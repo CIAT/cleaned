@@ -1,39 +1,7 @@
-# CLEANED R code for Lushoto, Tanzania (ReSLess project) 
+# CLEANED-RX 
+CLEANED-RX: Comprehensive Livestock Environmental Assessment for Improved Nutrition, a Secured Environment, and Sustainable Development along Livestock and Fish Value Chains	
+[CLEANED X](https://cgspace.cgiar.org/handle/10568/91205) is a rapid ex-ante environmental impact assessment tool that allows users to explore multiple impacts of developing livestock value chains. It models the impact of changes in the livestock production systems and value chains along several pathways on land use, productivity, economics, water impacts, greenhouse gas emissions, and soil health.
 
-This folder contains all codes and data necessary to run CLEANED as a stand alone on a computer. The code corresponds to the two shiny tools : 
-* The simplified version used in the workshop (https://ilri.shinyapps.io/cleaned-r-resless-lushoto-tza/)
-* the expert interface (https://ilri.shinyapps.io/cleaned-r-resless-lushoto_tza_ex/). 
+[CLEANED R](https://cgspace.cgiar.org/handle/10568/78474) is a quick, ex-ante and spatially explicit environmental impact assessment tool for assessing changes from transforming livestock value chains. The development of the tool has been funded by DFID, Livestock CRP, and PIM CRP.
 
-## Structure of the tool 
-The tool consistens of 3 folders that need to be created on the computer 
-* core code of CLEANED direcly available
-* 1-input : this folder contains all the data to be downloaded from https://drive.google.com/open?id=1tZvFE3q4m64i39BfZ_9B1hmBdnIOCAs5
-* 4-output : this folder is used to save the output of the CLEANED tool 
-* www : contains the images that are loaded into the R-shiny tool 
-
-## Core codes
-
-* interface in shiny: click on run app in R to start the interface comes in 3 versions 
-  + based on presets for the transformation game (preset/vignettes)
-  + expert version
-* 0-user definition (manual interface)
-* 2-feedbasket_nonlinear2 : productivity computations
-* 2-load data : loading data from 1-input
-* 2-luccomp : the land use module
-* 2-luc : the land use module
-* 1-water : water impact
-* 1-ghg : greenhouse gas emmissions
-* 1-biodiv : biodiversity impact
-* 1-soil : soil impact
-
-To run the r-shiny stand alone version on your computer make sure that you have the following packages downloaded : 
-shiny, shinydashoared, shinyjs, graphics, rgeos, sp,raster, maptools rgdal, gridExtrea, grid, RColorBrewer.
-
-This code was developped by Catherine Pfeifer (c.pfeifer@cgiar.org) at the International Livestock Research Institute  (www.ilri.org) and Joanne Morris Stockholm Environmental Institute (www.sei.org) based in York. 
-The shiny interface was developed by Victor Moses from LocateIT Kenya (http://www.locateit.co.ke/) 
-
-CLEANED parametrization for Lushoto, Tanzania has been funded by the SAIRLA program of DFID as well as the livestock CRP (and formely by the livestock and fish CRP).The program thanks all donors and organizations which globally supported its work through their contributions to the CGIAR system.
-
-
-Related publications 
-up-coming
+This is the first step towards refining the two models into CLEANED-RX: Comprehensive Livestock Environmental Assessment for Improved Nutrition, a Secured Environment, and Sustainable Development along Livestock and Fish Value Chains.
