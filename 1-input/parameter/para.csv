@@ -1,0 +1,50 @@
+row_num,parameter,name,value,,,,,,,,,old
+7,basic energy requirement per day,ber,0.1,,,,,,,,,0.1
+8,milk yield energy requirment per liter,myer,5.5,,,,,,,,,5.5
+9,ME-grass,meg,1.632,,,,,,,,,0
+10,ME- residuescereals,merc,7.786,,,,,,,,,0
+11,ME-residue legumes,merl,7.654,,,,,,,,,0
+12,ME-planted fodder,mepf,1.7081,,,,,,,,,0
+13,ME-concentrate maize,meconc,6.579,,,,,,,,,0
+14,ME-concentrate oil seed,meconos,6.4902,,,,,,,,,0
+15,ME-hay,meh,8.2,,,,,,,,,8.2
+16,ME-silage,mes,7.9,,,,,,,,,7.9
+17,FY-grass,fy_g,3.24,,,,,,,,,0
+18,FY-residue cereals,fy_rc,1.82681,,,,,,,,,0
+19,FY-residue legumes ,fy_rl,0.68,,,,,,,,,0
+20,FY- planted fodder,fy_pf,36,,,,,,,,,0
+21,DM (dry matter)-grass,dm_g,0.5,,,,,,,,,0.2
+22,DM-crop residues ,dm_rc,0.85,,,,,,,,,0.85
+23,DM-residue legumes,dm_rl,0.2,,,,,,,,,0.2
+24,DM-planted fodder,dm_pf,0.2,,,,,,,,,0.2
+25,DM-concentrate cereals,dm_conc,0.85,,,,,,,,,0.85
+26,DM-concentrate oilseed cake,dm_conos,0.85,,,,,,,,,0.85
+27,DM-hay,dm_h,0.82,,,,,,,,,0.82
+28,DM-silage,dm_s,0.235,,,,,,,,,0.235
+29,D-digestibility-natural grazing,d_g,0.8,,,,,,,,,0.66
+30,D-residue cereals ,d_rc,0.526,,,,,,,,,0.526
+31,D-residue legumes  ,d_rl,0.526,,,,,,,,,0.526
+32,D-residue planted fodder,d_pf,0.567,,,,,,,,,0.567
+33,D-concentrate cereals,d_conc,0.8,,,,,,,,,0.8
+34,D-concentrate oilseed cake,d_conos,0.8,,,,,,,,,0.8
+35,D-hay,d_h,0.571,,,,,,,,,0.571
+36,D-silage,d_s,0.67,,,,,,,,,0.67
+37,ash-ave,ash,0.08,,,,,,,,,0.08
+38,Crude protein-grass,cpg,6,,,,,,,,,6
+39,CP- residuescereals,cprc,3.7,,,,,,,,,3.7
+40,CP-residue legumes,cprl,12,,,,,,,,,12
+41,CP-planted fodder,cppf,10,,,,,,,,,10
+42,CP- cereals grain,cpc,15,,,,,,,,,15
+43,CP-legumes grain,cpl,30,,,,,,,,,30
+44,CP-hay,cph,10.4,,,,,,,,,10.4
+45,CP-silage,cps,8,,,,,,,,,8
+46,havest index - cereal,hic,0.47,,,,,,,,,0.47
+47,HI- legume,hil,0.5,,,,,,,,,0.5
+48,HI-fodder,hif,0.9,,,,,,,,,0.9
+49,HI-grass,hig,0.9,,,,,,,,,0.9
+50,HI - cereal residue,hirc,0.5,,,,,,,,,0.5
+51,HI- legume residue ,hirl,0.25,,,,,,,,,0.25
+52,residue factor grass,rfg,0.9,,,,,,,,,0
+53,residue factor maize,rfm,1.01489,,,,,,,,,0
+54,residue factor legume,rfl,0.5,,,,,,,,,0
+55,residue factor planted fodder,rfpf,0.9,,,,,,,,,0

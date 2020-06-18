@@ -1,0 +1,20 @@
+MMS,EF
+Pasture,NA
+DailySpread,0.005
+SolidStorage,0.02
+DryLot,0.005
+Liquid,0
+UncoveredAnerobic,0
+Pit storage,0.002
+AnerobicDigester,0
+Burned,NA
+DeepBeddingNoMix,0.01
+DeepBeddingMix,0.07
+CompostingVessel,0.006
+CompostingStatic,0.006
+CompostingIntensiveWindrow,0.1
+CompostingPassiveWindrow,0.01
+PoultryLitter,0.001
+PoultryNoLitter,0.001
+AerobicNaturalAeration,0.01
+AerobicForcedAeration,0.005

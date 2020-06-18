@@ -1,0 +1,145 @@
+AnimalClass,binomial,binomial_id,Common name,ConSt_id,GeogRange(sqkm),RelevanceMaziwaZ,ThreatsFromTzAg?,treatBIN,dforest,mforest,sforest,pforest,mforest,cgrass,ograss,cbush,obush,pcrop,acrop,wetland,waterbody
+Amphibian,Afrixalus sylvaticus,1,Forest banana frog,2,500,N,N,0,0,1,1,1,0,0,0,1,0,0,0,0,0
+Amphibian,Amietophrynus brauni,2,Dead-leaf Toad,2,5000,Y,Y,1,1,1,0,0,0,0,0,0,0,0,0,1,1
+Amphibian,Arthroleptides yakusini,3,Southern torrent frog,2,3113,Maybe,Y,0,1,0,0,0,0,0,0,0,0,0,0,0,0
+Amphibian,Leptopelis barbouri,4,Barbour's tree frog,4,7479,Y - check,Y,0,1,1,1,0,0,0,0,0,0,0,0,0,0
+Amphibian,Leptopelis parkeri,5,Parker’s forest tree frog,2,3684,Y,Y,1,1,0,0,0,0,0,0,0,0,0,0,0,0
+Amphibian,Leptopelis uluguruensis,6,Uluguru Treefrog,2,1748,Maybe,Y,0,1,1,1,0,0,0,0,1,0,1,0,0,0
+Amphibian,Nectophrynoides vestergaardi,7,African viviparous toad,2,5000,Y - check,Y,0,1,1,0,0,0,0,0,0,0,0,0,0,0
+Amphibian,Phrynobatrachus krefftii,8,Krefft's puddle frog,2,2120,Y,Y,1,1,1,0,0,0,0,0,0,0,0,0,1,1
+Amphibian,Probreviceps macrodactylus,9,Usambara Big-fingered Frog,2,864,Y,Y,1,0,1,0,0,0,0,0,0,0,0,0,0,0
+Bird,Acrocephalus griseldis,10,Basra reed warbler,2,759,N,N,0,0,0,0,0,0,0,0,0,0,0,0,1,0
+Bird,Anthreptes reichenowi,11,Plain-backed Sunbird,3,,Maybe,Y,0,0,1,1,0,0,0,0,1,0,0,0,1,0
+Bird,Anthreptes rubritorques,12,Banded Sunbird,4,,Y,Y,1,1,1,1,0,0,0,0,0,0,0,0,0,0
+Bird,Ardeola idae,13,Madagascar Pond-heron,2,,N,N,0,0,0,0,0,0,0,0,0,0,0,0,1,0
+Bird,Balearica regulorum,14,Grey Crowned-crane,2,,?,Y,0,0,0,0,0,0,0,0,0,0,0,0,1,1
+Bird,Bucorvus leadbeateri,15,Southern Ground-hornbill,4,,N,Y,0,0,0,1,0,0,1,1,1,1,0,0,0,0
+Bird,Buteo oreophilus,16,Mountain Buzzard,3,,N,Y,0,1,1,0,1,0,1,1,0,0,0,0,0,0
+Bird,Circaetus fasciolatus,17,Southern Banded Snake-eagle,3,,N,Y,0,0,0,0,1,1,0,0,0,0,0,0,1,0
+Bird,Circus macrourus,18,Pallid Harrier,3,,N,Y,0,0,1,0,0,0,1,1,0,0,0,0,1,1
+Bird,Coracias garrulus,19,European Roller,3,,N,Y,0,0,0,1,0,0,1,0,1,1,0,0,0,0
+Bird,Falco fasciinucha,20,Taita Falcon,4,,N,Y,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Bird,Gallinago media,21,Great Snipe,3,,N,Y,0,0,0,0,0,0,0,1,1,1,0,0,1,0
+Bird,Glareola ocularis,22,Madagascar Pratincole,4,"migratory species breeding in Madagascar,breed in loose colonies on rocky islets in rivers, saltmarsh and coastal rocky areas,",N,Y,0,0,0,0,0,0,0,1,0,0,0,0,1,1
+Bird,Gyps africanus,23,White-backed Vulture,2,,N,Y,0,0,0,1,0,0,1,1,1,1,0,0,0,0
+Bird,Gyps rueppelli,24,Ruppell's Vulture,2,,N,Y,0,0,1,1,0,0,0,1,1,0,0,0,0,0
+Bird,Limosa limosa,25,Black-tailed Godwit,3,,N,N,0,0,0,0,0,0,0,0,0,0,0,0,1,1
+Bird,Necrosyrtes monachus,26,Hooded Vulture,2,,N,Y,0,0,1,1,0,0,0,1,1,0,0,0,0,0
+Bird,Nectarinia moreaui,27,Moreau's Sunbird,3,,Maybe,Y,0,1,1,0,0,0,0,0,0,0,0,0,0,0
+Bird,Neophron percnopterus,28,"Egyptian Vulture, Egyptian Eagle",2,,N,Y,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Bird,Numenius arquata,29,Eurasian Curlew,3,,N,N,0,0,1,0,0,0,0,1,0,0,0,0,1,1
+Bird,Ploceus nicolli,30,Usambara Weaver,2,,Y,Y,1,1,1,1,1,0,1,0,1,1,1,0,0,0
+Bird,Polemaetus bellicosus,31,Martial Eagle,4,,N,Y,0,0,0,1,0,0,1,0,1,1,0,0,0,0
+Bird,Rynchops flavirostris,32,African Skimmer,3,,N,Y,0,0,0,0,0,0,0,0,0,0,0,0,1,1
+Bird,Sagittarius serpentarius,33,Secretarybird,4,,N,Y,0,0,0,1,0,0,1,1,1,1,1,1,0,0
+Bird,Serinus melanochrous,34,Kipengere Seedeater,3,,Maybe,Y,0,1,1,0,0,0,0,0,1,1,0,0,0,0
+Bird,Sheppardia gunningi,35,East Coast Akalat,3,,N,Y,0,1,1,0,0,0,0,0,0,0,0,0,0,0
+Bird,Sheppardia montana,36,Usambara Akalat,2,140,Y,Y,1,1,1,1,0,0,1,0,1,0,0,0,0,0
+Bird,Stephanoaetus coronatus,37,Crowned Eagle,3,,N,Y,0,1,1,1,1,0,1,0,1,1,0,0,0,0
+Bird,Tauraco fischeri,38,Fischer's Turaco,3,,Maybe,Y,0,0,0,0,0,1,0,0,0,0,0,0,1,1
+Bird,Terathopius ecaudatus,39,Bateleur,3,,N,Y,0,0,0,0,0,0,1,1,1,1,0,0,0,0
+Bird,Torgos tracheliotos,40,Lappet-faced Vulture,4,,N,Y,0,0,0,0,0,0,0,1,1,1,0,0,0,0
+Mammal,Bdeogale omnivora,41,Sokoke Bushy-tailed Mongoose,4,,N,N,0,0,1,0,0,1,0,0,0,0,0,0,0,0
+Mammal,Cephalophus spadix,42,Abbott's Duiker,2,838,Maybe,Y,0,1,1,1,0,0,0,0,0,0,0,0,0,0
+Mammal,Crocidura tansaniana,43,Tanzanian Shrew,2,5000,N,N,0,0,1,0,0,0,0,0,0,0,0,0,0,0
+Mammal,Crocidura telfordi,44,Telford's Shew,2,5000,Y?,Y,0,1,1,0,0,0,0,0,0,0,0,0,0,0
+Mammal,Crocidura usambarae,45,Usambara Shrew,2,5000,Maybe,Y,0,1,1,0,0,0,0,0,0,0,0,0,0,0
+Mammal,Diceros bicornis,46,Black rhino,1,,?,?,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Mammal,Eidolon helvum,47,African straw coloured fruit bat,3,,N,N,0,1,1,0,1,1,1,1,1,1,0,0,1,0
+Mammal,Galagoides orinus,48,Mountain Dwarf Galago,3,20000,Maybe,Y,0,1,1,0,0,0,0,0,0,0,0,0,0,0
+Mammal,Hippopotamus amphibius,49,Hippopotamus,4,,Maybe – unlikely,Maybe,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Mammal,Hipposideros vittatus,50,Commerson's Leafnosed Bat,3,,N,N,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Mammal,Hyaena hyaena,51,Striped Hyaena,3,,Maybe,Y,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Mammal,Kerivoula africana,52,Tanzanian Woolly Bat,2,500,Y,Y,1,0,1,0,0,1,0,0,0,0,0,0,0,0
+Mammal,Loxodonta africana,53,African elephant,4,,"Cattle, but Maziwa Zaidi?",Y,0,1,1,1,0,0,1,1,1,1,0,0,0,0
+Mammal,Myonycteris relicta,54,East African Little Collared Fruit Bat,4,,Indirect?,Maybe,0,1,1,1,0,0,1,0,0,0,0,0,0,0
+Mammal,Oryx beisa,55,Beisa Oryx,3,,Maybe,Y,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Mammal,Otomops martiensseni,56,arge-eared Free-tailed Bat,3,,N,N,0,1,1,0,0,0,0,0,1,0,0,0,0,0
+Mammal,Panthera leo,57,African lion,4,,Indirect?,Y,0,0,0,1,0,0,0,0,0,0,0,0,0,0
+Mammal,Panthera pardus,58,Leopard,3,,Maybe,Y,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Mammal,Paraxerus vexillarius,59,Svynnerton's Bush Squirrel,3,20000,Maybe,Y,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Mammal,Procolobus gordonorum,60,Udzungwa Red Colobus,2,5000,N,Y,0,0,1,1,0,0,0,0,1,0,0,0,0,0
+Mammal,Rhinolophus deckenii,61,Decken's Horseshoe Bat,3,,Maybe,Y,0,1,1,1,0,0,0,0,0,0,0,0,0,0
+Mammal,Rhynchocyon cirnei,62,Chequered Sengi,3,,Maybe,Maybe,0,1,1,1,0,0,0,0,0,0,0,0,1,1
+Mammal,Rhynchocyon petersi,63,Black and Rufous Sengi,4,,Maybe,Y,0,0,1,0,0,1,0,0,0,0,0,0,0,0
+Mammal,Smutsia temminckii,64,Temminck's Ground Pangolin,4,,N,N,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Mammal,Sylvisorex howelli,65,Howell's Forest Shrew,2,5000,Maybe,,0,1,1,0,0,0,0,0,0,0,0,0,0,0
+Mammal,Taphozous hildegardeae,66,Hildegarde's Tomb Bat,4,20000,N,N,0,0,1,1,0,1,0,0,0,0,0,0,0,1
+Mammal,Tragelaphus imberbis,67,Lesser Kudu,3,,Maybe – unlikely,Y,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Reptile,Afrotyphlops gierrai,68,Gierra's Blind Snake,2,1600,?,Y,0,1,1,0,0,0,0,0,0,0,0,0,0,0
+Reptile,Atheris ceratophora,69,Usambara Eyelash Viper,4,15000,Y - check,Y,0,1,1,0,0,0,0,0,0,0,0,0,0,0
+Reptile,Elapsoidea nigra,70,Usambara Garter Snake,2,2700,Maybe,Y,0,1,1,0,0,0,0,0,0,0,0,0,0,0
+Reptile,Lygodactylus gravis,71,Usambara Dwarf Gecko,4,7200,Y - check,Y,0,1,1,0,0,0,0,0,0,0,0,0,0,0
+Reptile,Rhampholeon spinosus,72,Usambara Spiny Pygmy Chameleon,2,3250,?,Y,0,1,1,1,0,0,0,0,0,0,0,0,0,0
+Amphibian,Afrixalus sylvaticus,1,Forest banana frog,2,500,N,N,0,0,1,1,1,0,0,0,1,0,0,0,0,0
+Amphibian,Amietophrynus brauni,2,Dead-leaf Toad,2,5000,Y,Y,1,1,1,0,0,0,0,0,0,0,0,0,1,1
+Amphibian,Arthroleptides yakusini,3,Southern torrent frog,2,3113,Maybe,Y,0,1,0,0,0,0,0,0,0,0,0,0,0,0
+Amphibian,Leptopelis barbouri,4,Barbour's tree frog,4,7479,Y - check,Y,0,1,1,1,0,0,0,0,0,0,0,0,0,0
+Amphibian,Leptopelis parkeri,5,Parker’s forest tree frog,2,3684,Y,Y,1,1,0,0,0,0,0,0,0,0,0,0,0,0
+Amphibian,Leptopelis uluguruensis,6,Uluguru Treefrog,2,1748,Maybe,Y,0,1,1,1,0,0,0,0,1,0,1,0,0,0
+Amphibian,Nectophrynoides vestergaardi,7,African viviparous toad,2,5000,Y - check,Y,0,1,1,0,0,0,0,0,0,0,0,0,0,0
+Amphibian,Phrynobatrachus krefftii,8,Krefft's puddle frog,2,2120,Y,Y,1,1,1,0,0,0,0,0,0,0,0,0,1,1
+Amphibian,Probreviceps macrodactylus,9,Usambara Big-fingered Frog,2,864,Y,Y,1,0,1,0,0,0,0,0,0,0,0,0,0,0
+Bird,Acrocephalus griseldis,10,Basra reed warbler,2,759,N,N,0,0,0,0,0,0,0,0,0,0,0,0,1,0
+Bird,Anthreptes reichenowi,11,Plain-backed Sunbird,3,,Maybe,Y,0,0,1,1,0,0,0,0,1,0,0,0,1,0
+Bird,Anthreptes rubritorques,12,Banded Sunbird,4,,Y,Y,1,1,1,1,0,0,0,0,0,0,0,0,0,0
+Bird,Ardeola idae,13,Madagascar Pond-heron,2,,N,N,0,0,0,0,0,0,0,0,0,0,0,0,1,0
+Bird,Balearica regulorum,14,Grey Crowned-crane,2,,?,Y,0,0,0,0,0,0,0,0,0,0,0,0,1,1
+Bird,Bucorvus leadbeateri,15,Southern Ground-hornbill,4,,N,Y,0,0,0,1,0,0,1,1,1,1,0,0,0,0
+Bird,Buteo oreophilus,16,Mountain Buzzard,3,,N,Y,0,1,1,0,1,0,1,1,0,0,0,0,0,0
+Bird,Circaetus fasciolatus,17,Southern Banded Snake-eagle,3,,N,Y,0,0,0,0,1,1,0,0,0,0,0,0,1,0
+Bird,Circus macrourus,18,Pallid Harrier,3,,N,Y,0,0,1,0,0,0,1,1,0,0,0,0,1,1
+Bird,Coracias garrulus,19,European Roller,3,,N,Y,0,0,0,1,0,0,1,0,1,1,0,0,0,0
+Bird,Falco fasciinucha,20,Taita Falcon,4,,N,Y,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Bird,Gallinago media,21,Great Snipe,3,,N,Y,0,0,0,0,0,0,0,1,1,1,0,0,1,0
+Bird,Glareola ocularis,22,Madagascar Pratincole,4,"migratory species breeding in Madagascar,breed in loose colonies on rocky islets in rivers, saltmarsh and coastal rocky areas,",N,Y,0,0,0,0,0,0,0,1,0,0,0,0,1,1
+Bird,Gyps africanus,23,White-backed Vulture,2,,N,Y,0,0,0,1,0,0,1,1,1,1,0,0,0,0
+Bird,Gyps rueppelli,24,Ruppell's Vulture,2,,N,Y,0,0,1,1,0,0,0,1,1,0,0,0,0,0
+Bird,Limosa limosa,25,Black-tailed Godwit,3,,N,N,0,0,0,0,0,0,0,0,0,0,0,0,1,1
+Bird,Necrosyrtes monachus,26,Hooded Vulture,2,,N,Y,0,0,1,1,0,0,0,1,1,0,0,0,0,0
+Bird,Nectarinia moreaui,27,Moreau's Sunbird,3,,Maybe,Y,0,1,1,0,0,0,0,0,0,0,0,0,0,0
+Bird,Neophron percnopterus,28,"Egyptian Vulture, Egyptian Eagle",2,,N,Y,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Bird,Numenius arquata,29,Eurasian Curlew,3,,N,N,0,0,1,0,0,0,0,1,0,0,0,0,1,1
+Bird,Ploceus nicolli,30,Usambara Weaver,2,,Y,Y,1,1,1,1,1,0,1,0,1,1,1,0,0,0
+Bird,Polemaetus bellicosus,31,Martial Eagle,4,,N,Y,0,0,0,1,0,0,1,0,1,1,0,0,0,0
+Bird,Rynchops flavirostris,32,African Skimmer,3,,N,Y,0,0,0,0,0,0,0,0,0,0,0,0,1,1
+Bird,Sagittarius serpentarius,33,Secretarybird,4,,N,Y,0,0,0,1,0,0,1,1,1,1,1,1,0,0
+Bird,Serinus melanochrous,34,Kipengere Seedeater,3,,Maybe,Y,0,1,1,0,0,0,0,0,1,1,0,0,0,0
+Bird,Sheppardia gunningi,35,East Coast Akalat,3,,N,Y,0,1,1,0,0,0,0,0,0,0,0,0,0,0
+Bird,Sheppardia montana,36,Usambara Akalat,2,140,Y,Y,1,1,1,1,0,0,1,0,1,0,0,0,0,0
+Bird,Stephanoaetus coronatus,37,Crowned Eagle,3,,N,Y,0,1,1,1,1,0,1,0,1,1,0,0,0,0
+Bird,Tauraco fischeri,38,Fischer's Turaco,3,,Maybe,Y,0,0,0,0,0,1,0,0,0,0,0,0,1,1
+Bird,Terathopius ecaudatus,39,Bateleur,3,,N,Y,0,0,0,0,0,0,1,1,1,1,0,0,0,0
+Bird,Torgos tracheliotos,40,Lappet-faced Vulture,4,,N,Y,0,0,0,0,0,0,0,1,1,1,0,0,0,0
+Mammal,Bdeogale omnivora,41,Sokoke Bushy-tailed Mongoose,4,,N,N,0,0,1,0,0,1,0,0,0,0,0,0,0,0
+Mammal,Cephalophus spadix,42,Abbott's Duiker,2,838,Maybe,Y,0,1,1,1,0,0,0,0,0,0,0,0,0,0
+Mammal,Crocidura tansaniana,43,Tanzanian Shrew,2,5000,N,N,0,0,1,0,0,0,0,0,0,0,0,0,0,0
+Mammal,Crocidura telfordi,44,Telford's Shew,2,5000,Y?,Y,0,1,1,0,0,0,0,0,0,0,0,0,0,0
+Mammal,Crocidura usambarae,45,Usambara Shrew,2,5000,Maybe,Y,0,1,1,0,0,0,0,0,0,0,0,0,0,0
+Mammal,Diceros bicornis,46,Black rhino,1,,?,?,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Mammal,Eidolon helvum,47,African straw coloured fruit bat,3,,N,N,0,1,1,0,1,1,1,1,1,1,0,0,1,0
+Mammal,Galagoides orinus,48,Mountain Dwarf Galago,3,20000,Maybe,Y,0,1,1,0,0,0,0,0,0,0,0,0,0,0
+Mammal,Hippopotamus amphibius,49,Hippopotamus,4,,Maybe – unlikely,Maybe,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Mammal,Hipposideros vittatus,50,Commerson's Leafnosed Bat,3,,N,N,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Mammal,Hyaena hyaena,51,Striped Hyaena,3,,Maybe,Y,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Mammal,Kerivoula africana,52,Tanzanian Woolly Bat,2,500,Y,Y,1,0,1,0,0,1,0,0,0,0,0,0,0,0
+Mammal,Loxodonta africana,53,African elephant,4,,"Cattle, but Maziwa Zaidi?",Y,0,1,1,1,0,0,1,1,1,1,0,0,0,0
+Mammal,Myonycteris relicta,54,East African Little Collared Fruit Bat,4,,Indirect?,Maybe,0,1,1,1,0,0,1,0,0,0,0,0,0,0
+Mammal,Oryx beisa,55,Beisa Oryx,3,,Maybe,Y,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Mammal,Otomops martiensseni,56,arge-eared Free-tailed Bat,3,,N,N,0,1,1,0,0,0,0,0,1,0,0,0,0,0
+Mammal,Panthera leo,57,African lion,4,,Indirect?,Y,0,0,0,1,0,0,0,0,0,0,0,0,0,0
+Mammal,Panthera pardus,58,Leopard,3,,Maybe,Y,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Mammal,Paraxerus vexillarius,59,Svynnerton's Bush Squirrel,3,20000,Maybe,Y,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Mammal,Procolobus gordonorum,60,Udzungwa Red Colobus,2,5000,N,Y,0,0,1,1,0,0,0,0,1,0,0,0,0,0
+Mammal,Rhinolophus deckenii,61,Decken's Horseshoe Bat,3,,Maybe,Y,0,1,1,1,0,0,0,0,0,0,0,0,0,0
+Mammal,Rhynchocyon cirnei,62,Chequered Sengi,3,,Maybe,Maybe,0,1,1,1,0,0,0,0,0,0,0,0,1,1
+Mammal,Rhynchocyon petersi,63,Black and Rufous Sengi,4,,Maybe,Y,0,0,1,0,0,1,0,0,0,0,0,0,0,0
+Mammal,Smutsia temminckii,64,Temminck's Ground Pangolin,4,,N,N,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Mammal,Sylvisorex howelli,65,Howell's Forest Shrew,2,5000,Maybe,,0,1,1,0,0,0,0,0,0,0,0,0,0,0
+Mammal,Taphozous hildegardeae,66,Hildegarde's Tomb Bat,4,20000,N,N,0,0,1,1,0,1,0,0,0,0,0,0,0,1
+Mammal,Tragelaphus imberbis,67,Lesser Kudu,3,,Maybe – unlikely,Y,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Reptile,Afrotyphlops gierrai,68,Gierra's Blind Snake,2,1600,?,Y,0,1,1,0,0,0,0,0,0,0,0,0,0,0
+Reptile,Atheris ceratophora,69,Usambara Eyelash Viper,4,15000,Y - check,Y,0,1,1,0,0,0,0,0,0,0,0,0,0,0
+Reptile,Elapsoidea nigra,70,Usambara Garter Snake,2,2700,Maybe,Y,0,1,1,0,0,0,0,0,0,0,0,0,0,0
+Reptile,Lygodactylus gravis,71,Usambara Dwarf Gecko,4,7200,Y - check,Y,0,1,1,0,0,0,0,0,0,0,0,0,0,0
+Reptile,Rhampholeon spinosus,72,Usambara Spiny Pygmy Chameleon,2,3250,?,Y,0,1,1,1,0,0,0,0,0,0,0,0,0,0
