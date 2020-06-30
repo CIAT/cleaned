@@ -56,7 +56,7 @@
       "time_in_onfarm_grazing": "0.15",
       "time_in_offfarm_grazing": "0.00",
       "distance_to_pasture": "1.00",
-      "manure_in_stable": "0.90,
+      "manure_in_stable": "0.90",
       "manure_in_non_roofed_enclosure": "0.90",
       "manure_in_field": "0.00",
       "manure_as_fertilizer": "0.90",
