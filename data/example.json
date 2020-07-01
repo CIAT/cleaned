@@ -34,13 +34,13 @@
   "grassland_implevel": "none",
   "grassland_toarable": "0",
   "arable_tograssland": "0",
-  "land_oppcost": "Land opportunity cost ($/ha)",
-  "cba_discount_rate": "CBA/ Payback - Periods Discount Rate",
-  "cba_years": "CBA/ Payback Periods - Number of years ",
+  "land_oppcost": "52",
+  "cba_discount_rate": "10",
+  "cba_years": "10",
   "purchased_inorganic_fertilizers": [
     {
-      "fertilizer_mame": "Fertilizer name",
-      "quantity": "Quantity (N/year)",
+      "fertilizer_mame": "Urea",
+      "quantity": "50",
       "fraction": "Fraction"
     }
   ],
