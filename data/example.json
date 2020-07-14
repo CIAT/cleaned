@@ -41,7 +41,12 @@
     {
       "fertilizer_mame": "Urea",
       "quantity": "50",
-      "fraction": "Fraction"
+      "fraction": "1"
+    },
+    {
+      "fertilizer_mame": "DAP",
+      "quantity": "20",
+      "fraction": "1"
     }
   ],
   "livestock": [
@@ -152,16 +157,108 @@
   ],
   "feed_production": [
     {
+      "feed_type_code": "01",
+      "feed_type_name": "Rice (Oryza sativa) - bran (with germs",
+      "is_concentrate": "No",
+      "fresh_yield": "2.0",
+      "dm_content": "0.80",
+      "dry_yield": "1.60",
+      "harvest_index": "0.42",
+      "residue_fresh_yield": "2.76",
+      "residue_dm_content": "0.87",
+      "residue_dry_yield": "2.41",
+      "main_n": "0.01",
+      "residue_n": "0.01",
+      "c_factor": "NA",
+      "energy": "360",
+      "water_content": "12.89",
+      "usda_value": "20450.00",
+      "kc_initial": "1.05",
+      "kc_midseason": "1.20",
+      "kc_late": "0.75",
+      "feed_items": [
+        {
+          "feed_item_code": "01",
+          "feed_item_name": "Rice (Oryza sativa) - bran (with germs)",
+          "source_type": "Residue",
+          "intercrop": "0.00",
+          "intercrop_fraction": "0.00",
+          "landcover_c_factor": "Degraded grass",
+          "slope_p_factor": "Hilly (5-20%)",
+          "slope_length": "15",
+          "grassman_change_factor": "Severely degraded",
+          "main_product_removal": "1",
+          "residue_removal": "NA",
+          "residue_burnt": "0",
+          "fertilizer_rate": "0.00",
+          "manure_fraction": "0.00",
+          "dm_content": "91",
+          "me_content": "10.43",
+          "cp_content": "14.00",
+          "establishment_cost": "NA",
+          "operational_cost": "NA",
+          "establishment_labour": "NA",
+          "operational_labour": "NA"
+        }
+      ]
+    },
+    {
+      "feed_type_code": "02",
+      "feed_type_name": "Maize (Zea mays) - whole grain",
+      "is_concentrate": "No",
+      "fresh_yield": "1.33",
+      "dm_content": "0.80",
+      "dry_yield": "1.06",
+      "harvest_index": "0.47",
+      "residue_fresh_yield": "3.50",
+      "residue_dm_content": "0.90",
+      "residue_dry_yield": "3.00",
+      "main_n": "0.02",
+      "residue_n": "0.01",
+      "c_factor": "0.05",
+      "energy": "365",
+      "water_content": "10.37",
+      "usda_value": "20314.00",
+      "kc_initial": "0.15",
+      "kc_midseason": "1.15",
+      "kc_late": "0.30",
+      "feed_items": [
+        {
+          "feed_item_code": "02",
+          "feed_item_name": "Maize (Zea mays) - whole grain",
+          "source_type": "Purchased",
+          "intercrop": "0.00",
+          "intercrop_fraction": "0.00",
+          "landcover_c_factor": "Dense grass",
+          "slope_p_factor": "Hilly (5-20%)",
+          "slope_length": "15",
+          "grassman_change_factor": "Severely degraded",
+          "main_product_removal": "1",
+          "residue_removal": "NA",
+          "residue_burnt": "0",
+          "fertilizer_rate": "0.00",
+          "manure_fraction": "0.00",
+          "dm_content": "90.00",
+          "me_content": "15.00",
+          "cp_content": "9.00",
+          "establishment_cost": "NA",
+          "operational_cost": "NA",
+          "establishment_labour": "NA",
+          "operational_labour": "NA"
+        }
+      ]
+    },
+    {
       "feed_type_code": "03",
-      "feed_type_name": "Forage",
+      "feed_type_name": "Brachiaria brizantha (forage)",
       "is_concentrate": "No",
       "fresh_yield": "NA",
       "dm_content": "0.26",
       "dry_yield": "15.65",
       "harvest_index": "NA",
       "residue_fresh_yield": "NA",
-      "residue_dm_content": "0.00",
-      "residue_dry_yield": "275.38",
+      "residue_dm_content": "NA",
+      "residue_dry_yield": "0.00",
       "main_n": "0.02",
       "residue_n": "0.02",
       "c_factor": "NA",
@@ -174,7 +271,7 @@
       "feed_items": [
         {
           "feed_item_code": "03",
-          "feed_item_name": "Brachiaria brizantha",
+          "feed_item_name": "Brachiaria brizantha (forage)",
           "source_type": "Main",
           "intercrop": "1",
           "intercrop_fraction": "0.00",
@@ -196,6 +293,190 @@
           "operational_labour": "8"
         }
       ]
+    },
+    {
+      "feed_type_code": "04",
+      "feed_type_name": "Concentrate (commercial)",
+      "is_concentrate": "Yes",
+      "fresh_yield": "NA",
+      "dm_content": "NA",
+      "dry_yield": "NA",
+      "harvest_index": "NA",
+      "residue_fresh_yield": "NA",
+      "residue_dm_content": "NA",
+      "residue_dry_yield": "NA",
+      "main_n": "NA",
+      "residue_n": "NA",
+      "c_factor": "NA",
+      "energy": "NA",
+      "water_content": "NA",
+      "usda_value": "NA",
+      "kc_initial": "NA",
+      "kc_midseason": "NA",
+      "kc_late": "NA",
+      "feed_items": [
+        {
+          "feed_item_code": "04",
+          "feed_item_name": "Concentrate (commercial)",
+          "source_type": "Purchased",
+          "intercrop": "0.00",
+          "intercrop_fraction": "0.00",
+          "landcover_c_factor": "Dense grass",
+          "slope_p_factor": "Hilly (5-20%)",
+          "slope_length": "15",
+          "grassman_change_factor": "NA",
+          "main_product_removal": "1",
+          "residue_removal": "NA",
+          "residue_burnt": "0",
+          "fertilizer_rate": "0.00",
+          "manure_fraction": "0.00",
+          "dm_content": "90",
+          "me_content": "12.10",
+          "cp_content": "16.00",
+          "establishment_cost": "NA",
+          "operational_cost": "0.30",
+          "establishment_labour": "NA",
+          "operational_labour": "NA"
+        }
+      ]
+    },
+    {
+      "feed_type_code": "05",
+      "feed_type_name": "Rice (Oryza sativa) - straw",
+      "is_concentrate": "No",
+      "fresh_yield": "2.0",
+      "dm_content": "0.80",
+      "dry_yield": "1.60",
+      "harvest_index": "0.42",
+      "residue_fresh_yield": "2.76",
+      "residue_dm_content": "0.87",
+      "residue_dry_yield": "2.41",
+      "main_n": "0.01",
+      "residue_n": "0.01",
+      "c_factor": "NA",
+      "energy": "360",
+      "water_content": "12.89",
+      "usda_value": "20450.00",
+      "kc_initial": "1.05",
+      "kc_midseason": "1.20",
+      "kc_late": "0.75",
+      "feed_items": [
+        {
+          "feed_item_code": "05",
+          "feed_item_name": "Rice (Oryza sativa) - straw",
+          "source_type": "Residue",
+          "intercrop": "0.00",
+          "intercrop_fraction": "0.00",
+          "landcover_c_factor": "Fallow hard",
+          "slope_p_factor": "Hilly (5-20%)",
+          "slope_length": "15",
+          "grassman_change_factor": "NA",
+          "main_product_removal": "1",
+          "residue_removal": "0.8",
+          "residue_burnt": "0",
+          "fertilizer_rate": "0.00",
+          "manure_fraction": "0.00",
+          "dm_content": "91.88",
+          "me_content": "5.64",
+          "cp_content": "3.85",
+          "establishment_cost": "NA",
+          "operational_cost": "NA",
+          "establishment_labour": "NA",
+          "operational_labour": "NA"
+        }
+      ]
+    },
+    {
+      "feed_type_code": "06",
+      "feed_type_name": "Naturally occuring pasture - grazing",
+      "is_concentrate": "No",
+      "fresh_yield": "2.00",
+      "dm_content": "NA",
+      "dry_yield": "0.00",
+      "harvest_index": "0.95",
+      "residue_fresh_yield": "0.11",
+      "residue_dm_content": "1.00",
+      "residue_dry_yield": "0.07",
+      "main_n": "0.00",
+      "residue_n": "0.00",
+      "c_factor": "0.03",
+      "energy": "NA",
+      "water_content": "NA",
+      "usda_value": "NA",
+      "kc_initial": "0.30",
+      "kc_midseason": "0.75",
+      "kc_late": "0.75",
+      "feed_items": [
+        {
+          "feed_item_code": "06",
+          "feed_item_name": "Naturally occuring pasture - grazing",
+          "source_type": "Main",
+          "intercrop": "0.00",
+          "intercrop_fraction": "0.00",
+          "landcover_c_factor": "Dense grass",
+          "slope_p_factor": "Hilly (5-20%)",
+          "slope_length": "15",
+          "grassman_change_factor": "NA",
+          "main_product_removal": "0.6",
+          "residue_removal": "NA",
+          "residue_burnt": "0",
+          "fertilizer_rate": "0.00",
+          "manure_fraction": "0.00",
+          "dm_content": "60.00",
+          "me_content": "5.00",
+          "cp_content": "6.00",
+          "establishment_cost": "350",
+          "operational_cost": "200",
+          "establishment_labour": "18",
+          "operational_labour": "200"
+        }
+      ]
+    },
+    {
+      "feed_type_code": "07",
+      "feed_type_name": "Pennisetum purpureum - forage",
+      "is_concentrate": "No",
+      "fresh_yield": "20.00",
+      "dm_content": "0.30",
+      "dry_yield": "6.00",
+      "harvest_index": "0.90",
+      "residue_fresh_yield": "2.22",
+      "residue_dm_content": "0.85",
+      "residue_dry_yield": "0.00",
+      "main_n": "0.02",
+      "residue_n": "0.02",
+      "c_factor": "0.03",
+      "energy": "NA",
+      "water_content": "NA",
+      "usda_value": "NA",
+      "kc_initial": "0.60",
+      "kc_midseason": "1.10",
+      "kc_late": "1.05",
+      "feed_items": [
+        {
+          "feed_item_code": "07",
+          "feed_item_name": "Pennisetum purpureum - forage",
+          "source_type": "Main",
+          "intercrop": "0.00",
+          "intercrop_fraction": "0.00",
+          "landcover_c_factor": "Fallow hard",
+          "slope_p_factor": "Hilly (5-20%)",
+          "slope_length": "15",
+          "grassman_change_factor": "NA",
+          "main_product_removal": "0.9",
+          "residue_removal": "NA",
+          "residue_burnt": "0",
+          "fertilizer_rate": "0.00",
+          "manure_fraction": "0.00",
+          "dm_content": "15.00",
+          "me_content": "9.88",
+          "cp_content": "11.00",
+          "establishment_cost": "300",
+          "operational_cost": "0.00",
+          "establishment_labour": "18",
+          "operational_labour": "6"
+        }
+      ]
     }
   ],
   "livestock_feeding_seasons": [
@@ -206,9 +487,724 @@
           "livestock_category_code": "01",
           "allocation:": [
             {
+              "feed_type_code": "01",
+              "feed_item_code": "01",
+              "allocation": "5.00"
+            },
+            {
+              "feed_type_code": "02",
+              "feed_item_code": "02",
+              "allocation": "0.00"
+            },
+            {
               "feed_type_code": "03",
               "feed_item_code": "03",
-              "allocation": "37"
+              "allocation": "37.00"
+            },
+            {
+              "feed_type_code": "04",
+              "feed_item_code": "04",
+              "allocation": "0.00"
+            },
+            {
+              "feed_type_code": "05",
+              "feed_item_code": "05",
+              "allocation": "10.00"
+            },
+            {
+              "feed_type_code": "06",
+              "feed_item_code": "06",
+              "allocation": "15.00"
+            },
+            {
+              "feed_type_code": "07",
+              "feed_item_code": "07",
+              "allocation": "33.00"
+            }
+          ]
+        },
+        {
+          "livestock_category_code": "02",
+          "allocation:": [
+            {
+              "feed_type_code": "01",
+              "feed_item_code": "01",
+              "allocation": "5.00"
+            },
+            {
+              "feed_type_code": "02",
+              "feed_item_code": "02",
+              "allocation": "0.00"
+            },
+            {
+              "feed_type_code": "03",
+              "feed_item_code": "03",
+              "allocation": "37.00"
+            },
+            {
+              "feed_type_code": "04",
+              "feed_item_code": "04",
+              "allocation": "0.00"
+            },
+            {
+              "feed_type_code": "05",
+              "feed_item_code": "05",
+              "allocation": "10.00"
+            },
+            {
+              "feed_type_code": "06",
+              "feed_item_code": "06",
+              "allocation": "15.00"
+            },
+            {
+              "feed_type_code": "07",
+              "feed_item_code": "07",
+              "allocation": "33.00"
+            }
+          ]
+        },
+        {
+          "livestock_category_code": "03",
+          "allocation:": [
+            {
+              "feed_type_code": "01",
+              "feed_item_code": "01",
+              "allocation": "5.00"
+            },
+            {
+              "feed_type_code": "02",
+              "feed_item_code": "02",
+              "allocation": "0.00"
+            },
+            {
+              "feed_type_code": "03",
+              "feed_item_code": "03",
+              "allocation": "37.00"
+            },
+            {
+              "feed_type_code": "04",
+              "feed_item_code": "04",
+              "allocation": "0.00"
+            },
+            {
+              "feed_type_code": "05",
+              "feed_item_code": "05",
+              "allocation": "10.00"
+            },
+            {
+              "feed_type_code": "06",
+              "feed_item_code": "06",
+              "allocation": "15.00"
+            },
+            {
+              "feed_type_code": "07",
+              "feed_item_code": "07",
+              "allocation": "33.00"
+            }
+          ]
+        },
+        {
+          "livestock_category_code": "04",
+          "allocation:": [
+            {
+              "feed_type_code": "01",
+              "feed_item_code": "01",
+              "allocation": "5.00"
+            },
+            {
+              "feed_type_code": "02",
+              "feed_item_code": "02",
+              "allocation": "0.00"
+            },
+            {
+              "feed_type_code": "03",
+              "feed_item_code": "03",
+              "allocation": "37.00"
+            },
+            {
+              "feed_type_code": "04",
+              "feed_item_code": "04",
+              "allocation": "0.00"
+            },
+            {
+              "feed_type_code": "05",
+              "feed_item_code": "05",
+              "allocation": "10.00"
+            },
+            {
+              "feed_type_code": "06",
+              "feed_item_code": "06",
+              "allocation": "15.00"
+            },
+            {
+              "feed_type_code": "07",
+              "feed_item_code": "07",
+              "allocation": "33.00"
+            }
+          ]
+        },
+        {
+          "livestock_category_code": "05",
+          "allocation:": [
+            {
+              "feed_type_code": "01",
+              "feed_item_code": "01",
+              "allocation": "5.00"
+            },
+            {
+              "feed_type_code": "02",
+              "feed_item_code": "02",
+              "allocation": "0.00"
+            },
+            {
+              "feed_type_code": "03",
+              "feed_item_code": "03",
+              "allocation": "37.00"
+            },
+            {
+              "feed_type_code": "04",
+              "feed_item_code": "04",
+              "allocation": "0.00"
+            },
+            {
+              "feed_type_code": "05",
+              "feed_item_code": "05",
+              "allocation": "10.00"
+            },
+            {
+              "feed_type_code": "06",
+              "feed_item_code": "06",
+              "allocation": "15.00"
+            },
+            {
+              "feed_type_code": "07",
+              "feed_item_code": "07",
+              "allocation": "33.00"
+            }
+          ]
+        },
+        {
+          "livestock_category_code": "06",
+          "allocation:": [
+            {
+              "feed_type_code": "01",
+              "feed_item_code": "01",
+              "allocation": "5.00"
+            },
+            {
+              "feed_type_code": "02",
+              "feed_item_code": "02",
+              "allocation": "0.00"
+            },
+            {
+              "feed_type_code": "03",
+              "feed_item_code": "03",
+              "allocation": "37.00"
+            },
+            {
+              "feed_type_code": "04",
+              "feed_item_code": "04",
+              "allocation": "0.00"
+            },
+            {
+              "feed_type_code": "05",
+              "feed_item_code": "05",
+              "allocation": "10.00"
+            },
+            {
+              "feed_type_code": "06",
+              "feed_item_code": "06",
+              "allocation": "15.00"
+            },
+            {
+              "feed_type_code": "07",
+              "feed_item_code": "07",
+              "allocation": "33.00"
+            }
+          ]
+        },
+        {
+          "livestock_category_code": "07",
+          "allocation:": [
+            {
+              "feed_type_code": "01",
+              "feed_item_code": "01",
+              "allocation": "5.00"
+            },
+            {
+              "feed_type_code": "02",
+              "feed_item_code": "02",
+              "allocation": "0.00"
+            },
+            {
+              "feed_type_code": "03",
+              "feed_item_code": "03",
+              "allocation": "37.00"
+            },
+            {
+              "feed_type_code": "04",
+              "feed_item_code": "04",
+              "allocation": "0.00"
+            },
+            {
+              "feed_type_code": "05",
+              "feed_item_code": "05",
+              "allocation": "10.00"
+            },
+            {
+              "feed_type_code": "06",
+              "feed_item_code": "06",
+              "allocation": "15.00"
+            },
+            {
+              "feed_type_code": "07",
+              "feed_item_code": "07",
+              "allocation": "33.00"
+            }
+          ]
+        },
+        {
+          "livestock_category_code": "08",
+          "allocation:": [
+            {
+              "feed_type_code": "01",
+              "feed_item_code": "01",
+              "allocation": "5.00"
+            },
+            {
+              "feed_type_code": "02",
+              "feed_item_code": "02",
+              "allocation": "0.00"
+            },
+            {
+              "feed_type_code": "03",
+              "feed_item_code": "03",
+              "allocation": "37.00"
+            },
+            {
+              "feed_type_code": "04",
+              "feed_item_code": "04",
+              "allocation": "0.00"
+            },
+            {
+              "feed_type_code": "05",
+              "feed_item_code": "05",
+              "allocation": "10.00"
+            },
+            {
+              "feed_type_code": "06",
+              "feed_item_code": "06",
+              "allocation": "15.00"
+            },
+            {
+              "feed_type_code": "07",
+              "feed_item_code": "07",
+              "allocation": "33.00"
+            }
+          ]
+        }
+        ,{
+          "livestock_category_code": "09",
+          "allocation:": [
+            {
+              "feed_type_code": "01",
+              "feed_item_code": "01",
+              "allocation": "5.00"
+            },
+            {
+              "feed_type_code": "02",
+              "feed_item_code": "02",
+              "allocation": "0.00"
+            },
+            {
+              "feed_type_code": "03",
+              "feed_item_code": "03",
+              "allocation": "37.00"
+            },
+            {
+              "feed_type_code": "04",
+              "feed_item_code": "04",
+              "allocation": "0.00"
+            },
+            {
+              "feed_type_code": "05",
+              "feed_item_code": "05",
+              "allocation": "10.00"
+            },
+            {
+              "feed_type_code": "06",
+              "feed_item_code": "06",
+              "allocation": "15.00"
+            },
+            {
+              "feed_type_code": "07",
+              "feed_item_code": "07",
+              "allocation": "33.00"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "season_name": "Dry Season",
+      "livestock_categories": [
+        {
+          "livestock_category_code": "01",
+          "allocation:": [
+            {
+              "feed_type_code": "01",
+              "feed_item_code": "01",
+              "allocation": "5.00"
+            },
+            {
+              "feed_type_code": "02",
+              "feed_item_code": "02",
+              "allocation": "0.00"
+            },
+            {
+              "feed_type_code": "03",
+              "feed_item_code": "03",
+              "allocation": "37.00"
+            },
+            {
+              "feed_type_code": "04",
+              "feed_item_code": "04",
+              "allocation": "0.00"
+            },
+            {
+              "feed_type_code": "05",
+              "feed_item_code": "05",
+              "allocation": "10.00"
+            },
+            {
+              "feed_type_code": "06",
+              "feed_item_code": "06",
+              "allocation": "15.00"
+            },
+            {
+              "feed_type_code": "07",
+              "feed_item_code": "07",
+              "allocation": "33.00"
+            }
+          ]
+        },
+        {
+          "livestock_category_code": "02",
+          "allocation:": [
+            {
+              "feed_type_code": "01",
+              "feed_item_code": "01",
+              "allocation": "5.00"
+            },
+            {
+              "feed_type_code": "02",
+              "feed_item_code": "02",
+              "allocation": "0.00"
+            },
+            {
+              "feed_type_code": "03",
+              "feed_item_code": "03",
+              "allocation": "37.00"
+            },
+            {
+              "feed_type_code": "04",
+              "feed_item_code": "04",
+              "allocation": "0.00"
+            },
+            {
+              "feed_type_code": "05",
+              "feed_item_code": "05",
+              "allocation": "10.00"
+            },
+            {
+              "feed_type_code": "06",
+              "feed_item_code": "06",
+              "allocation": "15.00"
+            },
+            {
+              "feed_type_code": "07",
+              "feed_item_code": "07",
+              "allocation": "33.00"
+            }
+          ]
+        },
+        {
+          "livestock_category_code": "03",
+          "allocation:": [
+            {
+              "feed_type_code": "01",
+              "feed_item_code": "01",
+              "allocation": "5.00"
+            },
+            {
+              "feed_type_code": "02",
+              "feed_item_code": "02",
+              "allocation": "0.00"
+            },
+            {
+              "feed_type_code": "03",
+              "feed_item_code": "03",
+              "allocation": "37.00"
+            },
+            {
+              "feed_type_code": "04",
+              "feed_item_code": "04",
+              "allocation": "0.00"
+            },
+            {
+              "feed_type_code": "05",
+              "feed_item_code": "05",
+              "allocation": "10.00"
+            },
+            {
+              "feed_type_code": "06",
+              "feed_item_code": "06",
+              "allocation": "15.00"
+            },
+            {
+              "feed_type_code": "07",
+              "feed_item_code": "07",
+              "allocation": "33.00"
+            }
+          ]
+        },
+        {
+          "livestock_category_code": "04",
+          "allocation:": [
+            {
+              "feed_type_code": "01",
+              "feed_item_code": "01",
+              "allocation": "5.00"
+            },
+            {
+              "feed_type_code": "02",
+              "feed_item_code": "02",
+              "allocation": "0.00"
+            },
+            {
+              "feed_type_code": "03",
+              "feed_item_code": "03",
+              "allocation": "37.00"
+            },
+            {
+              "feed_type_code": "04",
+              "feed_item_code": "04",
+              "allocation": "0.00"
+            },
+            {
+              "feed_type_code": "05",
+              "feed_item_code": "05",
+              "allocation": "10.00"
+            },
+            {
+              "feed_type_code": "06",
+              "feed_item_code": "06",
+              "allocation": "15.00"
+            },
+            {
+              "feed_type_code": "07",
+              "feed_item_code": "07",
+              "allocation": "33.00"
+            }
+          ]
+        },
+        {
+          "livestock_category_code": "05",
+          "allocation:": [
+            {
+              "feed_type_code": "01",
+              "feed_item_code": "01",
+              "allocation": "5.00"
+            },
+            {
+              "feed_type_code": "02",
+              "feed_item_code": "02",
+              "allocation": "0.00"
+            },
+            {
+              "feed_type_code": "03",
+              "feed_item_code": "03",
+              "allocation": "37.00"
+            },
+            {
+              "feed_type_code": "04",
+              "feed_item_code": "04",
+              "allocation": "0.00"
+            },
+            {
+              "feed_type_code": "05",
+              "feed_item_code": "05",
+              "allocation": "10.00"
+            },
+            {
+              "feed_type_code": "06",
+              "feed_item_code": "06",
+              "allocation": "15.00"
+            },
+            {
+              "feed_type_code": "07",
+              "feed_item_code": "07",
+              "allocation": "33.00"
+            }
+          ]
+        },
+        {
+          "livestock_category_code": "06",
+          "allocation:": [
+            {
+              "feed_type_code": "01",
+              "feed_item_code": "01",
+              "allocation": "5.00"
+            },
+            {
+              "feed_type_code": "02",
+              "feed_item_code": "02",
+              "allocation": "0.00"
+            },
+            {
+              "feed_type_code": "03",
+              "feed_item_code": "03",
+              "allocation": "37.00"
+            },
+            {
+              "feed_type_code": "04",
+              "feed_item_code": "04",
+              "allocation": "0.00"
+            },
+            {
+              "feed_type_code": "05",
+              "feed_item_code": "05",
+              "allocation": "10.00"
+            },
+            {
+              "feed_type_code": "06",
+              "feed_item_code": "06",
+              "allocation": "15.00"
+            },
+            {
+              "feed_type_code": "07",
+              "feed_item_code": "07",
+              "allocation": "33.00"
+            }
+          ]
+        },
+        {
+          "livestock_category_code": "07",
+          "allocation:": [
+            {
+              "feed_type_code": "01",
+              "feed_item_code": "01",
+              "allocation": "5.00"
+            },
+            {
+              "feed_type_code": "02",
+              "feed_item_code": "02",
+              "allocation": "0.00"
+            },
+            {
+              "feed_type_code": "03",
+              "feed_item_code": "03",
+              "allocation": "37.00"
+            },
+            {
+              "feed_type_code": "04",
+              "feed_item_code": "04",
+              "allocation": "0.00"
+            },
+            {
+              "feed_type_code": "05",
+              "feed_item_code": "05",
+              "allocation": "10.00"
+            },
+            {
+              "feed_type_code": "06",
+              "feed_item_code": "06",
+              "allocation": "15.00"
+            },
+            {
+              "feed_type_code": "07",
+              "feed_item_code": "07",
+              "allocation": "33.00"
+            }
+          ]
+        },
+        {
+          "livestock_category_code": "08",
+          "allocation:": [
+            {
+              "feed_type_code": "01",
+              "feed_item_code": "01",
+              "allocation": "5.00"
+            },
+            {
+              "feed_type_code": "02",
+              "feed_item_code": "02",
+              "allocation": "0.00"
+            },
+            {
+              "feed_type_code": "03",
+              "feed_item_code": "03",
+              "allocation": "37.00"
+            },
+            {
+              "feed_type_code": "04",
+              "feed_item_code": "04",
+              "allocation": "0.00"
+            },
+            {
+              "feed_type_code": "05",
+              "feed_item_code": "05",
+              "allocation": "10.00"
+            },
+            {
+              "feed_type_code": "06",
+              "feed_item_code": "06",
+              "allocation": "15.00"
+            },
+            {
+              "feed_type_code": "07",
+              "feed_item_code": "07",
+              "allocation": "33.00"
+            }
+          ]
+        }
+        ,{
+          "livestock_category_code": "09",
+          "allocation:": [
+            {
+              "feed_type_code": "01",
+              "feed_item_code": "01",
+              "allocation": "5.00"
+            },
+            {
+              "feed_type_code": "02",
+              "feed_item_code": "02",
+              "allocation": "0.00"
+            },
+            {
+              "feed_type_code": "03",
+              "feed_item_code": "03",
+              "allocation": "37.00"
+            },
+            {
+              "feed_type_code": "04",
+              "feed_item_code": "04",
+              "allocation": "0.00"
+            },
+            {
+              "feed_type_code": "05",
+              "feed_item_code": "05",
+              "allocation": "10.00"
+            },
+            {
+              "feed_type_code": "06",
+              "feed_item_code": "06",
+              "allocation": "15.00"
+            },
+            {
+              "feed_type_code": "07",
+              "feed_item_code": "07",
+              "allocation": "33.00"
             }
           ]
         }
