@@ -96,11 +96,11 @@
       "operational_cost": "8",
       "oneoff_labour": "NA",
       "operational_labour": "4",
-      "meat_product_gate_price": "##",
-      "methferm_tier1": "##",
-      "methferm_tier2": "##",
-      "methmanure": "##",
-      "nexcretion": "##"
+      "meat_product_gate_price": "3",
+      "methferm_tier1": "64",
+      "methferm_tier2": "6.5",
+      "methmanure": "1",
+      "nexcretion": "0.48"
     },
 	{
       "livestock_category_code": "02",
@@ -148,11 +148,11 @@
       "operational_cost": "20",
       "oneoff_labour": "NA",
       "operational_labour": "8",
-      "meat_product_gate_price": "##",
-      "methferm_tier1": "##",
-      "methferm_tier2": "##",
-      "methmanure": "##",
-      "nexcretion": "##"
+      "meat_product_gate_price": "3",
+      "methferm_tier1": "74",
+      "methferm_tier2": "6.5",
+      "methmanure": "1",
+      "nexcretion": "0.48"
     },
 	{
       "livestock_category_code": "03",
@@ -200,11 +200,11 @@
       "operational_cost": "8",
       "oneoff_labour": "NA",
       "operational_labour": "2",
-      "meat_product_gate_price": "##",
-      "methferm_tier1": "##",
-      "methferm_tier2": "##",
-      "methmanure": "##",
-      "nexcretion": "##"
+      "meat_product_gate_price": "3",
+      "methferm_tier1": "61",
+      "methferm_tier2": "6.5",
+      "methmanure": "1",
+      "nexcretion": "0.36"
     },
 	{
       "livestock_category_code": "04",
@@ -252,11 +252,11 @@
       "operational_cost": "5",
       "oneoff_labour": "NA",
       "operational_labour": "2",
-      "meat_product_gate_price": "##",
-      "methferm_tier1": "##",
-      "methferm_tier2": "##",
-      "methmanure": "##",
-      "nexcretion": "##"
+      "meat_product_gate_price": "3",
+      "methferm_tier1": "49",
+      "methferm_tier2": "6.5",
+      "methmanure": "1",
+      "nexcretion": "0.36"
     },
 	{
       "livestock_category_code": "05",
@@ -304,11 +304,11 @@
       "operational_cost": "20",
       "oneoff_labour": "NA",
       "operational_labour": "8",
-      "meat_product_gate_price": "##",
-      "methferm_tier1": "##",
-      "methferm_tier2": "##",
-      "methmanure": "##",
-      "nexcretion": "##"
+      "meat_product_gate_price": "3",
+      "methferm_tier1": "61",
+      "methferm_tier2": "6.5",
+      "methmanure": "1",
+      "nexcretion": "0.36"
     },
 	{
       "livestock_category_code": "06",
@@ -356,11 +356,11 @@
       "operational_cost": "NA",
       "oneoff_labour": "NA",
       "operational_labour": "NA",
-      "meat_product_gate_price": "##",
-      "methferm_tier1": "##",
-      "methferm_tier2": "##",
-      "methmanure": "##",
-      "nexcretion": "##"
+      "meat_product_gate_price": "3",
+      "methferm_tier1": "5",
+      "methferm_tier2": "6.5",
+      "methmanure": "1",
+      "nexcretion": "1.17"
     },
 	{
       "livestock_category_code": "07",
@@ -408,11 +408,11 @@
       "operational_cost": "NA",
       "oneoff_labour": "NA",
       "operational_labour": "NA",
-      "meat_product_gate_price": "##",
-      "methferm_tier1": "##",
-      "methferm_tier2": "##",
-      "methmanure": "##",
-      "nexcretion": "##"
+      "meat_product_gate_price": "3",
+      "methferm_tier1": "1",
+      "methferm_tier2": "0",
+      "methmanure": "1",
+      "nexcretion": "1.64"
     },
 	{
       "livestock_category_code": "08",
@@ -460,11 +460,11 @@
       "operational_cost": "20",
       "oneoff_labour": "NA",
       "operational_labour": "8",
-      "meat_product_gate_price": "##",
-      "methferm_tier1": "##",
-      "methferm_tier2": "##",
-      "methmanure": "##",
-      "nexcretion": "##"
+      "meat_product_gate_price": "3",
+      "methferm_tier1": "74",
+      "methferm_tier2": "6.5",
+      "methmanure": "1",
+      "nexcretion": "0.48"
     }
   ],
   "feed_production": [
