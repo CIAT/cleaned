@@ -75,70 +75,109 @@ energy_requirement <- function(para){
 # Compute feed quality
 feed_quality <- function(para) {
   
-  seasons <- para[["seasons"]]
+  livestock <- para[["livestock"]]
   
-  # Compute feeding season ratio
-  seasons <- seasons %>% mutate(feeding_ratio = season_length/sum(seasons$season_length))
+  livestock_category_names <- c(livestock$livestock_category_code)
   
-  for (i in 1:nrow(seasons)) {
+  livestock_allocation <- list()
+  
+  for (livestock in livestock_category_names) {
     
-    feed_production <- unnest(para[["feed_production"]], cols = c(feed_type_name))
+    seasons <- para[["seasons"]]
     
-    feed_types <- unique(feed_production$feed_type_name)
+    # Compute feeding season ratio
+    seasons <- seasons %>% mutate(feeding_ratio = season_length/sum(seasons$season_length))
     
-    for (j in 1:length(feed_types)) {
+    season_allocation <- list()
+    
+    for (season in 1:nrow(seasons)) {
       
-      feed <- feed_production %>% filter(feed_type_name %in% feed_production$feed_type_name[j])
+      feed_production <- unnest(para[["feed_production"]], cols = c(feed_type_name))
       
-      feed_item <- as.data.frame(feed[["feed_items"]])
+      feed_types <- unique(feed_production$feed_type_name)
       
-      temp <- feed_item %>% select(feed_item_code, feed_item_name, cp_content, me_content, 
-                                   dm_content)
+      feed_allocation <- list()
       
-      # Convert columns of interest to numeric
-      temp <- temp %>%
-        mutate_at(c("cp_content", "me_content", "dm_content"), as.numeric) %>% 
-        mutate(de_content = me_content*0.066) # calculate de content
-
-      
-      # Extracting allocation
-      feeding_seasons <- unnest(para[["livestock_feeding_seasons"]], 
-                                cols = c(livestock_categories)) %>% filter(season_name %in% 
-                                                                             seasons$season_name[i])
-      
-
-      feeding_seasons <- feeding_seasons %>% 
-        mutate(livestock_category_name = 
-                 ifelse(livestock_category_code %in% "01", "Cows (local)",
-                        ifelse(livestock_category_code %in% "02", "Cows (improved)",
-                               ifelse(livestock_category_code %in% "03", "Adult cattle - male", 
-                                      ifelse(livestock_category_code %in% "04", "Calves", 
-                                             ifelse(livestock_category_code %in% "05", "Buffalo (dairy)", 
-                                                    ifelse(livestock_category_code %in% "06", "Sheep/Goats - Ewes/Does", 
-                                                           ifelse(livestock_category_code %in% "07", "Pigs - lactating/pregnant sows", 
-                                                                  ifelse(livestock_category_code %in% "08", "Calves", 
-                                                                         ifelse(livestock_category_code %in% "09", "Cows (high productive)", "Error"))))))))))
-      
-      
-      for (k in 1:nrow(feeding_seasons)) {
+      for (i in 1:length(feed_types)) {
         
-        livestock_category_code <- feeding_seasons %>% 
-          filter(livestock_category_code %in% feeding_seasons$livestock_category_code[k])
+        feed_selected <- feed_production %>% filter(feed_type_name %in% 
+                                                      feed_production$feed_type_name[i])
         
-        feed_item_code <- feed_item$feed_item_code
+        feed_item <- as.data.frame(feed_selected[["feed_items"]])
         
-        feed_item_select <- as.data.frame(livestock_category_code[["allocation:"]])
+        feed_item <- feed_item %>% select(feed_item_code, feed_item_name, 
+                                          cp_content, me_content, dm_content)
         
-        feed_item_select <- feed_item_select[feed_item_select$feed_item_code==feed_item_code,]
+        # Convert columns of interest to numeric
+        feed_item <- feed_item %>% mutate_at(c("cp_content", "me_content", 
+                                               "dm_content"), as.numeric) %>% mutate(de_fraction = me_content * 
+                                                                                       0.066)  # calculate de content
         
         
-        temp <- temp %>%
-          mutate(fraction_as_fed = as.numeric(feed_item_select$allocation)/100) # ad fraction as fed
+        # Extracting allocation
+        feeding_seasons <- unnest(para[["livestock_feeding_seasons"]], 
+                                  cols = c(livestock_categories)) %>% filter(season_name %in% 
+                                                                               seasons$season_name[season])
         
+        
+        feeding_seasons <- feeding_seasons %>% mutate(livestock_category_name = ifelse(livestock_category_code %in% 
+                                                                                         "01", "Cows (local)", ifelse(livestock_category_code %in% 
+                                                                                                                        "02", "Cows (improved)", ifelse(livestock_category_code %in% 
+                                                                                                                                                          "03", "Adult cattle - male", ifelse(livestock_category_code %in% 
+                                                                                                                                                                                                "04", "Calves", ifelse(livestock_category_code %in% "05", 
+                                                                                                                                                                                                                       "Buffalo (dairy)", ifelse(livestock_category_code %in% 
+                                                                                                                                                                                                                                                   "06", "Sheep/Goats - Ewes/Does", ifelse(livestock_category_code %in% 
+                                                                                                                                                                                                                                                                                             "07", "Pigs - lactating/pregnant sows", ifelse(livestock_category_code %in% 
+                                                                                                                                                                                                                                                                                                                                              "08", "Calves", ifelse(livestock_category_code %in% 
+                                                                                                                                                                                                                                                                                                                                                                       "09", "Cows (high productive)", "Error"))))))))))
+        
+        
+        
+        
+        
+        livestock_selected <- feeding_seasons[feeding_seasons$livestock_category_code == 
+                                                livestock, ]
+        
+        feed_item_select <- as.data.frame(livestock_selected[["allocation:"]])
+        
+        # select feed item
+        feed_item_selected <- feed_item_select[feed_item_select$feed_item_code == 
+                                                 feed_item$feed_item_code, ]
+        
+        feed_allocation[[i]] <- feed_item %>% mutate(fraction_as_fed = as.numeric(feed_item_selected$allocation)/100)
       }
+      
+      # Bind by rows
+      feed_allocation_all <- feed_allocation %>% bind_rows() %>% 
+        select(-feed_item_code)
+      
+      # Gather
+      feed_allocation_all <- feed_allocation_all %>% 
+        gather(feed_variables, value, cp_content:fraction_as_fed) %>% 
+        spread(feed_item_name, value) %>% 
+        mutate_at(c(2,8), as.numeric)
+      
+      # Calculate fraction of dry matter
+      feed_allocation_all <- rbind(feed_allocation_all, c(feed_variables = "fraction_dry_matter", 
+                                   feed_allocation_all[feed_allocation_all$feed_variables == "fraction_as_fed", -1] * feed_allocation_all[feed_allocation_all$feed_variables == "dm_content", -1]/sum(unlist(feed_allocation_all[feed_allocation_all$feed_variables == "dm_content", -1]))))
+
+
+      # Bind and add into the season list
+      season_allocation[[season]] <- cbind(season_name = rep(livestock_selected$season_name, 
+                                                             times = nrow(feed_allocation_all)), livestock_category_name = rep(livestock_selected$livestock_category_name, 
+                                                                                                                               times = nrow(feed_allocation_all)), feed_allocation_all)
+      
       
     }
     
+    # Bind by rows
+    season_feed_allocation <- season_allocation %>% bind_rows()
+    
+    livestock_allocation[[livestock]] <- season_feed_allocation
+    
   }
+  
+  # Bind by rows
+  livestock_feed_allocation <- livestock_allocation %>% bind_rows()
   
 }
