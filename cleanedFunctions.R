@@ -164,8 +164,10 @@ feed_quality <- function(para) {
 
       # Bind and add into the season list
       season_allocation[[season]] <- cbind(season_name = rep(livestock_selected$season_name, 
-                                                             times = nrow(feed_allocation_all)), livestock_category_name = rep(livestock_selected$livestock_category_name, 
-                                                                                                                               times = nrow(feed_allocation_all)), feed_allocation_all)
+                                                             times = nrow(feed_allocation_all)), 
+                                           livestock_category_code = rep(livestock_selected$livestock_category_code, times = nrow(feed_allocation_all)), 
+                                           livestock_category_name = rep(livestock_selected$livestock_category_name, times = nrow(feed_allocation_all)), 
+                                           feed_allocation_all)
       
       
     }
