@@ -1,5 +1,3 @@
-# Feed quality calculation
-
 # Load required packages
 .packages = c("jsonlite","tidyverse", "lubridate", "data.table")
 .inst <- .packages %in% installed.packages()
@@ -17,4 +15,5 @@ para <- fromJSON(paste0(path,"/data/example.json"),  flatten = TRUE)
 
 energy_required <- energy_requirement(para)
 
+# Feed quality calculation
 feed_basket_quality <- feed_quality(para)

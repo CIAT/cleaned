@@ -105,15 +105,16 @@ feed_quality <- function(para) {
         
         feed_item <- as.data.frame(feed_selected[["feed_items"]])
         
-        feed_item <- feed_item %>% select(feed_item_code, feed_item_name, 
-                                          cp_content, me_content, dm_content)
+        # calculate me and dm fresh
+        feed_item <- feed_item %>% 
+          mutate_at(c("cp_content","me_content", "dm_content"), as.numeric) %>% 
+          select(feed_item_code, feed_item_name, cp_content, me_content, dm_content) %>% 
+          mutate(me_content_fresh = dm_content * me_content/100,
+                 cp_content_fresh = dm_content * cp_content/100, 
+                 de_fraction = me_content * 0.066) %>% 
+          select(feed_item_code, feed_item_name, cp_content_fresh, de_fraction, dm_content, me_content_fresh)
         
-        # Convert columns of interest to numeric
-        feed_item <- feed_item %>% mutate_at(c("cp_content", "me_content", 
-                                               "dm_content"), as.numeric) %>% mutate(de_fraction = me_content * 
-                                                                                       0.066)  # calculate de content
-        
-        
+
         # Extracting allocation
         feeding_seasons <- unnest(para[["livestock_feeding_seasons"]], 
                                   cols = c(livestock_categories)) %>% filter(season_name %in% 
@@ -153,13 +154,14 @@ feed_quality <- function(para) {
       
       # Gather
       feed_allocation_all <- feed_allocation_all %>% 
-        gather(feed_variables, value, cp_content:fraction_as_fed) %>% 
+        gather(feed_variables, value, cp_content_fresh:fraction_as_fed) %>% 
         spread(feed_item_name, value) %>% 
         mutate_at(c(2,8), as.numeric)
       
-      # Calculate fraction of dry matter
+      # calculate fraction of dry matter
       feed_allocation_all <- rbind(feed_allocation_all, c(feed_variables = "fraction_dry_matter", 
-                                   feed_allocation_all[feed_allocation_all$feed_variables == "fraction_as_fed", -1] * feed_allocation_all[feed_allocation_all$feed_variables == "dm_content", -1]/sum(unlist(feed_allocation_all[feed_allocation_all$feed_variables == "dm_content", -1]))))
+                                                          feed_allocation_all[feed_allocation_all$feed_variables == "fraction_as_fed", -1] * feed_allocation_all[feed_allocation_all$feed_variables == "dm_content", -1]/sum(unlist(feed_allocation_all[feed_allocation_all$feed_variables == "fraction_as_fed", -1] * feed_allocation_all[feed_allocation_all$feed_variables == "dm_content", -1]))))
+      
 
 
       # Bind and add into the season list
