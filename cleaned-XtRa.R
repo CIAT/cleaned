@@ -13,7 +13,8 @@ source("./cleanedFunctions.R")
 # Loading data
 para <- fromJSON(paste0(path,"/data/example.json"),  flatten = TRUE)
 
-energy_required <- energy_requirement(para)
-
 # Feed quality calculation
 feed_basket_quality <- feed_quality(para)
+
+# Energy requirement
+energy_required <- energy_requirement(para,feed_basket_quality)
