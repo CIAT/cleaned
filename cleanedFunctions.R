@@ -235,3 +235,95 @@ feed_quality <- function(para) {
   livestock_feed_allocation <- livestock_allocation %>% bind_rows()
   
 }
+
+land_requirement <- function(feed_basket_quality, energy_required, para){
+  
+  livestock_category_code <- unique(feed_basket_quality$livestock_category_code)
+  
+  livestock_requirements <- list()
+  
+  for (livestock in livestock_category_code){
+    
+    livestock_selected <- feed_basket_quality %>% 
+      filter(livestock == livestock_category_code)
+    
+    seasons <- unique(feed_basket_quality$season_name)
+    
+    seasonal_requirements <- list()
+    
+    for (season in seasons){
+      
+      # select feed and transpose the data
+      season_feeds <- livestock_selected %>% 
+        filter(season == season_name) %>% 
+        gather(feed,value,-season_name,-livestock_category_code,-livestock_category_name,-feed_variables)%>%
+        spread(feed_variables,value)
+      
+      # select form energy requirment sheet
+      season_selected_energy <- energy_required[2] %>% 
+        as.data.frame() %>% 
+        filter(livestock == livestock_category_code, season == season_name)
+      
+      feed_items <- unique(season_feeds$feed)
+      
+      land_requirements <- list()
+      
+      for (i in feed_items){
+        
+        # get crop yield
+        feed_production <- unnest(para[["feed_production"]], cols = c(feed_type_name))
+        feed_selected <- feed_production[feed_production$feed_type_name == i,]
+        
+        # get main product removal
+        feed_item_selected <- as.data.frame(feed_selected[["feed_items"]])
+        
+        # selected feed from season feeds above
+        selected_feed <- season_feeds[season_feeds$feed == i,]
+        
+        land_requirements[[i]] <- selected_feed %>% 
+          select(feed) %>% 
+          mutate(feed_item_dm = selected_feed$fraction_dry_matter*season_selected_energy$dmi_s,
+                 crop_yield = as.numeric(feed_selected$dry_yield)*1000,
+                 crop_removal = as.numeric(feed_item_selected$main_product_removal),
+                 cr_yield = as.numeric(feed_selected$residue_dry_yield)*1000,
+                 crop_residue_removal = ifelse(feed_item_selected$source_type == "Residue",
+                                               crop_residue_removal <- as.numeric(feed_item_selected$residue_removal),
+                                               crop_residue_removal <- 0),
+                 area_total = ifelse(feed_item_selected$source_type == "Main",
+                                     area_total <- feed_item_dm/(as.numeric(crop_yield)*as.numeric(crop_removal)),
+                                     ifelse(feed_item_selected$source_type != "Main",
+                                            area_total <- feed_item_dm/(as.numeric(cr_yield)*as.numeric(crop_residue_removal)),
+                                            area_total <- 0)),
+                 area_non_feed = ifelse(crop_residue_removal > 0,
+                                        area_non_feed <- area_total*(as.numeric(crop_yield)*as.numeric(crop_removal)/(as.numeric(crop_yield)*as.numeric(crop_removal)+as.numeric(cr_yield)*as.numeric(crop_removal))), 
+                                        area_non_feed <- 0),
+                 area_feed = ifelse(crop_residue_removal > 0,
+                                    area_feed <- area_total*(as.numeric(cr_yield)*as.numeric(crop_residue_removal)/(as.numeric(crop_yield)*as.numeric(crop_removal)+as.numeric(cr_yield)*as.numeric(crop_residue_removal))),
+                                    area_feed <- area_total*(crop_yield*crop_removal+crop_yield)/(crop_yield*crop_removal+cr_yield*crop_residue_removal))) %>% 
+          mutate_if(is.numeric, list(~na_if(.,Inf))) %>% 
+          replace(is.na(.), 0)
+        
+      }
+      
+      land_requirements <- land_requirements %>% bind_rows()
+      
+      
+      land_requirements <- cbind(season_name = rep(selected_feed$season_name, times = nrow(land_requirements)), 
+                                 livestock_category_code = rep(selected_feed$livestock_category_code, times = nrow(land_requirements)), 
+                                 livestock_category_name = rep(selected_feed$livestock_category_name, times = nrow(land_requirements)), 
+                                 land_requirements)
+      
+      # bind by rows and add into seasonal requirement list
+      seasonal_requirements[[season]] <- land_requirements %>% bind_rows()
+      
+      
+
+    }
+    
+    livestock_requirements[[livestock]] <- seasonal_requirements %>% bind_rows()
+
+  }
+  
+  land_requirements_all <- livestock_requirements %>% bind_rows()
+  
+}
