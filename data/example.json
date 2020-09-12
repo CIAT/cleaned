@@ -18,6 +18,7 @@
   "waste_processing_meat": "5",
   "waste_consume_milk": "2",
   "waste_consume_meat": "2",
+  "annual_precipitation": "3000",
   "rain_length": "222",
   "soil_description": "Andosol",
   "soil_k_value": "0.15",
