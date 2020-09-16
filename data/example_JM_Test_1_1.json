@@ -163,63 +163,230 @@
   ],
   "feed_production": [
     {
-      "feed_type_code": "Feed type code",
-      "feed_type_name": "Feed type description",
-      "is_concentrate": "Is concentrate",
-      "fresh_yield": "Main product Fresh Yield (t FW/ha)",
-      "dm_content": "Main product DM content fraction",
-      "dry_yield": "Main Product Dry Yield (t DM/ha)",
+      "feed_type_code": "01",
+      "feed_type_name": "Concentrate (commercial)",
+      "is_concentrate": "Yes",
+      "fresh_yield": "NA",
+      "dm_content": "NA",
+      "dry_yield": "NA",
       "harvest_index": "Average Harvest index",
-      "residue_fresh_yield": "Crop residue  Fresh yield (t FW/ha)",
-      "residue_dm_content": "Crop residue DM content fraction",
-      "residue_dry_yield": "Crop residue  Dry Yield(t DM/ha)",
-      "main_n": " Main product N conten (kg N/kg DM)",
-      "residue_n": "Crop residue N content (kg N/kg DM)",
-      "c_factor": "C (crop cover) factor",
-      "energy": "Energy  (kcal per FW 100g )",
-      "water_content": "Water content (g per 100 g)",
-      "usda_value": "USDA nutrition data base entry #",
-      "kc_initial": "Kc: Inital",
-      "kc_midseason": "Kc: MidSeason",
-      "kc_late": "Kc: Late",
+      "residue_fresh_yield": "NA",
+      "residue_dm_content": "NA",
+      "residue_dry_yield": "NA",
+      "main_n": "NA",
+      "residue_n": "NA",
+      "c_factor": "NA",
+      "energy": "NA",
+      "water_content": "NA",
+      "usda_value": "NA",
+      "kc_initial": "NA",
+      "kc_midseason": "NA",
+      "kc_late": "NA",
       "feed_items": [
         {
-          "feed_item_code": "Feed item code",
-          "feed_item_name": "Feed item description",
-          "source_type": "Crop product: 1=Purchased, 2=Main, 3= Residue",
-          "intercrop": "intercropping (1 = yes/0 = no)",
-          "intercrop_fraction": "If intercropping, fraction of field occupied by this crop",
-          "landcover_c_factor": "Land cover C factor",
-          "slope_p_factor": "Slope P factor",
-          "slope_length": "Length of slope (m)",
-          "grassman_change_factor": "Grassland management IPCC change factor",
-          "main_product_removal": "Main product removal (fraction)",
-          "residue_removal": "Crop residue removal from field (fraction)",
-          "residue_burnt": "Crop residue burnt (fraction)",
-          "fertilizer_rate": "Fertilizer rate per crop (kg N/ha)",
-          "manure_fraction": "Fraction of collected manure used for fertilization",
-          "dm_content": "DM content (%)",
-          "me_content": "ME content (MJ/kg DM)",
-          "cp_content": "CP content (% DM)",
-          "establishment_cost": "Establishment cost (USD/ha)",
-          "operational_cost": "Operational costs (USD/yr/ha)",
-          "establishment_labour": "Establishment labour (days/ha)",
-          "operational_labour": "Operational labour (days/yr/ha)"
+          "feed_item_code": "01",
+          "feed_item_name": "Concentrate (commercial)",
+          "source_type": "Purchased",
+          "intercrop": "0.00",
+          "intercrop_fraction": "0.00",
+          "landcover_c_factor": "Dense grass",
+          "slope_p_factor": "Hilly (5-20%)",
+          "slope_length": "15",
+          "grassman_change_factor": "NA",
+          "main_product_removal": "1",
+          "residue_removal": "NA",
+          "residue_burnt": "0",
+          "fertilizer_rate": "0.00",
+          "manure_fraction": "0.00",
+          "dm_content": "90",
+          "me_content": "12.10",
+          "cp_content": "16.00",
+          "establishment_cost": "NA",
+          "operational_cost": "0.30",
+          "establishment_labour": "NA",
+          "operational_labour": "NA"
+        }
+      ]
+    },
+    {
+      "feed_type_code": "02",
+      "feed_type_name": "Naturally occuring pasture - green fodder",
+      "is_concentrate": "No",
+      "fresh_yield": "45.0",
+      "dm_content": "0.29",
+      "dry_yield": "13.05",
+      "harvest_index": "0.90",
+      "residue_fresh_yield": "5.0",
+      "residue_dm_content": "1.00",
+      "residue_dry_yield": "5.0",
+      "main_n": "0.01",
+      "residue_n": "0.00",
+      "c_factor": "0.05",
+      "energy": "NA",
+      "water_content": "NA",
+      "usda_value": "NA",
+      "kc_initial": "0.30",
+      "kc_midseason": "0.75",
+      "kc_late": "0.75",
+      "feed_items": [
+        {
+          "feed_item_code": "02",
+          "feed_item_name": "Naturally occuring pasture - green fodder ",
+          "source_type": "Main",
+          "intercrop": "0.00",
+          "intercrop_fraction": "0.00",
+          "landcover_c_factor": "Dense grass",
+          "slope_p_factor": "Steep (20-30%)",
+          "slope_length": "30",
+          "grassman_change_factor": "NA",
+          "main_product_removal": "1",
+          "residue_removal": "NA",
+          "residue_burnt": "0",
+          "fertilizer_rate": "0.00",
+          "manure_fraction": "0.00",
+          "dm_content": "29.05",
+          "me_content": "6.55",
+          "cp_content": "7.5",
+          "establishment_cost": "NA",
+          "operational_cost": "NA",
+          "establishment_labour": "NA",
+          "operational_labour": "NA"
+        }
+      ]
+    },
+    {
+      "feed_type_code": "03",
+      "feed_type_name": "Maize (Zea mays)-stover",
+      "is_concentrate": "No",
+      "fresh_yield": "4.33",
+      "dm_content": "0.30",
+      "dry_yield": "1.30",
+      "harvest_index": "0.52",
+      "residue_fresh_yield": "4.00",
+      "residue_dm_content": "0.90",
+      "residue_dry_yield": "3.58",
+      "main_n": "0.013",
+      "residue_n": "0.006",
+      "c_factor": "NA",
+      "energy": "365",
+      "water_content": "10.37",
+      "usda_value": "20314.00",
+      "kc_initial": "0.150",
+      "kc_midseason": "1.20",
+      "kc_late": "0.60",
+      "feed_items": [
+        {
+          "feed_item_code": "03",
+          "feed_item_name": "Maize (Zea mays)-stover",
+          "source_type": "Residue",
+          "intercrop": "0.00",
+          "intercrop_fraction": "0.00",
+          "landcover_c_factor": "Maize",
+          "slope_p_factor": "Steep (20-30%)",
+          "slope_length": "30",
+          "grassman_change_factor": "Severely degraded",
+          "main_product_removal": "0.4",
+          "residue_removal": "0.6",
+          "residue_burnt": "0",
+          "fertilizer_rate": "15.00",
+          "manure_fraction": "0.20",
+          "dm_content": "87",
+          "me_content": "6.90",
+          "cp_content": "3.90",
+          "establishment_cost": "NA",
+          "operational_cost": "NA",
+          "establishment_labour": "NA",
+          "operational_labour": "NA"
         }
       ]
     }
   ],
   "livestock_feeding_seasons": [
     {
-      "season_name": "Name of the season",
+      "season_name": "Wet Season",
       "livestock_categories": [
         {
-          "livestock_category_code": "Livestock category code",
+          "livestock_category_code": "01",
           "allocation:": [
             {
-              "feed_type_code": "Feed type code",
-              "feed_item_code": "Feed item code",
-              "allocation": "Allocation in %"
+              "feed_type_code": "01",
+              "feed_item_code": "01",
+              "allocation": "5"
+            },
+            {
+              "feed_type_code": "02",
+              "feed_item_code": "02",
+              "allocation": "52"
+            },
+            {
+              "feed_type_code": "03",
+              "feed_item_code": "03",
+              "allocation": "43"
+            }
+          ]
+        },
+        {
+          "livestock_category_code": "02",
+          "allocation:": [
+            {
+              "feed_type_code": "01",
+              "feed_item_code": "01",
+              "allocation": "5"
+            },
+            {
+              "feed_type_code": "02",
+              "feed_item_code": "02",
+              "allocation": "52"
+            },
+            {
+              "feed_type_code": "03",
+              "feed_item_code": "03",
+              "allocation": "43"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "season_name": "Dry Season",
+      "livestock_categories": [
+        {
+          "livestock_category_code": "01",
+          "allocation:": [
+            {
+              "feed_type_code": "01",
+              "feed_item_code": "01",
+              "allocation": "5"
+            },
+            {
+              "feed_type_code": "02",
+              "feed_item_code": "02",
+              "allocation": "52"
+            },
+            {
+              "feed_type_code": "03",
+              "feed_item_code": "03",
+              "allocation": "43"
+            }
+          ]
+        },
+        {
+          "livestock_category_code": "02",
+          "allocation:": [
+            {
+              "feed_type_code": "01",
+              "feed_item_code": "01",
+              "allocation": "5"
+            },
+            {
+              "feed_type_code": "02",
+              "feed_item_code": "02",
+              "allocation": "52"
+            },
+            {
+              "feed_type_code": "03",
+              "feed_item_code": "03",
+              "allocation": "43"
             }
           ]
         }
