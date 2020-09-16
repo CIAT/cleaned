@@ -125,9 +125,9 @@ energy_requirement <- function(para,feed_basket_quality){
 # Compute feed quality
 feed_quality <- function(para) {
   
-  livestock <- para[["livestock"]]
+  livestock_df <- para[["livestock"]]
   
-  livestock_category_names <- c(livestock$livestock_category_code)
+  livestock_category_names <- c(livestock_df$livestock_category_code)
   
   livestock_allocation <- list()
   
@@ -170,30 +170,32 @@ feed_quality <- function(para) {
                                   cols = c(livestock_categories)) %>% filter(season_name %in% 
                                                                                seasons$season_name[season])
         
-        
-        feeding_seasons <- feeding_seasons %>% mutate(livestock_category_name = ifelse(livestock_category_code %in% 
-                                                                                         "01", "Cows (local)", ifelse(livestock_category_code %in% 
-                                                                                                                        "02", "Cows (improved)", ifelse(livestock_category_code %in% 
-                                                                                                                                                          "03", "Adult cattle - male", ifelse(livestock_category_code %in% 
-                                                                                                                                                                                                "04", "Calves", ifelse(livestock_category_code %in% "05", 
-                                                                                                                                                                                                                       "Buffalo (dairy)", ifelse(livestock_category_code %in% 
-                                                                                                                                                                                                                                                   "06", "Sheep/Goats - Ewes/Does", ifelse(livestock_category_code %in% 
-                                                                                                                                                                                                                                                                                             "07", "Pigs - lactating/pregnant sows", ifelse(livestock_category_code %in% 
-                                                                                                                                                                                                                                                                                                                                              "08", "Calves", ifelse(livestock_category_code %in% 
-                                                                                                                                                                                                                                                                                                                                                                       "09", "Cows (high productive)", "Error"))))))))))
+        feeding_seasons <- feeding_seasons %>% 
+          mutate(livestock_category_name = ifelse(feeding_seasons$livestock_category_code  == livestock_df$livestock_category_code, livestock_df$livestock_category_name, NA))
         
         
+        # feeding_seasons <- feeding_seasons %>% 
+        #   mutate(livestock_category_name = ifelse(livestock_category_code %in% "01", "Cows (local)", 
+        #                                           ifelse(livestock_category_code %in% "02", "Cows (improved)", 
+        #                                                  ifelse(livestock_category_code %in% "03", "Adult cattle - male", 
+        #                                                         ifelse(livestock_category_code %in% "04", "Calves", 
+        #                                                                ifelse(livestock_category_code %in% "05", "Buffalo (dairy)", 
+        #                                                                       ifelse(livestock_category_code %in% "06", "Sheep/Goats - Ewes/Does", 
+        #                                                                              ifelse(livestock_category_code %in% "07", "Pigs - lactating/pregnant sows", 
+        #                                                                                     ifelse(livestock_category_code %in% "08", "Calves", 
+        #                                                                                            ifelse(livestock_category_code %in% "09", "Cows (high productive)", 
+        #                                                                                                   "Error"))))))))))
         
         
         
-        livestock_selected <- feeding_seasons[feeding_seasons$livestock_category_code == 
-                                                livestock, ]
+        
+        
+        livestock_selected <- feeding_seasons[feeding_seasons$livestock_category_code == livestock, ]
         
         feed_item_select <- as.data.frame(livestock_selected[["allocation:"]])
         
         # select feed item
-        feed_item_selected <- feed_item_select[feed_item_select$feed_item_code == 
-                                                 feed_item$feed_item_code, ]
+        feed_item_selected <- feed_item_select[feed_item_select$feed_item_code == feed_item$feed_item_code, ]
         
         feed_allocation[[i]] <- feed_item %>% mutate(fraction_as_fed = as.numeric(feed_item_selected$allocation)/100)
       }
