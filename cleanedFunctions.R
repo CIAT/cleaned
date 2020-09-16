@@ -206,7 +206,7 @@ feed_quality <- function(para) {
       feed_allocation_all <- feed_allocation_all %>% 
         gather(feed_variables, value, cp_content_fresh:fraction_as_fed) %>% 
         spread(feed_item_name, value) %>% 
-        mutate_at(c(2,8), as.numeric)
+        mutate_at(-1, as.numeric)
       
       # calculate fraction of dry matter
       feed_allocation_all <- rbind(feed_allocation_all, c(feed_variables = "fraction_dry_matter", 
