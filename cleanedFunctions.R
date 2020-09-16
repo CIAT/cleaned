@@ -235,3 +235,216 @@ feed_quality <- function(para) {
   livestock_feed_allocation <- livestock_allocation %>% bind_rows()
   
 }
+
+land_requirement <- function(feed_basket_quality, energy_required, para){
+  
+  livestock_category_code <- unique(feed_basket_quality$livestock_category_code)
+  
+  livestock_requirements <- list()
+  
+  for (livestock in livestock_category_code){
+    
+    livestock_selected <- feed_basket_quality %>% 
+      filter(livestock == livestock_category_code)
+    
+    seasons <- unique(feed_basket_quality$season_name)
+    
+    seasonal_requirements <- list()
+    
+    for (season in seasons){
+      
+      # select feed and transpose the data
+      season_feeds <- livestock_selected %>% 
+        filter(season == season_name) %>% 
+        gather(feed,value,-season_name,-livestock_category_code,-livestock_category_name,-feed_variables)%>%
+        spread(feed_variables,value)
+      
+      # select form energy requirment sheet
+      season_selected_energy <- energy_required[2] %>% 
+        as.data.frame() %>% 
+        filter(livestock == livestock_category_code, season == season_name)
+      
+      feed_items <- unique(season_feeds$feed)
+      
+      land_requirements <- list()
+      
+      for (i in feed_items){
+        
+        # get crop yield
+        feed_production <- unnest(para[["feed_production"]], cols = c(feed_type_name))
+        feed_selected <- feed_production[feed_production$feed_type_name == i,]
+        
+        # get main product removal
+        feed_item_selected <- as.data.frame(feed_selected[["feed_items"]])
+        
+        # selected feed from season feeds above
+        selected_feed <- season_feeds[season_feeds$feed == i,]
+        
+        land_requirements[[i]] <- selected_feed %>% 
+          select(feed) %>% 
+          mutate(feed_item_dm = selected_feed$fraction_dry_matter*season_selected_energy$dmi_s,
+                 crop_yield = as.numeric(feed_selected$dry_yield)*1000,
+                 crop_removal = as.numeric(feed_item_selected$main_product_removal),
+                 cr_yield = as.numeric(feed_selected$residue_dry_yield)*1000,
+                 crop_residue_removal = ifelse(feed_item_selected$source_type == "Residue",
+                                               crop_residue_removal <- as.numeric(feed_item_selected$residue_removal),
+                                               crop_residue_removal <- 0),
+                 area_total = ifelse(feed_item_selected$source_type == "Main",
+                                     area_total <- feed_item_dm/(as.numeric(crop_yield)*as.numeric(crop_removal)),
+                                     ifelse(feed_item_selected$source_type != "Main",
+                                            area_total <- feed_item_dm/(as.numeric(cr_yield)*as.numeric(crop_residue_removal)),
+                                            area_total <- 0)),
+                 area_non_feed = ifelse(crop_residue_removal > 0,
+                                        area_non_feed <- area_total*(as.numeric(crop_yield)*as.numeric(crop_removal)/(as.numeric(crop_yield)*as.numeric(crop_removal)+as.numeric(cr_yield)*as.numeric(crop_removal))), 
+                                        area_non_feed <- 0),
+                 area_feed = ifelse(crop_residue_removal > 0,
+                                    area_feed <- area_total*(as.numeric(cr_yield)*as.numeric(crop_residue_removal)/(as.numeric(crop_yield)*as.numeric(crop_removal)+as.numeric(cr_yield)*as.numeric(crop_residue_removal))),
+                                    area_feed <- area_total*(crop_yield*crop_removal+crop_yield)/(crop_yield*crop_removal+cr_yield*crop_residue_removal))) %>% 
+          mutate_if(is.numeric, list(~na_if(.,Inf))) %>% 
+          replace(is.na(.), 0)
+        
+      }
+      
+      land_requirements <- land_requirements %>% bind_rows()
+      
+      
+      land_requirements <- cbind(season_name = rep(selected_feed$season_name, times = nrow(land_requirements)), 
+                                 livestock_category_code = rep(selected_feed$livestock_category_code, times = nrow(land_requirements)), 
+                                 livestock_category_name = rep(selected_feed$livestock_category_name, times = nrow(land_requirements)), 
+                                 land_requirements)
+      
+      # bind by rows and add into seasonal requirement list
+      seasonal_requirements[[season]] <- land_requirements %>% bind_rows()
+      
+      
+
+    }
+    
+    livestock_requirements[[livestock]] <- seasonal_requirements %>% bind_rows()
+
+  }
+  
+  land_requirements_all <- livestock_requirements %>% bind_rows()
+  
+}
+
+# compute soil health
+soil_health <- function(para, land_required) {
+  
+  no_days <- 365
+  
+  soil_type <- para[["soil_description"]]
+  
+  erosivity_r <- 0.55*(as.numeric(para[["annual_precipitation"]])/(as.numeric(para[["rain_length"]])/30))-4.7
+  
+  erodibility_k <- as.numeric(para[["soil_k_value"]])
+  
+  feed_production <- unnest(para[["feed_production"]], cols = c(feed_type_name))
+  
+  feed_types <- unique(feed_production$feed_type_name)
+  
+  soil_erosion_all_feed <- list()
+  
+  for (i in feed_types){
+    
+    feed_type <- i
+    
+    feed_selected <- feed_production[feed_production$feed_type_name == i,]
+    
+    feed_item_selected <- as.data.frame(feed_selected[["feed_items"]])
+    
+    slope_p_factor <- feed_item_selected$slope_p_factor
+    
+    slope_length <- feed_item_selected$slope_length
+    
+    slope_steepness_length_conversion <- function(x, y){
+      z <- ifelse(x == "Flat (0-5%)" & y == "1", 0.3, 
+                  ifelse(x == "Hilly (5-20%)" & y == "1", 0.52, 
+                         ifelse(x == "Steep (20-30%)" & y == "1", 0.59, 
+                                ifelse(x == "Extremely steep (30%+)" & y == "1", 0.65, 
+                                       ifelse(x == "Flat (0-5%)" & y == "3", 0.3, 
+                                              ifelse(x == "Hilly (5-20%)" & y == "3", 0.85, 
+                                                     ifelse(x == "Steep (20-30%)" & y == "3", 1.13, 
+                                                            ifelse(x == "Extremely steep (30%+)" & y == "3", 1.36, 
+                                                                   ifelse(x == "Flat (0-5%)" & y == "5", 0.3,
+                                                                          ifelse(x == "Hilly (5-20%)" & y == "5", 1.06,
+                                                                                 ifelse(x == "Steep (20-30%)" & y == "5", 1.53,
+                                                                                        ifelse(x == "Extremely steep (30%+)" & y == "5", 1.95, 
+                                                                                               ifelse(x == "Flat (0-5%)" & y == "15", 0.49,
+                                                                                                      ifelse(x == "Hilly (5-20%)" & y == "15", 2.22,
+                                                                                                             ifelse(x == "Steep (20-30%)" & y == "15", 3.39,
+                                                                                                                    ifelse(x == "Extremely steep (30%+)" & y == "15", 4.45, 
+                                                                                                                           ifelse(x == "Flat (0-5%)" & y == "30", 0.65,
+                                                                                                                                  ifelse(x == "Hilly (5-20%)" & y == "30", 3.4,
+                                                                                                                                         ifelse(x == "Steep (20-30%)" & y == "30", 5.34,
+                                                                                                                                                ifelse(x == "Extremely steep (30%+)" & y == "30", 7.14, 
+                                                                                                                                                       ifelse(x == "Flat (0-5%)" & y == "90", 1.01,
+                                                                                                                                                              ifelse(x == "Hilly (5-20%)" & y == "90", 6.68,
+                                                                                                                                                                     ifelse(x == "Steep (20-30%)" & y == "90", 11.01,
+                                                                                                                                                                            ifelse(x == "Extremely steep (30%+)" & y == "90", 15.14, NA))))))))))))))))))))))))
+      return(z)
+    }
+    
+    ls <- slope_steepness_length_conversion(slope_p_factor, slope_length)
+    
+    # calculate cover factor
+    landcover_c_factor <- feed_item_selected$landcover_c_factor
+    
+    landcover_c_factor_conversion <- function(x){
+      
+      z <- ifelse(x == "Dense forest", 0.001, 
+                  ifelse(x == "Other forest", 0.05, 
+                         ifelse(x == "Badlands hard", 0.05, 
+                                ifelse(x == "Badlands soft", 0.4, 
+                                       ifelse(x == "Sorghum", 0.1, 
+                                              ifelse(x == "Maize", 0.1, 
+                                                     ifelse(x == "Cereals", 0.15, 
+                                                            ifelse(x == "Pulses", 0.15, 
+                                                                   ifelse(x == "Dense grass", 0.01, 
+                                                                          ifelse(x == "Degraded grass", 0.05, 
+                                                                                 ifelse(x == "Fallow hard", 0.05, 
+                                                                                        ifelse(x == "Fallow plouged", 0.6, 
+                                                                                               ifelse(x == "Ethiopian teff", 0.25, 
+                                                                                                      ifelse(x == "Continuous fallow", 1, NA))))))))))))))
+      return(z)
+      
+    }
+    
+    c_factor <- landcover_c_factor_conversion(landcover_c_factor)
+    
+    
+    # calculate management factor
+    management_factor_conversion <- function(x){
+      
+      ifelse(x == "Flat (0-5%)", 0.11, 
+             ifelse(x == "Hilly (5-20%)", 0.13, 
+                    ifelse(x == "Steep (20-30%)", 0.22, 
+                           ifelse(x == "Extremely steep (30%+)", 0.37, 1))))
+      
+    }
+    
+    p_factor <- management_factor_conversion(slope_p_factor)
+    
+    # calculate Soil loss (t/ha/year)
+    soil_loss_ha_year <- erosivity_r*erodibility_k*ls*c_factor*p_factor
+    
+    # select feed from land rquired dataframe
+    land_required_feed_selected <- land_required[land_required$feed == i,]
+    
+    # land requirement for feed production (ha)
+    land_required_feed_selected <- sum(land_required_feed_selected$area_feed)
+    
+    # calculate Soil loss (t/plot/ season)
+    soil_loss_plot <- soil_loss_ha_year*land_required_feed_selected
+    
+    # write data into a dataframe
+    soil_erosion_per_feed <- as.data.frame(cbind(feed_type, soil_type, erosivity_r, erodibility_k, ls, c_factor, p_factor, soil_loss_ha_year, soil_loss_plot))
+    
+    
+    soil_erosion_all_feed[[i]] <- soil_erosion_per_feed
+
+  }
+  
+  soil_erosion_all_feed <- soil_erosion_all_feed %>% bind_rows()
+  
+}
