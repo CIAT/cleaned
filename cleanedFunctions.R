@@ -238,6 +238,7 @@ feed_quality <- function(para) {
   
 }
 
+# Compute land requirements
 land_requirement <- function(feed_basket_quality, energy_required, para){
   
   livestock_category_code <- unique(feed_basket_quality$livestock_category_code)
@@ -330,7 +331,7 @@ land_requirement <- function(feed_basket_quality, energy_required, para){
   
 }
 
-# compute soil health
+# Compute soil health
 soil_health <- function(para, land_required) {
   
   no_days <- 365
