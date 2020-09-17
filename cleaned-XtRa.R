@@ -1,3 +1,6 @@
+# clear your work space
+rm(list = ls(all = TRUE))
+
 # Load required packages
 .packages = c("jsonlite","tidyverse", "lubridate", "data.table", "tidyr", "dplyr")
 .inst <- .packages %in% installed.packages()
