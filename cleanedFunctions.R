@@ -290,19 +290,15 @@ land_requirement <- function(feed_basket_quality, energy_required, para){
                  crop_removal = as.numeric(feed_item_selected$main_product_removal),
                  cr_yield = as.numeric(feed_selected$residue_dry_yield)*1000,
                  crop_residue_removal = ifelse(feed_item_selected$source_type == "Residue",
-                                               crop_residue_removal <- as.numeric(feed_item_selected$residue_removal),
-                                               crop_residue_removal <- 0),
-                 area_total = ifelse(feed_item_selected$source_type == "Main",
-                                     area_total <- feed_item_dm/(as.numeric(crop_yield)*as.numeric(crop_removal)),
-                                     ifelse(feed_item_selected$source_type != "Main",
-                                            area_total <- feed_item_dm/(as.numeric(cr_yield)*as.numeric(crop_residue_removal)),
-                                            area_total <- 0)),
+                                               as.numeric(feed_item_selected$residue_removal), 0),
+                 area_total = ifelse(feed_item_selected$source_type == "Main", 
+                                     feed_item_dm/(crop_yield*crop_removal),
+                                     ifelse(feed_item_selected$source_type != "Main", feed_item_dm/(cr_yield*crop_residue_removal), 0)),
                  area_non_feed = ifelse(crop_residue_removal > 0,
-                                        area_non_feed <- area_total*(as.numeric(crop_yield)*as.numeric(crop_removal)/(as.numeric(crop_yield)*as.numeric(crop_removal)+as.numeric(cr_yield)*as.numeric(crop_removal))), 
-                                        area_non_feed <- 0),
-                 area_feed = ifelse(crop_residue_removal > 0,
-                                    area_feed <- area_total*(as.numeric(cr_yield)*as.numeric(crop_residue_removal)/(as.numeric(crop_yield)*as.numeric(crop_removal)+as.numeric(cr_yield)*as.numeric(crop_residue_removal))),
-                                    area_feed <- area_total*(crop_yield*crop_removal+crop_yield)/(crop_yield*crop_removal+cr_yield*crop_residue_removal))) %>% 
+                                        area_total*(crop_yield*crop_removal)/(crop_yield*crop_removal+cr_yield*crop_residue_removal), 0),
+                 area_feed = ifelse(crop_residue_removal > 0, 
+                                    area_total*(cr_yield*crop_residue_removal)/(crop_yield*crop_removal+cr_yield*crop_residue_removal), 
+                                    area_total*(crop_yield*crop_removal+cr_yield*crop_residue_removal)/(crop_yield*crop_removal+cr_yield*crop_residue_removal))) %>% 
           mutate_if(is.numeric, list(~na_if(.,Inf))) %>% 
           replace(is.na(.), 0)
         
