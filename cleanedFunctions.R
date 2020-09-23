@@ -604,6 +604,8 @@ nitrogen_balance <- function(para, land_required){
     # Atmospheric deposition
     in3 <- 0.14*sqrt(annual_precipitation)*area_total
     
+    in4 <- ifelse(area_total > 0, 2 + (annual_precipitation - 1350) * 0.005 * area_total, 0)
+    
 
     # write data into a dataframe
     n_balance <- as.data.frame(cbind(feed, 
