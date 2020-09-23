@@ -505,3 +505,134 @@ water_requirement <- function(para,land_required){
   #returning results
   return(water_use)
 } #end of water function
+
+
+# Compute N balance
+nitrogen_balance <- function(para, land_required){
+  
+  feed_types <- unique(land_required$feed)
+  
+  for (feed in feed_types){
+    
+    feed_production <- unnest(para[["feed_production"]], cols = c(feed_type_name))
+    
+    feed_production <- na_if(feed_production, "NA") %>% 
+      as.data.frame()
+    
+    feed_production[is.na(feed_production)] <- 0
+    
+    feed_selected <- feed_production[feed_production$feed_type_name == feed,]
+    
+    dry_yield <- feed_selected$dry_yield
+    
+    residue_dry_yield <- feed_selected$residue_dry_yield
+    
+    main_n <- feed_selected$main_n
+    
+    residue_n <- feed_selected$residue_n
+    
+    n_fixing <- ifelse(feed_selected$feed_category == "Legume", 0.5*(residue_n*residue_dry_yield+main_n*dry_yield)*1000, 0)
+    
+    feed_selected_land_required <- land_required[land_required$feed == feed,]
+    
+    area_total <- sum(feed_selected_land_required$area_feed)
+    
+    feed_item_selected <- as.data.frame(feed_selected[["feed_items"]])
+    
+    feed_item_selected <- na_if(feed_item_selected, "NA") %>% 
+      as.data.frame()
+    
+    feed_item_selected[is.na(feed_item_selected)] <- 0
+    
+    manure_fraction <- as.numeric(feed_item_selected$manure_fraction)
+    
+    fertilizer_rate <- as.numeric(feed_item_selected$fertilizer_rate)
+    
+    main_product_removal <- as.numeric(feed_item_selected$main_product_removal)
+    
+    residue_removal <- as.numeric(feed_item_selected$residue_removal)
+    
+    sum_n_content_manure_grazing <- energy_required[1] %>% 
+      as.data.frame() %>% 
+      summarise(sum(n_content_manure_grazing)) %>% 
+      as.numeric()
+    
+    yield_dm_ha <- as.numeric(dry_yield)*1000
+    
+    main_product_removed <- yield_dm_ha*main_product_removal
+    
+    n_content_manure_collected <- energy_required[1] %>% 
+      as.data.frame() %>% 
+      summarise(sum(n_content_manure_collected)) %>% 
+      as.numeric()
+    
+    animal_manure_collected <- n_content_manure_collected*manure_fraction
+    
+    organic_n_imported <- manure_fraction*(as.numeric(para$purchased_manure)+as.numeric(para$purchased_compost)+as.numeric(para$purchased_organic_n)+as.numeric(para$purchased_bedding))
+    
+    crop_residue_dm_ha <- as.numeric(feed_selected$residue_dry_yield)*1000
+    
+    residue_removal <- as.numeric(feed_item_selected$residue_removal)
+    
+    main_product_removed_kg <- area_total*main_product_removed
+    
+    residue_removed_dm_ha <- crop_residue_dm_ha*residue_removal
+    
+    residue_removed_kg <- area_total*residue_removed_dm_ha
+    
+    annual_precipitation <- as.numeric(para[["annual_precipitation"]])
+    
+    soil_n <- as.numeric(para[["soil_n"]])
+    
+    ntot_kg_ha_20cm <- soil_n*20*as.numeric(para[["soil_bulk"]])*10
+    
+    n_mineralized_kg_ha_year <- ntot_kg_ha_20cm*0.03
+    
+    soil_c <- as.numeric(para[["soil_c"]])
+    
+    soil_clay <- as.numeric(para[["soil_clay"]])
+    
+    # N content (kg N/kg DM)
+    ncrop <- as.numeric(feed_selected$main_n)
+    
+    # N content (kg N /kg DM)
+    nres <- as.numeric(feed_selected$residue_n)
+    
+    # Mineral fertilizer
+    in1 <- area_total*fertilizer_rate
+    
+    # Atmospheric deposition
+    in3 <- 0.14*sqrt(annual_precipitation)*area_total
+    
+
+    # write data into a dataframe
+    n_balance <- as.data.frame(cbind(feed, 
+                                     n_fixing, 
+                                     area_total, 
+                                     fertilizer_rate, 
+                                     animal_manure_collected,
+                                     organic_n_imported,
+                                     yield_dm_ha,
+                                     crop_residue_dm_ha,
+                                     residue_removal,
+                                     main_product_removal,
+                                     main_product_removed,
+                                     main_product_removed_kg,
+                                     residue_removed_dm_ha,
+                                     residue_removed_kg,
+                                     annual_precipitation,
+                                     soil_n,
+                                     ntot_kg_ha_20cm,
+                                     n_mineralized_kg_ha_year,
+                                     soil_c,
+                                     soil_clay,
+                                     ncrop,
+                                     nres,
+                                     in1))
+    
+    
+  }
+  
+  
+}
+
