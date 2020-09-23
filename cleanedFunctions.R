@@ -508,7 +508,7 @@ water_requirement <- function(para,land_required){
 
 
 # Compute N balance
-nitrogen_balance <- function(para, land_required){
+nitrogen_balance <- function(para, land_required, soil_erosion){
   
   feed_types <- unique(land_required$feed)
   
@@ -601,10 +601,50 @@ nitrogen_balance <- function(para, land_required){
     # Mineral fertilizer
     in1 <- area_total*fertilizer_rate
     
+    # calculate in2
+    
     # Atmospheric deposition
     in3 <- 0.14*sqrt(annual_precipitation)*area_total
     
-    in4 <- ifelse(area_total > 0, 2 + (annual_precipitation - 1350) * 0.005 * area_total, 0)
+    # Non-symbiotic N fixation
+    in4a <- ifelse(area_total > 0, 2 + (annual_precipitation - 1350) * 0.005 * area_total, 0)
+    
+    # Symbiotic N-fixation
+    in4b <- n_fixing * area_total
+    
+    # Crop yield  (kgN)
+    out1 <- area_total*main_product_removed*ncrop
+    
+    # Crop residue (KgN)
+    out2 <- ifelse(feed_item_selected$source_type == "Main", 0, residue_removed_kg * residue_n * area_total)
+    
+    # # N leached (kg N/ha/yr) @clay < 35%
+    # out3a <- (n_mineralized_kg_ha_year + fertilizer_rate + in2) * (0.021 * (annual_precipitation - 3.9) / 100)
+    
+    # # N leached (kg N/ha/yr) @clay >35% and <55%)
+    # out3b <- (n_mineralized_kg_ha_year + fertilizer_rate + in2) * (0.014 * annual_precipitation + 0.71) / 100
+    
+    # # N leached (kg N/ha/yr) @clay >55%)
+    # out3c <- (n_mineralized_kg_ha_year + fertilizer_rate + in2) * (0.0071 * annual_precipitation + 5.4) / 100
+    
+    # Soil clay content
+    soil_clay <- soil_type <- para[["soil_clay"]]
+    
+    # # Leaching
+    # out3 <- ifelse(soil_clay <=35, out3a, 
+    #                ifelse(soil_clay >= 35, out3c, out3b))
+    
+    # # Gaseous losses
+    # out4 <- ((n_mineralized_kg_ha_year + fertilizer_rate + in2) * (-9.4 + 0.13 * soil_clay + (0.01 * annual_precipitation)) / 100) * area_total
+    
+    # soil loss per plot per feed type
+    soil_loss_plot <- as.numeric(soil_erosion[soil_erosion$feed_type == feed,]$soil_loss_plot)
+
+    # Soil erosion
+    out5 <- soil_loss_plot*soil_n*1.5
+    
+    # #N in
+    # nin <- ifelse(area_total>0, in1+in2+in3+in4a+in4b, 0)
     
 
     # write data into a dataframe
@@ -630,7 +670,14 @@ nitrogen_balance <- function(para, land_required){
                                      soil_clay,
                                      ncrop,
                                      nres,
-                                     in1))
+                                     in1,
+                                     in3,
+                                     in4a,
+                                     in4b,
+                                     out1,
+                                     out2,
+                                     soil_clay,
+                                     out5))
     
     
   }
