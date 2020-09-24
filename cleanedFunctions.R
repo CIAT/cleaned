@@ -512,6 +512,8 @@ nitrogen_balance <- function(para, land_required, soil_erosion){
   
   feed_types <- unique(land_required$feed)
   
+  n_balance <- list()
+  
   for (feed in feed_types){
     
     feed_production <- unnest(para[["feed_production"]], cols = c(feed_type_name))
@@ -529,7 +531,7 @@ nitrogen_balance <- function(para, land_required, soil_erosion){
     
     main_n <- feed_selected$main_n
     
-    residue_n <- feed_selected$residue_n
+    residue_n <- as.numeric(feed_selected$residue_n)
     
     n_fixing <- ifelse(feed_selected$feed_category == "Legume", 0.5*(residue_n*residue_dry_yield+main_n*dry_yield)*1000, 0)
     
@@ -559,7 +561,7 @@ nitrogen_balance <- function(para, land_required, soil_erosion){
     
     yield_dm_ha <- as.numeric(dry_yield)*1000
     
-    main_product_removed <- yield_dm_ha*main_product_removal
+    main_product_removed_kg_ha <- yield_dm_ha*main_product_removal
     
     n_content_manure_collected <- energy_required[1] %>% 
       as.data.frame() %>% 
@@ -574,7 +576,7 @@ nitrogen_balance <- function(para, land_required, soil_erosion){
     
     residue_removal <- as.numeric(feed_item_selected$residue_removal)
     
-    main_product_removed_kg <- area_total*main_product_removed
+    main_product_removed_kg <- area_total*main_product_removed_kg_ha
     
     residue_removed_dm_ha <- crop_residue_dm_ha*residue_removal
     
@@ -607,35 +609,19 @@ nitrogen_balance <- function(para, land_required, soil_erosion){
     in3 <- 0.14*sqrt(annual_precipitation)*area_total
     
     # Non-symbiotic N fixation
-    in4a <- ifelse(area_total > 0, 2 + (annual_precipitation - 1350) * 0.005 * area_total, 0)
+    in4a <- ifelse(area_total > 0, (2 + (annual_precipitation - 1350) * 0.005) * area_total, 0)
     
     # Symbiotic N-fixation
     in4b <- n_fixing * area_total
     
     # Crop yield  (kgN)
-    out1 <- area_total*main_product_removed*ncrop
+    out1 <- area_total*main_product_removed_kg_ha*ncrop
     
     # Crop residue (KgN)
-    out2 <- ifelse(feed_item_selected$source_type == "Main", 0, residue_removed_kg * residue_n * area_total)
-    
-    # # N leached (kg N/ha/yr) @clay < 35%
-    # out3a <- (n_mineralized_kg_ha_year + fertilizer_rate + in2) * (0.021 * (annual_precipitation - 3.9) / 100)
-    
-    # # N leached (kg N/ha/yr) @clay >35% and <55%)
-    # out3b <- (n_mineralized_kg_ha_year + fertilizer_rate + in2) * (0.014 * annual_precipitation + 0.71) / 100
-    
-    # # N leached (kg N/ha/yr) @clay >55%)
-    # out3c <- (n_mineralized_kg_ha_year + fertilizer_rate + in2) * (0.0071 * annual_precipitation + 5.4) / 100
+    out2 <- ifelse(feed_item_selected$source_type == "Main", 0, residue_removed_dm_ha * nres * area_total)
     
     # Soil clay content
     soil_clay <- soil_type <- para[["soil_clay"]]
-    
-    # # Leaching
-    # out3 <- ifelse(soil_clay <=35, out3a, 
-    #                ifelse(soil_clay >= 35, out3c, out3b))
-    
-    # # Gaseous losses
-    # out4 <- ((n_mineralized_kg_ha_year + fertilizer_rate + in2) * (-9.4 + 0.13 * soil_clay + (0.01 * annual_precipitation)) / 100) * area_total
     
     # soil loss per plot per feed type
     soil_loss_plot <- as.numeric(soil_erosion[soil_erosion$feed_type == feed,]$soil_loss_plot)
@@ -643,45 +629,121 @@ nitrogen_balance <- function(para, land_required, soil_erosion){
     # Soil erosion
     out5 <- soil_loss_plot*soil_n*1.5
     
-    # #N in
-    # nin <- ifelse(area_total>0, in1+in2+in3+in4a+in4b, 0)
+    # N content (kgN/kg DM ) from GHG parameters
+    nfertilizer <- 0
     
 
     # write data into a dataframe
-    n_balance <- as.data.frame(cbind(feed, 
-                                     n_fixing, 
-                                     area_total, 
-                                     fertilizer_rate, 
-                                     animal_manure_collected,
-                                     organic_n_imported,
-                                     yield_dm_ha,
-                                     crop_residue_dm_ha,
-                                     residue_removal,
-                                     main_product_removal,
-                                     main_product_removed,
-                                     main_product_removed_kg,
-                                     residue_removed_dm_ha,
-                                     residue_removed_kg,
-                                     annual_precipitation,
-                                     soil_n,
-                                     ntot_kg_ha_20cm,
-                                     n_mineralized_kg_ha_year,
-                                     soil_c,
-                                     soil_clay,
-                                     ncrop,
-                                     nres,
-                                     in1,
-                                     in3,
-                                     in4a,
-                                     in4b,
-                                     out1,
-                                     out2,
-                                     soil_clay,
-                                     out5))
+    n_balance[[feed]] <- as.data.frame(cbind(feed,
+                                             n_fixing,
+                                             area_total,
+                                             fertilizer_rate,
+                                             animal_manure_collected,
+                                             organic_n_imported,
+                                             yield_dm_ha,
+                                             crop_residue_dm_ha,
+                                             residue_removal,
+                                             main_product_removal,
+                                             main_product_removed_kg_ha,
+                                             main_product_removed_kg,
+                                             residue_removed_dm_ha,
+                                             residue_removed_kg,
+                                             annual_precipitation,
+                                             soil_n,
+                                             ntot_kg_ha_20cm,
+                                             n_mineralized_kg_ha_year,
+                                             soil_c,
+                                             soil_clay,
+                                             ncrop,
+                                             nres,
+                                             in1,
+                                             in3,
+                                             in4a,
+                                             in4b,
+                                             out1,
+                                             out2,
+                                             soil_clay,
+                                             out5, nfertilizer))
     
     
   }
   
+  n_balance_all <- n_balance %>% 
+    bind_rows() %>% 
+    mutate_at(c(-1), as.numeric)
   
+  # Animal manure (N kg) grazing, Organic N (kg N) total, Organic N (kg N/ha) total
+  n_balance_all <- n_balance_all %>%
+    mutate(animal_manure_grazing = sum_n_content_manure_grazing * (main_product_removed_kg+residue_removed_kg)/(sum(n_balance_all$main_product_removed_kg)+sum(n_balance_all$residue_removed_kg)),
+           organic_n_kg_total = animal_manure_grazing+animal_manure_collected+organic_n_imported,
+           organic_n_kg_per_ha = ifelse(is.na(organic_n_kg_total/area_total), 0, organic_n_kg_total/area_total))
+  
+  # Manure (kgN)
+  n_balance_all$in2 <- n_balance_all$organic_n_kg_total
+  
+  # N leached (kg N/ha/yr) @clay < 35%, >35% and <55%, >55%, Gaseous losses
+  n_balance_all <- n_balance_all %>% 
+    mutate(out3a = (n_mineralized_kg_ha_year + fertilizer_rate + in2) * (0.021 * (annual_precipitation - 3.9) / 100),
+           out3b = (n_mineralized_kg_ha_year + fertilizer_rate + in2)* (0.014 * annual_precipitation + 0.71) / 100,
+           out3c = (n_mineralized_kg_ha_year + fertilizer_rate + in2) * (0.0071 * annual_precipitation + 5.4) / 100,
+           out3 = ifelse(soil_clay <=35, out3a, ifelse(soil_clay >= 35, out3c, out3b)),
+           out4 = (n_mineralized_kg_ha_year + fertilizer_rate + organic_n_kg_per_ha) * (-9.4 + 0.13 * soil_clay + 0.01 * annual_precipitation) / 100 * area_total,
+           nin = ifelse(area_total>0, in1+in2+in3+in4a+in4b, 0),
+           nout = ifelse(area_total>0, out1+out2+out3+out4+out5, 0),
+           nbalance_kg_n_total = nin-nout,
+           nbalance_kg_n_ha_total = ifelse(is.na(nbalance_kg_n_total/area_total), 0, nbalance_kg_n_total/area_total),
+           nbalance_feed_only_kg_n = ifelse(nbalance_kg_n_total==0, 0, ifelse(out2==0, nbalance_kg_n_total*out2/(out2+out1), 0)),
+           nbalance_feed_only_kg_n_ha = ifelse(is.na(nbalance_feed_only_kg_n/area_total), 0, nbalance_feed_only_kg_n/area_total))
+  
+  # arrange values
+  n_balance_all <- n_balance_all %>% 
+    select(feed, 
+           n_fixing, 
+           area_total,
+           fertilizer_rate,
+           animal_manure_grazing, 
+           animal_manure_collected, 
+           organic_n_imported, 
+           organic_n_kg_total, 
+           organic_n_kg_per_ha, 
+           yield_dm_ha,
+           crop_residue_dm_ha,
+           residue_removal,
+           main_product_removal,
+           main_product_removed_kg_ha,
+           main_product_removed_kg,
+           residue_removed_dm_ha,
+           residue_removed_kg,
+           annual_precipitation,
+           soil_n,
+           ntot_kg_ha_20cm,
+           n_mineralized_kg_ha_year,
+           soil_c,
+           soil_clay,
+           nfertilizer,
+           ncrop,
+           nres,
+           in1,
+           in2,
+           in3,
+           in4a,
+           in4b,
+           out1,
+           out2,
+           out3a,
+           out3b,
+           out3c,
+           soil_clay,
+           out3,
+           out4,
+           out5,
+           nin,
+           nout,
+           nbalance_kg_n_total,
+           nbalance_kg_n_ha_total,
+           nbalance_feed_only_kg_n,
+           nbalance_feed_only_kg_n_ha)
+  
+
 }
 

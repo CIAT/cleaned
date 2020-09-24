@@ -30,3 +30,7 @@ soil_erosion <- soil_health(para, land_required)
 
 #water requirement
 water_requirements <- water_requirement(para,land_required)
+
+#Nitrogen balance
+nitrogen_balance <- nitrogen_balance(para, land_required, soil_erosion)
+
