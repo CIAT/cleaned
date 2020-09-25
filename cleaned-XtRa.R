@@ -35,5 +35,4 @@ water_requirements <- water_requirement(para,land_required)
 nitrogen_balance <- nitrogen_balance(para, land_required, soil_erosion)
 
 # Compute meat and milk productivity
-meat_milk_productivity <- meat_milk_productivity(para)
-
+livestock_productivity <- meat_milk_productivity(para)

@@ -770,7 +770,7 @@ meat_milk_productivity <- function(para){
       mutate(number = as.numeric(herd_composition),
              lwg_per_animal = as.numeric(annual_growth),
              tlu = number*as.numeric(body_weight)/250,
-             parturition_interval = 0, # not available in the json file
+             parturition_interval = as.numeric(livestock_selected$birth_interval), # not available in the json file
              total_lwg = number*lwg_per_animal,
              meat = total_lwg*as.numeric(carcass_fraction),
              energy_kcal_year_prod = meat*as.numeric(energy_meatcontent),
