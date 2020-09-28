@@ -325,6 +325,23 @@ land_requirement <- function(feed_basket_quality, energy_required, para){
   
   land_requirements_all <- livestock_requirements %>% bind_rows()
   
+  # Land requirement for feed production per associated crop (ha)
+  land_requirement_feed_production_per_crop <- land_requirements_all %>%
+    select(season_name, feed, area_feed) %>% 
+    group_by(season_name, feed) %>% 
+    summarise(area_feed = sum(area_feed))
+  
+  # Dry Matter requirements (kg)
+  dry_matter_requirements <- land_requirements_all %>%
+    select(season_name, feed, feed_item_dm) %>% 
+    group_by(season_name, feed) %>% 
+    summarise(feed_item_dm = sum(feed_item_dm))
+  
+  land_requirements <- list(land_requirements_all, land_requirement_feed_production_per_crop, dry_matter_requirements)
+  
+  #returning results
+  return(land_requirements)
+  
 }
 
 # Compute soil health
@@ -448,7 +465,7 @@ soil_health <- function(para, land_required) {
   
 }
 
-water_requirement <- function(para,land_required){
+water_requirement <- function(para, land_required){
   #getting the crop parameters
   feed_production <- unnest(para[["feed_production"]], cols = c(feed_type_name))
   
@@ -473,7 +490,7 @@ water_requirement <- function(para,land_required){
   annual_precipitation <- as.numeric(para[["annual_precipitation"]])
   
   #computing water use per feed item
-  water_use_per_feed_item <- land_required%>%
+  water_use_per_feed_item <- as.data.frame(land_required[1])%>%
     group_by(feed)%>%
     summarise(area_feed = sum(area_feed, na.rm = T),
               area_non_feed = sum(area_non_feed, na.rm = T),
@@ -510,7 +527,10 @@ water_requirement <- function(para,land_required){
 # Compute N balance
 nitrogen_balance <- function(para, land_required, soil_erosion){
   
-  feed_types <- unique(land_required$feed)
+  #soil erosion status
+  soil_erosion <- soil_health(para, as.data.frame(land_required[1]))
+  
+  feed_types <- unique(as.data.frame(land_required[1])$feed)
   
   n_balance <- list()
   
@@ -535,7 +555,7 @@ nitrogen_balance <- function(para, land_required, soil_erosion){
     
     n_fixing <- ifelse(feed_selected$feed_category == "Legume", 0.5*(residue_n*residue_dry_yield+main_n*dry_yield)*1000, 0)
     
-    feed_selected_land_required <- land_required[land_required$feed == feed,]
+    feed_selected_land_required <- as.data.frame(land_required[1])[as.data.frame(land_required[1])$feed == feed,]
     
     area_total <- sum(feed_selected_land_required$area_feed)
     
@@ -744,6 +764,32 @@ nitrogen_balance <- function(para, land_required, soil_erosion){
            nbalance_feed_only_kg_n,
            nbalance_feed_only_kg_n_ha)
   
+  # N balance (kgN/year)
+  nbalance_kg_year <- sum(n_balance_all$nbalance_feed_only_kg_n)
+  
+  # Soil Erosion  ( t/farm/ time unit)
+  erosion_t_soil_year <- sum(as.numeric(soil_erosion$soil_loss_plot))
+  
+  # Bind overall soil impacts
+  overall_soil_impacts <- as.data.frame(cbind(nbalance_kg_year, erosion_t_soil_year))
+  
+  # Feed items specific N balance
+  feed_items_specific_n_balance <- n_balance_all %>% 
+    mutate(inputs_kg_n_year = nin,
+           outputs_kg_n_year = nout,
+           nbalance_total_kg_n_year = nbalance_kg_n_total,
+           nbalance_total_kg_n_ha_year = nbalance_kg_n_ha_total,
+           nbalance_feed_only_kg_n_year = nbalance_feed_only_kg_n,
+           nbalance_feed_only_kg_n_ha_year = nbalance_feed_only_kg_n_ha,
+           nbalance_food_only_kg_n_year = nbalance_total_kg_n_year-nbalance_feed_only_kg_n_year,
+           nbalance_food_only_kg_n_ha_year = nbalance_total_kg_n_ha_year-nbalance_feed_only_kg_n_ha_year) %>% 
+    select(-c(2:45))
+  
+  # combine the soil and nitogen outputs
+  soil_impacts <- list(overall_soil_impacts, feed_items_specific_n_balance)
+  
+  #returning results
+  return(soil_impacts)
 
 }
 
@@ -770,19 +816,23 @@ meat_milk_productivity <- function(para){
       mutate(number = as.numeric(herd_composition),
              lwg_per_animal = as.numeric(annual_growth),
              tlu = number*as.numeric(body_weight)/250,
-             parturition_interval = as.numeric(livestock_selected$birth_interval), # not available in the json file
+             parturition_interval = as.numeric(livestock_selected$birth_interval),
              total_lwg = number*lwg_per_animal,
-             meat = total_lwg*as.numeric(carcass_fraction),
-             energy_kcal_year_prod = meat*as.numeric(energy_meatcontent),
-             protein_kg_yr = meat*as.numeric(protein_meatcontent)/100,
+             meat_production_animal = total_lwg*as.numeric(carcass_fraction),
+             energy_kcal_year_meat = meat_production_animal*as.numeric(energy_meatcontent),
+             protein_kg_year_meat = meat_production_animal*as.numeric(protein_meatcontent)/100,
              milk_production_animal = as.numeric(annual_milk),
              total_milk = as.numeric(annual_milk)*(0.337+(0.116*as.numeric(fat_content)+(0.06*as.numeric(protein_milkcontent)))),
-             energy_kcal_year = total_milk*as.numeric(energy_milkcontent),
-             protein_kg_year = total_milk*as.numeric(protein_milkcontent)/100) %>%  
+             energy_kcal_year_milk = total_milk*as.numeric(energy_milkcontent),
+             protein_kg_year_milk = total_milk*as.numeric(protein_milkcontent)/100) %>%  
       select(-c(3:50))
     
   }
   
   livestock_production_all <- livestock_production %>% bind_rows()
+  
+  # sum production?????
+
+  
   
 }

@@ -25,9 +25,6 @@ energy_required <- energy_requirement(para,feed_basket_quality)
 # Land requirement
 land_required <- land_requirement(feed_basket_quality, energy_required, para)
 
-#soil erosion status
-soil_erosion <- soil_health(para, land_required)
-
 #water requirement
 water_requirements <- water_requirement(para,land_required)
 
