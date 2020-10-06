@@ -770,19 +770,128 @@ meat_milk_productivity <- function(para){
       mutate(number = as.numeric(herd_composition),
              lwg_per_animal = as.numeric(annual_growth),
              tlu = number*as.numeric(body_weight)/250,
-             parturition_interval = as.numeric(livestock_selected$birth_interval), # not available in the json file
+             parturition_interval = as.numeric(livestock_selected$birth_interval),
              total_lwg = number*lwg_per_animal,
-             meat = total_lwg*as.numeric(carcass_fraction),
-             energy_kcal_year_prod = meat*as.numeric(energy_meatcontent),
-             protein_kg_yr = meat*as.numeric(protein_meatcontent)/100,
+             meat_production_animal = total_lwg*as.numeric(carcass_fraction),
+             energy_kcal_year_meat = meat_production_animal*as.numeric(energy_meatcontent),
+             protein_kg_year_meat = meat_production_animal*as.numeric(protein_meatcontent)/100,
              milk_production_animal = as.numeric(annual_milk),
              total_milk = as.numeric(annual_milk)*(0.337+(0.116*as.numeric(fat_content)+(0.06*as.numeric(protein_milkcontent)))),
-             energy_kcal_year = total_milk*as.numeric(energy_milkcontent),
-             protein_kg_year = total_milk*as.numeric(protein_milkcontent)/100) %>%  
+             energy_kcal_year_milk = total_milk*as.numeric(energy_milkcontent),
+             protein_kg_year_milk = total_milk*as.numeric(protein_milkcontent)/100) %>%  
       select(-c(3:50))
     
   }
   
   livestock_production_all <- livestock_production %>% bind_rows()
+  
+}
+
+# Economics
+economics_payback <- function(para, energy_required){
+  
+  livestock_df <- para[["livestock"]]
+  
+  livestock_category_names <- c(livestock_df$livestock_category_name)
+  
+  # products dictionary
+  farm_gate_price <- function(x){
+    
+    ifelse(x == "Cattle Manure", 0.0058, 
+           ifelse(x == "Sheep Manure", NA, 
+                  ifelse(x == "Goat Manure", NA, 
+                         ifelse(x == "Beef", 3, 
+                                ifelse(x == "Buffalo meat", NA, 
+                                       ifelse(x == "Goat/Lamb/Mutton", NA, 
+                                              ifelse(x == "Pork", NA, 
+                                                     ifelse(x == "Cow Milk", 0.35, 
+                                                            ifelse(x == "Buffalo Milk", NA, 
+                                                                   ifelse(x == "Goat/sheep milk", NA, 
+                                                                          ifelse(x == "Labour", 3.5, 
+                                                                                 ifelse(x == "Urea", NA, 
+                                                                                        ifelse(x == "NPK", NA, NA)))))))))))))
+  }
+  
+  # Cattle manure
+  cattle_manure <- energy_required[1] %>% 
+    as.data.frame() %>%
+    summarise(product="Cattle Manure",
+              total_production_year= sum(annual_manure_produced),
+              estimated_production=sum(manure_collected))
+  
+  # Beef
+  beef <- livestock_productivity %>% 
+    as.data.frame() %>%
+    summarise(product="Beef",
+              total_production_year= sum(meat_production_animal),
+              estimated_production="")
+  
+  # Beef
+  cow_milk <- livestock_productivity %>% 
+    as.data.frame() %>%
+    summarise(product="Cow Milk",
+              total_production_year= sum(milk_production_animal),
+              estimated_production="")
+
+  #economics_all <- rbind.fill(list(cattle_manure, beef, cow_milk))
+  
+  economics_all <- plyr::rbind.fill(list(cattle_manure, 
+                                         beef, 
+                                         cow_milk)) %>% 
+    mutate(retail_price_kg = farm_gate_price(product),
+           total_value_production= retail_price_kg*total_production_year,
+           estimated_production_value = ifelse(product=="Cattle Manure", retail_price_kg*as.numeric(estimated_production), ""))
+    
+}
+
+# Biomass
+biomass_calculations <- function(para, land_required){
+  
+  tier1 <- data.frame()
+  
+  # Land requirement for feed production per associated crop (ha)
+  land_requirement_per_feed <- land_required %>%
+    select(feed, area_feed) %>% 
+    group_by(feed) %>% 
+    summarise(area_feed = sum(area_feed))
+  
+  # add feed category
+  feed_production <- unnest(para[["feed_production"]], cols = c(feed_type_name))
+  
+  feed_production <- na_if(feed_production, "NA") %>% 
+    as.data.frame()
+  
+  land_requirement_per_feed$feed_category <- feed_production$feed_category[match(land_requirement_per_feed$feed, 
+                                                                                 feed_production$feed_type_name)]
+  # To be added by rein
+  dbh <- ""
+  trees_annual_growth <- 0
+  trees_annual_removal <- 0
+  
+  # based on MICCA project (Kuyah et al 2012; Chave et Al. 2005
+  tier3 <- land_requirement_per_feed %>% 
+    mutate(area_ha = ifelse(feed_category=="tree crop" | feed_category=="tree legume", 
+                         area_feed, 0),
+           nb_trees = 0,
+           dbh = ifelse(dbh>0, dbh, 0),
+           agbest = ifelse(dbh=="", 0, 0.091*dbh^2.472),
+           agb = agbest+((2.69/100)*agbest),
+           carbon_content = 0.48,
+           carbon_content_tree = agb*carbon_content,
+           total_carbon_stock_ha = ifelse(is.na(agb), 0, nb_trees*carbon_content_tree),
+           total_carbon_stock = area_ha*total_carbon_stock_ha,
+           tree_annual_growth = trees_annual_growth,
+           annual_growth_ha = nb_trees*carbon_content*tree_annual_growth,
+           annual_growth = area_ha*annual_growth_ha,
+           annual_removal = ifelse(tree_annual_growth>0, tree_annual_growth, 0),
+           total_annual_removal = carbon_content*annual_removal,
+           carbon_biomass_balance = annual_growth-annual_removal,
+           carbon_stock_change_biomass = carbon_biomass_balance*44/12) %>% 
+    select (-c(area_feed, feed_category))
+  
+  carbon_stocks_change <- list(tier1, tier3)
+  
+  #returning results
+  return(carbon_stocks_change)
   
 }
