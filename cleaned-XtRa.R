@@ -39,3 +39,6 @@ livestock_productivity <- meat_milk_productivity(para)
 
 # Economics
 economics <- economics_payback(para, energy_required)
+
+# Biomass change
+biomass <- biomass_calculations(para, land_required)
