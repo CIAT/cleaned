@@ -25,8 +25,20 @@ energy_required <- energy_requirement(para,feed_basket_quality)
 # Land requirement
 land_required <- land_requirement(feed_basket_quality, energy_required, para)
 
-#soil health status
+#soil erosion status
 soil_erosion <- soil_health(para, land_required)
 
 #water requirement
 water_requirements <- water_requirement(para,land_required)
+
+#Nitrogen balance
+nitrogen_balance <- nitrogen_balance(para, land_required, soil_erosion)
+
+# Compute meat and milk productivity
+livestock_productivity <- meat_milk_productivity(para)
+
+# Economics
+economics <- economics_payback(para, energy_required)
+
+# Biomass change
+biomass <- biomass_calculations(para, land_required)

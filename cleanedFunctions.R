@@ -505,3 +505,393 @@ water_requirement <- function(para,land_required){
   #returning results
   return(water_use)
 } #end of water function
+
+
+# Compute N balance
+nitrogen_balance <- function(para, land_required, soil_erosion){
+  
+  feed_types <- unique(land_required$feed)
+  
+  n_balance <- list()
+  
+  for (feed in feed_types){
+    
+    feed_production <- unnest(para[["feed_production"]], cols = c(feed_type_name))
+    
+    feed_production <- na_if(feed_production, "NA") %>% 
+      as.data.frame()
+    
+    feed_production[is.na(feed_production)] <- 0
+    
+    feed_selected <- feed_production[feed_production$feed_type_name == feed,]
+    
+    dry_yield <- feed_selected$dry_yield
+    
+    residue_dry_yield <- feed_selected$residue_dry_yield
+    
+    main_n <- feed_selected$main_n
+    
+    residue_n <- as.numeric(feed_selected$residue_n)
+    
+    n_fixing <- ifelse(feed_selected$feed_category == "Legume", 0.5*(residue_n*residue_dry_yield+main_n*dry_yield)*1000, 0)
+    
+    feed_selected_land_required <- land_required[land_required$feed == feed,]
+    
+    area_total <- sum(feed_selected_land_required$area_feed)
+    
+    feed_item_selected <- as.data.frame(feed_selected[["feed_items"]])
+    
+    feed_item_selected <- na_if(feed_item_selected, "NA") %>% 
+      as.data.frame()
+    
+    feed_item_selected[is.na(feed_item_selected)] <- 0
+    
+    manure_fraction <- as.numeric(feed_item_selected$manure_fraction)
+    
+    fertilizer_rate <- as.numeric(feed_item_selected$fertilizer_rate)
+    
+    main_product_removal <- as.numeric(feed_item_selected$main_product_removal)
+    
+    residue_removal <- as.numeric(feed_item_selected$residue_removal)
+    
+    sum_n_content_manure_grazing <- energy_required[1] %>% 
+      as.data.frame() %>% 
+      summarise(sum(n_content_manure_grazing)) %>% 
+      as.numeric()
+    
+    yield_dm_ha <- as.numeric(dry_yield)*1000
+    
+    main_product_removed_kg_ha <- yield_dm_ha*main_product_removal
+    
+    n_content_manure_collected <- energy_required[1] %>% 
+      as.data.frame() %>% 
+      summarise(sum(n_content_manure_collected)) %>% 
+      as.numeric()
+    
+    animal_manure_collected <- n_content_manure_collected*manure_fraction
+    
+    organic_n_imported <- manure_fraction*(as.numeric(para$purchased_manure)+as.numeric(para$purchased_compost)+as.numeric(para$purchased_organic_n)+as.numeric(para$purchased_bedding))
+    
+    crop_residue_dm_ha <- as.numeric(feed_selected$residue_dry_yield)*1000
+    
+    residue_removal <- as.numeric(feed_item_selected$residue_removal)
+    
+    main_product_removed_kg <- area_total*main_product_removed_kg_ha
+    
+    residue_removed_dm_ha <- crop_residue_dm_ha*residue_removal
+    
+    residue_removed_kg <- area_total*residue_removed_dm_ha
+    
+    annual_precipitation <- as.numeric(para[["annual_precipitation"]])
+    
+    soil_n <- as.numeric(para[["soil_n"]])
+    
+    ntot_kg_ha_20cm <- soil_n*20*as.numeric(para[["soil_bulk"]])*10
+    
+    n_mineralized_kg_ha_year <- ntot_kg_ha_20cm*0.03
+    
+    soil_c <- as.numeric(para[["soil_c"]])
+    
+    soil_clay <- as.numeric(para[["soil_clay"]])
+    
+    # N content (kg N/kg DM)
+    ncrop <- as.numeric(feed_selected$main_n)
+    
+    # N content (kg N /kg DM)
+    nres <- as.numeric(feed_selected$residue_n)
+    
+    # Mineral fertilizer
+    in1 <- area_total*fertilizer_rate
+    
+    # calculate in2
+    
+    # Atmospheric deposition
+    in3 <- 0.14*sqrt(annual_precipitation)*area_total
+    
+    # Non-symbiotic N fixation
+    in4a <- ifelse(area_total > 0, (2 + (annual_precipitation - 1350) * 0.005) * area_total, 0)
+    
+    # Symbiotic N-fixation
+    in4b <- n_fixing * area_total
+    
+    # Crop yield  (kgN)
+    out1 <- area_total*main_product_removed_kg_ha*ncrop
+    
+    # Crop residue (KgN)
+    out2 <- ifelse(feed_item_selected$source_type == "Main", 0, residue_removed_dm_ha * nres * area_total)
+    
+    # Soil clay content
+    soil_clay <- soil_type <- para[["soil_clay"]]
+    
+    # soil loss per plot per feed type
+    soil_loss_plot <- as.numeric(soil_erosion[soil_erosion$feed_type == feed,]$soil_loss_plot)
+
+    # Soil erosion
+    out5 <- soil_loss_plot*soil_n*1.5
+    
+    # N content (kgN/kg DM ) from GHG parameters
+    nfertilizer <- 0
+    
+
+    # write data into a dataframe
+    n_balance[[feed]] <- as.data.frame(cbind(feed,
+                                             n_fixing,
+                                             area_total,
+                                             fertilizer_rate,
+                                             animal_manure_collected,
+                                             organic_n_imported,
+                                             yield_dm_ha,
+                                             crop_residue_dm_ha,
+                                             residue_removal,
+                                             main_product_removal,
+                                             main_product_removed_kg_ha,
+                                             main_product_removed_kg,
+                                             residue_removed_dm_ha,
+                                             residue_removed_kg,
+                                             annual_precipitation,
+                                             soil_n,
+                                             ntot_kg_ha_20cm,
+                                             n_mineralized_kg_ha_year,
+                                             soil_c,
+                                             soil_clay,
+                                             ncrop,
+                                             nres,
+                                             in1,
+                                             in3,
+                                             in4a,
+                                             in4b,
+                                             out1,
+                                             out2,
+                                             soil_clay,
+                                             out5, nfertilizer))
+    
+    
+  }
+  
+  n_balance_all <- n_balance %>% 
+    bind_rows() %>% 
+    mutate_at(c(-1), as.numeric)
+  
+  # Animal manure (N kg) grazing, Organic N (kg N) total, Organic N (kg N/ha) total
+  n_balance_all <- n_balance_all %>%
+    mutate(animal_manure_grazing = sum_n_content_manure_grazing * (main_product_removed_kg+residue_removed_kg)/(sum(n_balance_all$main_product_removed_kg)+sum(n_balance_all$residue_removed_kg)),
+           organic_n_kg_total = animal_manure_grazing+animal_manure_collected+organic_n_imported,
+           organic_n_kg_per_ha = ifelse(is.na(organic_n_kg_total/area_total), 0, organic_n_kg_total/area_total))
+  
+  # Manure (kgN)
+  n_balance_all$in2 <- n_balance_all$organic_n_kg_total
+  
+  # N leached (kg N/ha/yr) @clay < 35%, >35% and <55%, >55%, Gaseous losses
+  n_balance_all <- n_balance_all %>% 
+    mutate(out3a = (n_mineralized_kg_ha_year + fertilizer_rate + in2) * (0.021 * (annual_precipitation - 3.9) / 100),
+           out3b = (n_mineralized_kg_ha_year + fertilizer_rate + in2)* (0.014 * annual_precipitation + 0.71) / 100,
+           out3c = (n_mineralized_kg_ha_year + fertilizer_rate + in2) * (0.0071 * annual_precipitation + 5.4) / 100,
+           out3 = ifelse(soil_clay <=35, out3a, ifelse(soil_clay >= 35, out3c, out3b)),
+           out4 = (n_mineralized_kg_ha_year + fertilizer_rate + organic_n_kg_per_ha) * (-9.4 + 0.13 * soil_clay + 0.01 * annual_precipitation) / 100 * area_total,
+           nin = ifelse(area_total>0, in1+in2+in3+in4a+in4b, 0),
+           nout = ifelse(area_total>0, out1+out2+out3+out4+out5, 0),
+           nbalance_kg_n_total = nin-nout,
+           nbalance_kg_n_ha_total = ifelse(is.na(nbalance_kg_n_total/area_total), 0, nbalance_kg_n_total/area_total),
+           nbalance_feed_only_kg_n = ifelse(nbalance_kg_n_total==0, 0, ifelse(out2==0, nbalance_kg_n_total*out2/(out2+out1), 0)),
+           nbalance_feed_only_kg_n_ha = ifelse(is.na(nbalance_feed_only_kg_n/area_total), 0, nbalance_feed_only_kg_n/area_total))
+  
+  # arrange values
+  n_balance_all <- n_balance_all %>% 
+    select(feed, 
+           n_fixing, 
+           area_total,
+           fertilizer_rate,
+           animal_manure_grazing, 
+           animal_manure_collected, 
+           organic_n_imported, 
+           organic_n_kg_total, 
+           organic_n_kg_per_ha, 
+           yield_dm_ha,
+           crop_residue_dm_ha,
+           residue_removal,
+           main_product_removal,
+           main_product_removed_kg_ha,
+           main_product_removed_kg,
+           residue_removed_dm_ha,
+           residue_removed_kg,
+           annual_precipitation,
+           soil_n,
+           ntot_kg_ha_20cm,
+           n_mineralized_kg_ha_year,
+           soil_c,
+           soil_clay,
+           nfertilizer,
+           ncrop,
+           nres,
+           in1,
+           in2,
+           in3,
+           in4a,
+           in4b,
+           out1,
+           out2,
+           out3a,
+           out3b,
+           out3c,
+           soil_clay,
+           out3,
+           out4,
+           out5,
+           nin,
+           nout,
+           nbalance_kg_n_total,
+           nbalance_kg_n_ha_total,
+           nbalance_feed_only_kg_n,
+           nbalance_feed_only_kg_n_ha)
+  
+
+}
+
+# Compute meat and milk productivity
+meat_milk_productivity <- function(para){
+  
+  livestock_df <- para[["livestock"]]
+  
+  livestock_category_names <- c(livestock_df$livestock_category_name)
+  
+  livestock_production <- list()
+  
+  for (livestock in livestock_category_names){
+    
+    livestock_selected <- livestock_df[livestock_df$livestock_category_name == livestock,]
+    
+    livestock_selected <- na_if(livestock_selected, "NA") %>% 
+      as.data.frame()
+    
+    livestock_selected[is.na(livestock_selected)] <- 0
+    
+    # prodution per livestock
+    livestock_production[[livestock]] <- livestock_selected %>% 
+      mutate(number = as.numeric(herd_composition),
+             lwg_per_animal = as.numeric(annual_growth),
+             tlu = number*as.numeric(body_weight)/250,
+             parturition_interval = as.numeric(livestock_selected$birth_interval),
+             total_lwg = number*lwg_per_animal,
+             meat_production_animal = total_lwg*as.numeric(carcass_fraction),
+             energy_kcal_year_meat = meat_production_animal*as.numeric(energy_meatcontent),
+             protein_kg_year_meat = meat_production_animal*as.numeric(protein_meatcontent)/100,
+             milk_production_animal = as.numeric(annual_milk),
+             total_milk = as.numeric(annual_milk)*(0.337+(0.116*as.numeric(fat_content)+(0.06*as.numeric(protein_milkcontent)))),
+             energy_kcal_year_milk = total_milk*as.numeric(energy_milkcontent),
+             protein_kg_year_milk = total_milk*as.numeric(protein_milkcontent)/100) %>%  
+      select(-c(3:50))
+    
+  }
+  
+  livestock_production_all <- livestock_production %>% bind_rows()
+  
+}
+
+# Economics
+economics_payback <- function(para, energy_required){
+  
+  livestock_df <- para[["livestock"]]
+  
+  livestock_category_names <- c(livestock_df$livestock_category_name)
+  
+  # products dictionary
+  farm_gate_price <- function(x){
+    
+    ifelse(x == "Cattle Manure", 0.0058, 
+           ifelse(x == "Sheep Manure", NA, 
+                  ifelse(x == "Goat Manure", NA, 
+                         ifelse(x == "Beef", 3, 
+                                ifelse(x == "Buffalo meat", NA, 
+                                       ifelse(x == "Goat/Lamb/Mutton", NA, 
+                                              ifelse(x == "Pork", NA, 
+                                                     ifelse(x == "Cow Milk", 0.35, 
+                                                            ifelse(x == "Buffalo Milk", NA, 
+                                                                   ifelse(x == "Goat/sheep milk", NA, 
+                                                                          ifelse(x == "Labour", 3.5, 
+                                                                                 ifelse(x == "Urea", NA, 
+                                                                                        ifelse(x == "NPK", NA, NA)))))))))))))
+  }
+  
+  # Cattle manure
+  cattle_manure <- energy_required[1] %>% 
+    as.data.frame() %>%
+    summarise(product="Cattle Manure",
+              total_production_year= sum(annual_manure_produced),
+              estimated_production=sum(manure_collected))
+  
+  # Beef
+  beef <- livestock_productivity %>% 
+    as.data.frame() %>%
+    summarise(product="Beef",
+              total_production_year= sum(meat_production_animal),
+              estimated_production="")
+  
+  # Beef
+  cow_milk <- livestock_productivity %>% 
+    as.data.frame() %>%
+    summarise(product="Cow Milk",
+              total_production_year= sum(milk_production_animal),
+              estimated_production="")
+
+  #economics_all <- rbind.fill(list(cattle_manure, beef, cow_milk))
+  
+  economics_all <- plyr::rbind.fill(list(cattle_manure, 
+                                         beef, 
+                                         cow_milk)) %>% 
+    mutate(retail_price_kg = farm_gate_price(product),
+           total_value_production= retail_price_kg*total_production_year,
+           estimated_production_value = ifelse(product=="Cattle Manure", retail_price_kg*as.numeric(estimated_production), ""))
+    
+}
+
+# Biomass
+biomass_calculations <- function(para, land_required){
+  
+  tier1 <- data.frame()
+  
+  # Land requirement for feed production per associated crop (ha)
+  land_requirement_per_feed <- land_required %>%
+    select(feed, area_feed) %>% 
+    group_by(feed) %>% 
+    summarise(area_feed = sum(area_feed))
+  
+  # add feed category
+  feed_production <- unnest(para[["feed_production"]], cols = c(feed_type_name))
+  
+  feed_production <- na_if(feed_production, "NA") %>% 
+    as.data.frame()
+  
+  land_requirement_per_feed$feed_category <- feed_production$feed_category[match(land_requirement_per_feed$feed, 
+                                                                                 feed_production$feed_type_name)]
+  # To be added by rein
+  dbh <- ""
+  trees_annual_growth <- 0
+  trees_annual_removal <- 0
+  
+  # based on MICCA project (Kuyah et al 2012; Chave et Al. 2005
+  tier3 <- land_requirement_per_feed %>% 
+    mutate(area_ha = ifelse(feed_category=="tree crop" | feed_category=="tree legume", 
+                         area_feed, 0),
+           nb_trees = 0,
+           dbh = ifelse(dbh>0, dbh, 0),
+           agbest = ifelse(dbh=="", 0, 0.091*dbh^2.472),
+           agb = agbest+((2.69/100)*agbest),
+           carbon_content = 0.48,
+           carbon_content_tree = agb*carbon_content,
+           total_carbon_stock_ha = ifelse(is.na(agb), 0, nb_trees*carbon_content_tree),
+           total_carbon_stock = area_ha*total_carbon_stock_ha,
+           tree_annual_growth = trees_annual_growth,
+           annual_growth_ha = nb_trees*carbon_content*tree_annual_growth,
+           annual_growth = area_ha*annual_growth_ha,
+           annual_removal = ifelse(tree_annual_growth>0, tree_annual_growth, 0),
+           total_annual_removal = carbon_content*annual_removal,
+           carbon_biomass_balance = annual_growth-annual_removal,
+           carbon_stock_change_biomass = carbon_biomass_balance*44/12) %>% 
+    select (-c(area_feed, feed_category))
+  
+  carbon_stocks_change <- list(tier1, tier3)
+  
+  #returning results
+  return(carbon_stocks_change)
+  
+}
