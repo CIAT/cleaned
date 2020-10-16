@@ -15,6 +15,7 @@ source("./cleanedFunctions.R")
 
 # Loading data
 para <- fromJSON(paste0(path,"/data/example_JM_Test_1_1.json"),  flatten = TRUE)
+para <- fromJSON(paste0(path,"/data/ghg_parameters.json"),  flatten = TRUE)
 
 # Feed quality calculation
 feed_basket_quality <- feed_quality(para)
