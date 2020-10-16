@@ -42,3 +42,6 @@ economics <- economics_payback(para, energy_required)
 
 # Biomass change
 biomass <- biomass_calculations(para, land_required)
+
+# GHG emissions
+ghg_emissions <- ghg_emission(para,energy_required,ghg_ipcc_data,land_required)

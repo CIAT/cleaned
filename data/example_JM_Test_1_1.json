@@ -205,7 +205,11 @@
           "establishment_cost": "0.00",
           "operational_cost": "0.00",
           "establishment_labour": "0.00",
-          "operational_labour": "0.00"
+          "operational_labour": "0.00",
+          "ecosystem_type":"None",
+          "cultivation_period": "0.00",
+          "water_regime": "None",
+          "organic_amendment": "None"
         }
       ]
     },
@@ -252,7 +256,11 @@
           "establishment_cost": "0.00",
           "operational_cost": "0.00",
           "establishment_labour": "0.00",
-          "operational_labour": "0.00"
+          "operational_labour": "0.00",
+          "ecosystem_type":"None",
+          "cultivation_period": "0.00",
+          "water_regime": "None",
+          "organic_amendment": "None"
         }
       ]
     },
@@ -299,7 +307,11 @@
           "establishment_cost": "50.00",
           "operational_cost": "30.00",
           "establishment_labour": "5.00",
-          "operational_labour": "10.00"
+          "operational_labour": "10.00",
+          "ecosystem_type":"None",
+          "cultivation_period": "0.00",
+          "water_regime": "None",
+          "organic_amendment": "None"
         }
       ]
     }

@@ -895,3 +895,248 @@ biomass_calculations <- function(para, land_required){
   return(carbon_stocks_change)
   
 }
+
+#GHG function
+ghg_emission <- function(para,energy_required,ghg_ipcc_data,land_required){
+  livestock <- para[["livestock"]]
+  #convert columns to numeric
+  cols_nam <- colnames(livestock%>%select(-livestock_category_code,-livestock_category_name))
+  livestock[cols_nam] <- sapply(livestock[cols_nam],as.numeric)
+  #change NAs to 0
+  livestock[is.na(livestock)] <- 0
+  
+  #
+  no_days <- 365
+  annual_energy <- energy_required[[1]] 
+  seasons <- para[["seasons"]]
+  ###########################################################################################################
+  #Preparation of ghg parameters
+  #
+  #
+  ghg_parameters <- function(para,seasons,annual_energy,ghg_ipcc_data){
+    #Computation of ghg parameters from the feedbasket
+    for (i in 1:nrow(seasons)) {
+      sl <- seasons$season_length[i]
+      
+      #Preparing the seasonal feed quality
+      seasonal_feed_parameters <- filter(feed_basket_quality, season_name == seasons$season_name[i])%>%
+        gather(feed,value,-season_name,-livestock_category_code,-livestock_category_name,-feed_variables)%>%
+        spread(feed_variables,value)%>%
+        mutate(prod_me = fraction_as_fed*me_content_fresh,
+               prod_dm = fraction_as_fed*dm_content,
+               prod_cp = fraction_as_fed*cp_content_fresh,
+               prod_de = fraction_as_fed*de_fraction)%>%
+        select(livestock_category_code,prod_me,prod_dm,prod_cp,prod_de)%>%
+        group_by(livestock_category_code)%>%
+        summarise(average_me = sum(prod_me),
+                  average_dm = sum(prod_dm),
+                  average_cp = sum(prod_cp),
+                  average_de = sum(prod_de))%>%
+        mutate(season_de = average_de*sl/no_days,
+               season_cp = (average_cp*sl/no_days)/(average_dm*0.01),
+               season_name = seasons$season_name[i])
+      #Binding seasonal results     
+      if (i==1) {feed_parameters <- seasonal_feed_parameters}
+      else{feed_parameters <- rbind(feed_parameters,seasonal_feed_parameters)}
+    }
+    
+    ghg_feed_parameters <- feed_parameters%>%
+      group_by(livestock_category_code)%>%
+      summarise(de = sum(season_de), # digestible energy
+                cp = sum(season_cp)) # crude protein
+    
+    #Computation of ghg parameters from energy requirement
+    ghg_energy_parameters <- annual_energy%>%
+      select(livestock_category_code,livestock_category_name,ge_intake)%>%
+      mutate(daily_ge_intake = ge_intake/no_days)
+    
+    #Computation of ghg parameters from ipcc data
+    #manure conversion factor
+    manureman_stable <- para[["manureman_stable"]]
+    mfc_stable = filter(ghg_ipcc_data[["table_10.17"]],system == manureman_stable);names(mfc_stable) <- c("stable_mgmt_syst","mfc_stable")
+    manureman_yard <- para[["manureman_yard"]]
+    mfc_yard = filter(ghg_ipcc_data[["table_10.17"]],system == manureman_yard);names(mfc_yard) <- c("yard_mgmt_syst","mfc_yard")
+    manureman_pasture <- para[["manureman_pasture"]]
+    mfc_pasture = filter(ghg_ipcc_data[["table_10.17"]],system == manureman_pasture);names(mfc_pasture) <- c("pasture_mgmt_syst","mfc_pasture")
+    
+    #direct nitrous oxide factor
+    direct_n2o_stable <- filter(ghg_ipcc_data[["table_10.21"]],system == manureman_stable)%>%
+      select(direct_nitrous_oxide_factor)
+    names(direct_n2o_stable) <- "direct_n2o_stable"
+    direct_n2o_yard <- filter(ghg_ipcc_data[["table_10.21"]],system == manureman_yard)%>%
+      select(direct_nitrous_oxide_factor)
+    names(direct_n2o_yard) <- "direct_n2o_yard"
+    
+    #fraction of N loss due to manure management system
+    fraction_n_loss_mms_stable <- filter(ghg_ipcc_data[["table_10.22"]],system == manureman_stable)%>%
+      select(anaimal_category,fraction_n_loss_mms)
+    names(fraction_n_loss_mms_stable) <- c("anaimal_category","fraction_n_loss_mms_stable")
+    fraction_n_loss_mms_yard <- filter(ghg_ipcc_data[["table_10.22"]],system == manureman_yard)%>%
+      select(anaimal_category,fraction_n_loss_mms)
+    names(fraction_n_loss_mms_yard) <- c("anaimal_category","fraction_n_loss_mms_yard")
+    
+    #n2o emissions from managed soils
+    n2o_emissions_from_managed_soils <- filter(ghg_ipcc_data[["table_11.1_&_table_11.3"]],emission_factors == "EF4")%>%
+      select(n2o_emissions_from_managed_soils)
+    
+    #Cnotinent
+    region <- para[["region"]]
+    
+    ghg_ipcc_parameters <- ghg_ipcc_data[["livestock_parameters"]]%>%
+      filter(livestock_category_name %in% ghg_energy_parameters$livestock_category_name)%>%
+      mutate(mfc_stable,mfc_yard,mfc_pasture,direct_n2o_stable,direct_n2o_yard,n2o_emissions_from_managed_soils)%>%
+      left_join(filter(ghg_ipcc_data[["table_10A_9"]],Continent == region), by = c("IPCC Category - methane emissions manure - Tier 1" = "anaimal_category"))%>%
+      left_join(filter(ghg_ipcc_data[["table_10.19"]],Continent  == region), by = c("IPCC-Category - Default N-excretion rates Tier 1" = "anaimal_category"))%>%
+      left_join(fraction_n_loss_mms_stable,by = c("IPCC Category - methane emissions manure - Tier 1" = "anaimal_category"))%>%
+      left_join(fraction_n_loss_mms_yard,by = c("IPCC Category - methane emissions manure - Tier 1" = "anaimal_category"))
+    
+    ghg_parameters <- ghg_energy_parameters%>%
+      left_join(ghg_feed_parameters,by = "livestock_category_code")%>%
+      left_join(ghg_ipcc_parameters,by = "livestock_category_name")
+    
+    return(ghg_parameters)
+    
+  }
+  ghg_parameters <- ghg_parameters(para,seasons,annual_energy,ghg_ipcc_data)
+  
+  
+  ################################################################################################################################################################################################################################
+  #Computation of methane emissions from enteric fermentation
+  ghg_enteric_manure <- livestock%>%
+    left_join(select(ghg_parameters,-livestock_category_name),by = "livestock_category_code")%>%
+    mutate(tier_1_enteric_methane_emissions = methferm_tier1*herd_composition, #equation 10.19 and 10.20
+           tier_2_enteric_methane_emissions = ((daily_ge_intake*(methferm_tier2/100)*no_days)/55.65)/herd_composition, #equation 10.21
+           tier_1_manure_mgmt_methane_emissions = herd_composition*methmanure, #equation 10.22
+           tier_2_volatile_solid_excretion = (daily_ge_intake*(1-de)+(Urinary_energy_frac*daily_ge_intake))*(1-ash_content)/18.45, #equation 10.24
+           tier_2_manure_mgmt_methane_emissions = (tier_2_volatile_solid_excretion*no_days)*(Bo*0.67*((time_in_stable*mfc_stable)+(time_in_non_roofed_enclosure*mfc_yard)+(time_in_onfarm_grazing*mfc_pasture))), #equation 10.23
+           tier_1_annual_N_excretion = n_rate*(body_weight/1000)*no_days, #equation 10.30
+           n_intake = (daily_ge_intake/18.45)*(cp/100/6.25), #equation 10.32
+           n_retention = ((annual_milk*0.034/6.38)+(annual_growth*(268-(7*16))/6250))*herd_composition/no_days/n_intake, #equation 10.33
+           tier_2_annual_N_excretion = n_intake*(1-n_retention)*no_days,#equation 10.31
+           tier_1_direct_n2o_emission = ((tier_1_annual_N_excretion*time_in_stable*direct_n2o_stable)+(tier_1_annual_N_excretion*time_in_non_roofed_enclosure*direct_n2o_yard))*(44/28)*herd_composition, #Equation 10.25- T1
+           tier_2_direct_n2o_emission = ((tier_2_annual_N_excretion*time_in_stable*direct_n2o_stable)+(tier_2_annual_N_excretion*time_in_non_roofed_enclosure*direct_n2o_yard))*(44/28)*herd_composition,#Equation 10.25
+           tier_1_n_volatization = ((tier_1_annual_N_excretion*time_in_stable*fraction_n_loss_mms_stable)+(tier_1_annual_N_excretion*time_in_non_roofed_enclosure*fraction_n_loss_mms_yard))*herd_composition, #equation 10.26
+           tier_2_n_volatization = ((tier_2_annual_N_excretion*time_in_stable*fraction_n_loss_mms_stable)+(tier_2_annual_N_excretion*time_in_non_roofed_enclosure*fraction_n_loss_mms_yard))*herd_composition, #equation 10.26
+           tier_1_indirect_n2o_emission = tier_1_n_volatization*n2o_emissions_from_managed_soils*44/28,#equation 10.27
+           tier_2_indirect_n2o_emission = tier_2_n_volatization*n2o_emissions_from_managed_soils*44/28,#equation 10.27
+           tier_1_total_n_from_manure_mgmt = (((tier_1_annual_N_excretion*herd_composition*time_in_stable)*(1-fraction_n_loss_mms_stable)*manure_in_stable*manure_as_fertilizer)+
+                                                ((tier_1_annual_N_excretion*herd_composition*time_in_non_roofed_enclosure)*(1-fraction_n_loss_mms_yard)*manure_in_field*manure_as_fertilizer))-(tier_1_direct_n2o_emission*28/44),
+           tier_2_total_n_from_manure_mgmt = (((tier_2_annual_N_excretion*herd_composition*time_in_stable)*(1-fraction_n_loss_mms_stable)*manure_in_stable*manure_as_fertilizer)+
+                                                ((tier_2_annual_N_excretion*herd_composition*time_in_non_roofed_enclosure)*(1-fraction_n_loss_mms_yard)*manure_in_field*manure_as_fertilizer))-(tier_2_direct_n2o_emission*28/44))%>%
+    select("livestock_category_code","livestock_category_name","herd_composition","time_in_stable","time_in_non_roofed_enclosure",                                   
+           "time_in_onfarm_grazing","time_in_offfarm_grazing","manure_in_stable","manure_in_non_roofed_enclosure","manure_in_field",                                                
+           "manure_as_fertilizer","n_content","methferm_tier1","methferm_tier2","methmanure","nexcretion","ge_intake","daily_ge_intake",                                                
+           "de","cp","Urinary_energy_frac","ash_content","IPCC Category - methane emissions enteric fermentation - Tier 1",
+           "IPCC Category - methane emissions enteric fermentation - Tier 2","IPCC Category - methane emissions manure - Tier 1",              
+           "IPCC-Category - Default N-excretion rates Tier 1","stable_mgmt_syst","mfc_stable","yard_mgmt_syst","mfc_yard",                                                       
+           "pasture_mgmt_syst","mfc_pasture","direct_n2o_stable","direct_n2o_yard","n2o_emissions_from_managed_soils",                                                    
+           "Bo","n_rate","fraction_n_loss_mms_stable","fraction_n_loss_mms_yard","tier_1_enteric_methane_emissions",                               
+           "tier_2_enteric_methane_emissions","tier_1_manure_mgmt_methane_emissions","tier_2_volatile_solid_excretion","tier_2_manure_mgmt_methane_emissions",                           
+           "tier_1_annual_N_excretion","n_intake","n_retention","tier_2_annual_N_excretion","tier_1_direct_n2o_emission","tier_2_direct_n2o_emission",                                     
+           "tier_1_n_volatization","tier_2_n_volatization","tier_1_indirect_n2o_emission","tier_2_indirect_n2o_emission","tier_1_total_n_from_manure_mgmt",                                
+           "tier_2_total_n_from_manure_mgmt")
+  
+  #N on the pasture
+  catle_pig_poultry_n_pature <- filter(ghg_enteric_manure,livestock_category_name%in%c("Cows (local)","Cows (improved)","Cows (high productive)",
+                                                                                       "Adult cattle - male","Steers/heifers","Steers/heifers (improved)",         
+                                                                                       "Calves","Calves (improved)","Buffalo (dairy)","Buffalo steers/heifers",
+                                                                                       "Buffalo calves",  "Pigs - lactating/pregnant sows","Pigs - dry sows/boars","Pigs - growers"))%>%
+    mutate(tier_1_onfarm = tier_1_annual_N_excretion*time_in_onfarm_grazing,
+           tier_1_offfarm = tier_1_annual_N_excretion*time_in_offfarm_grazing,
+           tier_2_onfarm = tier_2_annual_N_excretion*time_in_onfarm_grazing,
+           tier_2_offfarm = tier_2_annual_N_excretion*time_in_offfarm_grazing)%>%
+    select(livestock_category_code,livestock_category_name,tier_1_onfarm,tier_1_offfarm,tier_2_onfarm,tier_2_offfarm)
+  
+  sheep_and_other_n_pature <- filter(ghg_enteric_manure,livestock_category_name%in%c("Sheep/Goats - Ewes/Does","Sheep/Goats - Breeding Rams/Bucks","Sheep/Goats - Fattening Rams/Bucks","Sheep/Goats - Lambs/Kids"))%>%
+    mutate(tier_1_onfarm = tier_1_annual_N_excretion*time_in_onfarm_grazing,
+           tier_1_offfarm = tier_1_annual_N_excretion*time_in_offfarm_grazing,
+           tier_2_onfarm = tier_2_annual_N_excretion*time_in_onfarm_grazing,
+           tier_2_offfarm = tier_2_annual_N_excretion*time_in_offfarm_grazing)%>%
+    select(livestock_category_code,livestock_category_name,tier_1_onfarm,tier_1_offfarm,tier_2_onfarm,tier_2_offfarm)
+  
+  ################################################################################################################################################################################################################################
+  #GHG Burning
+  crop <- unnest(para[["feed_production"]], cols = c(feed_type_name))
+  
+  
+  for (i in 1:length(crop$feed_type_name)) {
+    
+    feed_selected <- crop %>% filter(feed_type_name %in% crop$feed_type_name[i])
+    
+    feed_item <- as.data.frame(feed_selected[["feed_items"]])%>%
+      select(feed_item_name,source_type,residue_burnt,fertilizer_rate,ecosystem_type,cultivation_period,water_regime,organic_amendment)
+    
+    temp <- feed_selected%>%
+      select(feed_type_code,feed_type_name,residue_dry_yield)%>%
+      left_join(feed_item, by = c("feed_type_name"="feed_item_name"))
+    if (i==1) {crop_ghg_parameters = temp}
+    else{crop_ghg_parameters = rbind(crop_ghg_parameters,temp)}
+  }
+  
+  crop_ghg_parameters[c("residue_dry_yield","residue_burnt","cultivation_period","fertilizer_rate")] <- sapply(crop_ghg_parameters[c("residue_dry_yield","residue_burnt","cultivation_period","fertilizer_rate")],as.numeric)#convert columns to numeric
+  
+  land_used <- land_required%>%
+    group_by(feed)%>%
+    summarise(area_total = sum(area_total, na.rm = T))
+  
+  residue_burn <- crop_ghg_parameters%>%
+    left_join(land_used, by=c("feed_type_name"="feed"))%>%
+    mutate(amnt_crop_residue_burnt = residue_dry_yield*residue_burnt*area_total)
+  
+  mass_residue_burn <- sum(residue_burn$amnt_crop_residue_burnt,na.rm = TRUE)
+  
+  combusion_factor <- 0.80
+  
+  ghg_burn <- ghg_ipcc_data[["table_2.5"]]%>%
+    mutate(mass_residue_burn,
+           combusion_factor,
+           amount_of_ghg_emission_from_fire = mass_residue_burn*combusion_factor*burnt_emission_factor)#equation 2.27
+  
+  ################################################################################################################################################################################################################################
+  #GHG off-farm
+  fertlizer_parameters <- para[["purchased_inorganic_fertilizers"]]%>%
+    left_join(ghg_ipcc_data[["fertilizer_table"]], by=c("fertilizer_mame"="fertilizer_type"))%>%
+    mutate(fertlizer_ghg_emissions = quantity*emissions_factor_kg_CO2_eq_per_kg_fertilizer)
+  
+  fertlizer_ghg_emissions_per_ha <- sum(fertlizer_parameters$fertlizer_ghg_emissions,na.rm = TRUE)/sum(land_used$area_total,na.rm = TRUE)
+  
+  ################################################################################################################################################################################################################################
+  #GHG Rice
+  #filter rice feed
+  rice <- filter(crop_ghg_parameters,grepl('Rice', feed_type_name))
+  
+  if(nrow(rice)>0) {
+    
+    if (rice$source_type!="Purchased") {
+      
+      baseline_emission_factor <- ghg_ipcc_data[["table_5.11"]]$baseline_emission_factor
+      soil_type_scaling_factor <- ghg_ipcc_data[["table_5.11"]]$soil_type_scaling_factor
+      
+      
+      ghg_rice <- left_join(rice,land_used, by=c("feed_type_name"="feed"))%>%
+        left_join(ghg_ipcc_data[["table_5.12"]],by="ecosystem_type")%>%
+        left_join(ghg_ipcc_data[["table_5.13"]],by="water_regime")%>%
+        left_join(ghg_ipcc_data[["table_5.14"]],by="organic_amendment")%>%
+        mutate(baseline_emission_factor,
+               soil_type_scaling_factor,
+               Scaling_factor_for_both_types = (1+(fertilizer_rate*conversion_factor))^0.59,#equation 5.3
+               daily_emission = baseline_emission_factor*disaggregated_scaling_factor_w*disaggregated_scaling_factor_p*Scaling_factor_for_both_types*soil_type_scaling_factor,#equation 5.3
+               annual_methane_emission = area_total*cultivation_period*daily_emission)%>%
+        select(-residue_dry_yield,-residue_burnt)
+      
+      
+    }else{ghg_rice <- "rice is purchased"}
+    
+  }else{ghg_rice <- "no rice in feed basket"}
+  
+  ghg_emissions <- list(ghg_enteric_manure,
+                        catle_pig_poultry_n_pature,
+                        sheep_and_other_n_pature,
+                        ghg_burn,
+                        fertlizer_parameters,
+                        fertlizer_ghg_emissions_per_ha,
+                        ghg_rice)
+  
+  return(ghg_emissions)
+  
+}
