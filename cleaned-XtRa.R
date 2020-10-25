@@ -15,7 +15,7 @@ source("./cleanedFunctions.R")
 
 # Loading data
 para <- fromJSON(paste0(path,"/data/example_JM_Test_1_1.json"),  flatten = TRUE)
-para <- fromJSON(paste0(path,"/data/ghg_parameters.json"),  flatten = TRUE)
+ghg_ipcc_data <- fromJSON(paste0(path,"/data/ghg_parameters.json"),  flatten = TRUE)
 
 # Feed quality calculation
 feed_basket_quality <- feed_quality(para)
@@ -45,4 +45,4 @@ economics <- economics_payback(para, energy_required)
 biomass <- biomass_calculations(para, land_required)
 
 # GHG emissions
-ghg_emissions <- ghg_emission(para,energy_required,ghg_ipcc_data,land_required)
+ghg_emissions <- ghg_emission(para,energy_required,ghg_ipcc_data,land_required,nitrogen_balance)
