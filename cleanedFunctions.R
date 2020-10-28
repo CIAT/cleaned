@@ -984,7 +984,15 @@ ghg_emission <- function(para,energy_required,ghg_ipcc_data,land_required,nitrog
     
     ghg_ipcc_parameters <- ghg_ipcc_data[["livestock_parameters"]]%>%
       filter(livestock_category_name %in% ghg_energy_parameters$livestock_category_name)%>%
-      mutate(mfc_stable,mfc_yard,mfc_pasture,direct_n2o_stable,direct_n2o_yard,n2o_emissions_from_managed_soils)%>%
+      mutate(stable_mgmt_syst = mfc_stable$stable_mgmt_syst,
+             mfc_stable = mfc_stable$mfc_stable,
+             yard_mgmt_syst = mfc_yard$yard_mgmt_syst,
+             mfc_yard = mfc_yard$mfc_yard,
+             pasture_mgmt_syst = mfc_pasture$pasture_mgmt_syst,
+             mfc_pasture = mfc_pasture$mfc_pasture,
+             direct_n2o_stable = direct_n2o_stable$direct_n2o_stable,
+             direct_n2o_yard = direct_n2o_yard$direct_n2o_yard,
+             n2o_emissions_from_managed_soils = n2o_emissions_from_managed_soils$n2o_emissions_from_managed_soils)%>%
       left_join(filter(ghg_ipcc_data[["table_10A_9"]],Continent == region), by = c("IPCC Category - methane emissions manure - Tier 1" = "anaimal_category"))%>%
       left_join(filter(ghg_ipcc_data[["table_10.19"]],Continent  == region), by = c("IPCC-Category - Default N-excretion rates Tier 1" = "anaimal_category"))%>%
       left_join(fraction_n_loss_mms_stable,by = c("IPCC Category - methane emissions manure - Tier 1" = "anaimal_category"))%>%
@@ -1107,7 +1115,7 @@ ghg_emission <- function(para,energy_required,ghg_ipcc_data,land_required,nitrog
   ################################################################################################################################################################################################################################
   #GHG Rice
   #filter rice feed
-  rice <- filter(crop_ghg_parameters,grepl('Rice', feed_type_name)) #Maize
+  rice <- filter(crop_ghg_parameters,grepl('Rice', feed_type_name)) 
   
   if(nrow(rice)>0) {
     
