@@ -1,0 +1,23 @@
+Package: cleaned
+Title: Comprehensive Livestock Environmental Assessment for Improved Nutrition, a Secured Environment, and Sustainable Development along Livestock and Fish Value Chains
+Version: 0.1.0
+Authors@R: c(
+    person("John", "Mutua", email = "ymutua@gmail.com", role = "cre"),
+    person("Stephen", "Oloo", email = "xxxxx", role = "aut"),
+    person("Jessica", "Mukiri", email = "xxxxx", role = "ctb"))
+Description: Assesses changes from transforming livestock value chains.
+BugReports: https://github.com/ciat/cleaned/issues
+Depends: R (>= 3.5.0)
+Imports: 
+    jsonlite, 
+    tidyverse, 
+    data.table, 
+    lubridate,
+    tidyr, 
+    dplyr,
+    utils,
+    rlang
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.1
