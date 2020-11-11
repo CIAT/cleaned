@@ -21,8 +21,8 @@ the `feed_quality` function
 \examples{
 \dontrun{
 data(mufindi)
-feed_basket_quality <- feed_quality(para)
-energy_requirement(para,feed_basket_quality)
+feed_basket_quality <- feed_quality(mufindi)
+energy_requirement(mufindi,feed_basket_quality)
 }
 
 }

@@ -2,14 +2,18 @@
 #'
 #' @description It computes feed quality
 #'
-#' @param para A json file
+#' @param para A list
+#'
+#' @importFrom dplyr mutate_at bind_rows
+#'
+#' @importFrom tidyr gather spread
 #'
 #' @return dataframe
 #'
 #' @examples
 #' \dontrun{
 #' data(mufindi)
-#' feed_quality(para)
+#' feed_quality(mufindi)
 #' }
 #'
 #' @export
@@ -41,14 +45,14 @@ feed_quality <- function(para) {
 
       for (i in 1:length(feed_types)) {
 
-        feed_selected <- feed_production %>% filter(feed_type_name %in%
+        feed_selected <- feed_production %>% dplyr::filter(feed_type_name %in%
                                                       feed_production$feed_type_name[i])
 
         feed_item <- as.data.frame(feed_selected[["feed_items"]])
 
         # calculate me and dm fresh
         feed_item <- feed_item %>%
-          mutate_at(c("cp_content","me_content", "dm_content"), as.numeric) %>%
+          dplyr::mutate_at(c("cp_content","me_content", "dm_content"), as.numeric) %>%
           select(feed_item_code, feed_item_name, cp_content, me_content, dm_content) %>%
           mutate(me_content_fresh = dm_content * me_content/100,
                  cp_content_fresh = dm_content * cp_content/100,
@@ -58,11 +62,27 @@ feed_quality <- function(para) {
 
         # Extracting allocation
         feeding_seasons <- unnest(para[["livestock_feeding_seasons"]],
-                                  cols = c(livestock_categories)) %>% filter(season_name %in%
+                                  cols = c(livestock_categories)) %>% dplyr::filter(season_name %in%
                                                                                seasons$season_name[season])
 
         feeding_seasons <- feeding_seasons %>%
-         mutate(livestock_category_name = ifelse(feeding_seasons$livestock_category_code  == livestock_df$livestock_category_code, livestock_df$livestock_category_name, NA))
+          mutate(livestock_category_name = ifelse(feeding_seasons$livestock_category_code  == livestock_df$livestock_category_code, livestock_df$livestock_category_name, NA))
+
+
+        # feeding_seasons <- feeding_seasons %>%
+        #   mutate(livestock_category_name = ifelse(livestock_category_code %in% "01", "Cows (local)",
+        #                                           ifelse(livestock_category_code %in% "02", "Cows (improved)",
+        #                                                  ifelse(livestock_category_code %in% "03", "Adult cattle - male",
+        #                                                         ifelse(livestock_category_code %in% "04", "Calves",
+        #                                                                ifelse(livestock_category_code %in% "05", "Buffalo (dairy)",
+        #                                                                       ifelse(livestock_category_code %in% "06", "Sheep/Goats - Ewes/Does",
+        #                                                                              ifelse(livestock_category_code %in% "07", "Pigs - lactating/pregnant sows",
+        #                                                                                     ifelse(livestock_category_code %in% "08", "Calves",
+        #                                                                                            ifelse(livestock_category_code %in% "09", "Cows (high productive)",
+        #                                                                                                   "Error"))))))))))
+
+
+
 
 
         livestock_selected <- feeding_seasons[feeding_seasons$livestock_category_code == livestock, ]

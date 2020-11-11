@@ -5,7 +5,7 @@
 \alias{mufindi}
 \title{Sample input data for cleaned model.}
 \format{
-A json file contain several lists:
+A json file containing several lists:
 \describe{
   \item{farm_code}{Farm code, a character}
   \item{farm_name}{Farm name, a character}
@@ -13,10 +13,16 @@ A json file contain several lists:
 }
 }
 \usage{
-mufindi
+data(mufindi)
 }
 \description{
 A dataset containing livestock and feed variables for
 the cleaned model.
+}
+\examples{
+data(mufindi)
+farm_code<-mufindi$farm_code
+farm_name <- mufindi$farm_name
+
 }
 \keyword{datasets}

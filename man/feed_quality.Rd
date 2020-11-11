@@ -7,7 +7,7 @@
 feed_quality(para)
 }
 \arguments{
-\item{para}{A json file}
+\item{para}{A list}
 }
 \value{
 dataframe
@@ -18,7 +18,7 @@ It computes feed quality
 \examples{
 \dontrun{
 data(mufindi)
-feed_quality(para)
+feed_quality(mufindi)
 }
 
 }

@@ -7,17 +7,17 @@
 #'
 #' @param feed_basket_quality A dataframe computed using the `feed_quality` function
 #'
-#' @importFrom dplyr mutate
+#' @importFrom dplyr summarise mutate left_join %>%
 #'
-#' @importFrom dplyr summarise
+#' @importFrom tidyr gather spread
 #'
 #' @return dataframe
 #'
 #' @examples
 #' \dontrun{
 #' data(mufindi)
-#' feed_basket_quality <- feed_quality(para)
-#' energy_requirement(para,feed_basket_quality)
+#' feed_basket_quality <- feed_quality(mufindi)
+#' energy_requirement(mufindi,feed_basket_quality)
 #' }
 #'
 #' @export
