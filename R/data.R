@@ -7,7 +7,7 @@
 #'
 #' @usage data(mufindi)
 #'
-#' @format A json file containing several lists:
+#' @format A nestd list:
 #' \describe{
 #'   \item{farm_code}{Farm code, a character}
 #'   \item{farm_name}{Farm name, a character}
@@ -28,11 +28,22 @@
 #' A dataset containing greenhosue gas parameters for use
 #' the cleaned model.
 #'
-#' @format A json file contain fourteen lists:
+#' @docType data
+#'
+#' @usage data(ghg_para)
+#'
+#' @format A nested list:
 #' \describe{
-#'   \item{livestock_category_name}{Livestock category name, a character}
-#'   \item{Urinary_energy_frac}{Urinary energy fraction, a number}
+#'   \item{fertilizer_table}{Livestock category name, a dataframe}
+#'   \item{table_2.5}{Urinary energy fraction, a dataframe}
 #'   ...
 #' }
+#'
+#' #' @keywords datasets
+#'
+#' @examples
+#' data(ghg_para)
+#' fertilizer_table<-ghg_para$fertilizer_table
+#' table_2.5 <- ghg_para$table_2.5
 #'
 "ghg_para"

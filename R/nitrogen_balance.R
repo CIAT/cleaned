@@ -106,8 +106,13 @@ n_balance <- function(para, land_required, soil_erosion){
 
     n_mineralized_kg_ha_year <- ntot_kg_ha_20cm*0.03
 
+    # Soil type
+    soil_type <- para[["soil_description"]]
+
+    # Soil carbon
     soil_c <- as.numeric(para[["soil_c"]])
 
+    # Soil clay
     soil_clay <- as.numeric(para[["soil_clay"]])
 
     # N content (kg N/kg DM)
@@ -135,9 +140,6 @@ n_balance <- function(para, land_required, soil_erosion){
 
     # Crop residue (KgN)
     out2 <- ifelse(feed_item_selected$source_type == "Main", 0, residue_removed_dm_ha * nres * area_total)
-
-    # Soil clay content
-    soil_clay <- soil_type <- as.numeric(para[["soil_clay"]])
 
     # soil loss per plot per feed type
     soil_loss_plot <- as.numeric(soil_erosion[soil_erosion$feed_type == feed,]$soil_loss_plot)
@@ -168,6 +170,7 @@ n_balance <- function(para, land_required, soil_erosion){
                                              soil_n,
                                              ntot_kg_ha_20cm,
                                              n_mineralized_kg_ha_year,
+                                             soil_type,
                                              soil_c,
                                              soil_clay,
                                              ncrop,
@@ -178,7 +181,6 @@ n_balance <- function(para, land_required, soil_erosion){
                                              in4b,
                                              out1,
                                              out2,
-                                             soil_clay,
                                              out5, nfertilizer))
 
 
@@ -186,7 +188,7 @@ n_balance <- function(para, land_required, soil_erosion){
 
   n_balance_all <- n_balance %>%
     bind_rows() %>%
-    mutate_at(c(-1), as.numeric)
+    mutate_at(c(-1, -19), as.numeric)
 
   # Animal manure (N kg) grazing, Organic N (kg N) total, Organic N (kg N/ha) total
   n_balance_all <- n_balance_all %>%
@@ -249,7 +251,7 @@ n_balance <- function(para, land_required, soil_erosion){
            out3a,
            out3b,
            out3c,
-           soil_clay,
+           soil_type,
            out3,
            out4,
            out5,

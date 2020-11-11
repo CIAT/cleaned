@@ -5,18 +5,26 @@
 \alias{ghg_para}
 \title{Greenhouse gas parameters for use in cleaned model.}
 \format{
-A json file contain fourteen lists:
+A nested list:
 \describe{
-  \item{livestock_category_name}{Livestock category name, a character}
-  \item{Urinary_energy_frac}{Urinary energy fraction, a number}
+  \item{fertilizer_table}{Livestock category name, a dataframe}
+  \item{table_2.5}{Urinary energy fraction, a dataframe}
   ...
 }
+
+#' @keywords datasets
 }
 \usage{
-ghg_para
+data(ghg_para)
 }
 \description{
 A dataset containing greenhosue gas parameters for use
 the cleaned model.
+}
+\examples{
+data(ghg_para)
+fertilizer_table<-ghg_para$fertilizer_table
+table_2.5 <- ghg_para$table_2.5
+
 }
 \keyword{datasets}

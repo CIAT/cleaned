@@ -7,7 +7,7 @@
 #'
 #' @param feed_basket_quality A dataframe computed using the `feed_quality` function
 #'
-#' @importFrom dplyr summarise mutate left_join %>%
+#' @importFrom dplyr summarise mutate filter left_join %>%
 #'
 #' @importFrom tidyr gather spread
 #'
@@ -49,7 +49,7 @@ energy_requirement <- function(para,feed_basket_quality){
     sl <- seasons$season_length[i]
 
     #Preparing the seasonal feed quality
-    s_feed_basket_quality <- filter(feed_basket_quality, season_name == seasons$season_name[i])%>%
+    s_feed_basket_quality <- dplyr::filter(feed_basket_quality, season_name == seasons$season_name[i])%>%
       gather(feed,value,-season_name,-livestock_category_code,-livestock_category_name,-feed_variables)%>%
       spread(feed_variables,value)%>%
       mutate(prod_me = fraction_as_fed*me_content_fresh,

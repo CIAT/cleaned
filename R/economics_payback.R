@@ -6,9 +6,7 @@
 #'
 #' @param energy_required A list computed using the `energy_required` function
 #'
-#' @importFrom dplyr summarise
-#'
-#' @importFrom dplyr mutate
+#' @importFrom dplyr summarise mutate
 #'
 #' @return dataframe
 #'

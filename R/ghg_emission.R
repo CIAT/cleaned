@@ -14,11 +14,7 @@
 #'
 #' @return list
 #'
-#' @importFrom dplyr summarise
-#'
-#' @importFrom dplyr mutate
-#'
-#' @importFrom dplyr rename
+#' @importFrom dplyr summarise mutate rename filter
 #'
 #' @examples
 #' \dontrun{
@@ -59,7 +55,7 @@ ghg_emission <- function(para,energy_required,ghg_ipcc_data,land_required,nitrog
       sl <- seasons$season_length[i]
 
       #Preparing the seasonal feed quality
-      seasonal_feed_parameters <- filter(feed_basket_quality, season_name == seasons$season_name[i])%>%
+      seasonal_feed_parameters <- dplyr::filter(feed_basket_quality, season_name == seasons$season_name[i])%>%
         gather(feed,value,-season_name,-livestock_category_code,-livestock_category_name,-feed_variables)%>%
         spread(feed_variables,value)%>%
         mutate(prod_me = fraction_as_fed*me_content_fresh,
@@ -93,37 +89,37 @@ ghg_emission <- function(para,energy_required,ghg_ipcc_data,land_required,nitrog
     #Computation of ghg parameters from ipcc data
     #manure conversion factor
     manureman_stable <- para[["manureman_stable"]]
-    mfc_stable = filter(ghg_ipcc_data[["table_10.17"]],system == manureman_stable);names(mfc_stable) <- c("stable_mgmt_syst","mfc_stable")
+    mfc_stable = dplyr::filter(ghg_ipcc_data[["table_10.17"]],system == manureman_stable);names(mfc_stable) <- c("stable_mgmt_syst","mfc_stable")
     manureman_yard <- para[["manureman_yard"]]
-    mfc_yard = filter(ghg_ipcc_data[["table_10.17"]],system == manureman_yard);names(mfc_yard) <- c("yard_mgmt_syst","mfc_yard")
+    mfc_yard = dplyr::filter(ghg_ipcc_data[["table_10.17"]],system == manureman_yard);names(mfc_yard) <- c("yard_mgmt_syst","mfc_yard")
     manureman_pasture <- para[["manureman_pasture"]]
-    mfc_pasture = filter(ghg_ipcc_data[["table_10.17"]],system == manureman_pasture);names(mfc_pasture) <- c("pasture_mgmt_syst","mfc_pasture")
+    mfc_pasture = dplyr::filter(ghg_ipcc_data[["table_10.17"]],system == manureman_pasture);names(mfc_pasture) <- c("pasture_mgmt_syst","mfc_pasture")
 
     #direct nitrous oxide factor
-    direct_n2o_stable <- filter(ghg_ipcc_data[["table_10.21"]],system == manureman_stable)%>%
+    direct_n2o_stable <- dplyr::filter(ghg_ipcc_data[["table_10.21"]],system == manureman_stable)%>%
       select(direct_nitrous_oxide_factor)
     names(direct_n2o_stable) <- "direct_n2o_stable"
-    direct_n2o_yard <- filter(ghg_ipcc_data[["table_10.21"]],system == manureman_yard)%>%
+    direct_n2o_yard <- dplyr::filter(ghg_ipcc_data[["table_10.21"]],system == manureman_yard)%>%
       select(direct_nitrous_oxide_factor)
     names(direct_n2o_yard) <- "direct_n2o_yard"
 
     #fraction of N loss due to manure management system
-    fraction_n_loss_mms_stable <- filter(ghg_ipcc_data[["table_10.22"]],system == manureman_stable)%>%
+    fraction_n_loss_mms_stable <- dplyr::filter(ghg_ipcc_data[["table_10.22"]],system == manureman_stable)%>%
       select(anaimal_category,fraction_n_loss_mms)
     names(fraction_n_loss_mms_stable) <- c("anaimal_category","fraction_n_loss_mms_stable")
-    fraction_n_loss_mms_yard <- filter(ghg_ipcc_data[["table_10.22"]],system == manureman_yard)%>%
+    fraction_n_loss_mms_yard <- dplyr::filter(ghg_ipcc_data[["table_10.22"]],system == manureman_yard)%>%
       select(anaimal_category,fraction_n_loss_mms)
     names(fraction_n_loss_mms_yard) <- c("anaimal_category","fraction_n_loss_mms_yard")
 
     #n2o emissions from managed soils
-    n2o_emissions_from_managed_soils <- filter(ghg_ipcc_data[["table_11.1_&_table_11.3"]],emission_factors == "EF4")%>%
+    n2o_emissions_from_managed_soils <- dplyr::filter(ghg_ipcc_data[["table_11.1_&_table_11.3"]],emission_factors == "EF4")%>%
       select(n2o_emissions_from_managed_soils)
 
     #Cnotinent
     region <- para[["region"]]
 
     ghg_ipcc_parameters <- ghg_ipcc_data[["livestock_parameters"]]%>%
-      filter(livestock_category_name %in% ghg_energy_parameters$livestock_category_name)%>%
+      dplyr::filter(livestock_category_name %in% ghg_energy_parameters$livestock_category_name)%>%
       mutate(stable_mgmt_syst = mfc_stable$stable_mgmt_syst,
              mfc_stable = mfc_stable$mfc_stable,
              yard_mgmt_syst = mfc_yard$yard_mgmt_syst,
@@ -133,8 +129,8 @@ ghg_emission <- function(para,energy_required,ghg_ipcc_data,land_required,nitrog
              direct_n2o_stable = direct_n2o_stable$direct_n2o_stable,
              direct_n2o_yard = direct_n2o_yard$direct_n2o_yard,
              n2o_emissions_from_managed_soils = n2o_emissions_from_managed_soils$n2o_emissions_from_managed_soils)%>%
-      left_join(filter(ghg_ipcc_data[["table_10A_9"]],Continent == region), by = c("IPCC Category - methane emissions manure - Tier 1" = "anaimal_category"))%>%
-      left_join(filter(ghg_ipcc_data[["table_10.19"]],Continent  == region), by = c("IPCC-Category - Default N-excretion rates Tier 1" = "anaimal_category"))%>%
+      left_join(dplyr::filter(ghg_ipcc_data[["table_10A_9"]],Continent == region), by = c("IPCC Category - methane emissions manure - Tier 1" = "anaimal_category"))%>%
+      left_join(dplyr::filter(ghg_ipcc_data[["table_10.19"]],Continent  == region), by = c("IPCC-Category - Default N-excretion rates Tier 1" = "anaimal_category"))%>%
       left_join(fraction_n_loss_mms_stable,by = c("IPCC Category - methane emissions manure - Tier 1" = "anaimal_category"))%>%
       left_join(fraction_n_loss_mms_yard,by = c("IPCC Category - methane emissions manure - Tier 1" = "anaimal_category"))
 
@@ -185,7 +181,7 @@ ghg_emission <- function(para,energy_required,ghg_ipcc_data,land_required,nitrog
            "tier_2_total_n_from_manure_mgmt")
 
   #N on the pasture
-  cattle_pig_poultry_n_pature <- filter(ghg_enteric_manure,livestock_category_name%in%c("Cows (local)","Cows (improved)","Cows (high productive)",
+  cattle_pig_poultry_n_pature <- dplyr::filter(ghg_enteric_manure,livestock_category_name%in%c("Cows (local)","Cows (improved)","Cows (high productive)",
                                                                                         "Adult cattle - male","Steers/heifers","Steers/heifers (improved)",
                                                                                         "Calves","Calves (improved)","Buffalo (dairy)","Buffalo steers/heifers",
                                                                                         "Buffalo calves",  "Pigs - lactating/pregnant sows","Pigs - dry sows/boars","Pigs - growers"))%>%
@@ -195,7 +191,7 @@ ghg_emission <- function(para,energy_required,ghg_ipcc_data,land_required,nitrog
            tier_2_offfarm = tier_2_annual_N_excretion*time_in_offfarm_grazing)%>%
     select(livestock_category_code,livestock_category_name,tier_1_onfarm,tier_1_offfarm,tier_2_onfarm,tier_2_offfarm)
 
-  sheep_and_other_n_pature <- filter(ghg_enteric_manure,livestock_category_name%in%c("Sheep/Goats - Ewes/Does","Sheep/Goats - Breeding Rams/Bucks","Sheep/Goats - Fattening Rams/Bucks","Sheep/Goats - Lambs/Kids"))%>%
+  sheep_and_other_n_pature <- dplyr::filter(ghg_enteric_manure,livestock_category_name%in%c("Sheep/Goats - Ewes/Does","Sheep/Goats - Breeding Rams/Bucks","Sheep/Goats - Fattening Rams/Bucks","Sheep/Goats - Lambs/Kids"))%>%
     mutate(tier_1_onfarm = tier_1_annual_N_excretion*time_in_onfarm_grazing,
            tier_1_offfarm = tier_1_annual_N_excretion*time_in_offfarm_grazing,
            tier_2_onfarm = tier_2_annual_N_excretion*time_in_onfarm_grazing,
@@ -209,7 +205,7 @@ ghg_emission <- function(para,energy_required,ghg_ipcc_data,land_required,nitrog
 
   for (i in 1:length(crop$feed_type_name)) {
 
-    feed_selected <- crop %>% filter(feed_type_name %in% crop$feed_type_name[i])
+    feed_selected <- crop %>% dplyr::filter(feed_type_name %in% crop$feed_type_name[i])
 
     feed_item <- as.data.frame(feed_selected[["feed_items"]])%>%
       select(feed_item_name,source_type,residue_removal,residue_burnt,fertilizer_rate,ecosystem_type,cultivation_period,water_regime,organic_amendment)
@@ -255,7 +251,7 @@ ghg_emission <- function(para,energy_required,ghg_ipcc_data,land_required,nitrog
   ################################################################################################################################################################################################################################
   #GHG Rice
   #filter rice feed
-  rice <- filter(crop_ghg_parameters,grepl('Rice', feed_type_name))
+  rice <- dplyr::filter(crop_ghg_parameters,grepl('Rice', feed_type_name))
 
   if(nrow(rice)>0) {
 
@@ -309,7 +305,7 @@ ghg_emission <- function(para,energy_required,ghg_ipcc_data,land_required,nitrog
   emission_factor_managed_soil <- "EF1"
 
   tier_1_n_managed_soil <- data.frame(rbind(tier_1_n_synthetic_fertilizer_managed_soil, tier_1_n_organic_manure_managed_soil, tier_1_n_from_crop_residue_managed_soil))%>%
-    rownames_to_column()%>%
+    tibble::rownames_to_column()%>%
     mutate(emission_factor_managed_soil)
 
   names(tier_1_n_managed_soil) <- c("anthropogenic_N_input","amount_of_N_applied","emission_factors")
@@ -333,7 +329,7 @@ ghg_emission <- function(para,energy_required,ghg_ipcc_data,land_required,nitrog
   emission_factor_flooded_rice <- "EF1R"
 
   tier_1_n_flooded_rice <- data.frame(rbind(tier_1_n_synthetic_fertilizer_flooded_rice, tier_1_n_organic_manure_flooded_rice, tier_1_n_from_crop_residue_flooded_rice))%>%
-    rownames_to_column()%>%
+    tibble::rownames_to_column()%>%
     mutate(emission_factor_flooded_rice)
 
   names(tier_1_n_flooded_rice) <- c("anthropogenic_N_input","amount_of_N_applied","emission_factors")
@@ -345,7 +341,7 @@ ghg_emission <- function(para,energy_required,ghg_ipcc_data,land_required,nitrog
   emission_factor_grazed_soils <- c("EF3PRP-CPP","EF3PRP-SO")
 
   tier_1_n_grazed_soils <- data.frame(rbind(tier_1_cattle_pig_poultry_n_pature_onfarm, tier_1_sheep_and_other_n_pature_onfarm))%>%
-    rownames_to_column()%>%
+    tibble::rownames_to_column()%>%
     mutate(emission_factor_grazed_soils)
 
   names(tier_1_n_grazed_soils) <- c("anthropogenic_N_input","amount_of_N_applied","emission_factors")
@@ -368,7 +364,7 @@ ghg_emission <- function(para,energy_required,ghg_ipcc_data,land_required,nitrog
   tier_2_n_from_crop_residue_managed_soil <- tier_1_n_from_crop_residue_managed_soil
 
   tier_2_n_managed_soil <- data.frame(rbind(tier_2_n_synthetic_fertilizer_managed_soil, tier_2_n_organic_manure_managed_soil, tier_2_n_from_crop_residue_managed_soil))%>%
-    rownames_to_column()%>%
+    tibble::rownames_to_column()%>%
     mutate(emission_factor_managed_soil)
 
   names(tier_2_n_managed_soil) <- c("anthropogenic_N_input","amount_of_N_applied","emission_factors")
@@ -382,7 +378,7 @@ ghg_emission <- function(para,energy_required,ghg_ipcc_data,land_required,nitrog
   tier_2_n_from_crop_residue_flooded_rice <- tier_1_n_from_crop_residue_flooded_rice
 
   tier_2_n_flooded_rice <- data.frame(rbind(tier_2_n_synthetic_fertilizer_flooded_rice, tier_2_n_organic_manure_flooded_rice, tier_2_n_from_crop_residue_flooded_rice))%>%
-    rownames_to_column()%>%
+    tibble::rownames_to_column()%>%
     mutate(emission_factor_flooded_rice)
 
   names(tier_2_n_flooded_rice) <- c("anthropogenic_N_input","amount_of_N_applied","emission_factors")
@@ -392,7 +388,7 @@ ghg_emission <- function(para,energy_required,ghg_ipcc_data,land_required,nitrog
   tier_2_sheep_and_other_n_pature_onfarm <- sum(sheep_and_other_n_pature$tier_2_onfarm,na.rm = TRUE)
 
   tier_2_n_grazed_soils <- data.frame(rbind(tier_2_cattle_pig_poultry_n_pature_onfarm, tier_2_sheep_and_other_n_pature_onfarm))%>%
-    rownames_to_column()%>%
+    tibble::rownames_to_column()%>%
     mutate(emission_factor_grazed_soils)
 
   names(tier_2_n_grazed_soils) <- c("anthropogenic_N_input","amount_of_N_applied","emission_factors")
@@ -434,15 +430,15 @@ ghg_emission <- function(para,energy_required,ghg_ipcc_data,land_required,nitrog
 
   names(tier_2_N20_indirect_emission) <- c("tier","n_synthetic_fertilizer_managed_soil","n_organic","n_pature_onfarm")
 
-  FracGASF <- filter(ghg_ipcc_data[["table_11.1_&_table_11.3"]],emission_factors == "FracGASF")
+  FracGASF <- dplyr::filter(ghg_ipcc_data[["table_11.1_&_table_11.3"]],emission_factors == "FracGASF")
 
-  FracGASM <- filter(ghg_ipcc_data[["table_11.1_&_table_11.3"]],emission_factors == "FracGASM")
+  FracGASM <- dplyr::filter(ghg_ipcc_data[["table_11.1_&_table_11.3"]],emission_factors == "FracGASM")
 
-  EF4 <- filter(ghg_ipcc_data[["table_11.1_&_table_11.3"]],emission_factors == "EF4")
+  EF4 <- dplyr::filter(ghg_ipcc_data[["table_11.1_&_table_11.3"]],emission_factors == "EF4")
 
-  EF3PRP_CPP <- filter(ghg_ipcc_data[["table_11.1_&_table_11.3"]],emission_factors == "EF3PRP-CPP")
+  EF3PRP_CPP <- dplyr::filter(ghg_ipcc_data[["table_11.1_&_table_11.3"]],emission_factors == "EF3PRP-CPP")
 
-  EF3PRP_SO <- filter(ghg_ipcc_data[["table_11.1_&_table_11.3"]],emission_factors == "EF3PRP-SO")
+  EF3PRP_SO <- dplyr::filter(ghg_ipcc_data[["table_11.1_&_table_11.3"]],emission_factors == "EF3PRP-SO")
 
   N20_onfarm_indirect_emission <- rbind.data.frame(tier_1_N20_indirect_emission,tier_2_N20_indirect_emission)%>%
     mutate(FracGASF = FracGASF$n2o_emissions_from_managed_soils,
@@ -459,7 +455,7 @@ ghg_emission <- function(para,energy_required,ghg_ipcc_data,land_required,nitrog
   tier_2_sheep_and_other_n_pature_offfarm <- sum(sheep_and_other_n_pature$tier_2_offfarm,na.rm = TRUE)
 
   N20N_offfarm <- data.frame(rbind(tier_1_cattle_pig_poultry_n_pature_offfarm,tier_1_sheep_and_other_n_pature_offfarm,tier_2_cattle_pig_poultry_n_pature_offfarm,tier_2_sheep_and_other_n_pature_offfarm))%>%
-    rownames_to_column()%>%
+    tibble::rownames_to_column()%>%
     rename(category = rowname,n_offfarm_pasture = rbind.tier_1_cattle_pig_poultry_n_pature_offfarm..tier_1_sheep_and_other_n_pature_offfarm..)%>%
     mutate(EF3PRP = ifelse(grepl("cattle",category),EF3PRP_CPP$n2o_emissions_from_managed_soils,EF3PRP_SO$n2o_emissions_from_managed_soils),
            annual_N20N_offfarm_direct_emission =n_offfarm_pasture*EF3PRP,

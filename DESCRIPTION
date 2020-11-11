@@ -15,6 +15,7 @@ Imports:
     lubridate,
     tidyr, 
     dplyr,
+    tibble,
     utils,
     rlang
 License: MIT + file LICENSE

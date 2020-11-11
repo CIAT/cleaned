@@ -10,7 +10,9 @@
 #'
 #' @return dataframe
 #'
-#' @importFrom dplyr mutate
+#' @importFrom dplyr summarise mutate filter left_join %>% mutate_if
+#'
+#' @importFrom tidyr gather spread
 #'
 #' @examples
 #' \dontrun{
@@ -31,7 +33,7 @@ land_requirement <- function(feed_basket_quality, energy_required, para){
   for (livestock in livestock_category_code){
 
     livestock_selected <- feed_basket_quality %>%
-      filter(livestock == livestock_category_code)
+      dplyr::filter(livestock == livestock_category_code)
 
     seasons <- unique(feed_basket_quality$season_name)
 
@@ -41,14 +43,14 @@ land_requirement <- function(feed_basket_quality, energy_required, para){
 
       # select feed and transpose the data
       season_feeds <- livestock_selected %>%
-        filter(season == season_name) %>%
+        dplyr::filter(season == season_name) %>%
         gather(feed,value,-season_name,-livestock_category_code,-livestock_category_name,-feed_variables)%>%
         spread(feed_variables,value)
 
       # select form energy requirment sheet
       season_selected_energy <- energy_required[2] %>%
         as.data.frame() %>%
-        filter(livestock == livestock_category_code, season == season_name)
+        dplyr::filter(livestock == livestock_category_code, season == season_name)
 
       feed_items <- unique(season_feeds$feed)
 
@@ -82,7 +84,7 @@ land_requirement <- function(feed_basket_quality, energy_required, para){
                  area_feed = ifelse(crop_residue_removal > 0,
                                     area_total*(cr_yield*crop_residue_removal)/(crop_yield*crop_removal+cr_yield*crop_residue_removal),
                                     area_total*(crop_yield*crop_removal+cr_yield*crop_residue_removal)/(crop_yield*crop_removal+cr_yield*crop_residue_removal))) %>%
-          mutate_if(is.numeric, list(~na_if(.,Inf))) %>%
+          dplyr::mutate_if(is.numeric, list(~na_if(.,Inf))) %>%
           replace(is.na(.), 0)
 
       }

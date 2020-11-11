@@ -10,8 +10,6 @@
 #'
 #' @importFrom dplyr summarise select mutate group_by na_if %>%
 #'
-#' @importFrom stats filter
-#'
 #' @importFrom utils de
 #'
 #' @importFrom tidyr unnest
