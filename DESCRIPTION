@@ -13,6 +13,7 @@ Imports:
     tidyverse, 
     data.table, 
     lubridate,
+    plyr,
     tidyr, 
     dplyr,
     tibble,
