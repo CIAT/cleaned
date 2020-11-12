@@ -71,7 +71,7 @@ economics_payback <- function(para, energy_required){
 
   #economics_all <- rbind.fill(list(cattle_manure, beef, cow_milk))
 
-  economics_all <- rbind.fill(list(cattle_manure,
+  economics_all <- plyr::rbind.fill(list(cattle_manure,
                                          beef,
                                          cow_milk)) %>%
     mutate(retail_price_kg = farm_gate_price(product),
