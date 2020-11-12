@@ -22,7 +22,7 @@ This is a basic example which shows you how to calculate feed basket quality
 ``` r
 library(cleaned)
 data(mufindi)
-feed_basket_quality <- feed_quality(para)
+feed_basket_quality <- feed_quality(mufindi)
 ```
 
 ## More information
