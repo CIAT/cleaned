@@ -5,7 +5,11 @@ Authors@R: c(
     person("John", "Mutua", email = "ymutua@gmail.com", role = "cre"),
     person("Stephen", "Oloo", email = "xxxxx", role = "aut"),
     person("Jessica", "Mukiri", email = "xxxxx", role = "ctb"))
-Description: Assesses changes from transforming livestock value chains.
+Description: CLEANED (Comprehensive Livestock Environmental Assessment for Improved Nutrition, a 
+    Secured Environment, and Sustainable Development along Livestock and Fish Value Chains) is an 
+    ex-ante tool that assesses environmental impacts of livestock systems and value chains.  It 
+    evaluates land requirements, productivity, water use, soil health, economics and greenhouse gas 
+    emissions.
 BugReports: https://github.com/ciat/cleaned/issues
 Depends: R (>= 3.5.0)
 Imports: 
@@ -23,3 +27,5 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
+Suggests: 
+    testthat
