@@ -22,7 +22,7 @@
 #'
 #' @export
 
-energy_requirement <- function(para,feed_basket_quality){
+energy_requirement <- function(para, feed_basket_quality){
   #get the seasons
   seasons <- para[["seasons"]]
   livestock <- para[["livestock"]]
