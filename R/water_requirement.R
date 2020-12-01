@@ -74,7 +74,8 @@ water_requirement <- function(para,land_required){
   #merging water use items for production
   water_use_for_production <- cbind(ET,fraction_of_precipitation_used_for_feed_production,total_water_use,water_use_fpcm,water_use_meat,water_use_protein)
 
-  water_use <- list(water_use_per_feed_item,water_use_for_production)
+  water_use <- list(water_use_per_feed_item = water_use_per_feed_item,
+                    water_use_for_production = water_use_per_feed_item)
 
   #returning results
   return(water_use)

@@ -74,7 +74,7 @@ biomass_calculation <- function(para, land_required){
            carbon_stock_change_biomass = carbon_biomass_balance*44/12) %>%
     select (-c(area_feed, feed_category))
 
-  carbon_stocks_change <- list(tier1, tier3)
+  carbon_stocks_change <- list(tier1 = tier1, tier3 = tier3)
 
   #returning results
   return(carbon_stocks_change)

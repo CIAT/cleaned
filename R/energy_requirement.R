@@ -105,6 +105,7 @@ energy_requirement <- function(para, feed_basket_quality){
   seasonal_results <- select(df,season_name,livestock_category_code,livestock_category_name,energy_required_by_season,protein_required_by_season,
                              fresh_intake_required_e,dmi_required_e,fresh_intake_required_cp,dmi_required_cp,dmi_s,limiting,me_intake_s)
   #return results
-  results <- list(annual_results,seasonal_results)
+  results <- list(annual_results = annual_results,
+                  seasonal_results = seasonal_results)
   return(results)
 }

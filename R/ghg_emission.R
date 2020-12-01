@@ -43,7 +43,7 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
 
   #
   no_days <- 365
-  annual_energy <- energy_required[[1]]
+  annual_energy <- energy_required[["annual_results"]]
   seasons <- para[["seasons"]]
   ###########################################################################################################
   #Preparation of ghg parameters
@@ -181,7 +181,7 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
            "tier_2_total_n_from_manure_mgmt")
 
   #N on the pasture
-  cattle_pig_poultry_n_pature <- dplyr::filter(ghg_enteric_manure,livestock_category_name%in%c("Cows (local)","Cows (improved)","Cows (high productive)",
+  cattle_pig_poultry_n_pasture <- dplyr::filter(ghg_enteric_manure,livestock_category_name%in%c("Cows (local)","Cows (improved)","Cows (high productive)",
                                                                                         "Adult cattle - male","Steers/heifers","Steers/heifers (improved)",
                                                                                         "Calves","Calves (improved)","Buffalo (dairy)","Buffalo steers/heifers",
                                                                                         "Buffalo calves",  "Pigs - lactating/pregnant sows","Pigs - dry sows/boars","Pigs - growers"))%>%
@@ -191,7 +191,7 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
            tier_2_offfarm = tier_2_annual_N_excretion*time_in_offfarm_grazing)%>%
     select(livestock_category_code,livestock_category_name,tier_1_onfarm,tier_1_offfarm,tier_2_onfarm,tier_2_offfarm)
 
-  sheep_and_other_n_pature <- dplyr::filter(ghg_enteric_manure,livestock_category_name%in%c("Sheep/Goats - Ewes/Does","Sheep/Goats - Breeding Rams/Bucks","Sheep/Goats - Fattening Rams/Bucks","Sheep/Goats - Lambs/Kids"))%>%
+  sheep_and_other_n_pasture <- dplyr::filter(ghg_enteric_manure,livestock_category_name%in%c("Sheep/Goats - Ewes/Does","Sheep/Goats - Breeding Rams/Bucks","Sheep/Goats - Fattening Rams/Bucks","Sheep/Goats - Lambs/Kids"))%>%
     mutate(tier_1_onfarm = tier_1_annual_N_excretion*time_in_onfarm_grazing,
            tier_1_offfarm = tier_1_annual_N_excretion*time_in_offfarm_grazing,
            tier_2_onfarm = tier_2_annual_N_excretion*time_in_onfarm_grazing,
@@ -335,12 +335,12 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
   names(tier_1_n_flooded_rice) <- c("anthropogenic_N_input","amount_of_N_applied","emission_factors")
 
   ### Anthropogenic N input type from Urine and dung inputs to grazed soils
-  tier_1_cattle_pig_poultry_n_pature_onfarm <-sum(cattle_pig_poultry_n_pature$tier_1_onfarm,na.rm = TRUE)
-  tier_1_sheep_and_other_n_pature_onfarm <- sum(sheep_and_other_n_pature$tier_1_onfarm,na.rm = TRUE)
+  tier_1_cattle_pig_poultry_n_pasture_onfarm <-sum(cattle_pig_poultry_n_pasture$tier_1_onfarm,na.rm = TRUE)
+  tier_1_sheep_and_other_n_pasture_onfarm <- sum(sheep_and_other_n_pasture$tier_1_onfarm,na.rm = TRUE)
 
   emission_factor_grazed_soils <- c("EF3PRP-CPP","EF3PRP-SO")
 
-  tier_1_n_grazed_soils <- data.frame(rbind(tier_1_cattle_pig_poultry_n_pature_onfarm, tier_1_sheep_and_other_n_pature_onfarm))%>%
+  tier_1_n_grazed_soils <- data.frame(rbind(tier_1_cattle_pig_poultry_n_pasture_onfarm, tier_1_sheep_and_other_n_pasture_onfarm))%>%
     tibble::rownames_to_column()%>%
     mutate(emission_factor_grazed_soils)
 
@@ -384,10 +384,10 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
   names(tier_2_n_flooded_rice) <- c("anthropogenic_N_input","amount_of_N_applied","emission_factors")
 
   ### Anthropogenic N input type from Urine and dung inputs to grazed soils
-  tier_2_cattle_pig_poultry_n_pature_onfarm <-sum(cattle_pig_poultry_n_pature$tier_2_onfarm,na.rm = TRUE)
-  tier_2_sheep_and_other_n_pature_onfarm <- sum(sheep_and_other_n_pature$tier_2_onfarm,na.rm = TRUE)
+  tier_2_cattle_pig_poultry_n_pasture_onfarm <-sum(cattle_pig_poultry_n_pasture$tier_2_onfarm,na.rm = TRUE)
+  tier_2_sheep_and_other_n_pasture_onfarm <- sum(sheep_and_other_n_pasture$tier_2_onfarm,na.rm = TRUE)
 
-  tier_2_n_grazed_soils <- data.frame(rbind(tier_2_cattle_pig_poultry_n_pature_onfarm, tier_2_sheep_and_other_n_pature_onfarm))%>%
+  tier_2_n_grazed_soils <- data.frame(rbind(tier_2_cattle_pig_poultry_n_pasture_onfarm, tier_2_sheep_and_other_n_pasture_onfarm))%>%
     tibble::rownames_to_column()%>%
     mutate(emission_factor_grazed_soils)
 
@@ -407,28 +407,28 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
 
   tier_1_organic_n <- sum(tier_1_n_organic_manure_managed_soil,tier_1_n_from_crop_residue_managed_soil,tier_1_n_organic_manure_flooded_rice,tier_1_n_from_crop_residue_flooded_rice,na.rm = TRUE)
 
-  tier_1_n_pature_onfarm <- sum(tier_1_cattle_pig_poultry_n_pature_onfarm,tier_1_sheep_and_other_n_pature_onfarm,na.rm = TRUE)
+  tier_1_n_pasture_onfarm <- sum(tier_1_cattle_pig_poultry_n_pasture_onfarm,tier_1_sheep_and_other_n_pasture_onfarm,na.rm = TRUE)
 
   tier_1_N20_indirect_emission <- as.data.frame(cbind(tier_1,
                                                       tier_1_n_synthetic_fertilizer_managed_soil,
                                                       tier_1_organic_n,
-                                                      tier_1_n_pature_onfarm))
+                                                      tier_1_n_pasture_onfarm))
 
-  names(tier_1_N20_indirect_emission) <- c("tier","n_synthetic_fertilizer_managed_soil","n_organic","n_pature_onfarm")
+  names(tier_1_N20_indirect_emission) <- c("tier","n_synthetic_fertilizer_managed_soil","n_organic","n_pasture_onfarm")
 
   ###tier 2
   tier_2 <- 2
 
   tier_2_organic_n <- sum(tier_2_n_organic_manure_managed_soil,tier_2_n_from_crop_residue_managed_soil,tier_2_n_organic_manure_flooded_rice,tier_2_n_from_crop_residue_flooded_rice,na.rm = TRUE)
 
-  tier_2_n_pature_onfarm <- sum(tier_2_cattle_pig_poultry_n_pature_onfarm,tier_2_sheep_and_other_n_pature_onfarm,na.rm = TRUE)
+  tier_2_n_pasture_onfarm <- sum(tier_2_cattle_pig_poultry_n_pasture_onfarm,tier_2_sheep_and_other_n_pasture_onfarm,na.rm = TRUE)
 
   tier_2_N20_indirect_emission <- as.data.frame(cbind(tier_2,
                                                       tier_2_n_synthetic_fertilizer_managed_soil,
                                                       tier_2_organic_n,
-                                                      tier_2_n_pature_onfarm))
+                                                      tier_2_n_pasture_onfarm))
 
-  names(tier_2_N20_indirect_emission) <- c("tier","n_synthetic_fertilizer_managed_soil","n_organic","n_pature_onfarm")
+  names(tier_2_N20_indirect_emission) <- c("tier","n_synthetic_fertilizer_managed_soil","n_organic","n_pasture_onfarm")
 
   FracGASF <- dplyr::filter(ghg_ipcc_data[["table_11.1_&_table_11.3"]],emission_factors == "FracGASF")
 
@@ -444,19 +444,19 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
     mutate(FracGASF = FracGASF$n2o_emissions_from_managed_soils,
            FracGASM = FracGASM$n2o_emissions_from_managed_soils,
            EF4 = EF4$n2o_emissions_from_managed_soils,
-           annual_N20N_from_atmospheric_deposition = ((n_synthetic_fertilizer_managed_soil*FracGASF)+((n_organic+n_pature_onfarm)*FracGASM))*EF4*(44/28))
+           annual_N20N_from_atmospheric_deposition = ((n_synthetic_fertilizer_managed_soil*FracGASF)+((n_organic+n_pasture_onfarm)*FracGASM))*EF4*(44/28))
 
   ## Off-farm
 
-  tier_1_cattle_pig_poultry_n_pature_offfarm <-sum(cattle_pig_poultry_n_pature$tier_1_offfarm,na.rm = TRUE)
-  tier_1_sheep_and_other_n_pature_offfarm <- sum(sheep_and_other_n_pature$tier_1_offfarm,na.rm = TRUE)
+  tier_1_cattle_pig_poultry_n_pasture_offfarm <-sum(cattle_pig_poultry_n_pasture$tier_1_offfarm,na.rm = TRUE)
+  tier_1_sheep_and_other_n_pasture_offfarm <- sum(sheep_and_other_n_pasture$tier_1_offfarm,na.rm = TRUE)
 
-  tier_2_cattle_pig_poultry_n_pature_offfarm <-sum(cattle_pig_poultry_n_pature$tier_2_offfarm,na.rm = TRUE)
-  tier_2_sheep_and_other_n_pature_offfarm <- sum(sheep_and_other_n_pature$tier_2_offfarm,na.rm = TRUE)
+  tier_2_cattle_pig_poultry_n_pasture_offfarm <-sum(cattle_pig_poultry_n_pasture$tier_2_offfarm,na.rm = TRUE)
+  tier_2_sheep_and_other_n_pasture_offfarm <- sum(sheep_and_other_n_pasture$tier_2_offfarm,na.rm = TRUE)
 
-  N20N_offfarm <- data.frame(rbind(tier_1_cattle_pig_poultry_n_pature_offfarm,tier_1_sheep_and_other_n_pature_offfarm,tier_2_cattle_pig_poultry_n_pature_offfarm,tier_2_sheep_and_other_n_pature_offfarm))%>%
+  N20N_offfarm <- data.frame(rbind(tier_1_cattle_pig_poultry_n_pasture_offfarm,tier_1_sheep_and_other_n_pasture_offfarm,tier_2_cattle_pig_poultry_n_pasture_offfarm,tier_2_sheep_and_other_n_pasture_offfarm))%>%
     tibble::rownames_to_column()%>%
-    rename(category = rowname,n_offfarm_pasture = rbind.tier_1_cattle_pig_poultry_n_pature_offfarm..tier_1_sheep_and_other_n_pature_offfarm..)%>%
+    rename(category = rowname,n_offfarm_pasture = rbind.tier_1_cattle_pig_poultry_n_pasture_offfarm..tier_1_sheep_and_other_n_pasture_offfarm..)%>%
     mutate(EF3PRP = ifelse(grepl("cattle",category),EF3PRP_CPP$n2o_emissions_from_managed_soils,EF3PRP_SO$n2o_emissions_from_managed_soils),
            annual_N20N_offfarm_direct_emission =n_offfarm_pasture*EF3PRP,
            FracGASM = FracGASM$n2o_emissions_from_managed_soils,
@@ -470,8 +470,8 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
   ################################################################################################################################################################################################################################
   #GHG data merge
   ghg_emissions <- list(ghg_enteric_manure = ghg_enteric_manure,
-                        cattle_pig_poultry_n_pature = cattle_pig_poultry_n_pature,
-                        sheep_and_other_n_pature = sheep_and_other_n_pature,
+                        cattle_pig_poultry_n_pasture = cattle_pig_poultry_n_pasture,
+                        sheep_and_other_n_pasture = sheep_and_other_n_pasture,
                         ghg_off_farm = fetilizer_ghg,
                         ghg_burning = ghg_burn,
                         ghg_soil = ghg_soil,
