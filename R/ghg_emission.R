@@ -27,13 +27,13 @@
 #' nitrogen_balance <- n_balance(para, land_required, soil_erosion)
 #' livestock_productivity <- land_productivity(para)
 #' economics <- economics_payback(para, energy_required)
-#' biomass <- biomass_calculations(para, land_required)
+#' biomass <- biomass_calculation(para, land_required)
 #' ghg_emission(para,energy_required,ghg_ipcc_data,land_required,nitrogen_balance)
 #' }
 #'
 #' @export
 
-ghg_emission <- function(para,energy_required,ghg_ipcc_data,land_required,nitrogen_balance){
+ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, nitrogen_balance){
   livestock <- para[["livestock"]]
   #convert columns to numeric
   cols_nam <- colnames(livestock%>%select(-livestock_category_code,-livestock_category_name))

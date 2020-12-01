@@ -2,7 +2,15 @@
 #'
 #' @description It computes land productivity. Products include milk and meat.
 #'
-#' @param para A json file
+#' @param para A JSON file which contains an object named \code{livestock} which contains
+#' more than one arrays. Each array can contain several objects. Data elements inside
+#' each array include: \code{livestock_category_code}: Livestock category code, \code{livestock_category_name}:
+#' Livestock category name, \code{herd_composition}: Herd composition (number), \code{annual_growth}:
+#' Average annual growth per animal (kilogram), \code{body_weight}: Average Body weight (kilogram),
+#' \code{birth_interval}: Birth interval (years), \code{carcass_fraction}: Carcass fraction, \code{energy_meatcontent}:
+#' Energy content meat, \code{protein_meatcontent}: Protein content meat (percent), \code{annual_milk}:
+#' Average annual milk (kilogram), \code{fat_content}: Fat content milk (percent), \code{protein_milkcontent}:
+#' Protein content milk (percent).
 #'
 #' @return dataframe
 #'

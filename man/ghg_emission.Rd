@@ -40,7 +40,7 @@ soil_erosion <- soil_health(para, land_required)
 nitrogen_balance <- n_balance(para, land_required, soil_erosion)
 livestock_productivity <- land_productivity(para)
 economics <- economics_payback(para, energy_required)
-biomass <- biomass_calculations(para, land_required)
+biomass <- biomass_calculation(para, land_required)
 ghg_emission(para,energy_required,ghg_ipcc_data,land_required,nitrogen_balance)
 }
 
