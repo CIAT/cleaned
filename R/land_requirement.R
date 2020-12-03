@@ -48,7 +48,7 @@ land_requirement <- function(feed_basket_quality, energy_required, para){
         spread(feed_variables,value)
 
       # select form energy requirment sheet
-      season_selected_energy <- energy_required[2] %>%
+      season_selected_energy <- energy_required[["seasonal_results"]] %>%
         as.data.frame() %>%
         dplyr::filter(livestock == livestock_category_code, season == season_name)
 
