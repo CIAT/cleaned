@@ -10,7 +10,7 @@
 #'
 #' @param energy_required A list computed using the `energy_required` function
 #'
-#' @param water_requirements A dataframe computed using the `water_requirement` function
+#' @param water_requirement A dataframe computed using the `water_requirement` function
 #'
 #' @param nitrogen_balance A dataframe computed using the `n_balance` function
 #'
@@ -20,7 +20,7 @@
 #'
 #' @param biomass A dataframe computed using the `biomass_calculation` function
 #'
-#' @param ghg_emissions A dataframe computed using the `n_balance` ghg_emission
+#' @param ghg_emission A dataframe computed using the `n_balance` ghg_emission
 #'
 #' @return saved json file
 #'
@@ -30,38 +30,82 @@
 #' \dontrun{
 #' data(mufindi)
 #' data(ghg_para)
-#' feed_basket_quality <- feed_quality(para)
-#' energy_required <- energy_requirement(para,feed_basket_quality)
-#' land_required <- land_requirement(feed_basket_quality, energy_required, para)
-#' soil_erosion <- soil_health(para, land_required)
-#' water_requirements <- water_requirement(para,land_required)
-#' nitrogen_balance <- n_balance(para, land_required, soil_erosion)
-#' livestock_productivity <- land_productivity(para)
-#' economics <- economics_payback(para, energy_required)
-#' biomass <- biomass_calculations(para, land_required)
-#' ghg_emission <- ghg_emission(para,energy_required,ghg_ipcc_data,land_required,nitrogen_balance)
-#' output(feed_basket_quality,energy_required,land_required,soil_erosion,water_requirements,
-#' nitrogen_balance,livestock_productivity,economics,biomass,ghg_emissions)
+#' feed_basket_quality <- feed_quality(mufindi)
+#' energy_required <- energy_requirement(mufindi,feed_basket_quality)
+#' land_required <- land_requirement(feed_basket_quality, energy_required, mufindi)
+#' soil_erosion <- soil_health(mufindi, land_required)
+#' water_requirement <- water_requirement(mufindi,land_required)
+#' nitrogen_balance <- n_balance(mufindi, land_required, soil_erosion)
+#' livestock_productivity <- land_productivity(mufindi)
+#' economics <- economics_payback(mufindi, energy_required)
+#' biomass <- biomass_calculation(mufindi, land_required)
+#' ghg_emission <- ghg_emission(mufindi,energy_required,ghg_para,land_required,nitrogen_balance)
+#' output(feed_basket_quality,energy_required,land_required,soil_erosion,water_requirement,
+#' nitrogen_balance,livestock_productivity,economics,biomass,ghg_emission)
 #' }
 #'
 #' @export
 #'
 output <- function(feed_basket_quality,energy_required,land_required,
-                   soil_erosion,water_requirements,nitrogen_balance,
-                   livestock_productivity,economics,biomass,ghg_emissions){
+                   soil_erosion,water_requirement,nitrogen_balance,
+                   livestock_productivity,economics,biomass,ghg_emission){
 
-  output_list <- list(feed_basket_quality = ifelse(exists("feed_basket_quality"), feed_basket_quality,"ERROR: Feed quality was not computed") ,
-                      energy_required = ifelse(exists("energy_required"),energy_required,"ERROR: Energy requirement was not computed"),
-                      land_required = ifelse(exists("land_required"),land_required,"ERROR: Land requirement was not computed"),
-                      soil_erosion = ifelse(exists("soil_erosion"),soil_erosion,"ERROR: Soil erosion was not computed"),
-                      water_requirements = ifelse(exists("water_requirements"),water_requirements,"ERROR: Water requirement was not computed"),
-                      nitrogen_balance = ifelse(exists("nitrogen_balance"),nitrogen_balance,"ERROR: Nitrogen balance was not computed"),
-                      livestock_productivity = ifelse(exists("livestock_productivity"),livestock_productivity,"ERROR: Livestock productivity was not computed"),
-                      economics = ifelse(exists("economics"),economics,"ERROR: Farm economics were not computed"),
-                      biomass = ifelse(exists("biomass"),biomass,"ERROR: Biomass was not computed"),
-                      ghg_emissions = ifelse(exists("ghg_emissions"),ghg_emissions,"ERROR: Greenhouse gas emissions were not computed"))
+  if (exists("feed_basket_quality")) {
+    feed_basket_quality = feed_basket_quality
+  }else {feed_basket_quality = "ERROR: Feed quality was not computed"}
+
+  if (exists("energy_required")) {
+    energy_required = energy_required
+  }else {energy_required = "ERROR: Energy requirement was not computed"}
+
+  if (exists("land_required")) {
+    land_required = land_required
+  }else {land_required = "ERROR: Land requirement was not computed"}
+
+  if (exists("soil_erosion")) {
+    soil_erosion = soil_erosion
+  }else {soil_erosion = "ERROR: Soil erosion was not computed"}
+
+  if (exists("water_requirement")) {
+    water_requirement = water_requirement
+  }else {water_requirement = "ERROR: Water requirement was not computed"}
+
+  if (exists("nitrogen_balance")) {
+    nitrogen_balance = nitrogen_balance
+  }else {nitrogen_balance = "ERROR: Nitrogen balance was not computed"}
+
+  if (exists("livestock_productivity")) {
+    livestock_productivity = livestock_productivity
+  }else {livestock_productivity = "ERROR: Livestock productivity was not computed"}
+
+  if (exists("economics")) {
+    economics = economics
+  }else {economics = "ERROR: Farm economics were not computed"}
+
+  if (exists("biomass")) {
+    biomass = biomass
+  }else {biomass = "ERROR: Biomass was not computed"}
+
+  if (exists("ghg_emission")) {
+    ghg_emission = ghg_emission
+  }else {ghg_emission = "ERROR: Greenhouse gas emissions were not computed"}
+
+
+  output_list <- list(feed_basket_quality = feed_basket_quality,
+                      energy_required = energy_required,
+                      land_required = land_required,
+                      soil_erosion = soil_erosion,
+                      water_requirement = water_requirement,
+                      nitrogen_balance = nitrogen_balance,
+                      livestock_productivity = livestock_productivity,
+                      economics = economics,
+                      biomass = biomass,
+                      ghg_emission = ghg_emission)
 
   output <- jsonlite::toJSON(output_list,pretty = TRUE)
-  write(output,"output.json")
+
+  output_path <- getwd()
+
+  write(output,paste0(output_path,"/","output.json"))
 
 } #end of output function

@@ -9,12 +9,12 @@ output(
   energy_required,
   land_required,
   soil_erosion,
-  water_requirements,
+  water_requirement,
   nitrogen_balance,
   livestock_productivity,
   economics,
   biomass,
-  ghg_emissions
+  ghg_emission
 )
 }
 \arguments{
@@ -26,7 +26,7 @@ output(
 
 \item{soil_erosion}{A dataframe computed using the `soil_health` function}
 
-\item{water_requirements}{A dataframe computed using the `water_requirement` function}
+\item{water_requirement}{A dataframe computed using the `water_requirement` function}
 
 \item{nitrogen_balance}{A dataframe computed using the `n_balance` function}
 
@@ -36,7 +36,7 @@ output(
 
 \item{biomass}{A dataframe computed using the `biomass_calculation` function}
 
-\item{ghg_emissions}{A dataframe computed using the `n_balance` ghg_emission}
+\item{ghg_emission}{A dataframe computed using the `n_balance` ghg_emission}
 }
 \value{
 saved json file
@@ -48,18 +48,18 @@ It generates a json file of all CLEANED_XtRa computation.
 \dontrun{
 data(mufindi)
 data(ghg_para)
-feed_basket_quality <- feed_quality(para)
-energy_required <- energy_requirement(para,feed_basket_quality)
-land_required <- land_requirement(feed_basket_quality, energy_required, para)
-soil_erosion <- soil_health(para, land_required)
-water_requirements <- water_requirement(para,land_required)
-nitrogen_balance <- n_balance(para, land_required, soil_erosion)
-livestock_productivity <- land_productivity(para)
-economics <- economics_payback(para, energy_required)
-biomass <- biomass_calculations(para, land_required)
-ghg_emission <- ghg_emission(para,energy_required,ghg_ipcc_data,land_required,nitrogen_balance)
-output(feed_basket_quality,energy_required,land_required,soil_erosion,water_requirements,
-nitrogen_balance,livestock_productivity,economics,biomass,ghg_emissions)
+feed_basket_quality <- feed_quality(mufindi)
+energy_required <- energy_requirement(mufindi,feed_basket_quality)
+land_required <- land_requirement(feed_basket_quality, energy_required, mufindi)
+soil_erosion <- soil_health(mufindi, land_required)
+water_requirement <- water_requirement(mufindi,land_required)
+nitrogen_balance <- n_balance(mufindi, land_required, soil_erosion)
+livestock_productivity <- land_productivity(mufindi)
+economics <- economics_payback(mufindi, energy_required)
+biomass <- biomass_calculation(mufindi, land_required)
+ghg_emission <- ghg_emission(mufindi,energy_required,ghg_para,land_required,nitrogen_balance)
+output(feed_basket_quality,energy_required,land_required,soil_erosion,water_requirement,
+nitrogen_balance,livestock_productivity,economics,biomass,ghg_emission)
 }
 
 }

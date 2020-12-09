@@ -70,7 +70,7 @@ n_balance <- function(para, land_required, soil_erosion){
 
     residue_removal <- as.numeric(feed_item_selected$residue_removal)
 
-    sum_n_content_manure_grazing <- energy_required[1] %>%
+    sum_n_content_manure_grazing <- energy_required[["annual_results"]] %>%
       as.data.frame() %>%
       summarise(sum(n_content_manure_grazing)) %>%
       as.numeric()
@@ -79,7 +79,7 @@ n_balance <- function(para, land_required, soil_erosion){
 
     main_product_removed_kg_ha <- yield_dm_ha*main_product_removal
 
-    n_content_manure_collected <- energy_required[1] %>%
+    n_content_manure_collected <- energy_required[["annual_results"]] %>%
       as.data.frame() %>%
       summarise(sum(n_content_manure_collected)) %>%
       as.numeric()

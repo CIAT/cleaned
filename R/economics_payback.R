@@ -49,7 +49,7 @@ economics_payback <- function(para, energy_required){
   }
 
   # Cattle manure
-  cattle_manure <- energy_required[1] %>%
+  cattle_manure <- energy_required[["annual_results"]] %>%
     as.data.frame() %>%
     summarise(product="Cattle Manure",
               total_production_year= sum(annual_manure_produced),
