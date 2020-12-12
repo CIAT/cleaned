@@ -10,7 +10,7 @@
 #'
 #' @param energy_required A list computed using the `energy_required` function
 #'
-#' @param water_requirement A dataframe computed using the `water_requirement` function
+#' @param water_required A dataframe computed using the `water_required` function
 #'
 #' @param nitrogen_balance A dataframe computed using the `n_balance` function
 #'
@@ -40,18 +40,19 @@
 #' economics <- economics_payback(mufindi, energy_required)
 #' biomass <- biomass_calculation(mufindi, land_required)
 #' ghg_emission <- ghg_emission(mufindi,energy_required,ghg_para,land_required,nitrogen_balance)
-#' output(feed_basket_quality,energy_required,land_required,soil_erosion,water_requirement,
+#' combineOutputs(feed_basket_quality,energy_required,land_required,soil_erosion,water_required,
 #' nitrogen_balance,livestock_productivity,economics,biomass,ghg_emission)
 #' }
 #'
 #' @export
 #'
-output <- function(feed_basket_quality,energy_required,land_required,
-                   soil_erosion,water_requirement,nitrogen_balance,
-                   livestock_productivity,economics,biomass,ghg_emission){
+combineOutputs <- function(feed_basket_quality, energy_required, land_required,
+                                  soil_erosion, water_required, nitrogen_balance,
+                                  livestock_productivity, economics, biomass,ghg_emission){
+
 
   if (exists("feed_basket_quality")) {
-    feed_basket_quality = feed_basket_quality
+    feed_basket_quality = split(feed_basket_quality, f=feed_basket_quality$season_name)
   }else {feed_basket_quality = "ERROR: Feed quality was not computed"}
 
   if (exists("energy_required")) {
@@ -59,7 +60,7 @@ output <- function(feed_basket_quality,energy_required,land_required,
   }else {energy_required = "ERROR: Energy requirement was not computed"}
 
   if (exists("land_required")) {
-    land_required = land_required
+    land_required = split(land_required, f=land_required$season_name)
   }else {land_required = "ERROR: Land requirement was not computed"}
 
   if (exists("soil_erosion")) {
@@ -67,8 +68,8 @@ output <- function(feed_basket_quality,energy_required,land_required,
   }else {soil_erosion = "ERROR: Soil erosion was not computed"}
 
   if (exists("water_requirement")) {
-    water_requirement = water_requirement
-  }else {water_requirement = "ERROR: Water requirement was not computed"}
+    water_required = water_required
+  }else {water_required = "ERROR: Water requirement was not computed"}
 
   if (exists("nitrogen_balance")) {
     nitrogen_balance = nitrogen_balance
@@ -87,9 +88,12 @@ output <- function(feed_basket_quality,energy_required,land_required,
   }else {biomass = "ERROR: Biomass was not computed"}
 
   if (exists("ghg_emission")) {
-    ghg_emission = ghg_emission
-  }else {ghg_emission = "ERROR: Greenhouse gas emissions were not computed"}
+    ghg_emissions = ghg_emissions
+  }else {ghg_emissions = "ERROR: Greenhouse gas emissions were not computed"}
 
+
+  feed_basket_quality <- lapply(feed_basket_quality, function(x) {x <- x[,-1]})
+  land_required <- lapply(land_required, function(x) {x <- x[,-1]})
 
   output_list <- list(feed_basket_quality = feed_basket_quality,
                       energy_required = energy_required,
@@ -102,10 +106,6 @@ output <- function(feed_basket_quality,energy_required,land_required,
                       biomass = biomass,
                       ghg_emission = ghg_emission)
 
-  output <- jsonlite::toJSON(output_list,pretty = TRUE)
-
-  output_path <- getwd()
-
-  write(output,paste0(output_path,"/","output.json"))
+  jsonlite::toJSON(output_list, pretty = TRUE)
 
 } #end of output function
