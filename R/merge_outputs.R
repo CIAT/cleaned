@@ -20,6 +20,8 @@
 #'
 #' @param biomass A dataframe computed using the `biomass_calculation` function
 #'
+#' @param soil_carbon A dataframe computed using the `soil_organic_carbon` dunction
+#'
 #' @param ghg_emission A dataframe computed using the `n_balance` ghg_emission
 #'
 #' @return saved json file
@@ -39,16 +41,17 @@
 #' livestock_productivity <- land_productivity(mufindi)
 #' economics <- economics_payback(mufindi, energy_required)
 #' biomass <- biomass_calculation(mufindi, land_required)
+#' soil_carbon <- soil_organic_carbon(para, land_required, biomass)
 #' ghg_emission <- ghg_emission(mufindi,energy_required,ghg_para,land_required,nitrogen_balance)
 #' combineOutputs(feed_basket_quality,energy_required,land_required,soil_erosion,water_required,
-#' nitrogen_balance,livestock_productivity,economics,biomass,ghg_emission)
+#' nitrogen_balance,livestock_productivity,economics,biomass,soil_carbon,ghg_emission)
 #' }
 #'
 #' @export
 #'
 combineOutputs <- function(feed_basket_quality, energy_required, land_required,
                                   soil_erosion, water_required, nitrogen_balance,
-                                  livestock_productivity, economics, biomass,ghg_emission){
+                                  livestock_productivity, economics, biomass,soil_carbon, ghg_emission){
 
 
   if (exists("feed_basket_quality")) {
@@ -87,6 +90,10 @@ combineOutputs <- function(feed_basket_quality, energy_required, land_required,
     biomass = biomass
   }else {biomass = "ERROR: Biomass was not computed"}
 
+  if (exists("biomass")) {
+    soil_carbon = soil_carbon
+  }else {soil_carbon = "ERROR: Soil carbon was not computed"}
+
   if (exists("ghg_emission")) {
     ghg_emissions = ghg_emissions
   }else {ghg_emissions = "ERROR: Greenhouse gas emissions were not computed"}
@@ -104,6 +111,7 @@ combineOutputs <- function(feed_basket_quality, energy_required, land_required,
                       livestock_productivity = livestock_productivity,
                       economics = economics,
                       biomass = biomass,
+                      soil_carbon = soil_carbon,
                       ghg_emission = ghg_emission)
 
   jsonlite::toJSON(output_list, pretty = TRUE)

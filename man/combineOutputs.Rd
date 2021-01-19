@@ -14,6 +14,7 @@ combineOutputs(
   livestock_productivity,
   economics,
   biomass,
+  soil_carbon,
   ghg_emission
 )
 }
@@ -36,6 +37,8 @@ combineOutputs(
 
 \item{biomass}{A dataframe computed using the `biomass_calculation` function}
 
+\item{soil_carbon}{A dataframe computed using the `soil_organic_carbon` dunction}
+
 \item{ghg_emission}{A dataframe computed using the `n_balance` ghg_emission}
 }
 \value{
@@ -57,9 +60,10 @@ nitrogen_balance <- n_balance(mufindi, land_required, soil_erosion)
 livestock_productivity <- land_productivity(mufindi)
 economics <- economics_payback(mufindi, energy_required)
 biomass <- biomass_calculation(mufindi, land_required)
+soil_carbon <- soil_organic_carbon(para, land_required, biomass)
 ghg_emission <- ghg_emission(mufindi,energy_required,ghg_para,land_required,nitrogen_balance)
 combineOutputs(feed_basket_quality,energy_required,land_required,soil_erosion,water_required,
-nitrogen_balance,livestock_productivity,economics,biomass,ghg_emission)
+nitrogen_balance,livestock_productivity,economics,biomass,soil_carbon,ghg_emission)
 }
 
 }

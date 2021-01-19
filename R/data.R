@@ -47,3 +47,28 @@
 #' table_2.5 <- ghg_para$table_2.5
 #'
 "ghg_para"
+
+#' Relative stock change parameters for use in cleaned model.
+#'
+#' A dataset containing relative stock change parameters for use
+#' the cleaned model.
+#'
+#' @docType data
+#'
+#' @usage data(stock_change_para)
+#'
+#' @format A nested list:
+#' \describe{
+#'   \item{cropland}{Cropland factors, a dataframe}
+#'   \item{grassland}{Grassland factors, a dataframe}
+#'   ...
+#' }
+#'
+#' #' @keywords datasets
+#'
+#' @examples
+#' data(stock_change_para)
+#' cropland_factors<-stock_change_para$cropland
+#' grassland_factors <- stock_change_para$grassland
+#'
+"stock_change_para"

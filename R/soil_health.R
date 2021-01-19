@@ -130,7 +130,6 @@ soil_health <- function(para, land_required) {
     # write data into a dataframe
     soil_erosion_per_feed <- as.data.frame(cbind(feed_type, soil_type, erosivity_r, erodibility_k, ls, c_factor, p_factor, soil_loss_ha_year, soil_loss_plot))
 
-
     soil_erosion_all_feed[[i]] <- soil_erosion_per_feed
 
   }

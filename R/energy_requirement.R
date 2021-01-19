@@ -73,7 +73,7 @@ energy_requirement <- function(para, feed_basket_quality){
              fresh_intake_required_cp = protein_required_by_season/(average_cp/100),
              dmi_required_cp = fresh_intake_required_cp*average_dm/100,
              dmi_s = ifelse(dmi_required_cp>dmi_required_e,dmi_required_cp,dmi_required_e),
-             limiting = ifelse(dmi_required_e == 0 |dmi_required_cp == 0, NA,
+             limiting = ifelse(dmi_required_e == 0 | dmi_required_cp == 0, NA,
                                ifelse(dmi_required_cp>dmi_required_e,"CP","ENERGY")),
              me_intake_s = dmi_s*average_me*100/average_dm)
 

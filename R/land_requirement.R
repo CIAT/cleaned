@@ -83,7 +83,9 @@ land_requirement <- function(feed_basket_quality, energy_required, para){
                                         area_total*(crop_yield*crop_removal)/(crop_yield*crop_removal+cr_yield*crop_residue_removal), 0),
                  area_feed = ifelse(crop_residue_removal > 0,
                                     area_total*(cr_yield*crop_residue_removal)/(crop_yield*crop_removal+cr_yield*crop_residue_removal),
-                                    area_total*(crop_yield*crop_removal+cr_yield*crop_residue_removal)/(crop_yield*crop_removal+cr_yield*crop_residue_removal))) %>%
+                                    area_total*(crop_yield*crop_removal+cr_yield*crop_residue_removal)/(crop_yield*crop_removal+cr_yield*crop_residue_removal)),
+                 grasses = ifelse(feed_selected$feed_category == "grass", area_feed, 0),
+                 tree_legume = ifelse(feed_selected$feed_category == "tree crop" | feed_selected$feed_category == "tree legume", area_feed, 0)) %>%
           dplyr::mutate_if(is.numeric, list(~na_if(.,Inf))) %>%
           replace(is.na(.), 0)
 
@@ -109,5 +111,6 @@ land_requirement <- function(feed_basket_quality, energy_required, para){
   }
 
   land_requirements_all <- livestock_requirements %>% bind_rows()
+
 
 }
