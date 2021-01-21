@@ -111,7 +111,7 @@ soil_organic_carbon <- function(para, stock_change_para, land_required, biomass)
 
   annual_change_carbon_stocks_trees_feed <- data.frame("type" = "trees_feed") %>%
     mutate(biomass = sum(biomass$tier3$carbon_biomass_balance)/1000,
-           below_ground = biomass**0.25,
+           below_ground = biomass*0.25,
            annual_change_carbon_stocks = below_ground/1000)
 
   annual_change_carbon_stocks_trees_non_feed <- data.frame("type" = "trees_non_feed") %>%
