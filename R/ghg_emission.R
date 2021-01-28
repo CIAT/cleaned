@@ -149,7 +149,7 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
   ghg_enteric_manure <- livestock%>%
     left_join(select(ghg_parameters,-livestock_category_name),by = "livestock_category_code")%>%
     mutate(tier_1_enteric_methane_emissions = methferm_tier1*herd_composition, #equation 10.19 and 10.20
-           tier_2_enteric_methane_emissions = ((daily_ge_intake*(methferm_tier2/100)*no_days)/55.65)/herd_composition, #equation 10.21
+           tier_2_enteric_methane_emissions = ((daily_ge_intake*(methferm_tier2/100)*no_days)/55.65), #equation 10.21
            tier_1_manure_mgmt_methane_emissions = herd_composition*methmanure, #equation 10.22
            tier_2_volatile_solid_excretion = (daily_ge_intake*(1-de)+(Urinary_energy_frac*daily_ge_intake))*(1-ash_content)/18.45, #equation 10.24
            tier_2_manure_mgmt_methane_emissions = (tier_2_volatile_solid_excretion*no_days)*(Bo*0.67*((time_in_stable*mfc_stable)+(time_in_non_roofed_enclosure*mfc_yard)+(time_in_onfarm_grazing*mfc_pasture))), #equation 10.23
