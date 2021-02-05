@@ -1,8 +1,9 @@
+---
+output: github_document
+---
 
 # cleaned
 
-<!-- badges: start -->
-<!-- badges: end -->
 
 The goal of cleaned is to assess changes from transforming livestock value chains.
 

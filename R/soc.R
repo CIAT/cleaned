@@ -125,9 +125,6 @@ soil_organic_carbon <- function(para, stock_change_para, land_required, biomass)
 
   results <- data.frame(total_annual_change_carbon_soils, total_change_co2_soils)
 
-  # results <- list(total_annual_change_carbon_soils = as.data.frame(total_annual_change_carbon_soils),
-  #                 total_change_co2_soils = as.data.frame(total_change_co2_soils))
-
   return(results)
 
 }
