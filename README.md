@@ -1,5 +1,4 @@
-# cleaned
-
+# Comprehensive Livestock Environmental Assessment for Improved Nutrition, a Secured Environment, and Sustainable Development along Livestock and Fish Value Chains (CLEANED)
 
 The goal of cleaned is to assess changes from transforming livestock value chains.
 
