@@ -1,8 +1,5 @@
-
 # cleaned
 
-<!-- badges: start -->
-<!-- badges: end -->
 
 The goal of cleaned is to assess changes from transforming livestock value chains.
 
