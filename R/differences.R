@@ -91,6 +91,8 @@ calculate_differences <- function(iDir){
 
   scenarios_all <- scenarioList %>% dplyr::bind_rows()
 
+  return(scenarios_all)
+
 }
 
 
