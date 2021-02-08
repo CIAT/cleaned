@@ -33,7 +33,7 @@ water_requirement <- function(para,land_required){
   feed_production[is.na(feed_production)] <- 0
 
   #getting the livestock parameters
-  livestock <- unnest(para[["livestock"]])
+  livestock <- unnest(para[["livestock"]], cols = c())
 
   #convert columns to numeric
   cols_nam <- colnames(livestock%>%select(-livestock_category_code,-livestock_category_name))
