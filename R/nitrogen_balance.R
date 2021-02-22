@@ -148,7 +148,7 @@ n_balance <- function(para, land_required, soil_erosion){
     out5 <- soil_loss_plot*soil_n*1.5
 
     # N content (kgN/kg DM ) from GHG parameters
-    nfertilizer <- 0
+    nfertilizer <- 0 # to fox from GHG
 
 
     # write data into a dataframe
@@ -208,6 +208,7 @@ n_balance <- function(para, land_required, soil_erosion){
            out4 = (n_mineralized_kg_ha_year + fertilizer_rate + organic_n_kg_per_ha) * (-9.4 + 0.13 * soil_clay + 0.01 * annual_precipitation) / 100 * area_total,
            nin = ifelse(area_total>0, in1+in2+in3+in4a+in4b, 0),
            nout = ifelse(area_total>0, out1+out2+out3+out4+out5, 0),
+           nue = ifelse(is.na(nout/nin), 0, nout/nin),
            nbalance_kg_n_total = nin-nout,
            nbalance_kg_n_ha_total = ifelse(is.na(nbalance_kg_n_total/area_total), 0, nbalance_kg_n_total/area_total),
            nbalance_feed_only_kg_n = ifelse(nbalance_kg_n_total==0, 0, ifelse(out2==0, nbalance_kg_n_total*out2/(out2+out1), 0)),
@@ -257,6 +258,7 @@ n_balance <- function(para, land_required, soil_erosion){
            out5,
            nin,
            nout,
+           nue,
            nbalance_kg_n_total,
            nbalance_kg_n_ha_total,
            nbalance_feed_only_kg_n,

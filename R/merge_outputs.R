@@ -36,7 +36,7 @@
 #' energy_required <- energy_requirement(mufindi,feed_basket_quality)
 #' land_required <- land_requirement(feed_basket_quality, energy_required, mufindi)
 #' soil_erosion <- soil_health(mufindi, land_required)
-#' water_requirement <- water_requirement(mufindi,land_required)
+#' water_required <- water_requirement(mufindi,land_required)
 #' nitrogen_balance <- n_balance(mufindi, land_required, soil_erosion)
 #' livestock_productivity <- land_productivity(mufindi)
 #' economics <- economics_payback(mufindi, energy_required)
@@ -70,7 +70,7 @@ combineOutputs <- function(feed_basket_quality, energy_required, land_required,
     soil_erosion = soil_erosion
   }else {soil_erosion = "ERROR: Soil erosion was not computed"}
 
-  if (exists("water_requirement")) {
+  if (exists("water_required")) {
     water_required = water_required
   }else {water_required = "ERROR: Water requirement was not computed"}
 
@@ -106,7 +106,7 @@ combineOutputs <- function(feed_basket_quality, energy_required, land_required,
                       energy_required = energy_required,
                       land_required = land_required,
                       soil_erosion = soil_erosion,
-                      water_requirement = water_requirement,
+                      water_required = water_required,
                       nitrogen_balance = nitrogen_balance,
                       livestock_productivity = livestock_productivity,
                       economics = economics,

@@ -202,4 +202,7 @@ if(getRversion() >= '2.15.1')  utils::globalVariables(c('Urinary_energy_frac',
                                                         'annual_carbon_loss_cultivated_organic_soils',
                                                         'annual_change_inorganic_carbon_stocks_soils',
                                                         'below_ground',
+                                                        'nue',
+                                                        'feeds',
+                                                        'livetype_code',
                                                         '.'))
