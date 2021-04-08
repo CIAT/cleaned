@@ -7,7 +7,7 @@
 #'
 #' @usage data(mufindi)
 #'
-#' @format A nestd list:
+#' @format A nested list:
 #' \describe{
 #'   \item{farm_code}{Farm code, a character}
 #'   \item{farm_name}{Farm name, a character}
@@ -25,7 +25,7 @@
 
 #' Greenhouse gas parameters for use in cleaned model.
 #'
-#' A dataset containing greenhosue gas parameters for use
+#' A dataset containing greenhouse gas parameters for use
 #' the cleaned model.
 #'
 #' @docType data

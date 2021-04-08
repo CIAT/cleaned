@@ -84,9 +84,6 @@ feed_quality <- function(para) {
         feed_allocation[[i]] <- feed_item %>%
           mutate(fraction_as_fed = as.numeric(livestock_selected$allocation)/100)
 
-
-
-
         # feeding_seasons <- feeding_seasons %>%
         #   mutate(livestock_category_name = ifelse(feeding_seasons$livetype_code  == livestock_df$livetype_code, livestock_df$livetype_code, NA))
 
@@ -118,7 +115,8 @@ feed_quality <- function(para) {
       }
 
       # Bind by rows
-      feed_allocation_all <- feed_allocation %>% bind_rows() %>%
+      feed_allocation_all <- feed_allocation %>%
+        bind_rows() %>%
         select(-feed_item_code)
 
       # Gather
@@ -131,13 +129,16 @@ feed_quality <- function(para) {
       feed_allocation_all <- rbind(feed_allocation_all, c(feed_variables = "fraction_dry_matter",
                                                           feed_allocation_all[feed_allocation_all$feed_variables == "fraction_as_fed", -1] * feed_allocation_all[feed_allocation_all$feed_variables == "dm_content", -1]/sum(unlist(feed_allocation_all[feed_allocation_all$feed_variables == "fraction_as_fed", -1] * feed_allocation_all[feed_allocation_all$feed_variables == "dm_content", -1]))))
 
-
+      # replace all NaN with zeros, could there be a better solution
+      feed_allocation_all[is.na(feed_allocation_all)] <- 0
 
       # Bind and add into the season list
       season_allocation[[season]] <- cbind(season_name = rep(feed_item_selected$season_name, times = nrow(feed_allocation_all)),
                                            livestock_category_code = rep(livestock_selected$livetype_code, times = nrow(feed_allocation_all)),
                                            livestock_category_name = rep(livestock_type_selected$livetype_desc, times = nrow(feed_allocation_all)),
                                            feed_allocation_all)
+
+
 
 
     }

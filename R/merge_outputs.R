@@ -1,6 +1,6 @@
 #' @title JSON output
 #'
-#' @description It generates a json file of all CLEANED_XtRa computation.
+#' @description It generates a JSON file of all CLEANED model computation.
 #'
 #' @param feed_basket_quality A dataframe computed using the `feed_quality` function
 #'
@@ -20,11 +20,11 @@
 #'
 #' @param biomass A dataframe computed using the `biomass_calculation` function
 #'
-#' @param soil_carbon A dataframe computed using the `soil_organic_carbon` dunction
+#' @param soil_carbon A dataframe computed using the `soil_organic_carbon` function
 #'
 #' @param ghg_emission A dataframe computed using the `n_balance` ghg_emission
 #'
-#' @return saved json file
+#' @return saved JSON file
 #'
 #' @importFrom jsonlite toJSON
 #'

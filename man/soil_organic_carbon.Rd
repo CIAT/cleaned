@@ -7,7 +7,7 @@
 soil_organic_carbon(para, stock_change_para, land_required, biomass)
 }
 \arguments{
-\item{para}{A json file}
+\item{para}{A JSON file}
 
 \item{stock_change_para}{A JSON file with stock change parameters}
 

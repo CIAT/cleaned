@@ -205,4 +205,5 @@ if(getRversion() >= '2.15.1')  utils::globalVariables(c('Urinary_energy_frac',
                                                         'nue',
                                                         'feeds',
                                                         'livetype_code',
+                                                        'livetype_desc',
                                                         '.'))

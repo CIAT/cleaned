@@ -2,7 +2,7 @@
 #'
 #' @description It compute land requirements
 #'
-#' @param para A json file
+#' @param para A JSON file
 #'
 #' @param feed_basket_quality A dataframe computed using the `feed_quality` function
 #'
@@ -59,11 +59,11 @@ land_requirement <- function(feed_basket_quality, energy_required, para){
       for (i in feed_items){
 
         # get crop yield
-        feed_production <- unnest(para[["feed_production"]], cols = c(feed_type_name))
-        feed_selected <- feed_production[feed_production$feed_type_name == i,]
+        feed_production <- unnest(para[["feed_items"]], cols = c(feed_type_name))
+        feed_item_selected <- feed_production[feed_production$feed_item_name == i,]
 
-        # get main product removal
-        feed_item_selected <- as.data.frame(feed_selected[["feed_items"]])
+        # # get main product removal
+        # feed_item_selected <- as.data.frame(feed_selected[["feed_items"]])
 
         # selected feed from season feeds above
         selected_feed <- season_feeds[season_feeds$feed == i,]
@@ -71,9 +71,9 @@ land_requirement <- function(feed_basket_quality, energy_required, para){
         land_requirements[[i]] <- selected_feed %>%
           select(feed) %>%
           mutate(feed_item_dm = selected_feed$fraction_dry_matter*season_selected_energy$dmi_s,
-                 crop_yield = as.numeric(feed_selected$dry_yield)*1000,
+                 crop_yield = as.numeric(feed_item_selected$dry_yield)*1000,
                  crop_removal = as.numeric(feed_item_selected$main_product_removal),
-                 cr_yield = as.numeric(feed_selected$residue_dry_yield)*1000,
+                 cr_yield = as.numeric(feed_item_selected$residue_dry_yield)*1000,
                  crop_residue_removal = ifelse(feed_item_selected$source_type == "Residue",
                                                as.numeric(feed_item_selected$residue_removal), 0),
                  area_total = ifelse(feed_item_selected$source_type == "Main",
@@ -84,8 +84,8 @@ land_requirement <- function(feed_basket_quality, energy_required, para){
                  area_feed = ifelse(crop_residue_removal > 0,
                                     area_total*(cr_yield*crop_residue_removal)/(crop_yield*crop_removal+cr_yield*crop_residue_removal),
                                     area_total*(crop_yield*crop_removal+cr_yield*crop_residue_removal)/(crop_yield*crop_removal+cr_yield*crop_residue_removal)),
-                 grasses = ifelse(feed_selected$feed_category == "grass", area_feed, 0),
-                 tree_legume = ifelse(feed_selected$feed_category == "tree crop" | feed_selected$feed_category == "tree legume", area_feed, 0)) %>%
+                 grasses = ifelse(feed_item_selected$category == "grass", area_feed, 0),
+                 tree_legume = ifelse(feed_item_selected$category == "tree crop" | feed_item_selected$category == "tree legume", area_feed, 0)) %>%
           dplyr::mutate_if(is.numeric, list(~na_if(.,Inf))) %>%
           replace(is.na(.), 0)
 

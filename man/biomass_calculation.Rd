@@ -7,7 +7,7 @@
 biomass_calculation(para, land_required)
 }
 \arguments{
-\item{para}{A json file}
+\item{para}{A JSON file}
 
 \item{land_required}{A dataframe computed using the `land_requirement` function}
 }

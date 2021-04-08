@@ -13,11 +13,11 @@ ghg_emission(
 )
 }
 \arguments{
-\item{para}{A json file}
+\item{para}{A JSON file}
 
 \item{energy_required}{A list computed using the `energy_required` function}
 
-\item{ghg_ipcc_data}{A json file}
+\item{ghg_ipcc_data}{A JSON file}
 
 \item{land_required}{A dataframe computed using the `land_requirement` function}
 

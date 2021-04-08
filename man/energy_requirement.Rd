@@ -7,7 +7,7 @@
 energy_requirement(para, feed_basket_quality)
 }
 \arguments{
-\item{para}{A json file}
+\item{para}{A JSON file}
 
 \item{feed_basket_quality}{A dataframe computed using the `feed_quality` function}
 }

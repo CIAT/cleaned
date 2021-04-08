@@ -2,7 +2,7 @@
 #'
 #' @description It computes economic payback from livestock products.
 #'
-#' @param para A json file
+#' @param para A JSON file
 #'
 #' @param energy_required A list computed using the `energy_required` function
 #'

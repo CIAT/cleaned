@@ -7,7 +7,7 @@
 n_balance(para, land_required, soil_erosion)
 }
 \arguments{
-\item{para}{A json file}
+\item{para}{A JSON file}
 
 \item{land_required}{A dataframe computed using the `land_requirement` function}
 

@@ -7,7 +7,7 @@
 economics_payback(para, energy_required)
 }
 \arguments{
-\item{para}{A json file}
+\item{para}{A JSON file}
 
 \item{energy_required}{A list computed using the `energy_required` function}
 }

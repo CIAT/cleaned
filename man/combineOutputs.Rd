@@ -37,15 +37,15 @@ combineOutputs(
 
 \item{biomass}{A dataframe computed using the `biomass_calculation` function}
 
-\item{soil_carbon}{A dataframe computed using the `soil_organic_carbon` dunction}
+\item{soil_carbon}{A dataframe computed using the `soil_organic_carbon` function}
 
 \item{ghg_emission}{A dataframe computed using the `n_balance` ghg_emission}
 }
 \value{
-saved json file
+saved JSON file
 }
 \description{
-It generates a json file of all CLEANED_XtRa computation.
+It generates a JSON file of all CLEANED model computation.
 }
 \examples{
 \dontrun{

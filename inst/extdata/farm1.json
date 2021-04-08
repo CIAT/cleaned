@@ -1,0 +1,847 @@
+{
+    "cba_discount_rate": 0,
+    "cba_years": 0,
+    "cropland_orgmatter": "Low, temperate/boreal, dry",
+    "cropland_system": "Long term cultivated, temperate/boreal, dry",
+    "cropland_tillage": "Full",
+    "farm_code": "t11",
+    "farm_name": "aa",
+    "feed_basket": [
+        {
+            "feeds": [
+                {
+                    "feed_item_code": "1",
+                    "feed_type_code": "1",
+                    "livestock": [
+                        {
+                            "allocation": 0,
+                            "livetype_code": "1"
+                        },
+                        {
+                            "allocation": 0,
+                            "livetype_code": "2"
+                        }
+                    ]
+                },
+                {
+                    "feed_item_code": "53",
+                    "feed_type_code": "29",
+                    "livestock": [
+                        {
+                            "allocation": 0,
+                            "livetype_code": "1"
+                        },
+                        {
+                            "allocation": 0,
+                            "livetype_code": "2"
+                        }
+                    ]
+                },
+                {
+                    "feed_item_code": "82",
+                    "feed_type_code": "40",
+                    "livestock": [
+                        {
+                            "allocation": 0,
+                            "livetype_code": "1"
+                        },
+                        {
+                            "allocation": 0,
+                            "livetype_code": "2"
+                        }
+                    ]
+                },
+                {
+                    "feed_item_code": "62",
+                    "feed_type_code": "36",
+                    "livestock": [
+                        {
+                            "allocation": 0,
+                            "livetype_code": "1"
+                        },
+                        {
+                            "allocation": 0,
+                            "livetype_code": "2"
+                        }
+                    ]
+                },
+                {
+                    "feed_item_code": "107",
+                    "feed_type_code": "16",
+                    "livestock": [
+                        {
+                            "allocation": 0,
+                            "livetype_code": "1"
+                        },
+                        {
+                            "allocation": 0,
+                            "livetype_code": "2"
+                        }
+                    ]
+                },
+                {
+                    "feed_item_code": "12",
+                    "feed_type_code": "6",
+                    "livestock": [
+                        {
+                            "allocation": 0,
+                            "livetype_code": "1"
+                        },
+                        {
+                            "allocation": 0,
+                            "livetype_code": "2"
+                        }
+                    ]
+                }
+            ],
+            "season_name": "Wet"
+        },
+        {
+            "feeds": [
+                {
+                    "feed_item_code": "1",
+                    "feed_type_code": "1",
+                    "livestock": [
+                        {
+                            "allocation": 0,
+                            "livetype_code": "1"
+                        },
+                        {
+                            "allocation": 0,
+                            "livetype_code": "2"
+                        }
+                    ]
+                },
+                {
+                    "feed_item_code": "53",
+                    "feed_type_code": "29",
+                    "livestock": [
+                        {
+                            "allocation": 0,
+                            "livetype_code": "1"
+                        },
+                        {
+                            "allocation": 0,
+                            "livetype_code": "2"
+                        }
+                    ]
+                },
+                {
+                    "feed_item_code": "82",
+                    "feed_type_code": "40",
+                    "livestock": [
+                        {
+                            "allocation": 0,
+                            "livetype_code": "1"
+                        },
+                        {
+                            "allocation": 0,
+                            "livetype_code": "2"
+                        }
+                    ]
+                },
+                {
+                    "feed_item_code": "62",
+                    "feed_type_code": "36",
+                    "livestock": [
+                        {
+                            "allocation": 0,
+                            "livetype_code": "1"
+                        },
+                        {
+                            "allocation": 0,
+                            "livetype_code": "2"
+                        }
+                    ]
+                },
+                {
+                    "feed_item_code": "107",
+                    "feed_type_code": "16",
+                    "livestock": [
+                        {
+                            "allocation": 0,
+                            "livetype_code": "1"
+                        },
+                        {
+                            "allocation": 0,
+                            "livetype_code": "2"
+                        }
+                    ]
+                },
+                {
+                    "feed_item_code": "12",
+                    "feed_type_code": "6",
+                    "livestock": [
+                        {
+                            "allocation": 0,
+                            "livetype_code": "1"
+                        },
+                        {
+                            "allocation": 0,
+                            "livetype_code": "2"
+                        }
+                    ]
+                }
+            ],
+            "season_name": "De"
+        },
+        {
+            "feeds": [
+                {
+                    "feed_item_code": "1",
+                    "feed_type_code": "1",
+                    "livestock": [
+                        {
+                            "allocation": 0,
+                            "livetype_code": "1"
+                        },
+                        {
+                            "allocation": 0,
+                            "livetype_code": "2"
+                        }
+                    ]
+                },
+                {
+                    "feed_item_code": "53",
+                    "feed_type_code": "29",
+                    "livestock": [
+                        {
+                            "allocation": 0,
+                            "livetype_code": "1"
+                        },
+                        {
+                            "allocation": 0,
+                            "livetype_code": "2"
+                        }
+                    ]
+                },
+                {
+                    "feed_item_code": "82",
+                    "feed_type_code": "40",
+                    "livestock": [
+                        {
+                            "allocation": 0,
+                            "livetype_code": "1"
+                        },
+                        {
+                            "allocation": 0,
+                            "livetype_code": "2"
+                        }
+                    ]
+                },
+                {
+                    "feed_item_code": "62",
+                    "feed_type_code": "36",
+                    "livestock": [
+                        {
+                            "allocation": 0,
+                            "livetype_code": "1"
+                        },
+                        {
+                            "allocation": 0,
+                            "livetype_code": "2"
+                        }
+                    ]
+                },
+                {
+                    "feed_item_code": "107",
+                    "feed_type_code": "16",
+                    "livestock": [
+                        {
+                            "allocation": 0,
+                            "livetype_code": "1"
+                        },
+                        {
+                            "allocation": 0,
+                            "livetype_code": "2"
+                        }
+                    ]
+                },
+                {
+                    "feed_item_code": "12",
+                    "feed_type_code": "6",
+                    "livestock": [
+                        {
+                            "allocation": 0,
+                            "livetype_code": "1"
+                        },
+                        {
+                            "allocation": 0,
+                            "livetype_code": "2"
+                        }
+                    ]
+                }
+            ],
+            "season_name": "Wet Dry"
+        }
+    ],
+    "feed_items": [
+        {
+            "ammonia": 0,
+            "ammonium_nitrate": 0,
+            "ammonium_sulfate": 0,
+            "c_factor": 0,
+            "category": "grass",
+            "cp_content": 6.25479452054795,
+            "cp_fresh": 1.73883287671233,
+            "crop_coefficient": 0.6,
+            "cut_carry_fraction": 0,
+            "dap": 0,
+            "de": 0.4686,
+            "dm_content": 27.8,
+            "dry_yield": 8.88219178082192,
+            "emission_factor": 0,
+            "energy": 0,
+            "energy_dm": 0,
+            "establishment_cost": 0,
+            "establishment_labour": 6,
+            "feed_item_code": "1",
+            "feed_item_name": "Andropogon gayanus (forage)",
+            "feed_type_code": "1",
+            "feed_type_name": "Andropogon gayanus",
+            "fraction_as_fertilizer": 0,
+            "fresh_yield": 0,
+            "grassman": "1",
+            "grassman_change_factor": 1,
+            "harvest_index": 0,
+            "intercrop": 0,
+            "intercrop_fraction": 0,
+            "kc_initial": 0.3,
+            "kc_late": 0.75,
+            "kc_midseason": 0.75,
+            "land_cover": "1",
+            "landcover_c_factor": 0.001,
+            "main_n": 0.0104,
+            "main_product_removal": 0,
+            "me_content": 7.1,
+            "me_fresh": 2.52812438356164,
+            "n_fertilizer": 0,
+            "n_fixation": 0,
+            "n_solutions": 0,
+            "npk": 0,
+            "operational_cost": 18,
+            "operational_labour": 0.203,
+            "residue_burnt": 0,
+            "residue_dm_content": 0,
+            "residue_dry_yield": 0,
+            "residue_fresh_yield": 0,
+            "residue_n": 0,
+            "residue_n_dm": 0.0104,
+            "residue_removal": 0,
+            "slope": "1",
+            "slope_length": 0,
+            "slope_p_factor": 0.11,
+            "trees_dhb": 0,
+            "trees_growth": 0,
+            "trees_ha": 0,
+            "trees_removal": 0,
+            "urea": 0,
+            "usda_value": 0,
+            "water_content": 0,
+            "wfp_blue": 0.002,
+            "wfp_green": 0.199,
+            "wfp_grey": 0.002
+        },
+        {
+            "ammonia": 0,
+            "ammonium_nitrate": 0,
+            "ammonium_sulfate": 0,
+            "c_factor": 0.05,
+            "category": "cereal",
+            "cp_content": 5.9,
+            "cp_fresh": 5.133,
+            "crop_coefficient": 0.533333333333333,
+            "cut_carry_fraction": 0,
+            "dap": 0,
+            "de": 0.602396784,
+            "dm_content": 87,
+            "dry_yield": 8.6,
+            "emission_factor": 0,
+            "energy": 365,
+            "energy_dm": 407.229722191231,
+            "establishment_cost": 0,
+            "establishment_labour": 0,
+            "feed_item_code": "53",
+            "feed_item_name": "Maize (Zea mays) - stover",
+            "feed_type_code": "29",
+            "feed_type_name": "Maize",
+            "fraction_as_fertilizer": 0,
+            "fresh_yield": 10,
+            "grassman": "1",
+            "grassman_change_factor": 1,
+            "harvest_index": 0.47,
+            "intercrop": 0,
+            "intercrop_fraction": 0,
+            "kc_initial": 0.15,
+            "kc_late": 0.3,
+            "kc_midseason": 1.15,
+            "land_cover": "1",
+            "landcover_c_factor": 0.001,
+            "main_n": 0.017,
+            "main_product_removal": 0,
+            "me_content": 9.127224,
+            "me_fresh": 7.94068488,
+            "n_fertilizer": 0,
+            "n_fixation": 0,
+            "n_solutions": 0,
+            "npk": 0,
+            "operational_cost": 0,
+            "operational_labour": 1.222,
+            "residue_burnt": 0,
+            "residue_dm_content": 0.8963,
+            "residue_dry_yield": 3,
+            "residue_fresh_yield": 3.5,
+            "residue_n": 0,
+            "residue_n_dm": 0.007,
+            "residue_removal": 0,
+            "slope": "1",
+            "slope_length": 0,
+            "slope_p_factor": 0.11,
+            "trees_dhb": 0,
+            "trees_growth": 0,
+            "trees_ha": 0,
+            "trees_removal": 0,
+            "urea": 0,
+            "usda_value": 20314,
+            "water_content": 10.37,
+            "wfp_blue": 0.081,
+            "wfp_green": 0.947,
+            "wfp_grey": 0.194
+        },
+        {
+            "ammonia": 0,
+            "ammonium_nitrate": 0,
+            "ammonium_sulfate": 0,
+            "c_factor": 0.027,
+            "category": "grass",
+            "cp_content": 11,
+            "cp_fresh": 1.65,
+            "crop_coefficient": 0.916666666666667,
+            "cut_carry_fraction": 0,
+            "dap": 0,
+            "de": 0.652135968,
+            "dm_content": 15,
+            "dry_yield": 6,
+            "emission_factor": 0,
+            "energy": 0,
+            "energy_dm": 0,
+            "establishment_cost": 20,
+            "establishment_labour": 6,
+            "feed_item_code": "82",
+            "feed_item_name": "Pennisetum purpureum - forage",
+            "feed_type_code": "40",
+            "feed_type_name": "Pennisetum purpureum",
+            "fraction_as_fertilizer": 0,
+            "fresh_yield": 20,
+            "grassman": "1",
+            "grassman_change_factor": 1,
+            "harvest_index": 0.9,
+            "intercrop": 0,
+            "intercrop_fraction": 0,
+            "kc_initial": 0.6,
+            "kc_late": 1.05,
+            "kc_midseason": 1.1,
+            "land_cover": "1",
+            "landcover_c_factor": 0.001,
+            "main_n": 0.023,
+            "main_product_removal": 0,
+            "me_content": 9.880848,
+            "me_fresh": 1.4821272,
+            "n_fertilizer": 0,
+            "n_fixation": 0,
+            "n_solutions": 0,
+            "npk": 0,
+            "operational_cost": 18,
+            "operational_labour": 0.5,
+            "residue_burnt": 0,
+            "residue_dm_content": 0.85,
+            "residue_dry_yield": 0,
+            "residue_fresh_yield": 2.22222222222222,
+            "residue_n": 0,
+            "residue_n_dm": 0.023,
+            "residue_removal": 0,
+            "slope": "1",
+            "slope_length": 0,
+            "slope_p_factor": 0.11,
+            "trees_dhb": 0,
+            "trees_growth": 0,
+            "trees_ha": 0,
+            "trees_removal": 0,
+            "urea": 0,
+            "usda_value": 0,
+            "water_content": 0,
+            "wfp_blue": 0,
+            "wfp_green": 0,
+            "wfp_grey": 0
+        },
+        {
+            "ammonia": 0,
+            "ammonium_nitrate": 0,
+            "ammonium_sulfate": 0,
+            "c_factor": 0.027,
+            "category": "grass",
+            "cp_content": 6,
+            "cp_fresh": 3.6,
+            "crop_coefficient": 0.6,
+            "cut_carry_fraction": 0,
+            "dap": 0,
+            "de": 0.33,
+            "dm_content": 60,
+            "dry_yield": 10,
+            "emission_factor": 0,
+            "energy": 0,
+            "energy_dm": 0,
+            "establishment_cost": 20,
+            "establishment_labour": 6,
+            "feed_item_code": "62",
+            "feed_item_name": "Naturally occuring pasture - grazing",
+            "feed_type_code": "36",
+            "feed_type_name": "Natural pasture",
+            "fraction_as_fertilizer": 0,
+            "fresh_yield": 2,
+            "grassman": "1",
+            "grassman_change_factor": 1,
+            "harvest_index": 0.95,
+            "intercrop": 0,
+            "intercrop_fraction": 0,
+            "kc_initial": 0.3,
+            "kc_late": 0.75,
+            "kc_midseason": 0.75,
+            "land_cover": "1",
+            "landcover_c_factor": 0.001,
+            "main_n": 0.01,
+            "main_product_removal": 0,
+            "me_content": 5,
+            "me_fresh": 3,
+            "n_fertilizer": 0,
+            "n_fixation": 0,
+            "n_solutions": 0,
+            "npk": 0,
+            "operational_cost": 18,
+            "operational_labour": 0.203,
+            "residue_burnt": 0,
+            "residue_dm_content": 1,
+            "residue_dry_yield": 0,
+            "residue_fresh_yield": 0.105263157894737,
+            "residue_n": 0,
+            "residue_n_dm": 0.01,
+            "residue_removal": 0,
+            "slope": "1",
+            "slope_length": 0,
+            "slope_p_factor": 0.11,
+            "trees_dhb": 0,
+            "trees_growth": 0,
+            "trees_ha": 0,
+            "trees_removal": 0,
+            "urea": 0,
+            "usda_value": 0,
+            "water_content": 0,
+            "wfp_blue": 0.002,
+            "wfp_green": 0.199,
+            "wfp_grey": 0.002
+        },
+        {
+            "ammonia": 0,
+            "ammonium_nitrate": 0,
+            "ammonium_sulfate": 0,
+            "c_factor": 0,
+            "category": "legume",
+            "cp_content": 5.2,
+            "cp_fresh": 4.576,
+            "crop_coefficient": 0.633333333333333,
+            "cut_carry_fraction": 0,
+            "dap": 0,
+            "de": 0.417256488,
+            "dm_content": 88,
+            "dry_yield": 3.1045,
+            "emission_factor": 0,
+            "energy": 0,
+            "energy_dm": 0,
+            "establishment_cost": 0,
+            "establishment_labour": 0,
+            "feed_item_code": "107",
+            "feed_item_name": "Soybean (Glycine max) - crop residue",
+            "feed_type_code": "16",
+            "feed_type_name": "Glycine max",
+            "fraction_as_fertilizer": 0,
+            "fresh_yield": 3.5,
+            "grassman": "1",
+            "grassman_change_factor": 1,
+            "harvest_index": 0,
+            "intercrop": 0,
+            "intercrop_fraction": 0,
+            "kc_initial": 0.15,
+            "kc_late": 0.6,
+            "kc_midseason": 1.15,
+            "land_cover": "1",
+            "landcover_c_factor": 0.001,
+            "main_n": 0.064,
+            "main_product_removal": 0,
+            "me_content": 6.322068,
+            "me_fresh": 5.56341984,
+            "n_fertilizer": 0,
+            "n_fixation": 99.344,
+            "n_solutions": 0,
+            "npk": 0,
+            "operational_cost": 0,
+            "operational_labour": 0,
+            "residue_burnt": 0,
+            "residue_dm_content": 0,
+            "residue_dry_yield": 0,
+            "residue_fresh_yield": 0,
+            "residue_n": 0,
+            "residue_n_dm": 0,
+            "residue_removal": 0,
+            "slope": "1",
+            "slope_length": 0,
+            "slope_p_factor": 0.11,
+            "trees_dhb": 0,
+            "trees_growth": 0,
+            "trees_ha": 0,
+            "trees_removal": 0,
+            "urea": 0,
+            "usda_value": 0,
+            "water_content": 0,
+            "wfp_blue": 0,
+            "wfp_green": 0,
+            "wfp_grey": 0
+        },
+        {
+            "ammonia": 0,
+            "ammonium_nitrate": 0,
+            "ammonium_sulfate": 0,
+            "c_factor": 0,
+            "category": "grass",
+            "cp_content": 8.25479452054795,
+            "cp_fresh": 2.14624657534247,
+            "crop_coefficient": 0.916666666666667,
+            "cut_carry_fraction": 0,
+            "dap": 0,
+            "de": 0.478816438356164,
+            "dm_content": 26,
+            "dry_yield": 13.7643835616438,
+            "emission_factor": 0,
+            "energy": 0,
+            "energy_dm": 0,
+            "establishment_cost": 20,
+            "establishment_labour": 8,
+            "feed_item_code": "12",
+            "feed_item_name": "Brachiaria hybrid (forage)",
+            "feed_type_code": "6",
+            "feed_type_name": "Brachiaria hybrid",
+            "fraction_as_fertilizer": 0,
+            "fresh_yield": 0,
+            "grassman": "1",
+            "grassman_change_factor": 1,
+            "harvest_index": 0,
+            "intercrop": 0,
+            "intercrop_fraction": 0,
+            "kc_initial": 0.6,
+            "kc_late": 1.05,
+            "kc_midseason": 1.1,
+            "land_cover": "1",
+            "landcover_c_factor": 0.001,
+            "main_n": 0.0224,
+            "main_product_removal": 0,
+            "me_content": 7.25479452054795,
+            "me_fresh": 1.88624657534247,
+            "n_fertilizer": 0,
+            "n_fixation": 0,
+            "n_solutions": 0,
+            "npk": 0,
+            "operational_cost": 31,
+            "operational_labour": 0.203,
+            "residue_burnt": 0,
+            "residue_dm_content": 0,
+            "residue_dry_yield": 0,
+            "residue_fresh_yield": 0,
+            "residue_n": 0,
+            "residue_n_dm": 0.0224,
+            "residue_removal": 0,
+            "slope": "1",
+            "slope_length": 0,
+            "slope_p_factor": 0.11,
+            "trees_dhb": 0,
+            "trees_growth": 0,
+            "trees_ha": 0,
+            "trees_removal": 0,
+            "urea": 0,
+            "usda_value": 0,
+            "water_content": 0,
+            "wfp_blue": 0.002,
+            "wfp_green": 0.199,
+            "wfp_grey": 0.002
+        }
+    ],
+    "ferlitizer": [
+        {
+            "cost": 0,
+            "fertilizer_code": "1",
+            "fertilizer_desc": "Urea",
+            "fraction": 0,
+            "quantity": 0
+        }
+    ],
+    "grassland_implevel": "Medium ",
+    "grassland_management": "Nominally managed",
+    "land_oppcost": 0,
+    "livestock": [
+        {
+            "annual_growth": 0,
+            "annual_milk": 520,
+            "birth_interval": 1.5,
+            "body_weight": 350,
+            "carcass_fraction": 0,
+            "cp_grazing": 0,
+            "cp_growth": 0,
+            "cp_lactation": 0,
+            "cp_lactmilk": 0.09,
+            "cp_maintenance": 0.35,
+            "cp_pregnancy": 9.64,
+            "distance_to_pasture": 0,
+            "energy_eggcontent": 0,
+            "energy_meatcontent": 2200,
+            "energy_milkcontent": 970,
+            "er_grazing": 2,
+            "er_growth": 0,
+            "er_lactation": 0,
+            "er_lactmilk": 5.5,
+            "er_maintenance": 40.45954902,
+            "er_pregnancy": 1260,
+            "fat_content": 5.8,
+            "grazing_displacement": 0,
+            "herd_composition": 1,
+            "ipcc_meth_ef_t1": 32,
+            "ipcc_meth_ef_t2": 6.5,
+            "ipcc_meth_exc": 0.6,
+            "ipcc_meth_man": 1,
+            "lactation_length": 0,
+            "litter_size": 0,
+            "livetype_code": "1",
+            "livetype_desc": "Cows (local)",
+            "lw_gain": 0,
+            "manure_in_field": 0,
+            "manure_in_non_roofed_enclosure": 0,
+            "manure_in_stable": 0,
+            "meat_price": 23,
+            "meat_product": "beef",
+            "milk_price": 1.045,
+            "milk_product": "cow milk",
+            "n_content": 0.029,
+            "oneoff_cost": 6200,
+            "oneoff_labour": 0,
+            "operational_cost": 4200,
+            "operational_labour": 46,
+            "proportion_growth": 0,
+            "protein_meatcontent": 26,
+            "protein_milkcontent": 3.2,
+            "time_in_non_roofed_enclosure": 0,
+            "time_in_offfarm_grazing": 0,
+            "time_in_onfarm_grazing": 0,
+            "time_in_stable": 0,
+            "water_requirement": 120
+        },
+        {
+            "annual_growth": 0,
+            "annual_milk": 1500,
+            "birth_interval": 1.166666667,
+            "body_weight": 600,
+            "carcass_fraction": 0.48,
+            "cp_grazing": 0,
+            "cp_growth": 0,
+            "cp_lactation": 0,
+            "cp_lactmilk": 0.09,
+            "cp_maintenance": 0.6,
+            "cp_pregnancy": 12.21,
+            "distance_to_pasture": 0,
+            "energy_eggcontent": 0,
+            "energy_meatcontent": 2200,
+            "energy_milkcontent": 970,
+            "er_grazing": 2,
+            "er_growth": 0,
+            "er_lactation": 0,
+            "er_lactmilk": 5.5,
+            "er_maintenance": 60.61546514,
+            "er_pregnancy": 1500,
+            "fat_content": 4.3,
+            "grazing_displacement": 0,
+            "herd_composition": 1,
+            "ipcc_meth_ef_t1": 46,
+            "ipcc_meth_ef_t2": 6.5,
+            "ipcc_meth_exc": 0.6,
+            "ipcc_meth_man": 1,
+            "lactation_length": 0,
+            "litter_size": 0,
+            "livetype_code": "2",
+            "livetype_desc": "Cows (improved)",
+            "lw_gain": 0,
+            "manure_in_field": 0,
+            "manure_in_non_roofed_enclosure": 0,
+            "manure_in_stable": 0,
+            "meat_price": 23,
+            "meat_product": "beef",
+            "milk_price": 1.045,
+            "milk_product": "cow milk",
+            "n_content": 0.029,
+            "oneoff_cost": 1300,
+            "oneoff_labour": 0,
+            "operational_cost": 1200,
+            "operational_labour": 5,
+            "proportion_growth": 0,
+            "protein_meatcontent": 26,
+            "protein_milkcontent": 3.7,
+            "time_in_non_roofed_enclosure": 0,
+            "time_in_offfarm_grazing": 0,
+            "time_in_onfarm_grazing": 0,
+            "time_in_stable": 0,
+            "water_requirement": 140
+        }
+    ],
+    "manure_onfarm_fraction": 0,
+    "manure_sales_fraction": 0,
+    "manureman_pasture": "Pasture / range / paddock",
+    "manureman_stable": "Pasture / range / paddock",
+    "manureman_yard": "Pasture / range / paddock",
+    "purchased_bedding": 0,
+    "purchased_compost": 0,
+    "purchased_manure": 0,
+    "purchased_organic_n": 0,
+    "region": "AFRICA",
+    "seasons": [
+        {
+            "season_length": 120,
+            "season_name": "Wet"
+        },
+        {
+            "season_length": 100,
+            "season_name": "De"
+        },
+        {
+            "season_length": 50,
+            "season_name": "Wet Dry"
+        }
+    ],
+    "txt_annual_prec": 0,
+    "txt_arable_tograssland": 0,
+    "txt_cropland_orgmatter_ipcc": 0.95,
+    "txt_cropland_system_ipcc": 0.8,
+    "txt_cropland_tillage_ipcc": 1,
+    "txt_et": 0,
+    "txt_grassland_implevel_ipcc": 1,
+    "txt_grassland_management_ipcc": 1,
+    "txt_grassland_toarable": 0,
+    "txt_rain_length": 0,
+    "txt_soil_bulk": 0,
+    "txt_soil_c": 0,
+    "txt_soil_clay": 0,
+    "txt_soil_depth": 0,
+    "txt_soil_k_value": 0.15,
+    "txt_soil_n": 0,
+    "waste_consume_milk": 0,
+    "waste_distribution_meat": 0,
+    "waste_distribution_milk": 0,
+    "waste_processing_meat": 0,
+    "waste_processing_milk": 0,
+    "waste_production_meat": 0,
+    "waste_production_milk": 0
+}

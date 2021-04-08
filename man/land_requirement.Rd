@@ -11,7 +11,7 @@ land_requirement(feed_basket_quality, energy_required, para)
 
 \item{energy_required}{A list computed using the `energy_required` function}
 
-\item{para}{A json file}
+\item{para}{A JSON file}
 }
 \value{
 dataframe

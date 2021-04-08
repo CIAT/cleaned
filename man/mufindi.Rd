@@ -5,7 +5,7 @@
 \alias{mufindi}
 \title{Sample input data for cleaned model.}
 \format{
-A nestd list:
+A nested list:
 \describe{
   \item{farm_code}{Farm code, a character}
   \item{farm_name}{Farm name, a character}

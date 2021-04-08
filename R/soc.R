@@ -2,7 +2,7 @@
 #'
 #' @description It computes soil organic carbon status
 #'
-#' @param para A json file
+#' @param para A JSON file
 #'
 #' @param stock_change_para A JSON file with stock change parameters
 #'

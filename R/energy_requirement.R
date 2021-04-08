@@ -3,7 +3,7 @@
 #' @description It calculates energy requirement. Compute this after
 #' the `feed_quality` function
 #'
-#' @param para A json file
+#' @param para A JSON file
 #'
 #' @param feed_basket_quality A dataframe computed using the `feed_quality` function
 #'

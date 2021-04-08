@@ -18,7 +18,7 @@ A nested list:
 data(ghg_para)
 }
 \description{
-A dataset containing greenhosue gas parameters for use
+A dataset containing greenhouse gas parameters for use
 the cleaned model.
 }
 \examples{
