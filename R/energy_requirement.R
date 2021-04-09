@@ -79,25 +79,25 @@ energy_requirement <- function(para, feed_basket_quality){
     else{df <- rbind(df,temp)}
   }
 
-  # #Manure computation
-  # manure_comp <- df%>%group_by(livestock_category_code)%>%
-  #   summarise(me_intake = sum(me_intake_s),
-  #             dmi_tot = sum(dmi_s))%>%
-  #   mutate(de_intake = me_intake/0.81,
-  #          ge_intake = dmi_tot*18.45,
-  #          annual_manure_produced = (dmi_tot*0.365),
-  #          daily_manure_produced = annual_manure_produced/365)%>%
-  #   left_join(livestock, by = "livestock_category_code")%>%
-  #   mutate(manure_onfarm_grazing = (annual_manure_produced*time_in_onfarm_grazing)-(annual_manure_produced*time_in_onfarm_grazing*manure_in_field),
-  #          n_content_manure_grazing = manure_onfarm_grazing*n_content,
-  #          manure_collected = annual_manure_produced*((time_in_stable*manure_in_stable)+
-  #                                                       (time_in_non_roofed_enclosure*manure_in_non_roofed_enclosure)+
-  #                                                       (time_in_onfarm_grazing*manure_in_field))*manure_as_fertilizer,
-  #          n_content_manure_collected = manure_collected*n_content,
-  #          n_content_manure_total = n_content_manure_grazing+n_content_manure_collected)%>%
-  #   select(livestock_category_code,me_intake,dmi_tot,de_intake,ge_intake,annual_manure_produced,daily_manure_produced,manure_onfarm_grazing,
-  #          n_content_manure_grazing,manure_collected,n_content_manure_collected,n_content_manure_total)
-  #
+  #Manure computation
+  manure_comp <- df%>%group_by(livestock_category_code)%>%
+    summarise(me_intake = sum(me_intake_s),
+              dmi_tot = sum(dmi_s))%>%
+    mutate(de_intake = me_intake/0.81,
+           ge_intake = dmi_tot*18.45,
+           annual_manure_produced = (dmi_tot*0.365),
+           daily_manure_produced = annual_manure_produced/365)%>%
+    left_join(livestock, by = "livestock_category_code")%>%
+    mutate(manure_onfarm_grazing = (annual_manure_produced*time_in_onfarm_grazing)-(annual_manure_produced*time_in_onfarm_grazing*manure_in_field),
+           n_content_manure_grazing = manure_onfarm_grazing*n_content,
+           manure_collected = annual_manure_produced*((time_in_stable*manure_in_stable)+
+                                                        (time_in_non_roofed_enclosure*manure_in_non_roofed_enclosure)+
+                                                        (time_in_onfarm_grazing*manure_in_field))*manure_onfarm_fraction,
+           n_content_manure_collected = manure_collected*n_content,
+           n_content_manure_total = n_content_manure_grazing+n_content_manure_collected)%>%
+    select(livestock_category_code,me_intake,dmi_tot,de_intake,ge_intake,annual_manure_produced,daily_manure_produced,manure_onfarm_grazing,
+           n_content_manure_grazing,manure_collected,n_content_manure_collected,n_content_manure_total)
+
   annual_results <- annual_requirement #left_join(annual_requirement,manure_comp)
   seasonal_results <- select(df,season_name,livestock_category_code,livestock_category_name,energy_required_by_season,protein_required_by_season,
                              fresh_intake_required_e,dmi_required_e,fresh_intake_required_cp,dmi_required_cp,dmi_s,limiting,me_intake_s)
