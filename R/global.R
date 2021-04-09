@@ -206,4 +206,5 @@ if(getRversion() >= '2.15.1')  utils::globalVariables(c('Urinary_energy_frac',
                                                         'feeds',
                                                         'livetype_code',
                                                         'livetype_desc',
+                                                        'manure_onfarm_fraction',
                                                         '.'))

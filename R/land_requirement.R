@@ -52,6 +52,11 @@ land_requirement <- function(feed_basket_quality, energy_required, para){
         as.data.frame() %>%
         dplyr::filter(livestock == livestock_category_code, season == season_name)
 
+      # replace NAs, Inf etc
+      season_selected_energy <- season_selected_energy %>%
+        dplyr::mutate_if(is.numeric, list(~na_if(.,Inf))) %>%
+        replace(is.na(.), 0)
+
       feed_items <- unique(season_feeds$feed)
 
       land_requirements <- list()
