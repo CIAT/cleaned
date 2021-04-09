@@ -98,7 +98,7 @@ energy_requirement <- function(para, feed_basket_quality){
     select(livestock_category_code,me_intake,dmi_tot,de_intake,ge_intake,annual_manure_produced,daily_manure_produced,manure_onfarm_grazing,
            n_content_manure_grazing,manure_collected,n_content_manure_collected,n_content_manure_total)
 
-  annual_results <- annual_requirement #left_join(annual_requirement,manure_comp)
+  annual_results <- left_join(annual_requirement,manure_comp, by = "livestock_category_code")
   seasonal_results <- select(df,season_name,livestock_category_code,livestock_category_name,energy_required_by_season,protein_required_by_season,
                              fresh_intake_required_e,dmi_required_e,fresh_intake_required_cp,dmi_required_cp,dmi_s,limiting,me_intake_s)
   #return results
