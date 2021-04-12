@@ -24,25 +24,14 @@
 
 water_requirement <- function(para,land_required){
   #getting the crop parameters
-  feed_production <- unnest(para[["feed_production"]], cols = c(feed_type_name))
-
-  #convert columns to numeric
-  cols_nam <- colnames(feed_production%>%select(kc_initial,kc_midseason,kc_late))
-  feed_production[cols_nam] <- sapply(feed_production[cols_nam],as.numeric)
-  #change NAs to 0
-  feed_production[is.na(feed_production)] <- 0
+  feed_production <- unnest(para[["feed_items"]], cols = c(feed_type_name))
 
   #getting the livestock parameters
   livestock <- unnest(para[["livestock"]], cols = c())
 
-  #convert columns to numeric
-  cols_nam <- colnames(livestock%>%select(-livestock_category_code,-livestock_category_name))
-  livestock[cols_nam] <- sapply(livestock[cols_nam],as.numeric)
-  #change NAs to 0
-  livestock[is.na(livestock)] <- 0
-
   #area evapotranspiration
   et <- as.numeric(para[["et"]])
+
   #annual precipitation
   annual_precipitation <- as.numeric(para[["annual_precipitation"]])
 
@@ -58,9 +47,10 @@ water_requirement <- function(para,land_required){
            kc_frac = fraction_of_land_required*kc_average,
            ET = kc_frac*et,
            water_use = ET*sum(area_feed),
-           feed_water_use = ifelse(is.nan(water_use*(1-(area_non_feed/area_total))),0,(water_use*(1-(area_non_feed/area_total)))),
+           feed_water_use = ifelse(is.nan(water_use*(1-(area_non_feed/area_total))),0,
+                                   (water_use*(1-(area_non_feed/area_total)))),
            non_feed_water_use = water_use-feed_water_use)%>%
-    select(feed,area_feed,area_non_feed,area_total,kc_average,kc_frac,ET,water_use,feed_water_use,non_feed_water_use)
+    select(feed,kc_average,kc_frac,water_use,feed_water_use,non_feed_water_use)
 
   #computing water use for production
   ET <- et*sum(water_use_per_feed_item$kc_frac)
@@ -72,7 +62,12 @@ water_requirement <- function(para,land_required){
                                           sum(livestock$herd_composition*livestock$annual_milk*(0.337+(0.116*livestock$fat_content)+(0.06*livestock$protein_milkcontent))*(livestock$protein_milkcontent/100)))
 
   #merging water use items for production
-  water_use_for_production <- cbind(ET,fraction_of_precipitation_used_for_feed_production,total_water_use,water_use_fpcm,water_use_meat,water_use_protein)
+  water_use_for_production <- t(cbind(ET,
+                                      fraction_of_precipitation_used_for_feed_production,
+                                      total_water_use,
+                                      water_use_fpcm,
+                                      water_use_meat,
+                                      water_use_protein))
 
   water_use <- list(water_use_per_feed_item = water_use_per_feed_item,
                     water_use_for_production = water_use_per_feed_item)
