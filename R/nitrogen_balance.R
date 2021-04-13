@@ -32,14 +32,18 @@ n_balance <- function(para, land_required, soil_erosion){
 
   for (feed in feed_types){
 
-    feed_production <- unnest(para[["feed_production"]], cols = c(feed_type_name))
+    feed_production <- unnest(para[["feed_items"]], cols = c(feed_type_name))
 
-    feed_production <- na_if(feed_production, "NA") %>%
-      as.data.frame()
+    feed_selected <- feed_production[feed_production$feed_item_name == feed,]
 
-    feed_production[is.na(feed_production)] <- 0
-
-    feed_selected <- feed_production[feed_production$feed_type_name == feed,]
+    # feed_production <- unnest(para[["feed_production"]], cols = c(feed_type_name))
+    #
+    # feed_production <- na_if(feed_production, "NA") %>%
+    #   as.data.frame()
+    #
+    # feed_production[is.na(feed_production)] <- 0
+    #
+    # feed_selected <- feed_production[feed_production$feed_type_name == feed,]
 
     dry_yield <- feed_selected$dry_yield
 
@@ -55,20 +59,20 @@ n_balance <- function(para, land_required, soil_erosion){
 
     area_total <- sum(feed_selected_land_required$area_feed)
 
-    feed_item_selected <- as.data.frame(feed_selected[["feed_items"]])
+    # feed_item_selected <- as.data.frame(feed_selected[["feed_items"]])
+    #
+    # feed_item_selected <- na_if(feed_item_selected, "NA") %>%
+    #   as.data.frame()
+    #
+    # feed_item_selected[is.na(feed_item_selected)] <- 0
 
-    feed_item_selected <- na_if(feed_item_selected, "NA") %>%
-      as.data.frame()
+    manure_fraction <- as.numeric(feed_selected$fraction_as_manure)
 
-    feed_item_selected[is.na(feed_item_selected)] <- 0
+    fertilizer_rate <- as.numeric(feed_selected$fraction_as_fertilizer)
 
-    manure_fraction <- as.numeric(feed_item_selected$manure_fraction)
+    main_product_removal <- as.numeric(feed_selected$main_product_removal)
 
-    fertilizer_rate <- as.numeric(feed_item_selected$fertilizer_rate)
-
-    main_product_removal <- as.numeric(feed_item_selected$main_product_removal)
-
-    residue_removal <- as.numeric(feed_item_selected$residue_removal)
+    residue_removal <- as.numeric(feed_selected$residue_removal)
 
     sum_n_content_manure_grazing <- energy_required[["annual_results"]] %>%
       as.data.frame() %>%
@@ -90,7 +94,7 @@ n_balance <- function(para, land_required, soil_erosion){
 
     crop_residue_dm_ha <- as.numeric(feed_selected$residue_dry_yield)*1000
 
-    residue_removal <- as.numeric(feed_item_selected$residue_removal)
+    residue_removal <- as.numeric(feed_selected$residue_removal)
 
     main_product_removed_kg <- area_total*main_product_removed_kg_ha
 
@@ -98,7 +102,7 @@ n_balance <- function(para, land_required, soil_erosion){
 
     residue_removed_kg <- area_total*residue_removed_dm_ha
 
-    annual_precipitation <- as.numeric(para[["annual_precipitation"]])
+    annual_precipitation <- as.numeric(para[["annual_prec"]])
 
     soil_n <- as.numeric(para[["soil_n"]])
 
@@ -139,7 +143,7 @@ n_balance <- function(para, land_required, soil_erosion){
     out1 <- area_total*main_product_removed_kg_ha*ncrop
 
     # Crop residue (KgN)
-    out2 <- ifelse(feed_item_selected$source_type == "Main", 0, residue_removed_dm_ha * nres * area_total)
+    out2 <- ifelse(feed_selected$source_type == "Main", 0, residue_removed_dm_ha * nres * area_total)
 
     # soil loss per plot per feed type
     soil_loss_plot <- as.numeric(soil_erosion[soil_erosion$feed_type == feed,]$soil_loss_plot)
@@ -194,7 +198,9 @@ n_balance <- function(para, land_required, soil_erosion){
   n_balance_all <- n_balance_all %>%
     mutate(animal_manure_grazing = sum_n_content_manure_grazing * (main_product_removed_kg+residue_removed_kg)/(sum(n_balance_all$main_product_removed_kg)+sum(n_balance_all$residue_removed_kg)),
            organic_n_kg_total = animal_manure_grazing+animal_manure_collected+organic_n_imported,
-           organic_n_kg_per_ha = ifelse(is.na(organic_n_kg_total/area_total), 0, organic_n_kg_total/area_total))
+           organic_n_kg_per_ha = ifelse(is.na(organic_n_kg_total/area_total), 0, organic_n_kg_total/area_total)) %>%
+    dplyr::mutate_if(is.numeric, list(~na_if(.,Inf))) %>%
+    replace(is.na(.), 0)
 
   # Manure (kgN)
   n_balance_all$in2 <- n_balance_all$organic_n_kg_total
@@ -212,7 +218,9 @@ n_balance <- function(para, land_required, soil_erosion){
            nbalance_kg_n_total = nin-nout,
            nbalance_kg_n_ha_total = ifelse(is.na(nbalance_kg_n_total/area_total), 0, nbalance_kg_n_total/area_total),
            nbalance_feed_only_kg_n = ifelse(nbalance_kg_n_total==0, 0, ifelse(out2==0, nbalance_kg_n_total*out2/(out2+out1), 0)),
-           nbalance_feed_only_kg_n_ha = ifelse(is.na(nbalance_feed_only_kg_n/area_total), 0, nbalance_feed_only_kg_n/area_total))
+           nbalance_feed_only_kg_n_ha = ifelse(is.na(nbalance_feed_only_kg_n/area_total), 0, nbalance_feed_only_kg_n/area_total)) %>%
+    dplyr::mutate_if(is.numeric, list(~na_if(.,Inf))) %>%
+    replace(is.na(.), 0)
 
   # arrange values
   n_balance_all <- n_balance_all %>%
