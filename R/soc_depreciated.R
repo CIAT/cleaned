@@ -12,7 +12,7 @@
 #'
 #' @return dataframe
 #'
-#' @importFrom dplyr mutate %>% everything
+#' @importFrom dplyr mutate %>% ends_with
 #'
 #' @importFrom tidyr unnest
 #'
@@ -47,15 +47,15 @@ soil_organic_carbon <- function(para, stock_change_para, land_required, biomass)
            time_dependence_stock_change = 20,
            stock_change_factor_land_use = unnest(stock_change_para[["cropland"]], cols = c(landuse)) %>%
              unnest(cols = c(factor_variables)) %>%
-             select(paste0(para[["cropland_system"]])) %>%
+             select(starts_with(paste0(para[["cropland_system"]]))) %>%
              as.numeric(),
            stock_change_factor_management = unnest(stock_change_para[["cropland"]], cols = c(tillage)) %>%
              unnest(cols = c(factor_variables)) %>%
-             select(paste0(para[["cropland_tillage"]])) %>%
+             select(starts_with(paste0(para[["cropland_tillage"]]))) %>%
              as.numeric(),
            stock_change_factor_input = unnest(stock_change_para[["cropland"]], cols = c(input)) %>%
              unnest(cols = c(factor_variables)) %>%
-             select(paste0(para[["cropland_orgmatter"]])) %>%
+             select(starts_with(paste0(para[["cropland_orgmatter"]]))) %>%
              as.numeric(),
            annual_change_carbon_stocks_mineral_soils = ((carbon_stock_last_year_inventory_period*stock_change_factor_land_use*stock_change_factor_management*stock_change_factor_input)-carbon_stock_last_year_inventory_period)/time_dependence_stock_change*area_last_year_inventory_period)
 
@@ -67,15 +67,15 @@ soil_organic_carbon <- function(para, stock_change_para, land_required, biomass)
            time_dependence_stock_change = 20,
            stock_change_factor_land_use = unnest(stock_change_para[["grassland"]], cols = c(landuse)) %>%
              unnest(cols = c(factor_variables)) %>%
-             select(everything("All")) %>%
+             select(ends_with("All")) %>%
              as.numeric(),
            stock_change_factor_management = unnest(stock_change_para[["grassland"]], cols = c(management)) %>%
              unnest(cols = c(factor_variables)) %>%
-             select(paste0(para[["grassland_management"]])) %>%
+             select(starts_with(paste0(para[["grassland_management"]]))) %>%
              as.numeric(),
            stock_change_factor_input = unnest(stock_change_para[["grassland"]], cols = c(input)) %>%
              unnest(cols = c(factor_variables)) %>%
-             select(paste0(para[["grassland_implevel"]])) %>%
+             select(starts_with(paste0(para[["grassland_implevel"]]))) %>%
              as.numeric(),
            annual_change_carbon_stocks_mineral_soils = ((carbon_stock_last_year_inventory_period*stock_change_factor_land_use*stock_change_factor_management*stock_change_factor_input)-carbon_stock_last_year_inventory_period)/time_dependence_stock_change*area_last_year_inventory_period)
 
@@ -86,7 +86,7 @@ soil_organic_carbon <- function(para, stock_change_para, land_required, biomass)
            time_dependence_stock_change = 20,
            stock_change_factor_land_use = unnest(stock_change_para[["grassland"]], cols = c(landuse)) %>%
              unnest(cols = c(factor_variables)) %>%
-             select(everything("All")) %>%
+             select(ends_with("All")) %>%
              as.numeric(),
            stock_change_factor_management = 0,
            stock_change_factor_input = 0,

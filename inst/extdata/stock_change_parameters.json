@@ -1,0 +1,105 @@
+{
+	"cropland": [
+		{
+			"landuse": [
+				{
+					"factor_variables": [
+						{
+							"Long term cultivated, temperate/boreal, dry": 0.8,
+							"Long term cultivated, temperate/boreal, moist": 0.69,
+							"Long term cultivated, tropical, dry": 0.58,
+							"Long term cultivated, tropical, moist/wet": 0.48,
+							"Long term cultivated, tropical montane, all": 0.64,
+							"Paddy rice": 1.1,
+							"Perennial/tree crop": 1,
+							"Set aside (< 20 years), temperate/boreal and tropical, dry": 0.93,
+							"Set aside (< 20 years), temperate/boreal and tropical, moist/wet": 0.82,
+							"Set aside (< 20 years),tropical montane, all": 0.88
+						}
+					]
+				}
+				],
+			"tillage": [
+				{
+					"factor_variables": [
+						{
+							"Full": 1,
+							"Reduced, temperate/boreal, dry": 1.02,
+							"Reduced, temperate/boreal, moist": 1.08,
+							"Reduced, tropical, dry": 1.09,
+							"Reduced, tropical, moist": 1.15,
+							"Reduced, tropical montane, all": 1.09,
+							"No-till, temperate/boreal, dry": 1.1,
+							"No-till, temperate/boreal, moist": 1.15,
+							"No-till, tropical, dry": 1.17,
+							"No-till, tropical, moist/wet": 1.22,
+							"No-till, tropical montane, all": 1.16
+						}
+					]
+				}
+				],
+			"input": [
+				{
+					"factor_variables": [
+						{
+							"Low, temperate/boreal, dry": 0.95,
+							"Low, temperate/boreal, moist": 0.92,
+							"Low, tropical, dry": 0.95,
+							"Low, tropical, moist": 0.92,
+							"Low, tropical montane, all": 0.94,
+							"Medium, all": 1,
+							"High w/OUT manure, temperate/boral and tropical, dry": 1.04,
+							"High w/OUT manure, temperate/boral and tropical, moist/wet": 1.11,
+							"High w/OUT manure, tropical montane": 1.08,
+							"High with manure, temperate/boral and tropical, dry": 1.37,
+							"High with manure, temperate/boral and tropical, moist/wet": 1.44,
+							"High with manure, tropical montane": 1.41
+						}
+					]
+				}
+			]
+			}
+		],
+	"grassland": [
+		{
+			"landuse": [
+				{
+					"factor_variables": [
+						{
+							"All": 1
+						}
+					]
+				}
+			],
+			"management": [
+				{
+					"factor_variables": [
+						{
+							"Nominally managed": 1.00,
+							"Medium": 1.5,
+							"Moderately degraded grassland, temperate/boreal": 0.95,
+							"Moderately degraded grassland, tropical": 0.97,
+							"Moderately degraded grassland, tropical montane": 0.96,
+							"Severely degraded": 0.70,
+							"Improved grassland, temperate/boreal": 1.14,
+							"Improved grassland, tropical": 1.17,
+							"Improved grassland, tropical montane": 1.16
+						}
+					]
+				}
+			],
+			"input": [
+				{
+					"factor_variables": [
+						{
+							"Medium": 1,
+							"High": 1.11,
+							"none":	1
+						}
+					]
+				}
+			]
+		}
+		]
+
+}

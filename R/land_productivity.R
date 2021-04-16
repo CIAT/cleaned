@@ -33,13 +33,13 @@ land_productivity <- function(para){
 
   livestock_df <- para[["livestock"]]
 
-  livestock_category_names <- c(livestock_df$livestock_category_name)
+  livestock_category_names <- c(livestock_df$livetype_desc)
 
   livestock_production <- list()
 
   for (livestock in livestock_category_names){
 
-    livestock_selected <- livestock_df[livestock_df$livestock_category_name == livestock,]
+    livestock_selected <- livestock_df[livestock_df$livetype_desc == livestock,]
 
     livestock_selected <- na_if(livestock_selected, "NA") %>%
       as.data.frame()

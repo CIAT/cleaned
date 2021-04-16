@@ -41,38 +41,34 @@ biomass_calculation <- function(para, land_required){
     summarise(area_feed = sum(area_feed))
 
   # add feed category
-  feed_production <- unnest(para[["feed_production"]], cols = c(feed_type_name))
+  feed_production <- unnest(para[["feed_items"]], cols = c(feed_type_name))
 
   feed_production <- na_if(feed_production, "NA") %>%
     as.data.frame()
 
-  land_requirement_per_feed$feed_category <- feed_production$feed_category[match(land_requirement_per_feed$feed,
-                                                                                 feed_production$feed_type_name)]
-  # To be added by rein
-  dbh <- ""
-  trees_annual_growth <- 0
-  trees_annual_removal <- 0
+  land_requirement_per_feed$category <- feed_production$category[match(land_requirement_per_feed$feed,
+                                                                                 feed_production$feed_item_name)]
 
   # based on MICCA project (Kuyah et al 2012; Chave et Al. 2005
   tier3 <- land_requirement_per_feed %>%
-    mutate(area_ha = ifelse(feed_category=="tree crop" | feed_category=="tree legume",
+    mutate(area_ha = ifelse(category=="tree crop" | category=="tree legume",
                             area_feed, 0),
            nb_trees = 0,
-           dbh = ifelse(dbh>0, dbh, 0),
-           agbest = ifelse(dbh=="", 0, 0.091*dbh^2.472),
+           dbh = ifelse(feed_production$trees_dhb>0, feed_production$trees_dhb, 0),
+           agbest = ifelse(feed_production$trees_dhb=="", 0, 0.091*feed_production$trees_dhb^2.472),
            agb = agbest+((2.69/100)*agbest),
            carbon_content = 0.48,
            carbon_content_tree = agb*carbon_content,
            total_carbon_stock_ha = ifelse(is.na(agb), 0, nb_trees*carbon_content_tree),
            total_carbon_stock = area_ha*total_carbon_stock_ha,
-           tree_annual_growth = trees_annual_growth,
-           annual_growth_ha = nb_trees*carbon_content*tree_annual_growth,
+           tree_annual_growth = feed_production$trees_growth,
+           annual_growth_ha = nb_trees*carbon_content*feed_production$trees_growth,
            annual_growth = area_ha*annual_growth_ha,
-           annual_removal = ifelse(tree_annual_growth>0, tree_annual_growth, 0),
-           total_annual_removal = carbon_content*annual_removal,
-           carbon_biomass_balance = annual_growth-annual_removal,
+           annual_removal = ifelse(feed_production$trees_growth>0, feed_production$trees_growth, 0),
+           total_annual_removal = carbon_content*feed_production$trees_removal,
+           carbon_biomass_balance = annual_growth-feed_production$trees_removal,
            carbon_stock_change_biomass = carbon_biomass_balance*44/12) %>%
-    select (-c(area_feed, feed_category))
+    select (-c(area_feed, category))
 
   carbon_stocks_change <- list(tier1 = tier1, tier3 = tier3)
 

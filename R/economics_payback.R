@@ -28,7 +28,7 @@ economics_payback <- function(para, energy_required){
 
   livestock_df <- para[["livestock"]]
 
-  livestock_category_names <- c(livestock_df$livestock_category_name)
+  livestock_category_names <- c(livestock_df$livetype_desc)
 
   # products dictionary
   farm_gate_price <- function(x){

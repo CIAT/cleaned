@@ -53,7 +53,7 @@ n_balance <- function(para, land_required, soil_erosion){
 
     residue_n <- as.numeric(feed_selected$residue_n)
 
-    n_fixing <- ifelse(feed_selected$feed_category == "Legume", 0.5*(residue_n*residue_dry_yield+main_n*dry_yield)*1000, 0)
+    n_fixing <- ifelse(feed_selected$category == "Legume", 0.5*(residue_n*residue_dry_yield+main_n*dry_yield)*1000, 0)
 
     feed_selected_land_required <- land_required[land_required$feed == feed,]
 
