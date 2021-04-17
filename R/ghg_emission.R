@@ -34,17 +34,108 @@
 #' @export
 
 ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, nitrogen_balance){
-  livestock <- para[["livestock"]]
-  #convert columns to numeric
-  cols_nam <- colnames(livestock%>%select(-livestock_category_code,-livestock_category_name))
-  livestock[cols_nam] <- sapply(livestock[cols_nam],as.numeric)
-  #change NAs to 0
-  livestock[is.na(livestock)] <- 0
 
-  #
-  no_days <- 365
-  annual_energy <- energy_required[["annual_results"]]
+  livestock <- para[["livestock"]]
+
   seasons <- para[["seasons"]]
+
+  no_days <- 365
+
+  annual_energy <- select(energy_required[["annual_results"]],livestock_category_code,ge_intake)
+
+  ##########################################################################################################################
+  #Computing methane emission from enteric fermentation
+  #Computing feed digestibility (DE)
+  de <- feed_basket_quality%>%
+    gather(feed,value,-season_name,-livestock_category_code,-livestock_category_name,-feed_variables)%>%
+    spread(feed_variables,value)%>%
+    mutate(de_by_frac_fed = de_fraction*fraction_as_fed,
+           cp_by_frac_fed = fraction_as_fed*cp_content_fresh)%>%
+    group_by(season_name,livestock_category_code,livestock_category_name)%>%
+    summarise(de_by_frac_fed2 = sum(de_by_frac_fed,na.rm = TRUE),
+              cp_by_frac_fed2 = sum(cp_by_frac_fed,na.rm = TRUE),
+              fraction_as_fed2 = sum(fraction_as_fed,na.rm = TRUE))%>%
+    left_join(seasons, by = "season_name")%>%
+    mutate(season_de = de_by_frac_fed2*season_length/no_days,
+           season_cp = cp_by_frac_fed2*season_length/no_days)%>%
+    group_by(livestock_category_code,livestock_category_name)%>%
+    summarise(de = sum(season_de,na.rm = TRUE),
+              cp = sum(season_cp,na.rm = TRUE))
+
+  #Selecting methane conversion factor (Ym)
+  table_10.12 <- ghg_ipcc_data[["Table 10.12"]]
+  table_10.13 <- ghg_ipcc_data[["Table 10.13"]]
+
+  ym <- left_join(livestock,de, by = c("livetype_code"="livestock_category_code"))%>%
+    mutate(ym = ifelse(ipcc_ef_category_t2 == "Dairy cows"& annual_milk > 8500 & de >= 0.7,table_10.12$Ym[1],
+                       ifelse(ipcc_ef_category_t2 == "Dairy cows"& annual_milk > 5000 & annual_milk <= 8500 & de >= 0.63 & de < 0.7,table_10.12$Ym[2],
+                              ifelse(ipcc_ef_category_t2 == "Dairy cows"& annual_milk <= 5000 & de <= 0.62,table_10.12$Ym[3],
+                                     ifelse(ipcc_ef_category_t2 == "Non-dairy" & de <= 0.62,table_10.12$Ym[4],
+                                            ifelse(ipcc_ef_category_t2 == "Non-dairy" & de < 0.72 & de > 0.62,table_10.12$Ym[5],
+                                                   ifelse(ipcc_ef_category_t2 == "Non-dairy" & de >= 0.72 & de < 0.75,table_10.12$Ym[6],
+                                                          ifelse(ipcc_ef_category_t2 == "Non-dairy" & de >= 0.75,table_10.12$Ym[7],
+                                                                 ifelse(ipcc_ef_category_t2 == "Sheep",table_10.13$Ym[1],
+                                                                        ifelse(ipcc_ef_category_t2 == "Goats",table_10.13$Ym[2],0))))))))))
+
+  #Computing methane enteric emission factor
+
+  ef <- left_join(ym,annual_energy, by = c("livetype_code"="livestock_category_code"))%>%
+    mutate(enteric_methane_emissions = (ge_intake/no_days)*(ym/55.65))
+
+  ############################################################################################################################
+  #Computing methane emission from manure management T2
+  #Computing volatile solid excretion
+  table_m <- ghg_ipcc_data[["Table_m"]]
+
+  vs <- left_join(annual_energy,de, by = "livestock_category_code")%>%
+    left_join(table_m,by = "livestock_category_name")%>%
+    mutate(volatile_solid_excretion = (((ge_intake/no_days)*(1-de))+(Urinary_energy_frac*(ge_intake/no_days)))*((1-ash_content)/18.45))
+
+  #Extracting Bo
+  table_10.16 <- ghg_ipcc_data[["Table 10.16"]]
+  table_10.16$Bo <- table_10.16[,4]
+
+  region <- para[["region"]]
+
+  productivity <- para[["productivity"]]
+
+  dairy_cattle <- c("Cattle - Cows (local)","Cattle - Cows (improved)","Cattle - Cows (high productive)")
+  non_dairy_cattle <- c("Cattle - Adult male","Cattle - Steers/heifers","Cattle - Steers/heifers (improved)","Cattle - Calves","Cattle - Calves (improved)")
+
+  max_meth_bo <- livestock%>%
+    mutate(ipcc_meth_man_t2 = ifelse(livetype_desc %in% dairy_cattle,"Dairy cattle",
+                                     ifelse(livetype_desc %in% non_dairy_cattle,"Other cattle",
+                                            ifelse(grepl("Buffalo",livetype_desc),"Buffalo",
+                                                   ifelse(grepl("Sheep",livetype_desc),"Sheep",
+                                                          ifelse(grepl("Goats",livetype_desc),"Goats",
+                                                                 ifelse(grepl("Pigs",livetype_desc),"Swine",NA)))))))%>%
+    left_join(filter(table_10.16,Region == region & Productivity_systems == productivity),
+              by=c("ipcc_meth_man_t2" = "Category_of_animal"))
+
+  #mcf
+  table_10.17 <- ghg_ipcc_data[["Table 10.17"]]
+
+  manureman_pasture <- para[["manureman_pasture"]]
+  manureman_stable <- para[["manureman_stable"]]
+  manureman_yard <- para[["manureman_yard"]]
+
+  mcf <- max_meth_bo%>%
+    mutate(manure_man_pasture = manureman_pasture,
+           mfc_pasture = table_10.17[table_10.17$system==manure_man_pasture,2],
+           manure_man_stable = manureman_stable,
+           mfc_stable = table_10.17[table_10.17$system==manure_man_stable,2],
+           manure_man_yard = manureman_yard,
+           mfc_yard = table_10.17[table_10.17$system==manure_man_yard,2])
+
+  #Emission factor for methane from manure management calculation
+  eft <- left_join(vs,mcf,by=c("livestock_category_code" = "livetype_code"))%>%
+    mutate(emission_factor = (volatile_solid_excretion*no_days)*(Bo*0.67*((time_in_stable*mfc_stable)+(time_in_non_roofed_enclosure*mfc_yard)+(time_in_onfarm_grazing*mfc_pasture)))) #equation 10.23
+
+  ################################################################################################################################
+  #Annual average nitrogen excretion rates T2
+
+
+
   ###########################################################################################################
   #Preparation of ghg parameters
   #
