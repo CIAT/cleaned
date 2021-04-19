@@ -41,7 +41,7 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
 
   no_days <- 365
 
-  annual_energy <- select(energy_required[["annual_results"]],livestock_category_code,ge_intake)
+  annual_energy <- select(energy_required[["annual_results"]],livestock_category_code,ge_intake,dmi_tot)
 
   ##########################################################################################################################
   #Computing methane emission from enteric fermentation
@@ -50,17 +50,21 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
     gather(feed,value,-season_name,-livestock_category_code,-livestock_category_name,-feed_variables)%>%
     spread(feed_variables,value)%>%
     mutate(de_by_frac_fed = de_fraction*fraction_as_fed,
-           cp_by_frac_fed = fraction_as_fed*cp_content_fresh)%>%
+           cp_by_frac_fed = fraction_as_fed*cp_content_fresh,
+           dm_by_frac_fed = fraction_as_fed*dm_content)%>%
     group_by(season_name,livestock_category_code,livestock_category_name)%>%
     summarise(de_by_frac_fed2 = sum(de_by_frac_fed,na.rm = TRUE),
               cp_by_frac_fed2 = sum(cp_by_frac_fed,na.rm = TRUE),
+              dm_by_frac_fed2 = sum(dm_by_frac_fed,na.rm = TRUE),
               fraction_as_fed2 = sum(fraction_as_fed,na.rm = TRUE))%>%
     left_join(seasons, by = "season_name")%>%
     mutate(season_de = de_by_frac_fed2*season_length/no_days,
-           season_cp = cp_by_frac_fed2*season_length/no_days)%>%
+           season_cp = cp_by_frac_fed2*season_length/no_days,
+           season_dm = dm_by_frac_fed2*season_length/no_days)%>%
     group_by(livestock_category_code,livestock_category_name)%>%
     summarise(de = sum(season_de,na.rm = TRUE),
-              cp = sum(season_cp,na.rm = TRUE))
+              cp = sum(season_cp,na.rm = TRUE),
+              dm = sum(season_dm,na.rm = TRUE))
 
   #Selecting methane conversion factor (Ym)
   table_10.12 <- ghg_ipcc_data[["Table 10.12"]]
@@ -133,6 +137,33 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
 
   ################################################################################################################################
   #Annual average nitrogen excretion rates T2
+  #Nitrogen intake
+  n_intake <- eft%>%
+    mutate(n_intake = ifelse(grepl("Cattle",livetype_desc),((ge_intake/no_days)/18.45)*(cp/6.25), #equation 10.32
+                             ifelse(grepl("Buffalo",livetype_desc),((ge_intake/no_days)/18.45)*(cp/6.25), #equation 10.32
+                                    ifelse(grepl("Sheep",livetype_desc),((ge_intake/no_days)/18.45)*(cp/6.25), #equation 10.32
+                                           ifelse(grepl("Goats",livetype_desc),((ge_intake/no_days)/18.45)*(cp/6.25), #equation 10.32
+                                                  ifelse(grepl("Pigs",livetype_desc),(dmi_tot/no_days)*(cp/6.25),NA)))))) #equation 10.32A
+
+  #Nitrogen retention
+  n_retention <- n_intake%>%
+    mutate(n_retained = (((annual_milk*(protein_milkcontent/100))/6.38)+((annual_growth*(268-((7.0*16))))/6250))*herd_composition/365/n_intake) #equation 10.33
+
+  #Nitrogen excretion rates
+  n_excretion <- n_retention%>%
+    mutate(n_excretion_rate = n_intake*(1-n_retained)*no_days) #equation 10.31
+
+  #################################################################################################################################
+  #Direct N2O emissions
+  table_10.21 <- ghg_ipcc_data[["Table 10.21"]]
+  direct_N2O <- n_excretion%>%
+    mutate(ef3_stable = table_10.21[table_10.21$system==manureman_stable,3],
+           ef3_yard = table_10.21[table_10.21$system==manureman_yard,3],
+           direct_N2O_emission = ((n_excretion_rate*time_in_stable*ef3_stable)+(n_excretion_rate*time_in_non_roofed_enclosure*ef3_yard))*(44/28))#Equation 10.25
+
+  #################################################################################################################################
+  #Indirect N2O emissions
+
 
 
 
