@@ -63,7 +63,7 @@ land_requirement <- function(feed_basket_quality, energy_required, para){
 
       for (i in feed_items){
 
-        # get crop yield
+        # select feed item
         feed_item_selected <- unnest(para[["feed_items"]], cols = c(feed_type_name)) %>%
           dplyr::filter(feed_item_name == i)
 
