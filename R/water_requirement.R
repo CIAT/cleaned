@@ -36,12 +36,12 @@ water_requirement <- function(para,land_required){
   annual_precipitation <- as.numeric(para[["annual_precipitation"]])
 
   #computing water use per feed item
-  water_use_per_feed_item <- land_required%>%
+  water_use_per_feed_item <- land_required %>%
     group_by(feed)%>%
     summarise(area_feed = sum(area_feed, na.rm = T),
               area_non_feed = sum(area_non_feed, na.rm = T),
               area_total = sum(area_total, na.rm = T))%>% #reformating land required
-    left_join(feed_production, by = c("feed"="feed_type_name"))%>%
+    left_join(feed_production, by = c("feed"="feed_item_name"))%>%
     mutate(fraction_of_land_required = area_feed/sum(area_feed,na.rm = T),
            kc_average = (kc_initial+kc_midseason+kc_late)/3,
            kc_frac = fraction_of_land_required*kc_average,
@@ -50,7 +50,7 @@ water_requirement <- function(para,land_required){
            feed_water_use = ifelse(is.nan(water_use*(1-(area_non_feed/area_total))),0,
                                    (water_use*(1-(area_non_feed/area_total)))),
            non_feed_water_use = water_use-feed_water_use)%>%
-    select(feed,kc_average,kc_frac,water_use,feed_water_use,non_feed_water_use)
+    select(feed,area_feed,kc_average,kc_frac,water_use,feed_water_use,non_feed_water_use)
 
   #computing water use for production
   ET <- et*sum(water_use_per_feed_item$kc_frac)
