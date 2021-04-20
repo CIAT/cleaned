@@ -339,7 +339,7 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
 
   ghg_soil <- list(annual_N20N_onfarm_direct_emission = annual_N20N_onfarm_direct_emission,
                    N20_onfarm_indirect_emission = N20_onfarm_indirect_emission,
-                   N20N_offfarm = N20N_offfarm)
+                   N20N_off_farm = N20N_off_farm)
 
   ################################################################################################################################################################################################################################
   #GHG Burning
