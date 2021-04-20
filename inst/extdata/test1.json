@@ -513,7 +513,12 @@
             "wfp_grey": 0
         }
     ],
-    "ferlitizer": [
+    "purchased_inorganic_fertilizers": [
+      {
+        "fertilizer_mame": "Urea",
+        "quantity": 5,
+        "fraction": 1
+      }
     ],
     "grassland_implevel": "Medium",
     "grassland_management": "Nominally managed",
