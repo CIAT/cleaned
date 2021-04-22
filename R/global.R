@@ -242,4 +242,6 @@ if(getRversion() >= '2.15.1')  utils::globalVariables(c('Urinary_energy_frac',
                                                         'rbind.Enteric_fermentation_Methane..Manure_Methane..Manure_Direct_N2O..',
                                                         'manure_man_stable',
                                                         'annual_N20N_off_farm_direct_emission',
+                                                        'all_of',
+                                                        'starts_with',
                                                         '.'))

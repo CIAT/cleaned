@@ -40,6 +40,9 @@ soil_organic_carbon <- function(para, stock_change_para, land_required, biomass)
 
   field_soc <- soil_amount*para[["soil_c"]]*0.001
 
+  land_required <- land_required[["land_requirements_all"]] %>%
+    as.data.frame()
+
   cropland_change_carbon_stocks_mineral_soils <- data.frame("initial_landuse" = "cropland") %>%
     mutate(reporting_landuse = "cropland",
            area_last_year_inventory_period = sum(land_required$area_feed)-(sum(land_required$grasses)+sum(land_required$tree_legume)),

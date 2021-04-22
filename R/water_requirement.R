@@ -36,7 +36,7 @@ water_requirement <- function(para,land_required){
   annual_precipitation <- as.numeric(para[["annual_precipitation"]])
 
   #computing water use per feed item
-  water_use_per_feed_item <- land_required %>%
+  water_use_per_feed_item <- land_required[["land_requirements_all"]] %>%
     group_by(feed)%>%
     summarise(area_feed = sum(area_feed, na.rm = T),
               area_non_feed = sum(area_non_feed, na.rm = T),

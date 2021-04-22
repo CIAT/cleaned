@@ -211,8 +211,11 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
 
   #################################################################################################################################
   #Crop parameters
-  feed_items <- para[["feed_items"]]
-  land_used <- land_required%>%
+  #feed_items <- para[["feed_items"]]
+  feed_items <- land_required[["feed_items_frac"]] %>%
+    as.data.frame()
+
+  land_used <- land_required[["land_requirements_all"]]%>%
     group_by(feed)%>%
     summarise(area_total = sum(area_total, na.rm = T))
 

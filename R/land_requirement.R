@@ -61,6 +61,8 @@ land_requirement <- function(feed_basket_quality, energy_required, para){
 
       land_requirements <- list()
 
+      feed_items_frac <- list()
+
       for (i in feed_items){
 
         # select feed item
@@ -78,10 +80,12 @@ land_requirement <- function(feed_basket_quality, energy_required, para){
         # to be removed from JSON file
         feed_item_selected <- feed_item_selected %>%
           mutate(dry_yield = selected_feed$dm_content * fresh_yield,
-                 residue_fresh_yield = fresh_yield*((1-harvest_index)/harvest_index),
+                 residue_fresh_yield = ifelse(is.na(fresh_yield*((1-harvest_index)/harvest_index)), 0, fresh_yield*((1-harvest_index)/harvest_index)),
                  residue_dm_content = 1-(water_content/100),
                  residue_dry_yield = residue_dm_content*residue_fresh_yield,
                  residue_n_dm = dry_yield*residue_n)
+
+        feed_items_frac[[i]] <- feed_item_selected
 
         land_requirements[[i]] <- selected_feed %>%
           mutate(feed_item_dm = selected_feed$fraction_dry_matter*season_selected_energy$dmi_s,
@@ -108,6 +112,8 @@ land_requirement <- function(feed_basket_quality, energy_required, para){
 
       land_requirements <- land_requirements %>% bind_rows()
 
+      feed_items_frac <- feed_items_frac %>% bind_rows()
+
 
       # land_requirements <- cbind(season_name = rep(selected_feed$season_name, times = nrow(land_requirements)),
       #                            livestock_category_code = rep(selected_feed$livestock_category_code, times = nrow(land_requirements)),
@@ -127,5 +133,9 @@ land_requirement <- function(feed_basket_quality, energy_required, para){
 
   land_requirements_all <- livestock_requirements %>% bind_rows()
 
+  results <- list(land_requirements_all = land_requirements_all,
+                  feed_items_frac = feed_items_frac)
+
+  return(results)
 
 }

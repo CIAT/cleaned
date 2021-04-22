@@ -26,13 +26,17 @@
 
 n_balance <- function(para, land_required, soil_erosion){
 
-  feed_types <- unique(land_required$feed)
+  feed_types <- unique(land_required[["land_requirements_all"]]$feed)
 
   n_balance <- list()
 
   for (feed in feed_types){
 
     feed_production <- unnest(para[["feed_items"]], cols = c(feed_type_name))
+
+    feed_selected_frac <- land_required[["feed_items_frac"]] %>%
+      as.data.frame() %>%
+      dplyr::filter(feed_item_name == feed)
 
     feed_selected <- feed_production[feed_production$feed_item_name == feed,]
 
@@ -45,17 +49,18 @@ n_balance <- function(para, land_required, soil_erosion){
     #
     # feed_selected <- feed_production[feed_production$feed_type_name == feed,]
 
-    dry_yield <- feed_selected$dry_yield
+    dry_yield <- feed_selected_frac$dry_yield
 
-    residue_dry_yield <- feed_selected$residue_dry_yield
+    residue_dry_yield <- feed_selected_frac$residue_dry_yield
 
-    main_n <- feed_selected$main_n
+    main_n <- feed_selected_frac$main_n
 
     residue_n <- as.numeric(feed_selected$residue_n)
 
     n_fixing <- ifelse(feed_selected$category == "Legume", 0.5*(residue_n*residue_dry_yield+main_n*dry_yield)*1000, 0)
 
-    feed_selected_land_required <- land_required[land_required$feed == feed,]
+
+    feed_selected_land_required <- land_required[["land_requirements_all"]][land_required[["land_requirements_all"]]$feed == feed,]
 
     area_total <- sum(feed_selected_land_required$area_feed)
 
@@ -92,7 +97,7 @@ n_balance <- function(para, land_required, soil_erosion){
 
     organic_n_imported <- manure_fraction*(as.numeric(para$purchased_manure)+as.numeric(para$purchased_compost)+as.numeric(para$purchased_organic_n)+as.numeric(para$purchased_bedding))
 
-    crop_residue_dm_ha <- as.numeric(feed_selected$residue_dry_yield)*1000
+    crop_residue_dm_ha <- as.numeric(feed_selected_frac$residue_dry_yield)*1000
 
     residue_removal <- as.numeric(feed_selected$residue_removal)
 
@@ -263,7 +268,7 @@ n_balance <- function(para, land_required, soil_erosion){
            soil_type,
            out3,
            out4,
-           out5,
+           all_of(out5),
            nin,
            nout,
            nue,

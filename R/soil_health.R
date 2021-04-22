@@ -153,7 +153,9 @@ soil_health <- function(para, land_required) {
     soil_loss_ha_year <- erosivity_r*erodibility_k*ls*c_factor*p_factor
 
     # select feed from land required dataframe
-    land_required_feed_selected <- land_required[land_required$feed == i,]
+    land_required_feed_selected <- land_required[["land_requirements_all"]] %>%
+      as.data.frame() %>%
+      dplyr::filter(feed == i)
 
     # land requirement for feed production (ha)
     land_required_feed_selected <- sum(land_required_feed_selected$area_feed)

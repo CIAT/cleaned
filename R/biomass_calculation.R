@@ -35,7 +35,7 @@ biomass_calculation <- function(para, land_required){
   tier1 <- data.frame()
 
   # Land requirement for feed production per associated crop (ha)
-  land_requirement_per_feed <- land_required %>%
+  land_requirement_per_feed <- land_required[["land_requirements_all"]] %>%
     select(feed, area_feed) %>%
     group_by(feed) %>%
     summarise(area_feed = sum(area_feed))
