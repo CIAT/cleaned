@@ -4,12 +4,14 @@
 \alias{economics_payback}
 \title{Economics payback}
 \usage{
-economics_payback(para, energy_required)
+economics_payback(para, energy_required, livestock_productivity)
 }
 \arguments{
 \item{para}{A JSON file}
 
 \item{energy_required}{A list computed using the `energy_required` function}
+
+\item{livestock_productivity}{A dataframe containing productivity values.}
 }
 \value{
 dataframe

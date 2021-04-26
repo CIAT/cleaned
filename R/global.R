@@ -244,4 +244,8 @@ if(getRversion() >= '2.15.1')  utils::globalVariables(c('Urinary_energy_frac',
                                                         'annual_N20N_off_farm_direct_emission',
                                                         'all_of',
                                                         'starts_with',
+                                                        'meat_earnings',
+                                                        'milk_earnings',
+                                                        'manure_earnings',
+                                                        'livetype_name',
                                                         '.'))
