@@ -493,11 +493,13 @@
             "wfp_grey": 0
         }
     ],
-    "purchased_inorganic_fertilizers": [
+    "fertilizer": [
       {
-        "fertilizer_mame": "Urea",
-        "quantity": 5,
-        "fraction": 1
+          "cost": 2,
+          "fertilizer_code": "4",
+          "fertilizer_desc": "Ammonium nitrate",
+          "fraction": 3,
+          "quantity": 1
       }
     ],
     "grassland_implevel": "Medium",
@@ -680,7 +682,6 @@
     "purchased_manure": 0,
     "purchased_organic_n": 0,
     "region": "AFRICA",
-    "productivity": "Low  productivity systems",
     "seasons": [
         {
             "season_length": 106,
