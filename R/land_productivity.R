@@ -48,7 +48,8 @@ land_productivity <- function(para){
 
     # prodution per livestock
     livestock_production[[livestock]] <- livestock_selected %>%
-      mutate(number = as.numeric(herd_composition),
+      mutate(livetype_name = livetype_desc,
+             number = as.numeric(herd_composition),
              lwg_per_animal = as.numeric(annual_growth),
              tlu = number*as.numeric(body_weight)/250,
              parturition_interval = as.numeric(livestock_selected$birth_interval),
