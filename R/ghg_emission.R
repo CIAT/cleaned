@@ -70,6 +70,21 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
   table_10.12 <- ghg_ipcc_data[["Table 10.12"]]
   table_10.13 <- ghg_ipcc_data[["Table 10.13"]]
 
+
+  `%gle%` <- function(e1, e2) {
+    stopifnot(identical(length(e2), 2L))
+    stopifnot(!anyNA(e2))
+
+    e1 > min(e2) & e1 <= max(e2)
+  }
+
+  `%gel%` <- function(e1, e2) {
+    stopifnot(identical(length(e2), 2L))
+    stopifnot(!anyNA(e2))
+
+    e1 >= min(e2) & e1 < max(e2)
+  }
+
   ym1 <- left_join(livestock,de, by = c("livetype_code"="livestock_category_code"))%>%
     mutate(ym = ifelse(ipcc_ef_category_t2 == "Dairy cows"& annual_milk > 8500 & de >= 0.7,table_10.12$Ym[1],
                        ifelse(ipcc_ef_category_t2 == "Dairy cows"& annual_milk %gle% c(5000,8500) & de %gel% c(0.63,0.7),table_10.12$Ym[2],
