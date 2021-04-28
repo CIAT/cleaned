@@ -53,6 +53,8 @@ combineOutputs <- function(feed_basket_quality, energy_required, land_required,
                                   soil_erosion, water_required, nitrogen_balance,
                                   livestock_productivity, economics, biomass,soil_carbon, ghg_emission){
 
+  land_required <- land_required[["land_requirements_all"]]
+
 
   if (exists("feed_basket_quality")) {
     feed_basket_quality = split(feed_basket_quality, f=feed_basket_quality$season_name)
