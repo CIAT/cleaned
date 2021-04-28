@@ -46,7 +46,7 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
   ##########################################################################################################################
   #Computing methane emission from enteric fermentation
   #Computing feed digestibility (DE)
-  de <- feed_basket_quality%>%
+  de1 <- feed_basket_quality%>%
     gather(feed,value,-season_name,-livestock_category_code,-livestock_category_name,-feed_variables)%>%
     spread(feed_variables,value)%>%
     mutate(de_by_frac_fed = de_fraction*fraction_as_fed,
@@ -85,7 +85,7 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
     e1 >= min(e2) & e1 < max(e2)
   }
 
-  ym1 <- left_join(livestock,de, by = c("livetype_code"="livestock_category_code"))%>%
+  ym1 <- left_join(livestock,de1, by = c("livetype_code"="livestock_category_code"))%>%
     mutate(ym = ifelse(ipcc_ef_category_t2 == "Dairy cows"& annual_milk > 8500 & de >= 0.7,table_10.12$Ym[1],
                        ifelse(ipcc_ef_category_t2 == "Dairy cows"& annual_milk %gle% c(5000,8500) & de %gel% c(0.63,0.7),table_10.12$Ym[2],
                               ifelse(ipcc_ef_category_t2 == "Dairy cows"& annual_milk <= 5000 & de <= 0.62,table_10.12$Ym[3],
@@ -106,7 +106,7 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
   #Computing volatile solid excretion
   table_m <- ghg_ipcc_data[["Table_m"]]
 
-  vs <- left_join(annual_energy,de, by = "livestock_category_code")%>%
+  vs <- left_join(annual_energy,de1, by = "livestock_category_code")%>%
     left_join(table_m,by = "livestock_category_name")%>%
     mutate(volatile_solid_excretion = (((ge_intake/no_days)*(1-de))+(Urinary_energy_frac*(ge_intake/no_days)))*((1-ash_content)/18.45)) #equation 10.24
 

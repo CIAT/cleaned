@@ -80,9 +80,7 @@ energy_requirement <- function(para, feed_basket_quality){
   }
 
   #Manure computation
-  manure_onfarm_fraction <- para[["manure_onfarm_fraction"]]
-
-  manure_comp <- df%>%group_by(livestock_category_code)%>%
+ manure_comp <- df%>%group_by(livestock_category_code)%>%
     summarise(me_intake = sum(me_intake_s),
               dmi_tot = sum(dmi_s))%>%
     mutate(de_intake = me_intake/0.81,
