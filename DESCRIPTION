@@ -33,7 +33,8 @@ Imports:
     dplyr,
     tibble,
     utils,
-    rlang
+    rlang,
+    stringr
 Suggests: 
     knitr,
     rmarkdown,

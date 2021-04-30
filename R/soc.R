@@ -91,8 +91,14 @@ soil_organic_carbon <- function(para, stock_change_para, land_required, biomass)
              unnest(cols = c(factor_variables)) %>%
              select(everything("All")) %>%
              as.numeric(),
-           stock_change_factor_management = 0,
-           stock_change_factor_input = 0,
+           stock_change_factor_management = unnest(stock_change_para[["grassland"]], cols = c(management)) %>%
+             unnest(cols = c(factor_variables)) %>%
+             select(paste0(para[["grassland_management"]])) %>%
+             as.numeric(),
+           stock_change_factor_input = unnest(stock_change_para[["grassland"]], cols = c(input)) %>%
+             unnest(cols = c(factor_variables)) %>%
+             select(paste0(para[["grassland_implevel"]])) %>%
+             as.numeric(),
            annual_change_carbon_stocks_mineral_soils = ((carbon_stock_last_year_inventory_period*stock_change_factor_land_use*stock_change_factor_management*stock_change_factor_input)-carbon_stock_last_year_inventory_period)/time_dependence_stock_change*area_last_year_inventory_period)
 
   annual_change_carbon_stocks_mineral_soils <- rbind(cropland_change_carbon_stocks_mineral_soils,
@@ -113,18 +119,18 @@ soil_organic_carbon <- function(para, stock_change_para, land_required, biomass)
            annual_change_carbon_stocks_soils = annual_change_carbon_stocks_mineral_soils+annual_carbon_loss_cultivated_organic_soils+annual_change_inorganic_carbon_stocks_soils)
 
   annual_change_carbon_stocks_trees_feed <- data.frame("type" = "trees_feed") %>%
-    mutate(biomass = sum(biomass$tier3$carbon_biomass_balance)/1000,
+    mutate(biomass = sum(biomass[["tier3"]]$carbon_biomass_balance)/1000,
            below_ground = biomass*0.25,
            annual_change_carbon_stocks = below_ground/1000)
 
   annual_change_carbon_stocks_trees_non_feed <- data.frame("type" = "trees_non_feed") %>%
-    mutate(biomass = 0, # to add from trees carbon
-           below_ground = biomass*0.25,
+    mutate(biomass = sum(biomass[["trees_non_feed_biomass"]]$c_increase_soc),
+           below_ground = biomass,
            annual_change_carbon_stocks = below_ground/1000)
 
   total_annual_change_carbon_soils <- annual_change_carbon_stocks_soils$annual_change_carbon_stocks_soils+annual_change_carbon_stocks_trees_feed$annual_change_carbon_stocks+annual_change_carbon_stocks_trees_non_feed$annual_change_carbon_stocks
 
-  total_change_co2_soils <- total_annual_change_carbon_soils*44/12
+  total_change_co2_soils <- total_annual_change_carbon_soils*co2_conversion_factor
 
   results <- data.frame(total_annual_change_carbon_soils, total_change_co2_soils)
 

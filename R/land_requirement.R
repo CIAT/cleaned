@@ -14,6 +14,8 @@
 #'
 #' @importFrom tidyr gather spread
 #'
+#' @importFrom stringr str_detect
+#'
 #' @examples
 #' \dontrun{
 #' data(mufindi)
@@ -103,6 +105,10 @@ land_requirement <- function(feed_basket_quality, energy_required, para){
                  area_feed = ifelse(crop_residue_removal > 0,
                                     area_total*(cr_yield*crop_residue_removal)/(crop_yield*crop_removal+cr_yield*crop_residue_removal),
                                     area_total*(crop_yield*crop_removal+cr_yield*crop_residue_removal)/(crop_yield*crop_removal+cr_yield*crop_residue_removal)),
+                 rough_of = ifelse(stringr::str_detect(selected_feed$feed, "OFR"), area_feed, 0),
+                 conc_of = ifelse(stringr::str_detect(selected_feed$feed, "OFC"), area_feed, 0),
+                 conc_ip = ifelse(stringr::str_detect(selected_feed$feed, "IP"), area_feed, 0),
+                 farm = sum(area_feed, rough_of, conc_of, conc_ip),
                  grasses = ifelse(feed_item_selected$category == "grass", area_feed, 0),
                  tree_legume = ifelse(feed_item_selected$category == "tree crop" | feed_item_selected$category == "tree legume", area_feed, 0)) %>%
           dplyr::mutate_if(is.numeric, list(~na_if(.,Inf))) %>%
