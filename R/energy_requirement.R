@@ -22,7 +22,7 @@
 #'
 #' @export
 
-energy_requirement <- function(para, feed_basket_quality){
+energy_requirement <- function(para, feed_basket_quality,energy_parameters){
   #get the seasons
   seasons <- para[["seasons"]]
   livestock <- para[["livestock"]]%>%
@@ -32,6 +32,67 @@ energy_requirement <- function(para, feed_basket_quality){
 
 
   #Compute annual energy and protein required
+
+  #Maintenance energy
+  table_10.4 <- energy_parameters[["Table 10.4"]]
+
+  Cattle_n_Buffalo <- c("Cattle - Steers/heifers",
+                      "Cattle - Steers/heifers (improved)",
+                      "Cattle - Calves",
+                      "Cattle - Calves (improved)",
+                      "Buffalo - Steers/heifers",
+                      "Buffalo - Calves")
+
+  Cattle_n_Buffalo_lactating_cows <- c("Cattle - Cows (local)",
+                                     "Cattle - Cows (improved)",
+                                     "Cattle - Cows (high productive)",
+                                     "Buffalo - Cows")
+
+  Cattle_n_Buffalo_bulls <- c("Cattle - Adult male",
+                            "Buffalo - Adult male")
+
+  Sheep_lamb_to_one_year <- c("Sheep - Lambs")
+
+  Sheep_older_than_one_year <- c("Sheep - Ewes",
+                               "Sheep - Breeding Rams",
+                               "Sheep - Fattening Rams")
+  Goats <- c("Goats - Does",
+             "Goats - Breeding Bucks",
+             "Goats - Fattening Bucks",
+             "Goats - Kids")
+
+  Pigs <- c("Pigs - lactating/pregnant sows",
+            "Pigs - dry sows/boars",
+            "Pigs - growers")
+
+  maintenance_er <- livestock%>%
+    mutate(maintenance_cat = ifelse(livestock_category_name%in%Cattle_n_Buffalo,"Cattle_Buffalo",
+                                    ifelse(livestock_category_name%in%Cattle_n_Buffalo_lactating_cows,"Cattle_Buffalo_lactating_cows",
+                                           ifelse(livestock_category_name%in%Cattle_n_Buffalo_bulls,"Cattle_Buffalo_bulls",
+                                                  ifelse(livestock_category_name%in%Sheep_lamb_to_one_year,"Sheep_lamb_to_1_year",
+                                                         ifelse(livestock_category_name%in%Sheep_older_than_one_year,"Sheep_older_than_1_year",
+                                                                ifelse(livestock_category_name%in%Goats,"Goats",
+                                                                       ifelse(livestock_category_name%in%Pigs,"Pigs",NA))))))))%>%
+    left_join(table_10.4,by = c("maintenance_cat" = "animal_category"))%>%
+    mutate(er_maintenance = body_weight*maintenance_cfi**0.75) #equation 10.3
+
+  #Activity energy
+
+  #Growth energy
+  growth_er <- livestock%>%
+    mutate(er_growth = ifelse(livestock_category_name%in%Pigs,annual_growth*45/no_days, #this equation is not explained
+                              ifelse(livestock_category_name%in%Cattle_n_Buffalo_lactating_cows,22.02*((body_weight/(0.8*adult_weight))**0.75)*((annual_growth/no_days)**1.097), #equation 10.6 cows
+                                     ifelse(livestock_category_name%in%Cattle_n_Buffalo,22.02*((body_weight/(1*adult_weight))**0.75)*((annual_growth/no_days)**1.097), #equation 10.6 castrates
+                                            ifelse(livestock_category_name%in%Cattle_n_Buffalo_bulls,22.02*((body_weight/(1.2*adult_weight))**0.75)*((annual_growth/no_days)**1.097), #equation 10.6 bulls
+                                                   ifelse(livestock_category_name%in%Goats,(annual_growth*(5+(0.5*0.33*(body_weight_weaning+body_weight_year_one))))/no_days, #equation 10.7 goats
+                                                          ifelse(livestock_category_name == "Sheep - Ewes",(annual_growth*(2.1+(0.5*0.45*(body_weight_weaning+body_weight_year_one))))/no_days,  #equation 10.7 sheep - ewes
+                                                                 ifelse(livestock_category_name == "Sheep - Breeding Rams",(annual_growth*(2.5+(0.5*0.35*(body_weight_weaning+body_weight_year_one))))/no_days, #equation 10.7 sheep - intact males
+                                                                        ifelse(livestock_category_name == "Sheep - Fattening Rams",(annual_growth*(4.4+(0.5*0.32*(body_weight_weaning+body_weight_year_one))))/no_days, #equation 10.7 sheep - castrates
+                                                                               ifelse(livestock_category_name == "Sheep - Lambs",(annual_growth*(2.3+(0.5*0.4*(body_weight_weaning+body_weight_year_one))))/no_days, #equation 10.7 sheep - lambs
+                                                                                      NA))))))))))
+
+
+
   annual_requirement <- livestock%>%select(livestock_category_code,livestock_category_name)%>%
     mutate(energy_required_annually=((livestock$er_maintenance*no_days)+(livestock$er_grazing*livestock$grazing_displacement*no_days)+
                                        ifelse(is.nan(((livestock$er_pregnancy/(no_days*livestock$birth_interval))*no_days)),0,((livestock$er_pregnancy/(no_days*livestock$birth_interval))*no_days))+
