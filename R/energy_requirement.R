@@ -91,6 +91,20 @@ energy_requirement <- function(para, feed_basket_quality,energy_parameters){
                                                                                ifelse(livestock_category_name == "Sheep - Lambs",(annual_growth*(2.3+(0.5*0.4*(body_weight_weaning+body_weight_year_one))))/no_days, #equation 10.7 sheep - lambs
                                                                                       NA))))))))))
 
+  #Lactation energy
+  lactation_er <- livestock%>%
+    mutate(ev = ifelse(livestock_category_name %in% Cattle_n_Buffalo_lactating_cows, 1.47+(0.40*fat_content),
+                       ifelse(livestock_category_name == "Sheep - Ewes",4.6,
+                              ifelse(livestock_category_name == "Goats - Does",3,0))),
+           er_lactation = ifelse(livestock_category_name%in%c("Sheep - Ewes","Goats - Does") & annual_milk == 0,5*(body_weight_weaning/no_days)*ev,  #equation 10.10
+                                ifelse(livestock_category_name=="Pigs - lactating/pregnant sows",(((piglets_relying_on_milk/100)*lactation_length*((6.83*litter_size*lw_gain)-(0.125*litter_size)))*4.2)/no_days/birth_interval, #not from the ipcc
+                                       (annual_milk*ev)/no_days)))  #equation 10.8 & equation 10.9
+  #Pregnancy energy
+  pregnancy_er <- maintenance_er%>%
+    mutate(er_pregnancy = ifelse(livestock_category_name=="Pigs - lactating/pregnant sows",(171/no_days)/birth_interval,
+                                 er_maintenance*(0.1/birth_interval)))
+
+
 
 
   annual_requirement <- livestock%>%select(livestock_category_code,livestock_category_name)%>%
