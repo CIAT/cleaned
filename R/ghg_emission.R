@@ -41,7 +41,9 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
 
   no_days <- 365
 
-  annual_energy <- select(energy_required[["annual_results"]],livestock_category_code,ge_intake,dmi_tot)
+  annual_energy <- energy_required[["annual_results"]]
+
+  #annual_energy <- select(energy_required[["annual_results"]],livestock_category_code,ge_intake_day_per_animal,ge_intake,dmi_tot)
 
   ##########################################################################################################################
   #Computing methane emission from enteric fermentation
@@ -98,15 +100,15 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
 
   #Computing methane enteric emission factor
 
-  ef <- left_join(ym1,annual_energy, by = c("livetype_code"="livestock_category_code"))%>%
-    mutate(enteric_methane_emissions = (ge_intake/no_days)*(ym/55.65)) #equation 10.21
+  ef <- left_join(ym1,annual_energy, by = c("livetype_code"="livestock_category_code","livestock_category_name"))%>%
+    mutate(enteric_methane_emissions = ((ge_intake_day_per_animal*(ym/100)*no_days)/55.65)*herd_composition) #equation 10.21
 
   ############################################################################################################################
   #Computing methane emission from manure management T2
   #Computing volatile solid excretion
   table_m <- ghg_ipcc_data[["Table_m"]]
 
-  vs <- left_join(annual_energy,de1, by = "livestock_category_code")%>%
+  vs <- left_join(annual_energy,de1, by = c("livestock_category_code","livestock_category_name"))%>%
     left_join(table_m,by = "livestock_category_name")%>%
     mutate(volatile_solid_excretion = (((ge_intake/no_days)*(1-de))+(Urinary_energy_frac*(ge_intake/no_days)))*((1-ash_content)/18.45)) #equation 10.24
 
@@ -146,24 +148,20 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
               by=c("ipcc_meth_man_t2" = "Category_of_animal","productivity"="Productivity_systems"))
 
   #mcf
-  table_10.17 <- ghg_ipcc_data[["Table 10.17"]]
+  climate_zone <- para[["climate_zone_2"]]
 
-  manureman_pasture <- para[["manureman_pasture"]]
-  manureman_stable <- para[["manureman_stable"]]
-  manureman_yard <- para[["manureman_yard"]]
+  table_10.17 <- ghg_ipcc_data[["Table 10.17"]][ghg_ipcc_data[["Table 10.17"]]$climate_zone_2==climate_zone,]
 
   mcf <- max_meth_bo%>%
-    mutate(manure_man_pasture = manureman_pasture,
-           mfc_pasture = table_10.17[table_10.17$system==manure_man_pasture,2],
-           manure_man_stable = manureman_stable,
-           mfc_stable = table_10.17[table_10.17$system==manure_man_stable,2],
-           manure_man_yard = manureman_yard,
-           mfc_yard = table_10.17[table_10.17$system==manure_man_yard,2])%>%
+    mutate(mfc_non_roofed_enclosure = table_10.17[table_10.17$Manure_management_systems == manureman_non_roofed_enclosure,"MCFs"],
+           mfc_offfarm_grazing = table_10.17[table_10.17$Manure_management_systems == manureman_offfarm_grazing,"MCFs"],
+           mfc_onfarm_grazing = table_10.17[table_10.17$Manure_management_systems == manureman_onfarm_grazing,"MCFs"],
+           mfc_stable = table_10.17[table_10.17$Manure_management_systems == manureman_stable,"MCFs"])%>%
     select(-de,-cp,-dm)
 
   #Emission factor for methane from manure management calculation
   eft <- left_join(vs,mcf,by=c("livestock_category_code" = "livetype_code"))%>%
-    mutate(emission_factor = (volatile_solid_excretion*no_days)*(Bo*0.67*((time_in_stable*mfc_stable)+(time_in_non_roofed_enclosure*mfc_yard)+(time_in_onfarm_grazing*mfc_pasture)))) #equation 10.23
+    mutate(emission_factor = (volatile_solid_excretion*no_days)*(Bo*0.67*((time_in_stable*mfc_stable)+(time_in_non_roofed_enclosure*mfc_non_roofed_enclosure)+(time_in_onfarm_grazing*mfc_onfarm_grazing)+(time_in_offfarm_grazing*mfc_offfarm_grazing)))) #equation 10.23
 
   ################################################################################################################################
   #Annual average nitrogen excretion rates T2
@@ -191,7 +189,7 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
                                                                ifelse(livetype_desc== "Pigs - dry sows/boars",0.021,0))))))),
            n_retained = ifelse(!grepl("Pigs",livetype_desc),ifelse(annual_growth == 0,(annual_milk*(protein_milkcontent/100))/6.38,((annual_milk*(protein_milkcontent/100))/6.38)+(annual_growth*(268-(7.03*er_growth/annual_growth)))/1000/6.25),#equation 10.33
                                ifelse(livetype_desc=="Pigs - lactating/pregnant sows",n_gain+n_weaned, #equation 10.33A
-                                      ifelse(livetype_desc== "Pigs - growers" | livetype_desc== "Pigs - dry sows/boars",((bw_final - bw_initial)*n_gain),0)))) #equation 10.33C
+                                      ifelse(livetype_desc== "Pigs - growers" | livetype_desc== "Pigs - dry sows/boars",(annual_growth*n_gain),0)))) #equation 10.33C
 
 
   #Nitrogen excretion rates
@@ -202,9 +200,11 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
   #Direct N2O emissions
   table_10.21 <- ghg_ipcc_data[["Table 10.21"]]
   direct_N2O <- n_excretion%>%
-    mutate(ef3_stable = table_10.21[table_10.21$system==manureman_stable,3],
-           ef3_yard = table_10.21[table_10.21$system==manureman_yard,3],
-           direct_N2O_emission = ((n_excretion_rate*time_in_stable*ef3_stable)+(n_excretion_rate*time_in_non_roofed_enclosure*ef3_yard))*(44/28))#Equation 10.25
+    mutate(ef3_stable = ifelse(is.na(table_10.21[table_10.21$system==manureman_stable,3]),0,table_10.21[table_10.21$system==manureman_stable,3]),
+           ef3_non_roofed_enclosure = ifelse(is.na(table_10.21[table_10.21$system==manureman_non_roofed_enclosure,3]),0,table_10.21[table_10.21$system==manureman_non_roofed_enclosure,3]),
+           ef3_offfarm_grazing = ifelse(is.na(table_10.21[table_10.21$system==manureman_offfarm_grazing,3]),0,table_10.21[table_10.21$system==manureman_offfarm_grazing,3]),
+           ef3_onfarm_grazing = ifelse(is.na(table_10.21[table_10.21$system==manureman_onfarm_grazing,3]),0,table_10.21[table_10.21$system==manureman_onfarm_grazing,3]),
+           direct_N2O_emission = ((n_excretion_rate*time_in_stable*ef3_stable)+(n_excretion_rate*time_in_non_roofed_enclosure*ef3_non_roofed_enclosure)+(n_excretion_rate*time_in_offfarm_grazing*ef3_offfarm_grazing)+(n_excretion_rate*time_in_onfarm_grazing*ef3_onfarm_grazing))*(44/28))#Equation 10.25
 
   #################################################################################################################################
   #Indirect N2O emissions
@@ -216,25 +216,51 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
                                         ifelse(livetype_desc %in% non_dairy_cattle,"Other Cattle",
                                                ifelse(grepl("Pigs",livetype_desc),"Swine","Other animals"))),
            ef4 = ghg_ipcc_data[["table_11.1_&_table_11.3"]][ghg_ipcc_data[["table_11.1_&_table_11.3"]]$emission_factors=="EF4",4])%>%
-    left_join(table_10.22[,1:3],by = c("indirect_n20_animal"="livestock_category","manure_man_stable"="system"))%>%
-    rename(FracGasMS_stable = FracGas_MS)%>%
-    left_join(table_10.22[,1:3],by = c("indirect_n20_animal"="livestock_category","manure_man_yard"="system"))%>%
-    rename(FracGasMS_yard = FracGas_MS)
+    left_join(table_10.22[,1:5],by = c("indirect_n20_animal"="livestock_category","manureman_stable"="system"))%>%
+    rename(FracGasMS_stable = FracGas_MS,
+           Frac_leach_MS_stable = Frac_leach_MS,
+           FracGas_MS_range_stable = FracGas_MS_range)%>%
+    left_join(table_10.22[,1:5],by = c("indirect_n20_animal"="livestock_category","manureman_non_roofed_enclosure"="system"))%>%
+    rename(FracGasMS_non_roofed_enclosure = FracGas_MS,
+           Frac_leach_MS_non_roofed_enclosure = Frac_leach_MS,
+           FracGas_MS_range_non_roofed_enclosure = FracGas_MS_range)%>%
+    left_join(table_10.22[,1:5],by = c("indirect_n20_animal"="livestock_category","manureman_offfarm_grazing"="system"))%>%
+    rename(FracGasMS_offfarm_grazing = FracGas_MS,
+           Frac_leach_MS_offfarm_grazing = Frac_leach_MS,
+           FracGas_MS_range_offfarm_grazing = FracGas_MS_range)%>%
+    left_join(table_10.22[,1:5],by = c("indirect_n20_animal"="livestock_category","manureman_onfarm_grazing"="system"))%>%
+    rename(FracGasMS_onfarm_grazing = FracGas_MS,
+           Frac_leach_MS_onfarm_grazing = Frac_leach_MS,
+           FracGas_MS_range_onfarm_grazing = FracGas_MS_range)%>%
+    mutate(FracGasMS_stable = ifelse(is.na(FracGasMS_stable),0,FracGasMS_stable),
+           Frac_leach_MS_stable = ifelse(is.na(Frac_leach_MS_stable),0,Frac_leach_MS_stable),
+           FracGasMS_non_roofed_enclosure = ifelse(is.na(FracGasMS_non_roofed_enclosure),0,FracGasMS_non_roofed_enclosure),
+           Frac_leach_MS_non_roofed_enclosure = ifelse(is.na(Frac_leach_MS_non_roofed_enclosure),0,Frac_leach_MS_non_roofed_enclosure),
+           FracGasMS_offfarm_grazing = ifelse(is.na(FracGasMS_offfarm_grazing),0,FracGasMS_offfarm_grazing),
+           Frac_leach_MS_offfarm_grazing = ifelse(is.na(Frac_leach_MS_offfarm_grazing),0,Frac_leach_MS_offfarm_grazing),
+           FracGasMS_onfarm_grazing = ifelse(is.na(FracGasMS_onfarm_grazing),0,FracGasMS_onfarm_grazing),
+           Frac_leach_MS_onfarm_grazing = ifelse(is.na(Frac_leach_MS_onfarm_grazing),0,Frac_leach_MS_onfarm_grazing))
 
   #computing indirect N2O emissions
   indirect_N2O <- FracGasMS%>%
-    mutate(n_volatilisation = ((n_excretion_rate*time_in_stable*FracGasMS_stable)+(n_excretion_rate*time_in_non_roofed_enclosure*FracGasMS_yard)), #equation 10.26
+    mutate(n_volatilisation = ((n_excretion_rate*time_in_stable*FracGasMS_stable)+(n_excretion_rate*time_in_non_roofed_enclosure*FracGasMS_non_roofed_enclosure)+(n_excretion_rate*time_in_offfarm_grazing*FracGasMS_offfarm_grazing)+(n_excretion_rate*time_in_onfarm_grazing*FracGasMS_onfarm_grazing)), #equation 10.26
            indirect_N2O_emission = n_volatilisation*ef4*44/28)#equation 10.28
 
   #################################################################################################################################
   #N flow calculations of total available N from manure for application to  fields
   #Manure used as fertilizer
-  manure_onfarm_fraction <- para[["manure_onfarm_fraction"]]
-
   total_n_from_manure_mgmt <- indirect_N2O%>%
-    mutate(total_n_from_manure_mgmt = (((n_excretion_rate*time_in_stable)*(1-FracGasMS_stable)*manure_in_stable*manure_onfarm_fraction)+
-                                         ((n_excretion_rate*time_in_non_roofed_enclosure)*(1-FracGasMS_yard)*manure_in_non_roofed_enclosure*manure_onfarm_fraction))-(direct_N2O_emission*28/44))
-  #################################################################################################################################
+    mutate(FracN2MS_stable = 3*ef3_stable, #equation 10.34B
+           FracN2MS_non_roofed_enclosure = 3*ef3_non_roofed_enclosure, #equation 10.34B
+           FracN2MS_offfarm_grazing = 3*ef3_offfarm_grazing, #equation 10.34B
+           FracN2MS_onfarm_grazing = 3*ef3_onfarm_grazing, #equation 10.34B
+           Frac_LOSS_MS_stable = FracGasMS_stable+Frac_leach_MS_stable+FracN2MS_stable+ef3_stable,  #equation 10.34A
+           Frac_LOSS_MS_non_roofed_enclosure = FracGasMS_non_roofed_enclosure+Frac_leach_MS_non_roofed_enclosure+FracN2MS_non_roofed_enclosure+ef3_non_roofed_enclosure, #equation 10.34A
+           Frac_LOSS_MS_offfarm_grazing = FracGasMS_offfarm_grazing+Frac_leach_MS_offfarm_grazing+FracN2MS_offfarm_grazing+ef3_offfarm_grazing, #equation 10.34A
+           Frac_LOSS_MS_onfarm_grazing = FracGasMS_onfarm_grazing+Frac_leach_MS_onfarm_grazing+FracN2MS_onfarm_grazing+ef3_onfarm_grazing, #equation 10.34A
+           total_n_from_manure_mgmt = ((n_excretion_rate*time_in_stable)*(1-Frac_LOSS_MS_stable))+((n_excretion_rate*time_in_non_roofed_enclosure)*(1-Frac_LOSS_MS_non_roofed_enclosure))+((n_excretion_rate*time_in_offfarm_grazing)*(1-Frac_LOSS_MS_offfarm_grazing))+((n_excretion_rate*time_in_onfarm_grazing)*(1-Frac_LOSS_MS_onfarm_grazing)))  #equation 10.34
+
+  ###############################################################################################################################
   #last calc in manure sheet
   cattle_pig_poultry <- c("Cattle - Cows (local)","Cattle - Cows (improved)","Cattle - Cows (high productive)",
                           "Cattle - Adult male","Cattle - Steers/heifers","Cattle - Steers/heifers (improved)",
