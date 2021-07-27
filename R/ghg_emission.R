@@ -170,8 +170,8 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
 
   #Nitrogen retention
   n_retention1 <- n_intake1%>%
-    mutate(wkg = ifelse(ipcc_meth_man_category=="Dairy cows" & productivity == "High  productivity systems",7,
-                        ifelse(ipcc_meth_man_category=="Dairy cows" & productivity == "Low  productivity systems",6.5,NA)),
+    mutate(wkg = ifelse(ipcc_meth_man_category=="Swine" & productivity == "High  productivity systems",7,
+                        ifelse(ipcc_meth_man_category=="Swine" & productivity == "Low  productivity systems",6.5,NA)),
            ckg = ifelse(ipcc_meth_man_category=="Swine" & productivity == "High  productivity systems",1.2,
                         ifelse(ipcc_meth_man_category=="Swine" & productivity == "Low  productivity systems",0.8,NA)),
            n_weaned = ifelse(livetype_desc=="Pigs - lactating/pregnant sows", (0.0025*litter_size*birth_interval*body_weight*((wkg-ckg)/0.98))/lactation_length,0),#equation 10.33B
