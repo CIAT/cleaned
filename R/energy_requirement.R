@@ -109,6 +109,7 @@ energy_requirement <- function(para, feed_basket_quality,energy_parameters){
                                 ifelse(livestock_category_name=="Pigs - lactating/pregnant sows",(((piglets_relying_on_milk/100)*lactation_length*((6.83*litter_size*lw_gain)-(0.125*litter_size)))*4.2)/no_days/birth_interval, #not from the ipcc
                                        (annual_milk*ev)/no_days)), #equation 10.8 & equation 10.9
            er_lactation = ifelse(!is.finite(er_lact),0,er_lact))
+
   #Pregnancy energy
   pregnancy_er <- lactation_er%>%
     mutate(er_preg = ifelse(livestock_category_name=="Pigs - lactating/pregnant sows",(171/no_days)/birth_interval,
