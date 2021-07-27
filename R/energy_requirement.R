@@ -7,17 +7,19 @@
 #'
 #' @param feed_basket_quality A dataframe computed using the `feed_quality` function
 #'
+#' @param energy_parameters A JSON file containing energy coeficients
+#'
 #' @importFrom dplyr summarise mutate filter left_join %>%
 #'
 #' @importFrom tidyr gather spread
 #'
-#' @return dataframe
+#' @return list
 #'
 #' @examples
 #' \dontrun{
 #' data(mufindi)
 #' feed_basket_quality <- feed_quality(mufindi)
-#' energy_requirement(mufindi,feed_basket_quality)
+#' energy_requirement(mufindi,feed_basket_quality,energy_parameters)
 #' }
 #'
 #' @export
@@ -125,7 +127,7 @@ energy_requirement <- function(para, feed_basket_quality,energy_parameters){
 
   #Compute annual energy and protein required
   annual_requirement <- wool_er%>%
-    mutate(energy_required_annually=(er_maintenance+er_activity+er_growth+er_lactation+er_work+er_wool)*no_days*herd_composition,
+    mutate(energy_required_annually=(er_maintenance+er_activity+er_growth+er_lactation+er_pregnancy+er_work+er_wool)*no_days*herd_composition,
            protein_required_annually =((cp_maintenance*no_days)+(cp_grazing*grazing_displacement*no_days)+
                                          ifelse(is.nan(((cp_pregnancy/(no_days*birth_interval))*no_days)),0,((cp_pregnancy/(no_days*birth_interval))*no_days))+
                                          ifelse(is.nan(((cp_lactation/(no_days*birth_interval))*no_days)),0,((er_lactation/(no_days*birth_interval))*no_days))+
@@ -188,7 +190,8 @@ energy_requirement <- function(para, feed_basket_quality,energy_parameters){
     select(livestock_category_code,me_intake,dmi_tot,de_intake,ge_intake,annual_manure_produced,daily_manure_produced,manure_onfarm_grazing,
            n_content_manure_grazing,manure_collected,n_content_manure_collected,n_content_manure_total)
 
-  annual_results <- left_join(annual_requirement,manure_comp)
+  annual_results <- left_join(annual_requirement,
+                              manure_comp)
   seasonal_results <- select(df,
                              season_name,
                              livestock_category_code,
