@@ -21,7 +21,7 @@
 #' soil_erosion <- soil_health(para, land_required)
 #' nitrogen_balance <- nitrogen_balance(para, land_required, soil_erosion)
 #' livestock_productivity <- land_productivity(para)
-#' economics_payback(para, energy_required)
+#' economics_payback(para, energy_required,livestock_productivity)
 #' }
 #'
 #' @export
