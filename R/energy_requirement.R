@@ -7,17 +7,19 @@
 #'
 #' @param feed_basket_quality A dataframe computed using the `feed_quality` function
 #'
+#' @param energy_parameters A JSON file containing energy coeficients
+#'
 #' @importFrom dplyr summarise mutate filter left_join %>%
 #'
 #' @importFrom tidyr gather spread
 #'
-#' @return dataframe
+#' @return list
 #'
 #' @examples
 #' \dontrun{
 #' data(mufindi)
 #' feed_basket_quality <- feed_quality(mufindi)
-#' energy_requirement(mufindi,feed_basket_quality)
+#' energy_requirement(mufindi,feed_basket_quality,energy_parameters)
 #' }
 #'
 #' @export
@@ -74,7 +76,7 @@ energy_requirement <- function(para, feed_basket_quality,energy_parameters){
                                                                 ifelse(livestock_category_name%in%Goats,"Goats",
                                                                        ifelse(livestock_category_name%in%Pigs,"Pigs",NA))))))))%>%
     left_join(table_10.4,by = c("maintenance_cat" = "animal_category"))%>%
-    mutate(er_maintenance = body_weight*maintenance_cfi**0.75) #equation 10.3
+    mutate(er_maintenance = maintenance_cfi*(body_weight**0.75)) #equation 10.3
 
   #Activity energy
   activity_er <- maintenance_er%>%
@@ -107,6 +109,7 @@ energy_requirement <- function(para, feed_basket_quality,energy_parameters){
                                 ifelse(livestock_category_name=="Pigs - lactating/pregnant sows",(((piglets_relying_on_milk/100)*lactation_length*((6.83*litter_size*lw_gain)-(0.125*litter_size)))*4.2)/no_days/birth_interval, #not from the ipcc
                                        (annual_milk*ev)/no_days)), #equation 10.8 & equation 10.9
            er_lactation = ifelse(!is.finite(er_lact),0,er_lact))
+
   #Pregnancy energy
   pregnancy_er <- lactation_er%>%
     mutate(er_preg = ifelse(livestock_category_name=="Pigs - lactating/pregnant sows",(171/no_days)/birth_interval,
@@ -123,35 +126,46 @@ energy_requirement <- function(para, feed_basket_quality,energy_parameters){
 
   #Computing Gross Energy and DMI
 
+  #Compute annual energy and protein required
+  annual_requirement <- wool_er%>%
+    mutate(energy_required_annually=(er_maintenance+er_activity+er_growth+er_lactation+er_pregnancy+er_work+er_wool)*no_days*herd_composition,
+           protein_required_annually =((cp_maintenance*no_days)+(cp_grazing*grazing_displacement*no_days)+
+                                         ifelse(is.nan(((cp_pregnancy/(no_days*birth_interval))*no_days)),0,((cp_pregnancy/(no_days*birth_interval))*no_days))+
+                                         ifelse(is.nan(((cp_lactation/(no_days*birth_interval))*no_days)),0,((er_lactation/(no_days*birth_interval))*no_days))+
+                                         (annual_milk*cp_lactmilk)+(annual_growth*cp_growth))*herd_composition)
+
   #get livestock energy and protein requirement per season
   for (i in 1:nrow(seasons)) {
     sl <- seasons$season_length[i]
 
     #Preparing the seasonal feed quality
-    s_feed_basket_quality <- dplyr::filter(feed_basket_quality, season_name == seasons$season_name[i])%>%
+    s_feed_basket_quality <- filter(feed_basket_quality, season_name == seasons$season_name[i])%>%
       gather(feed,value,-season_name,-livestock_category_code,-livestock_category_name,-feed_variables)%>%
       spread(feed_variables,value)%>%
       mutate(prod_me = fraction_as_fed*me_content_fresh,
              prod_dm = fraction_as_fed*dm_content,
-             prod_cp = fraction_as_fed*cp_content_fresh,
-             prod_de = fraction_as_fed*de_fraction)%>%
-      select(livestock_category_code,prod_me,prod_dm,prod_cp,prod_de)%>%
+             prod_cp = fraction_as_fed*cp_content_fresh)%>%
+      select(livestock_category_code,prod_me,prod_dm,prod_cp)%>%
       group_by(livestock_category_code)%>%
       summarise(average_me = sum(prod_me),
                 average_dm = sum(prod_dm),
-                average_cp = sum(prod_cp),
-                average_de = sum(prod_de),
-                de = average_de*100)%>%
-      mutate(rem = (1.123-(4.092*(10**-3)*de)+(1.126*(10**-5)*(de**2))-(25.4/de)), #equation 10.14
-             reg = (1.164-(5.16*(10**-3)*de)+(1.308*(10**-5)*(de**2))-(37.4/de))) #equation 10.15
+                average_cp=sum(prod_cp))
 
-    temp <- wool_er%>%
-      left_join(s_feed_basket_quality, by = "livestock_category_code")%>%
+
+    #Computation of seasonal requirements
+    temp <- annual_requirement%>%
       mutate(season_name = seasons$season_name[i],
-             ge_intake_s = ((((er_maintenance+er_activity+er_lactation+er_work+er_pregnancy)/rem)+((er_growth+er_wool)/reg))/de)*sl, #equation 10.16
-             fresh_intake_required_e = (er_maintenance+er_activity+er_lactation+er_work+er_pregnancy+er_growth+er_wool)/(average_me*100),
-             dmi_s = fresh_intake_required_e*average_dm*sl,
-             me_intake_s = dmi_s*average_me*100/(average_dm*100))
+             energy_required_by_season = energy_required_annually*(sl/no_days),#compute energy require by season
+             protein_required_by_season = protein_required_annually*(sl/no_days))%>% #compute protein require by season
+      left_join(s_feed_basket_quality, by = "livestock_category_code")%>%
+      mutate(fresh_intake_required_e = energy_required_by_season/average_me,
+             dmi_required_e = fresh_intake_required_e*average_dm/100,
+             fresh_intake_required_cp = protein_required_by_season/(average_cp/100),
+             dmi_required_cp = fresh_intake_required_cp*average_dm/100,
+             dmi_s = ifelse(dmi_required_cp>dmi_required_e,dmi_required_cp,dmi_required_e),
+             limiting = ifelse(dmi_required_e == 0 |dmi_required_cp == 0, NA,
+                               ifelse(dmi_required_cp>dmi_required_e,"CP","ENERGY")),
+             me_intake_s = dmi_s*average_me*100/average_dm)
 
     #Binding seasonal results
     if (i==1) {df <- temp}
@@ -159,59 +173,40 @@ energy_requirement <- function(para, feed_basket_quality,energy_parameters){
   }
 
   #Manure computation
- manure_comp <- df%>%group_by(livestock_category_code)%>%
+  manure_comp <- df%>%group_by(livestock_category_code)%>%
     summarise(me_intake = sum(me_intake_s),
-              dmi_tot = sum(dmi_s),
-              ge_intake_day_per_animal = sum(ge_intake_s)/no_days,
-              er_maintenance = mean(er_maintenance,na.rm=T),
-              er_activity = mean(er_activity,na.rm=T),
-              er_lactation = mean(er_lactation,na.rm=T) ,
-              er_work = mean(er_work,na.rm=T),
-              er_pregnancy = mean(er_pregnancy,na.rm=T),
-              er_growth = mean(er_growth,na.rm=T),
-              er_wool = mean(er_wool,na.rm=T))%>%
-   left_join(livestock, by = "livestock_category_code")%>%
+              dmi_tot = sum(dmi_s))%>%
     mutate(de_intake = me_intake/0.81,
-           ge_intake = ge_intake_day_per_animal*no_days*herd_composition,
+           ge_intake = dmi_tot*18.45,
            annual_manure_produced = (dmi_tot*0.365),
-           daily_manure_produced = annual_manure_produced/365,
-           manure_onfarm_grazing = (annual_manure_produced*time_in_onfarm_grazing)-(annual_manure_produced*time_in_onfarm_grazing*manure_in_field),
+           daily_manure_produced = annual_manure_produced/365)%>%
+    left_join(livestock, by = "livestock_category_code")%>%
+    mutate(manure_onfarm_grazing = (annual_manure_produced*time_in_onfarm_grazing)-(annual_manure_produced*time_in_onfarm_grazing*manure_in_field),
            n_content_manure_grazing = manure_onfarm_grazing*n_content,
            manure_collected = annual_manure_produced*((time_in_stable*manure_in_stable)+
                                                         (time_in_non_roofed_enclosure*manure_in_non_roofed_enclosure)+
                                                         (time_in_onfarm_grazing*manure_in_field))*manure_onfarm_fraction,
            n_content_manure_collected = manure_collected*n_content,
            n_content_manure_total = n_content_manure_grazing+n_content_manure_collected)%>%
-   select(livestock_category_code,
-          livestock_category_name,
-          er_maintenance,
-          er_activity,
-          er_lactation,
-          er_work,
-          er_pregnancy,
-          er_growth,
-          er_wool,
-          me_intake,
-          dmi_tot,
-          de_intake,
-          ge_intake,
-          ge_intake_day_per_animal,
-          annual_manure_produced,
-          daily_manure_produced,
-          manure_onfarm_grazing,
-          n_content_manure_grazing,
-          manure_collected,
-          n_content_manure_collected,
-          n_content_manure_total)
+    select(livestock_category_code,me_intake,dmi_tot,de_intake,ge_intake,annual_manure_produced,daily_manure_produced,manure_onfarm_grazing,
+           n_content_manure_grazing,manure_collected,n_content_manure_collected,n_content_manure_total)
 
-  annual_results <- manure_comp
-  seasonal_results <- select(df,season_name,
+  annual_results <- left_join(annual_requirement,
+                              manure_comp)
+  seasonal_results <- select(df,
+                             season_name,
                              livestock_category_code,
                              livestock_category_name,
-                             ge_intake_s,
+                             energy_required_by_season,
+                             protein_required_by_season,
                              fresh_intake_required_e,
+                             dmi_required_e,
+                             fresh_intake_required_cp,
+                             dmi_required_cp,
                              dmi_s,
+                             limiting,
                              me_intake_s)
+
   #return results
   results <- list(annual_results = annual_results,
                   seasonal_results = seasonal_results)

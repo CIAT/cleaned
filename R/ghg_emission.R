@@ -43,30 +43,26 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
 
   annual_energy <- energy_required[["annual_results"]]
 
-  #annual_energy <- select(energy_required[["annual_results"]],livestock_category_code,ge_intake_day_per_animal,ge_intake,dmi_tot)
 
   ##########################################################################################################################
   #Computing methane emission from enteric fermentation
   #Computing feed digestibility (DE)
-  de1 <- feed_basket_quality%>%
+  de1 <- annual_energy%>%
+    mutate(de = de_intake/ge_intake)%>%
+    select(livestock_category_code,livestock_category_name,de,de_intake,ge_intake,er_growth)
+
+  cp1 <- feed_basket_quality%>%
     gather(feed,value,-season_name,-livestock_category_code,-livestock_category_name,-feed_variables)%>%
     spread(feed_variables,value)%>%
-    mutate(de_by_frac_fed = de_fraction*fraction_as_fed,
-           cp_by_frac_fed = fraction_as_fed*cp_content_fresh,
-           dm_by_frac_fed = fraction_as_fed*dm_content)%>%
+    mutate(cp_by_frac_fed = fraction_as_fed*cp_content_fresh*100,
+           dm_by_frac_fed = fraction_as_fed*dm_content*100)%>%
     group_by(season_name,livestock_category_code,livestock_category_name)%>%
-    summarise(de_by_frac_fed2 = sum(de_by_frac_fed,na.rm = TRUE),
-              cp_by_frac_fed2 = sum(cp_by_frac_fed,na.rm = TRUE),
-              dm_by_frac_fed2 = sum(dm_by_frac_fed,na.rm = TRUE),
-              fraction_as_fed2 = sum(fraction_as_fed,na.rm = TRUE))%>%
+    summarise(cp_by_frac_fed2 = sum(cp_by_frac_fed,na.rm = TRUE),
+              dm_by_frac_fed2 = sum(dm_by_frac_fed,na.rm = TRUE))%>%
     left_join(seasons, by = "season_name")%>%
-    mutate(season_de = de_by_frac_fed2*season_length/no_days,
-           season_cp = cp_by_frac_fed2*season_length/no_days,
-           season_dm = dm_by_frac_fed2*season_length/no_days)%>%
+    mutate(season_cp = (cp_by_frac_fed2*(season_length/no_days))/(dm_by_frac_fed2*0.01))%>%
     group_by(livestock_category_code,livestock_category_name)%>%
-    summarise(de = sum(season_de,na.rm = TRUE),
-              cp = sum(season_cp,na.rm = TRUE),
-              dm = sum(season_dm,na.rm = TRUE))
+    summarise(cp = sum(season_cp,na.rm = TRUE))
 
   #Selecting methane conversion factor (Ym)
   table_10.12 <- ghg_ipcc_data[["Table 10.12"]]
@@ -100,16 +96,15 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
 
   #Computing methane enteric emission factor
 
-  ef <- left_join(ym1,annual_energy, by = c("livetype_code"="livestock_category_code","livestock_category_name"))%>%
-    mutate(enteric_methane_emissions = ((ge_intake_day_per_animal*(ym/100)*no_days)/55.65)*herd_composition) #equation 10.21
+  ef <- ym1%>%
+    mutate(enteric_methane_emissions = (ge_intake*(ym/100)*no_days)/55.65) #equation 10.21
 
   ############################################################################################################################
   #Computing methane emission from manure management T2
   #Computing volatile solid excretion
   table_m <- ghg_ipcc_data[["Table_m"]]
 
-  vs <- left_join(annual_energy,de1, by = c("livestock_category_code","livestock_category_name"))%>%
-    left_join(table_m,by = "livestock_category_name")%>%
+  vs <- left_join(de1,table_m,by = "livestock_category_name")%>%
     mutate(volatile_solid_excretion = (((ge_intake/no_days)*(1-de))+(Urinary_energy_frac*(ge_intake/no_days)))*((1-ash_content)/18.45)) #equation 10.24
 
   #Extracting Bo
@@ -157,7 +152,7 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
            mfc_offfarm_grazing = table_10.17[table_10.17$Manure_management_systems == manureman_offfarm_grazing,"MCFs"],
            mfc_onfarm_grazing = table_10.17[table_10.17$Manure_management_systems == manureman_onfarm_grazing,"MCFs"],
            mfc_stable = table_10.17[table_10.17$Manure_management_systems == manureman_stable,"MCFs"])%>%
-    select(-de,-cp,-dm)
+    select(-de_intake,-ge_intake,-de,-er_growth)
 
   #Emission factor for methane from manure management calculation
   eft <- left_join(vs,mcf,by=c("livestock_category_code" = "livetype_code"))%>%
@@ -166,17 +161,17 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
   ################################################################################################################################
   #Annual average nitrogen excretion rates T2
   #Nitrogen intake
-  n_intake1 <- eft%>%
-    mutate(n_intake = ifelse(grepl("Cattle",livetype_desc),((ge_intake/no_days)/18.45)*(cp/6.25), #equation 10.32
-                             ifelse(grepl("Buffalo",livetype_desc),((ge_intake/no_days)/18.45)*(cp/6.25), #equation 10.32
-                                    ifelse(grepl("Sheep",livetype_desc),((ge_intake/no_days)/18.45)*(cp/6.25), #equation 10.32
-                                           ifelse(grepl("Goats",livetype_desc),((ge_intake/no_days)/18.45)*(cp/6.25), #equation 10.32
-                                                  ifelse(grepl("Pigs",livetype_desc),(dmi_tot/no_days)*(cp/6.25),NA)))))) #equation 10.32A
+  n_intake1 <- left_join(eft,cp1,by="livestock_category_code")%>%
+    mutate(n_intake = ifelse(grepl("Cattle",livetype_desc),((ge_intake/no_days)/18.45)*((cp/100)/6.25), #equation 10.32
+                             ifelse(grepl("Buffalo",livetype_desc),((ge_intake/no_days)/18.45)*((cp/100)/6.25), #equation 10.32
+                                    ifelse(grepl("Sheep",livetype_desc),((ge_intake/no_days)/18.45)*((cp/100)/6.25), #equation 10.32
+                                           ifelse(grepl("Goats",livetype_desc),((ge_intake/no_days)/18.45)*((cp/100)/6.25), #equation 10.32
+                                                  ifelse(grepl("Pigs",livetype_desc),(dmi_tot/no_days)*((cp/100)/6.25),NA)))))) #equation 10.32A
 
   #Nitrogen retention
   n_retention1 <- n_intake1%>%
-    mutate(wkg = ifelse(ipcc_meth_man_category=="Dairy cows" & productivity == "High  productivity systems",7,
-                        ifelse(ipcc_meth_man_category=="Dairy cows" & productivity == "Low  productivity systems",6.5,NA)),
+    mutate(wkg = ifelse(ipcc_meth_man_category=="Swine" & productivity == "High  productivity systems",7,
+                        ifelse(ipcc_meth_man_category=="Swine" & productivity == "Low  productivity systems",6.5,NA)),
            ckg = ifelse(ipcc_meth_man_category=="Swine" & productivity == "High  productivity systems",1.2,
                         ifelse(ipcc_meth_man_category=="Swine" & productivity == "Low  productivity systems",0.8,NA)),
            n_weaned = ifelse(livetype_desc=="Pigs - lactating/pregnant sows", (0.0025*litter_size*birth_interval*body_weight*((wkg-ckg)/0.98))/lactation_length,0),#equation 10.33B
@@ -187,7 +182,7 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
                                                  ifelse(livetype_desc== "Pigs - growers" & body_weight %gel% c(40,80),0.024,
                                                         ifelse(livetype_desc== "Pigs - growers" & body_weight %gel% c(80,120),0.021,
                                                                ifelse(livetype_desc== "Pigs - dry sows/boars",0.021,0))))))),
-           n_retained = ifelse(!grepl("Pigs",livetype_desc),ifelse(annual_growth == 0,(annual_milk*(protein_milkcontent/100))/6.38,((annual_milk*(protein_milkcontent/100))/6.38)+(annual_growth*(268-(7.03*er_growth/annual_growth)))/1000/6.25),#equation 10.33
+           n_retained = ifelse(!grepl("Pigs",livetype_desc),ifelse(annual_growth == 0,(annual_milk*(protein_milkcontent/100))/6.38/no_days,((annual_milk*(protein_milkcontent/100))/6.38)+(((annual_growth*(268-(7.03*er_growth/annual_growth)))/1000)/6.25))/no_days,#equation 10.33
                                ifelse(livetype_desc=="Pigs - lactating/pregnant sows",n_gain+n_weaned, #equation 10.33A
                                       ifelse(livetype_desc== "Pigs - growers" | livetype_desc== "Pigs - dry sows/boars",(annual_growth*n_gain),0)))) #equation 10.33C
 
