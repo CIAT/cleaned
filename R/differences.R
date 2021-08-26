@@ -44,7 +44,7 @@ calculate_differences <- function(iDir){
 
       for (i in outputList){
 
-        scenario <- paste0(sub(".*_ *(.*?) *_.*", "\\1", i))
+        scenario <- gsub(".*(output_|\\s)(.*).json", "\\2", i)
 
         output <- jsonlite::fromJSON(paste0(i), flatten = TRUE)
 
