@@ -4,7 +4,7 @@
 \alias{energy_requirement}
 \title{Energy requirement}
 \usage{
-energy_requirement(para, feed_basket_quality)
+energy_requirement(para, feed_basket_quality, energy_parameters)
 }
 \arguments{
 \item{para}{A JSON file}
