@@ -19,7 +19,7 @@ Description: CLEANED (Comprehensive Livestock Environmental Assessment for Impro
     emissions.
 URL: https://github.com/CIAT/cleaned
 BugReports: https://github.com/ciat/cleaned/issues
-Depends: R (>= 4.0.4)
+Depends: R (>= 4.0.0)
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -34,7 +34,8 @@ Imports:
     tibble,
     utils,
     rlang,
-    stringr
+    stringr,
+    ggplot2
 Suggests: 
     knitr,
     rmarkdown,

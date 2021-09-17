@@ -10,9 +10,11 @@ energy_requirement(para, feed_basket_quality, energy_parameters)
 \item{para}{A JSON file}
 
 \item{feed_basket_quality}{A dataframe computed using the `feed_quality` function}
+
+\item{energy_parameters}{A JSON file containing energy coeficients}
 }
 \value{
-dataframe
+list
 }
 \description{
 It calculates energy requirement. Compute this after
@@ -22,7 +24,7 @@ the `feed_quality` function
 \dontrun{
 data(mufindi)
 feed_basket_quality <- feed_quality(mufindi)
-energy_requirement(mufindi,feed_basket_quality)
+energy_requirement(mufindi,feed_basket_quality,energy_parameters)
 }
 
 }

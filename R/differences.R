@@ -10,7 +10,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' #' data(mufindi)
+#' data(mufindi)
 #' data(ghg_para)
 #' feed_basket_quality <- feed_quality(mufindi)
 #' energy_required <- energy_requirement(mufindi,feed_basket_quality)
@@ -111,9 +111,9 @@ calculate_differences <- function(iDir){
 
       }
 
-  scenarios_all <- scenarioList %>% dplyr::bind_rows()
+  results <- scenarioList %>% dplyr::bind_rows()
 
-  return(scenarios_all)
+  return(results)
 
 }
 

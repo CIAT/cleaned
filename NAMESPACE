@@ -2,6 +2,7 @@
 
 export(biomass_calculation)
 export(calculate_differences)
+export(clean_plotting)
 export(combineOutputs)
 export(economics_payback)
 export(energy_requirement)
