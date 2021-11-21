@@ -98,7 +98,8 @@ energy_requirement <- function(para, feed_basket_quality,energy_parameters){
                                                                  ifelse(livestock_category_name == "Sheep - Breeding Rams",(annual_growth*(2.5+(0.5*0.35*(body_weight_weaning+body_weight_year_one))))/no_days, #equation 10.7 sheep - intact males
                                                                         ifelse(livestock_category_name == "Sheep - Fattening Rams",(annual_growth*(4.4+(0.5*0.32*(body_weight_weaning+body_weight_year_one))))/no_days, #equation 10.7 sheep - castrates
                                                                                ifelse(livestock_category_name == "Sheep - Lambs",(annual_growth*(2.3+(0.5*0.4*(body_weight_weaning+body_weight_year_one))))/no_days, #equation 10.7 sheep - lambs
-                                                                                      0))))))))))
+                                                                                      0))))))))),
+           er_growth = ifelse(!is.finite(er_growth),0,er_growth))
 
   #Lactation energy
   lactation_er <- growth_er%>%
@@ -118,11 +119,13 @@ energy_requirement <- function(para, feed_basket_quality,energy_parameters){
 
   #Work energy
   work_er <- pregnancy_er%>%
-    mutate(er_work = er_maintenance*0.10*work_hour) #equation 10.11
+    mutate(er_work = er_maintenance*0.10*work_hour,#equation 10.11
+           er_work = ifelse(!is.finite(er_work),0,er_work))
 
   #wool energy
   wool_er <- work_er%>%
-    mutate(er_wool = (24*annual_wool)/no_days) #equation 10.12
+    mutate(er_wool = (24*annual_wool)/no_days,#equation 10.12
+           er_wool = ifelse(!is.finite(er_wool),0,er_wool))
 
   #Computing Gross Energy and DMI
 

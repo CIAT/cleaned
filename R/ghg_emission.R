@@ -148,10 +148,14 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
   table_10.17 <- ghg_ipcc_data[["Table 10.17"]][ghg_ipcc_data[["Table 10.17"]]$climate_zone_2==climate_zone,]
 
   mcf <- max_meth_bo%>%
-    mutate(mfc_non_roofed_enclosure = table_10.17[table_10.17$Manure_management_systems == manureman_non_roofed_enclosure,"MCFs"],
-           mfc_offfarm_grazing = table_10.17[table_10.17$Manure_management_systems == manureman_offfarm_grazing,"MCFs"],
-           mfc_onfarm_grazing = table_10.17[table_10.17$Manure_management_systems == manureman_onfarm_grazing,"MCFs"],
-           mfc_stable = table_10.17[table_10.17$Manure_management_systems == manureman_stable,"MCFs"])%>%
+    left_join(table_10.17[,c(1,4)], by = c("manureman_non_roofed_enclosure"="Manure_management_systems"))%>%
+    rename(mfc_non_roofed_enclosure=MCFs)%>%
+    left_join(table_10.17[,c(1,4)], by = c("manureman_offfarm_grazing"="Manure_management_systems"))%>%
+    rename(mfc_offfarm_grazing=MCFs)%>%
+    left_join(table_10.17[,c(1,4)], by = c("manureman_onfarm_grazing"="Manure_management_systems"))%>%
+    rename(mfc_onfarm_grazing=MCFs)%>%
+    left_join(table_10.17[,c(1,4)], by = c("manureman_stable"="Manure_management_systems"))%>%
+    rename(mfc_stable=MCFs)%>%
     select(-de_intake,-ge_intake,-de,-er_growth)
 
   #Emission factor for methane from manure management calculation
