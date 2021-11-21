@@ -442,7 +442,7 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
 
   if(length(para[["fertilizer"]]) == 0) {
 
-    fertlizer_ghg_emissions_per_ha <- "No fertilizer used"
+    fertlizer_ghg_emissions_per_ha <- 0
   }else{
     fertlizer_parameters <- para[["fertilizer"]]%>%
       left_join(ghg_ipcc_data[["fertilizer_table"]], by=c("fertilizer_desc"="fertilizer_type"))%>%
