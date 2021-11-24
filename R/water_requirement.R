@@ -70,7 +70,7 @@ water_requirement <- function(para,land_required){
                                       water_use_protein))
 
   water_use <- list(water_use_per_feed_item = water_use_per_feed_item,
-                    water_use_for_production = water_use_per_feed_item)
+                    water_use_for_production = water_use_for_production)
 
   #returning results
   return(water_use)
