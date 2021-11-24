@@ -57,9 +57,12 @@ water_requirement <- function(para,land_required){
   fraction_of_precipitation_used_for_feed_production <- ET/annual_precipitation
   total_water_use <- ET*sum(water_use_per_feed_item$area_feed)
   water_use_fpcm <- total_water_use/sum(livestock$herd_composition*livestock$annual_milk*(0.337+(0.116*livestock$fat_content)+(0.06*livestock$protein_milkcontent)))
+  water_use_fpcm <- ifelse(!is.finite(water_use_fpcm),0,water_use_fpcm)
   water_use_meat <- total_water_use/sum(livestock$herd_composition*livestock$annual_growth*livestock$carcass_fraction)
+  water_use_meat <- ifelse(!is.finite(water_use_meat),0,water_use_meat)
   water_use_protein <- total_water_use/(sum(livestock$herd_composition*livestock$annual_growth*livestock$carcass_fraction*(livestock$protein_meatcontent/100))+
                                           sum(livestock$herd_composition*livestock$annual_milk*(0.337+(0.116*livestock$fat_content)+(0.06*livestock$protein_milkcontent))*(livestock$protein_milkcontent/100)))
+  water_use_protein <- ifelse(!is.finite(water_use_protein),0,water_use_protein)
 
   #merging water use items for production
   water_use_for_production <- t(cbind(ET,
