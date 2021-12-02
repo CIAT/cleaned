@@ -81,7 +81,7 @@ land_requirement <- function(feed_basket_quality, energy_required, para){
 
         # to be removed from JSON file
         feed_item_selected <- feed_item_selected %>%
-          mutate(dry_yield = selected_feed$dm_content * fresh_yield,
+          mutate(dry_yield = selected_feed$dm_content/100 * fresh_yield, #divided dm_content by 100
                  residue_fresh_yield = ifelse(is.na(fresh_yield*((1-harvest_index)/harvest_index)), 0, fresh_yield*((1-harvest_index)/harvest_index)),
                  residue_dm_content = 1-(water_content/100),
                  residue_dry_yield = residue_dm_content*residue_fresh_yield,
@@ -97,9 +97,8 @@ land_requirement <- function(feed_basket_quality, energy_required, para){
                  crop_residue_removal = ifelse(feed_item_selected$source_type == "Residue",
                                                as.numeric(feed_item_selected$residue_removal), 0),
                  area_total = ifelse(feed_item_selected$source_type == "Main",
-                                     feed_item_dm/(crop_yield*crop_removal),
-                                     ifelse(feed_item_selected$source_type != "Main",
-                                            feed_item_dm/(cr_yield*crop_residue_removal), 0)),
+                                     feed_item_dm/(crop_yield*crop_removal)-feed_item_selected$intercrop*(feed_item_selected$intercrop_fraction)*feed_item_dm/(crop_yield*crop_removal),
+                                     ifelse(feed_item_dm/(cr_yield*crop_residue_removal)-feed_item_selected$intercrop*(feed_item_selected$intercrop_fraction)*feed_item_dm/(cr_yield*crop_residue_removal), 0)),
                  area_non_feed = ifelse(crop_residue_removal > 0,
                                         area_total*(crop_yield*crop_removal)/(crop_yield*crop_removal+cr_yield*crop_residue_removal), 0),
                  area_feed = ifelse(crop_residue_removal > 0,
