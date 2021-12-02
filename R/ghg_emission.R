@@ -148,10 +148,14 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
   table_10.17 <- ghg_ipcc_data[["Table 10.17"]][ghg_ipcc_data[["Table 10.17"]]$climate_zone_2==climate_zone,]
 
   mcf <- max_meth_bo%>%
-    mutate(mfc_non_roofed_enclosure = table_10.17[table_10.17$Manure_management_systems == manureman_non_roofed_enclosure,"MCFs"],
-           mfc_offfarm_grazing = table_10.17[table_10.17$Manure_management_systems == manureman_offfarm_grazing,"MCFs"],
-           mfc_onfarm_grazing = table_10.17[table_10.17$Manure_management_systems == manureman_onfarm_grazing,"MCFs"],
-           mfc_stable = table_10.17[table_10.17$Manure_management_systems == manureman_stable,"MCFs"])%>%
+    left_join(table_10.17[,c(1,4)], by = c("manureman_non_roofed_enclosure"="Manure_management_systems"))%>%
+    rename(mfc_non_roofed_enclosure=MCFs)%>%
+    left_join(table_10.17[,c(1,4)], by = c("manureman_offfarm_grazing"="Manure_management_systems"))%>%
+    rename(mfc_offfarm_grazing=MCFs)%>%
+    left_join(table_10.17[,c(1,4)], by = c("manureman_onfarm_grazing"="Manure_management_systems"))%>%
+    rename(mfc_onfarm_grazing=MCFs)%>%
+    left_join(table_10.17[,c(1,4)], by = c("manureman_stable"="Manure_management_systems"))%>%
+    rename(mfc_stable=MCFs)%>%
     select(-de_intake,-ge_intake,-de,-er_growth)
 
   #Emission factor for methane from manure management calculation
@@ -195,11 +199,19 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
   #Direct N2O emissions
   table_10.21 <- ghg_ipcc_data[["Table 10.21"]]
   direct_N2O <- n_excretion%>%
-    mutate(ef3_stable = ifelse(is.na(table_10.21[table_10.21$system==manureman_stable,3]),0,table_10.21[table_10.21$system==manureman_stable,3]),
-           ef3_non_roofed_enclosure = ifelse(is.na(table_10.21[table_10.21$system==manureman_non_roofed_enclosure,3]),0,table_10.21[table_10.21$system==manureman_non_roofed_enclosure,3]),
-           ef3_offfarm_grazing = ifelse(is.na(table_10.21[table_10.21$system==manureman_offfarm_grazing,3]),0,table_10.21[table_10.21$system==manureman_offfarm_grazing,3]),
-           ef3_onfarm_grazing = ifelse(is.na(table_10.21[table_10.21$system==manureman_onfarm_grazing,3]),0,table_10.21[table_10.21$system==manureman_onfarm_grazing,3]),
-           direct_N2O_emission = ((n_excretion_rate*time_in_stable*ef3_stable)+(n_excretion_rate*time_in_non_roofed_enclosure*ef3_non_roofed_enclosure)+(n_excretion_rate*time_in_offfarm_grazing*ef3_offfarm_grazing)+(n_excretion_rate*time_in_onfarm_grazing*ef3_onfarm_grazing))*(44/28))#Equation 10.25
+    left_join(table_10.21[,c(1,3)],by = c("manureman_stable"="system"))%>%
+    mutate(direct_nitrous_oxide_factor = ifelse(is.na(direct_nitrous_oxide_factor),0,direct_nitrous_oxide_factor))%>%
+    rename(ef3_stable=direct_nitrous_oxide_factor)%>%
+    left_join(table_10.21[,c(1,3)],by = c("manureman_non_roofed_enclosure"="system"))%>%
+    mutate(direct_nitrous_oxide_factor = ifelse(is.na(direct_nitrous_oxide_factor),0,direct_nitrous_oxide_factor))%>%
+    rename(ef3_non_roofed_enclosure=direct_nitrous_oxide_factor)%>%
+    left_join(table_10.21[,c(1,3)],by = c("manureman_offfarm_grazing"="system"))%>%
+    mutate(direct_nitrous_oxide_factor = ifelse(is.na(direct_nitrous_oxide_factor),0,direct_nitrous_oxide_factor))%>%
+    rename(ef3_offfarm_grazing=direct_nitrous_oxide_factor)%>%
+    left_join(table_10.21[,c(1,3)],by = c("manureman_onfarm_grazing"="system"))%>%
+    mutate(direct_nitrous_oxide_factor = ifelse(is.na(direct_nitrous_oxide_factor),0,direct_nitrous_oxide_factor))%>%
+    rename(ef3_onfarm_grazing=direct_nitrous_oxide_factor)%>%
+    mutate(direct_N2O_emission = ((n_excretion_rate*time_in_stable*ef3_stable)+(n_excretion_rate*time_in_non_roofed_enclosure*ef3_non_roofed_enclosure)+(n_excretion_rate*time_in_offfarm_grazing*ef3_offfarm_grazing)+(n_excretion_rate*time_in_onfarm_grazing*ef3_onfarm_grazing))*(44/28))#Equation 10.25
 
   #################################################################################################################################
   #Indirect N2O emissions
@@ -427,14 +439,20 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
 
   ################################################################################################################################################################################################################################
   #GHG off-farm
-  fertlizer_parameters <- para[["fertilizer"]]%>%
-    left_join(ghg_ipcc_data[["fertilizer_table"]], by=c("fertilizer_desc"="fertilizer_type"))%>%
-    mutate(fertlizer_ghg_emissions = quantity*emissions_factor_kg_CO2_eq_per_kg_fertilizer)
 
-  fertlizer_ghg_emissions_per_ha <- sum(fertlizer_parameters$fertlizer_ghg_emissions,na.rm = TRUE)/sum(land_used$area_total,na.rm = TRUE)
+  if(length(para[["fertilizer"]]) == 0) {
 
-  fetilizer_ghg <- list(fertlizer_parameters=fertlizer_parameters,
-                        fertlizer_ghg_emissions_per_ha = fertlizer_ghg_emissions_per_ha)
+    fertlizer_ghg_emissions_per_ha <- 0
+  }else{
+    fertlizer_parameters <- para[["fertilizer"]]%>%
+      left_join(ghg_ipcc_data[["fertilizer_table"]], by=c("fertilizer_desc"="fertilizer_type"))%>%
+      mutate(fertlizer_ghg_emissions = quantity*emissions_factor_kg_CO2_eq_per_kg_fertilizer)
+
+    fertlizer_ghg_emissions_per_ha <- sum(fertlizer_parameters$fertlizer_ghg_emissions,na.rm = TRUE)/sum(land_used$area_total,na.rm = TRUE)
+
+    fetilizer_ghg <- list(fertlizer_parameters=fertlizer_parameters,
+                          fertlizer_ghg_emissions_per_ha = fertlizer_ghg_emissions_per_ha)
+  }
 
   ################################################################################################################################################################################################################################
   #GHG Rice
