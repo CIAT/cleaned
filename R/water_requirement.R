@@ -65,12 +65,16 @@ water_requirement <- function(para,land_required){
   water_use_protein <- ifelse(!is.finite(water_use_protein),0,water_use_protein)
 
   #merging water use items for production
-  water_use_for_production <- t(cbind(ET,
-                                      fraction_of_precipitation_used_for_feed_production,
-                                      total_water_use,
-                                      water_use_fpcm,
-                                      water_use_meat,
-                                      water_use_protein))
+  water_use_for_production <- as.data.frame(t(cbind(ET,
+                                                    fraction_of_precipitation_used_for_feed_production,
+                                                    total_water_use,
+                                                    water_use_fpcm,
+                                                    water_use_meat,
+                                                    water_use_protein)))
+  Items <- rownames(water_use_for_production)
+  rownames(water_use_for_production) <- NULL
+  water_use_for_production <- as.data.frame(cbind(Items,water_use_for_production))
+  names(water_use_for_production) <- c("Names","Value")
 
   water_use <- list(water_use_per_feed_item = water_use_per_feed_item,
                     water_use_for_production = water_use_for_production)
