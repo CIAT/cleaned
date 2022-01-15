@@ -215,7 +215,7 @@ n_balance <- function(para, land_required, soil_erosion){
     mutate(out3a = (n_mineralized_kg_ha_year + fertilizer_rate + in2) * (0.021 * (annual_precipitation - 3.9) / 100),
            out3b = (n_mineralized_kg_ha_year + fertilizer_rate + in2)* (0.014 * annual_precipitation + 0.71) / 100,
            out3c = (n_mineralized_kg_ha_year + fertilizer_rate + in2) * (0.0071 * annual_precipitation + 5.4) / 100,
-           out3 = ifelse(soil_clay <=35, out3a, ifelse(soil_clay >= 35, out3c, out3b)),
+           out3 = ifelse(soil_clay <35, out3a, ifelse(soil_clay >= 55, out3c, out3b)),
            out4 = (n_mineralized_kg_ha_year + fertilizer_rate + organic_n_kg_per_ha) * (-9.4 + 0.13 * soil_clay + 0.01 * annual_precipitation) / 100 * area_total,
            nin = ifelse(area_total>0, in1+in2+in3+in4a+in4b, 0),
            nout = ifelse(area_total>0, out1+out2+out3+out4+out5, 0),
