@@ -33,7 +33,7 @@ water_requirement <- function(para,land_required){
   et <- as.numeric(para[["et"]])
 
   #annual precipitation
-  annual_precipitation <- as.numeric(para[["annual_precipitation"]])
+  annual_precipitation <- as.numeric(para[["annual_prec"]])
 
   #computing water use per feed item
   water_use_per_feed_item <- land_required[["land_requirements_all"]] %>%
