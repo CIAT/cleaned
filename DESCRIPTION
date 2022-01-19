@@ -1,12 +1,12 @@
 Package: cleaned
 Title: Comprehensive Livestock Environmental Assessment for Improved Nutrition, a Secured Environment, and Sustainable Development along Livestock and Fish Value Chains
-Version: 0.2.1
-Date: 2021-12-07
-Authors@R: c(person("John", "Mutua", 
-        email = "ymutua@gmail.com", 
+Version: 0.2.2
+Date: 2022-01-19
+Authors@R: c(person("Stephen", "Oloo", 
+        email = "oloostephen08@gmail.com", 
         role = c("aut", "cre"),
         comment = c(ORCID = "0000-0003-2314-3146")),
-        person("Stephen", "Oloo", role = "aut"),
+        person("John", "Mutua", role = "aut"),
         person("Jessica", "Mukiri", role = "ctb"),
         person("An", "Notenbaert", role = "ctb"),
         person("Birthe", "Paul", role = "ctb"),

@@ -25,7 +25,7 @@ soil_health <- function(para, land_required) {
 
   soil_type <- para[["soil_description"]]
 
-  erosivity_r <- 0.55*(as.numeric(para[["annual_prec"]])/(as.numeric(para[["rain_length"]])/30))-4.7
+  erosivity_r <- 0.55*(as.numeric(para[["annual_prec"]])/(as.numeric(para[["rain_length"]])))-4.7
 
   erodibility_k <- as.numeric(para[["soil_k_value"]])
 
