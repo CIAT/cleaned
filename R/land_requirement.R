@@ -80,12 +80,12 @@ land_requirement <- function(feed_basket_quality, energy_required, para){
         selected_feed <- season_feeds[season_feeds$feed == i,]
 
         # to be removed from JSON file
-        feed_item_selected <- feed_item_selected %>%
-          mutate(dry_yield = selected_feed$dm_content/100 * fresh_yield, #divided dm_content by 100
-                 residue_fresh_yield = ifelse(is.na(fresh_yield*((1-harvest_index)/harvest_index)), 0, fresh_yield*((1-harvest_index)/harvest_index)),
-                 residue_dm_content = 1-(water_content/100),
-                 residue_dry_yield = residue_dm_content*residue_fresh_yield,
-                 residue_n_dm = dry_yield*residue_n)
+        # feed_item_selected <- feed_item_selected %>%
+        #   mutate(dry_yield = selected_feed$dm_content/100 * fresh_yield, #divided dm_content by 100
+        #          residue_fresh_yield = ifelse(is.na(fresh_yield*((1-harvest_index)/harvest_index)), 0, fresh_yield*((1-harvest_index)/harvest_index)),
+        #          residue_dm_content = 1-(water_content/100),
+        #          residue_dry_yield = residue_dm_content*residue_fresh_yield,
+        #          residue_n_dm = dry_yield*residue_n)
 
         feed_items_frac[[i]] <- feed_item_selected
 
