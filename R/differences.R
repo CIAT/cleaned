@@ -2,7 +2,7 @@
 #'
 #' @description It computes difference in environmental impact between scenarios
 #'
-#' @param iDir A path to a directory where output files are stored
+#' @param ... Outputs from different scenario computations
 #'
 #' @return dataframe
 #'
@@ -25,14 +25,14 @@
 #' ghg_emissions <- ghg_emission(mufindi,energy_required,ghg_para,land_required,nitrogen_balance)
 #' combineOutputs(feed_basket_quality,energy_required,land_required,soil_erosion,water_required,
 #' nitrogen_balance,livestock_productivity,economics,biomass,soil_carbon,ghg_emissions)
-#' calculate_differences(iDir)
+#' calculate_differences(...)
 #' }
 #'
 #' @export
 
-calculate_differences <- function(iDir){
+calculate_differences <- function(...){
 
-  outputList <- list.files(paste0(iDir), pattern = "output_", full.names = TRUE)
+  outputList <- list(...)
 
   if (length(outputList)==0) {
 
@@ -42,11 +42,11 @@ calculate_differences <- function(iDir){
 
       scenarioList <- list()
 
-      for (i in outputList){
+      for (i in 1:length(outputList)){
 
-        scenario <- gsub(".*(output_|\\s)(.*).json", "\\2", i)
+        scenario <- i
 
-        output <- jsonlite::fromJSON(paste0(i), flatten = TRUE)
+        output <- jsonlite::fromJSON(outputList[[i]], flatten = TRUE)
 
         nitrogen_balance <- output[["nitrogen_balance"]]
 
