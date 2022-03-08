@@ -84,10 +84,13 @@ calculate_differences <- function(...){
 
         water_requirement <- output[["water_required"]]
 
-        water_m3_yr <- sum(land_required$area_feed)*sum(water_requirement$water_use_per_feed_item$ET)
+        percent_of_precipitation_used_for_feed_production <- water_requirement[["water_use_for_production"]][which(water_requirement[["water_use_for_production"]]$Names=="fraction_of_precipitation_used_for_feed_production"),2]*100
+        water_m3_yr <- water_requirement[["water_use_for_production"]][which(water_requirement[["water_use_for_production"]]$Names=="total_water_use"),2]
         waterha_m3_ha <- water_m3_yr/sum(land_required$area_feed)
-        watermilk_m3_kg <- ifelse(is.na(water_m3_yr/sum(output[["livestock_productivity"]]$total_milk)), 0, water_m3_yr/sum(output[["livestock_productivity"]]$total_milk))
-        waterprotein_m3_kg <- ifelse(is.na(water_m3_yr/(sum(output[["livestock_productivity"]]$protein_kg_year_meat)+sum(output[["livestock_productivity"]]$protein_kg_year_milk))), 0, water_m3_yr/(sum(output[["livestock_productivity"]]$protein_kg_year_meat)+sum(output[["livestock_productivity"]]$protein_kg_year_milk)))
+        water_use_perkg_fpcm <- water_requirement[["water_use_for_production"]][which(water_requirement[["water_use_for_production"]]$Names=="water_use_fpcm"),2]
+        water_use_perkg_meat <- water_requirement[["water_use_for_production"]][which(water_requirement[["water_use_for_production"]]$Names=="water_use_meat"),2]
+        water_use_perkg_protein <- water_requirement[["water_use_for_production"]][which(water_requirement[["water_use_for_production"]]$Names=="water_use_protein"),2]
+
 
         scenarioList[[i]] <- data.frame(scenario,
                                         average_annual_milk_kg_yr,
@@ -103,10 +106,12 @@ calculate_differences <- function(...){
                                         ghgmilk_kg_co2eq_kg,
                                         ghgmeat_kg_co2eq_kg,
                                         ghgprotein_kg_co2eq_kg,
+                                        percent_of_precipitation_used_for_feed_production,
                                         water_m3_yr,
                                         waterha_m3_ha,
-                                        watermilk_m3_kg,
-                                        waterprotein_m3_kg)
+                                        water_use_perkg_fpcm,
+                                        water_use_perkg_meat,
+                                        water_use_perkg_protein)
         }
 
       }
