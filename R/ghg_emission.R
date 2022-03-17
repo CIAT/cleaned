@@ -49,7 +49,7 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
   #Computing feed digestibility (DE)
   de1 <- annual_energy%>%
     mutate(de = de_intake/ge_intake)%>%
-    select(livestock_category_code,livestock_category_name,de,de_intake,ge_intake,er_growth)
+    select(livestock_category_code,livestock_category_name,de,de_intake,ge_intake,er_growth,dmi_tot)
 
   cp1 <- feed_basket_quality%>%
     gather(feed,value,-season_name,-livestock_category_code,-livestock_category_name,-feed_variables)%>%
@@ -156,7 +156,7 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
     rename(mfc_onfarm_grazing=MCFs)%>%
     left_join(table_10.17[,c(1,4)], by = c("manureman_stable"="Manure_management_systems"))%>%
     rename(mfc_stable=MCFs)%>%
-    select(-de_intake,-ge_intake,-de,-er_growth)
+    select(-de_intake,-ge_intake,-de,-er_growth,-dmi_tot)
 
   #Emission factor for methane from manure management calculation
   eft <- left_join(vs,mcf,by=c("livestock_category_code" = "livetype_code"))%>%
@@ -520,3 +520,4 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
   return(ghg_emissions)
 
 } #end of ghg function
+

@@ -118,7 +118,7 @@ calculate_differences <- function(...){
 
   results <- scenarioList %>% dplyr::bind_rows()
 
-  return(results)
+  return(jsonlite::toJSON(results, pretty = TRUE))
 
 }
 
