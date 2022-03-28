@@ -318,8 +318,9 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
 
   n_from_crop_residues <- crop_parameters%>%
     mutate(fraction_crop_residue = 1-(residue_removal+residue_burnt),
-           dm_per_ha = fresh_yield*dm_content,
-           crop_residue_n_per_area = dm_per_ha*residue_n*1000,
+           # dm_per_ha = fresh_yield*dm_content,
+           # crop_residue_n_per_area = dm_per_ha*residue_n*1000,
+           crop_residue_n_per_area = dry_yield*residue_n*1000,
            n_from_crop_residue = area_total*fraction_crop_residue*crop_residue_n_per_area)
 
   n_from_crop_residue_managed_soil <- sum(n_from_crop_residues$crop_residue_n_per_area,na.rm = TRUE)
