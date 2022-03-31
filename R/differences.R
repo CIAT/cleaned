@@ -2,9 +2,11 @@
 #'
 #' @description It computes difference in environmental impact between scenarios
 #'
-#' @param ... Outputs from different scenario computations
+#' @param outDir Path to the new comaprison output json
 #'
-#' @return dataframe
+#' @param ... Paths of the different scenario outputs
+#'
+#' @return json file
 #'
 #' @importFrom dplyr %>%
 #'
@@ -30,11 +32,15 @@
 #'
 #' @export
 
-calculate_differences <- function(...){
+calculate_differences <- function(outDir,...){
 
-  outputList <- list(...)
+  outputList <- list(outDir = outDir,...)
 
-  if (length(outputList)==0) {
+  output_path <- outputList[["outDir"]]
+
+  outputList[[1]] <- NULL
+
+  if (length(outputList) == 0) {
 
     stop("No files in source directory")
 
@@ -83,13 +89,14 @@ calculate_differences <- function(...){
                                                        (ghgtot_t_co2eq_yr/tot_protein_kg_year_milk)+(ghgtot_t_co2eq_yr/tot_protein_kg_year_meat))))
 
         water_requirement <- output[["water_required"]]
+        water_use_for_production <- as.data.frame(water_requirement[["water_use_for_production"]])
 
-        percent_of_precipitation_used_for_feed_production <- water_requirement[["water_use_for_production"]][which(water_requirement[["water_use_for_production"]]$Names=="fraction_of_precipitation_used_for_feed_production"),2]*100
-        water_m3_yr <- water_requirement[["water_use_for_production"]][which(water_requirement[["water_use_for_production"]]$Names=="total_water_use"),2]
+        percent_of_precipitation_used_for_feed_production <- water_use_for_production[which(water_use_for_production$Names=="fraction_of_precipitation_used_for_feed_production"),2]*100
+        water_m3_yr <-water_use_for_production[which(water_use_for_production$Names=="total_water_use"),2]
         waterha_m3_ha <- water_m3_yr/sum(land_required$area_feed)
-        water_use_perkg_fpcm <- water_requirement[["water_use_for_production"]][which(water_requirement[["water_use_for_production"]]$Names=="water_use_fpcm"),2]
-        water_use_perkg_meat <- water_requirement[["water_use_for_production"]][which(water_requirement[["water_use_for_production"]]$Names=="water_use_meat"),2]
-        water_use_perkg_protein <- water_requirement[["water_use_for_production"]][which(water_requirement[["water_use_for_production"]]$Names=="water_use_protein"),2]
+        water_use_perkg_fpcm <- water_use_for_production[which(water_use_for_production$Names=="water_use_fpcm"),2]
+        water_use_perkg_meat <- water_use_for_production[which(water_use_for_production$Names=="water_use_meat"),2]
+        water_use_perkg_protein <- water_use_for_production[which(water_use_for_production$Names=="water_use_protein"),2]
 
 
         scenarioList[[i]] <- data.frame(scenario,
@@ -118,7 +125,7 @@ calculate_differences <- function(...){
 
   results <- scenarioList %>% dplyr::bind_rows()
 
-  return(jsonlite::toJSON(results, pretty = TRUE))
+  write(jsonlite::toJSON(results, pretty = TRUE),output_path)
 
 }
 
