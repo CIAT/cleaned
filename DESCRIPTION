@@ -1,9 +1,9 @@
 Package: cleaned
 Title: Comprehensive Livestock Environmental Assessment for Improved Nutrition, a Secured Environment, and Sustainable Development along Livestock and Fish Value Chains
-Version: 0.3.1
+Version: 0.3.2
 Date: 2022-01-19
-Authors@R: c(person("Stephen", "Oloo", 
-        email = "oloostephen08@gmail.com", 
+Authors@R: c(person("Stephen", "Oloo",
+        email = "oloostephen08@gmail.com",
         role = c("aut", "cre"),
         comment = c(ORCID = "0000-0003-2314-3146")),
         person("John", "Mutua", role = "aut"),
@@ -12,10 +12,10 @@ Authors@R: c(person("Stephen", "Oloo",
         person("Birthe", "Paul", role = "ctb"),
         person("Rein", "Van der Hoek", role = "ctb")
         )
-Description: CLEANED (Comprehensive Livestock Environmental Assessment for Improved Nutrition, a 
-    Secured Environment, and Sustainable Development along Livestock and Fish Value Chains) is an 
-    ex-ante tool that assesses environmental impacts of livestock systems and value chains.  It 
-    evaluates land requirements, productivity, water use, soil health, economics and greenhouse gas 
+Description: CLEANED (Comprehensive Livestock Environmental Assessment for Improved Nutrition, a
+    Secured Environment, and Sustainable Development along Livestock and Fish Value Chains) is an
+    ex-ante tool that assesses environmental impacts of livestock systems and value chains.  It
+    evaluates land requirements, productivity, water use, soil health, economics and greenhouse gas
     emissions.
 URL: https://github.com/CIAT/cleaned
 BugReports: https://github.com/ciat/cleaned/issues
@@ -23,20 +23,20 @@ Depends: R (>= 4.0.0)
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-Imports: 
-    jsonlite, 
-    tidyverse, 
-    data.table, 
+Imports:
+    jsonlite,
+    tidyverse,
+    data.table,
     lubridate,
     plyr,
-    tidyr, 
+    tidyr,
     dplyr,
     tibble,
     utils,
     rlang,
     stringr,
     ggplot2
-Suggests: 
+Suggests:
     knitr,
     rmarkdown,
     testthat,
