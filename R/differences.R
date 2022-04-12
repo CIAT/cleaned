@@ -2,7 +2,7 @@
 #'
 #' @description It computes difference in environmental impact between scenarios
 #'
-#' @param outDir Path to the new comaprison output json
+#' @param outFile Path to the new comparison output json
 #'
 #' @param ... Paths of the different scenario outputs
 #'
@@ -32,11 +32,11 @@
 #'
 #' @export
 
-calculate_differences <- function(outDir,...){
+calculate_differences <- function(outFile,...){
 
-  outputList <- list(outDir = outDir,...)
+  outputList <- list(outFile = outFile,...)
 
-  output_path <- outputList[["outDir"]]
+  output_path <- outputList[["outFile"]]
 
   outputList[[1]] <- NULL
 
@@ -128,5 +128,3 @@ calculate_differences <- function(outDir,...){
   write(jsonlite::toJSON(results, pretty = TRUE),output_path)
 
 }
-
-
