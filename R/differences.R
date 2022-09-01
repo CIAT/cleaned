@@ -98,6 +98,37 @@ calculate_differences <- function(outFile,...){
         water_use_perkg_meat <- water_use_for_production[which(water_use_for_production$Names=="water_use_meat"),2]
         water_use_perkg_protein <- water_use_for_production[which(water_use_for_production$Names=="water_use_protein"),2]
 
+        #Extracting limiting factor
+        seasonal_energy_required2 <- output$energy_required$seasonal_results
+
+        seasons <- unique(seasonal_energy_required2$season_name)
+
+        #loop through the seasons
+        for (j in 1:length(seasons)){
+
+          season <- seasons[j]
+
+          season_energy_data <- filter(seasonal_energy_required2, season_name == seasons[j])
+
+          livestock_category <- unique(season_energy_data$livestock_category_name)
+
+          #loop through livestock category
+          for (k in 1:length(livestock_category)) {
+
+            limiting_factor <- data.frame(filter(season_energy_data, livestock_category_name==livestock_category[k])$limiting)
+
+            names(limiting_factor) <- paste0("limiting_factor_",livestock_category[k])
+
+            if (k==1) {
+              season_limiting_factor <- data.frame(season,limiting_factor)
+            }else{season_limiting_factor <- cbind(season_limiting_factor,limiting_factor) }
+          } #end
+          if (j==1) {
+            annual_limiting_factor <- season_limiting_factor
+          }else{annual_limiting_factor <- cbind(annual_limiting_factor,season_limiting_factor) }
+        }
+        #end
+
 
         scenarioList[[i]] <- data.frame(scenario,
                                         average_annual_milk_kg_yr,
@@ -118,7 +149,7 @@ calculate_differences <- function(outFile,...){
                                         waterha_m3_ha,
                                         water_use_perkg_fpcm,
                                         water_use_perkg_meat,
-                                        water_use_perkg_protein)
+                                        water_use_perkg_protein)%>%cbind(annual_limiting_factor)
         }
 
       }
