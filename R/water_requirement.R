@@ -49,8 +49,24 @@ water_requirement <- function(para,land_required){
            water_use = ET*sum(area_feed),
            feed_water_use = ifelse(is.nan(water_use*(1-(area_non_feed/area_total))),0,
                                    (water_use*(1-(area_non_feed/area_total)))),
-           non_feed_water_use = water_use-feed_water_use)%>%
-    select(feed,area_feed,kc_average,kc_frac,water_use,feed_water_use,non_feed_water_use)
+           non_feed_water_use = water_use-feed_water_use,
+           kc_water_use_of_roughages = ifelse(grepl("OFR",feed),feed_water_use,0),
+           kc_water_use_of_concentrates = ifelse(grepl("OFC",feed),feed_water_use,0),
+           kc_water_use_ip_concentrates = ifelse(grepl("IP",feed),feed_water_use,0),
+           kc_water_use_on_farm = feed_water_use-kc_water_use_of_roughages-kc_water_use_ip_concentrates,
+           kc_water_use_m3_per_kg = ifelse(is.nan(feed_water_use/area_feed),0,(feed_water_use/area_feed)))%>%
+    select(feed,
+           area_feed,
+           kc_average,
+           kc_frac,
+           water_use,
+           feed_water_use,
+           non_feed_water_use,
+           kc_water_use_of_roughages,
+           kc_water_use_of_concentrates,
+           kc_water_use_ip_concentrates,
+           kc_water_use_on_farm,
+           kc_water_use_m3_per_kg)
 
   #computing water use for production
   ET <- et*sum(water_use_per_feed_item$kc_frac)
