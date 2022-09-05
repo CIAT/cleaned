@@ -108,7 +108,7 @@ land_requirement <- function(feed_basket_quality, energy_required, para){
                  rough_of = ifelse(stringr::str_detect(selected_feed$feed, "OFR"), area_feed, 0),
                  conc_of = ifelse(stringr::str_detect(selected_feed$feed, "OFC"), area_feed, 0),
                  conc_ip = ifelse(stringr::str_detect(selected_feed$feed, "IP"), area_feed, 0),
-                 farm = sum(area_feed, rough_of, conc_of, conc_ip),
+                 farm = (area_feed - rough_of - conc_of - conc_ip),
                  grasses = ifelse(feed_item_selected$category == "grass", area_feed, 0),
                  tree_legume = ifelse(feed_item_selected$category == "tree crop" | feed_item_selected$category == "tree legume", area_feed, 0)) %>%
           dplyr::mutate_if(is.numeric, list(~na_if(.,Inf))) %>%

@@ -37,7 +37,7 @@ biomass_calculation <- function(para, land_required){
            annual_area_cropland_perennial_woody_biomass=0,
            annual_growth_rate_perenial_woody_biomass=2.6,
            annual_carbon_stock_biomass_removed=2.5,
-           annual_change_carbon_stocks_biomass=annual_area_cropland_perennial_woody_biomass*sum(annual_growth_rate_perenial_woody_biomass+annual_carbon_stock_biomass_removed))
+           annual_change_carbon_stocks_biomass=annual_area_cropland_perennial_woody_biomass*(annual_growth_rate_perenial_woody_biomass-annual_carbon_stock_biomass_removed))
 
   # Land requirement for feed production per associated crop (ha)
   land_requirement_per_feed <- land_required[["land_requirements_all"]] %>%
@@ -105,17 +105,17 @@ biomass_calculation <- function(para, land_required){
              dbh_25_yearN = ifelse(is.na(years+dbh_25_year0*increase_dbh25), 0, years+dbh_25_year0*increase_dbh25),
              biomass_25_year0 = ifelse(is.na(exp(-1.996+2.32*log(dbh_25_year0))), 0, exp(-1.996+2.32*log(dbh_25_year0))),
              biomass_25_yearN = ifelse(is.na(exp(-1.996+2.32*log(dbh_25_yearN))), 0, exp(-1.996+2.32*log(dbh_25_yearN))),
-             biomass_25_increase = (biomass_25_yearN-biomass_25_year0)*trees_ha_dbh25/1000,
+             biomass_25_increase = (biomass_25_yearN-biomass_25_year0)*total_trees_25/1000,
              dbh_2550_year0 = ifelse(is.na(average_dbh2550), 0, average_dbh2550),
              dbh_2550_yearN = ifelse(is.na(years+dbh_2550_year0*increase_dbh2550), 0, years+dbh_2550_year0*increase_dbh2550),
              biomass_2550_year0 = ifelse(is.na(exp(-1.996+2.32*log(dbh_2550_year0))), 0, exp(-1.996+2.32*log(dbh_2550_year0))),
              biomass_2550_yearN = ifelse(is.na(exp(-1.996+2.32*log(dbh_2550_yearN))), 0, exp(-1.996+2.32*log(dbh_2550_yearN))),
-             biomass_2550_increase = (biomass_2550_yearN-biomass_2550_year0)*trees_ha_dbh2550/1000,
+             biomass_2550_increase = (biomass_2550_yearN-biomass_2550_year0)*total_trees_2550/1000,
              dbh_50_year0 = ifelse(is.na(average_dbh50), 0, average_dbh50),
              dbh_50_yearN = ifelse(is.na(years+dbh_50_year0*increase_dbh50), 0, years+dbh_50_year0*increase_dbh50),
              biomass_50_year0 = ifelse(is.na(exp(-1.996+2.32*log(dbh_50_year0))), 0, exp(-1.996+2.32*log(dbh_50_year0))),
              biomass_50_yearN = ifelse(is.na(exp(-1.996+2.32*log(dbh_50_yearN))), 0, exp(-1.996+2.32*log(dbh_50_yearN))),
-             biomass_50_increase = (biomass_50_yearN-biomass_50_year0)*trees_ha_dbh50/1000,
+             biomass_50_increase = (biomass_50_yearN-biomass_50_year0)*total_trees_50/1000,
              biomass_increase_total = ifelse(is.na((sum(biomass_25_increase, biomass_2550_increase, biomass_50_increase))/years), 0, (sum(biomass_25_increase, biomass_2550_increase, biomass_50_increase))/years),
              biomass_ccontent = 0.48,
              c_increase = biomass_increase_total*biomass_ccontent,
