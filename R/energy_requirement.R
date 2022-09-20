@@ -168,6 +168,9 @@ energy_requirement <- function(para, feed_basket_quality,energy_parameters){
              dmi_s = ifelse(dmi_required_cp>dmi_required_e,dmi_required_cp,dmi_required_e),
              limiting = ifelse(dmi_required_e == 0 |dmi_required_cp == 0, NA,
                                ifelse(dmi_required_cp>dmi_required_e,"CP","ENERGY")),
+             surplus_season = ifelse(is.na(limiting),NA,
+                                     ifelse(limiting=="CP",(dmi_required_cp-dmi_required_e)/dmi_required_e,
+                                            (dmi_required_e-dmi_required_cp)/dmi_required_cp)),
              me_intake_s = dmi_s*average_me*100/average_dm)
 
     #Binding seasonal results
@@ -175,7 +178,17 @@ energy_requirement <- function(para, feed_basket_quality,energy_parameters){
     else{df <- rbind(df,temp)}
   }
 
-  #Manure computation
+  # Annual limiting factor
+  limiting_factor <- df%>%
+    group_by(livestock_category_code,livestock_category_name)%>%
+    summarise(dmi_energy_total = sum(dmi_required_e,na.omit=TRUE),
+              dmi_cp_total = sum(dmi_required_cp,na.omit=TRUE))%>%
+    mutate(limiting_total = ifelse(dmi_cp_total>dmi_energy_total,"CP","ENERGY"),
+           surplus_total = ifelse(limiting_total == "CP", (dmi_cp_total-dmi_energy_total)/dmi_energy_total,
+                                  (dmi_energy_total-dmi_cp_total)/dmi_cp_total))
+
+
+  # Manure computation
   manure_comp <- df%>%group_by(livestock_category_code)%>%
     summarise(me_intake = sum(me_intake_s),
               dmi_tot = sum(dmi_s))%>%
@@ -194,8 +207,9 @@ energy_requirement <- function(para, feed_basket_quality,energy_parameters){
     select(livestock_category_code,me_intake,dmi_tot,de_intake,ge_intake,annual_manure_produced,daily_manure_produced,manure_onfarm_grazing,
            n_content_manure_grazing,manure_collected,n_content_manure_collected,n_content_manure_total)
 
-  annual_results <- left_join(annual_requirement,
-                              manure_comp)
+  annual_results <- left_join(annual_requirement, limiting_factor, by = c("livestock_category_code","livestock_category_name"))%>%
+    left_join(manure_comp, by = "livestock_category_code")
+
   seasonal_results <- select(df,
                              season_name,
                              livestock_category_code,
@@ -208,6 +222,7 @@ energy_requirement <- function(para, feed_basket_quality,energy_parameters){
                              dmi_required_cp,
                              dmi_s,
                              limiting,
+                             surplus_season,
                              me_intake_s)
 
   #return results
