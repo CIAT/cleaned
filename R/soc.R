@@ -65,7 +65,7 @@ soil_organic_carbon <- function(para, stock_change_para, land_required, biomass)
 
   grassland_change_carbon_stocks_mineral_soils <- data.frame("initial_landuse" = "grassland") %>%
     mutate(reporting_landuse = "grassland",
-           area_last_year_inventory_period = sum(land_required$grasses)+sum(land_required$tree_legume),
+           area_last_year_inventory_period = sum(land_required[which(land_required$grasses>0),]$farm),
            carbon_stock_last_year_inventory_period = 40, #hardcoded in the excel sheet 40
            time_dependence_stock_change = 20,
            stock_change_factor_land_use = unnest(stock_change_para[["grassland"]], cols = c(landuse)) %>%
@@ -84,7 +84,7 @@ soil_organic_carbon <- function(para, stock_change_para, land_required, biomass)
 
   off_farm_grassland_change_carbon_stocks_mineral_soils <- data.frame("initial_landuse" = "off_farm_grassland") %>%
     mutate(reporting_landuse = "off_farm_grassland",
-           area_last_year_inventory_period = 0,
+           area_last_year_inventory_period = sum(land_required[which(land_required$grasses>0),]$rough_of),
            carbon_stock_last_year_inventory_period = 40, #hardcoded in the excel sheet 40
            time_dependence_stock_change = 20,
            stock_change_factor_land_use = unnest(stock_change_para[["grassland"]], cols = c(landuse)) %>%
@@ -105,11 +105,14 @@ soil_organic_carbon <- function(para, stock_change_para, land_required, biomass)
                                                      grassland_change_carbon_stocks_mineral_soils,
                                                      off_farm_grassland_change_carbon_stocks_mineral_soils)
 
+  # This section is still under research and will be revisited
   annual_change_carbon_stocks_organic_soils <- data.frame("initial_landuse" = "cropland") %>%
     mutate(reporting_landuse = "cropland",
            land_area_cultivated_organic_soil = 0,
            emission_factor_climate_type = 0,
            carbon_loss_cultivated_organic_soils = land_area_cultivated_organic_soil*emission_factor_climate_type)
+
+  # End of the section
 
   annual_change_carbon_stocks_soils <- data.frame("initial_landuse" = "cropland") %>%
     mutate(reporting_landuse = "cropland",
@@ -118,17 +121,17 @@ soil_organic_carbon <- function(para, stock_change_para, land_required, biomass)
            annual_change_inorganic_carbon_stocks_soils = 0,
            annual_change_carbon_stocks_soils = annual_change_carbon_stocks_mineral_soils+annual_carbon_loss_cultivated_organic_soils+annual_change_inorganic_carbon_stocks_soils)
 
-  annual_change_carbon_stocks_trees_feed <- data.frame("type" = "trees_feed") %>%
-    mutate(biomass = sum(biomass[["tier3"]]$carbon_biomass_balance)/1000,
-           below_ground = biomass*0.25,
-           annual_change_carbon_stocks = below_ground/1000)
+  # annual_change_carbon_stocks_trees_feed <- data.frame("type" = "trees_feed") %>%
+  #   mutate(biomass = sum(biomass[["tier3"]]$carbon_biomass_balance)/1000,
+  #          below_ground = biomass*0.25,
+  #          annual_change_carbon_stocks = below_ground/1000)
 
   annual_change_carbon_stocks_trees_non_feed <- data.frame("type" = "trees_non_feed") %>%
     mutate(biomass = sum(biomass[["trees_non_feed_biomass"]]$c_increase_soc),
            below_ground = biomass,
-           annual_change_carbon_stocks = below_ground/1000)
+           annual_change_carbon_stocks = below_ground)
 
-  total_annual_change_carbon_soils <- annual_change_carbon_stocks_soils$annual_change_carbon_stocks_soils+annual_change_carbon_stocks_trees_feed$annual_change_carbon_stocks+annual_change_carbon_stocks_trees_non_feed$annual_change_carbon_stocks
+  total_annual_change_carbon_soils <- annual_change_carbon_stocks_soils$annual_change_carbon_stocks_soils+annual_change_carbon_stocks_trees_non_feed$annual_change_carbon_stocks
 
   total_change_co2_soils <- total_annual_change_carbon_soils*co2_conversion_factor
 
