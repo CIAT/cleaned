@@ -73,7 +73,25 @@ n_balance <- function(para, land_required, soil_erosion){
 
     manure_fraction <- as.numeric(feed_selected$fraction_as_manure)
 
-    fertilizer_rate <- as.numeric(feed_selected$fraction_as_fertilizer)
+    # Computing fertilizer rate
+    ammonia_n_frac <- ifelse(feed_selected$ammonia==0,0,
+                             as.numeric(para[["fertilizer"]][which(para[["fertilizer"]]$fertilizer_desc == "Ammonia"),]$fraction))
+    ammonium_nitrate_n_frac <- ifelse(feed_selected$ammonium_nitrate==0,0,
+                             as.numeric(para[["fertilizer"]][which(para[["fertilizer"]]$fertilizer_desc == "Ammonium nitrate"),]$fraction))
+    ammonium_sulfate_n_frac <- ifelse(feed_selected$ammonium_sulfate==0,0,
+                                      as.numeric(para[["fertilizer"]][which(para[["fertilizer"]]$fertilizer_desc == "Ammonium sulfate"),]$fraction))
+    dap_n_frac <- ifelse(feed_selected$dap==0,0,
+                         as.numeric(para[["fertilizer"]][which(para[["fertilizer"]]$fertilizer_desc == "DAP"),]$fraction))
+    n_solutions_n_frac <- ifelse(feed_selected$n_solutions==0,0,
+                         as.numeric(para[["fertilizer"]][which(para[["fertilizer"]]$fertilizer_desc == "N solutions"),]$fraction))
+    npk_n_frac <- ifelse(feed_selected$npk==0,0,
+                         as.numeric(para[["fertilizer"]][which(para[["fertilizer"]]$fertilizer_desc == "NPK"),]$fraction))
+    urea_n_frac <- ifelse(feed_selected$urea==0,0,
+                         as.numeric(para[["fertilizer"]][which(para[["fertilizer"]]$fertilizer_desc == "Urea"),]$fraction))
+
+
+    fertilizer_rate <- (feed_selected$ammonia*ammonia_n_frac)+(feed_selected$ammonium_nitrate*ammonium_nitrate_n_frac)+(feed_selected$ammonium_sulfate*ammonium_sulfate_n_frac)+
+      (feed_selected$dap*dap_n_frac)+(feed_selected$n_solutions*n_solutions_n_frac)+(feed_selected$npk*npk_n_frac)+(feed_selected$urea*urea_n_frac)
 
     main_product_removal <- as.numeric(feed_selected$main_product_removal)
 
