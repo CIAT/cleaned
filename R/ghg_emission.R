@@ -295,7 +295,8 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
 
   land_used <- land_required[["land_requirements_all"]]%>%
     group_by(feed)%>%
-    summarise(area_total = sum(area_total, na.rm = T))
+    summarise(area_total = sum(area_total, na.rm = T),
+              area_feed_total = sum(area_feed, na.rm = T))
 
   crop_parameters <- left_join(feed_items,land_used, by = c("feed_item_name"="feed"))
 
@@ -445,9 +446,24 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
 
     fertlizer_ghg_emissions_per_ha <- 0
   }else{
+    # Fertilizer applied to each feed per hectare
+    fertilizer_list <- c("Ammonia","Ammonium nitrate","Ammonium sulfate","DAP","N solutions","NPK","Urea")
+
+    fertilizer_applied <- as.data.frame(fertilizer_list)%>%
+      mutate(fertilizer_quantity = ifelse(fertilizer_list == "Ammonia",sum(crop_parameters$ammonia*crop_parameters$area_total,na.rm = T),
+                                          ifelse(fertilizer_list == "Ammonium nitrate",sum(crop_parameters$ammonium_nitrate*crop_parameters$area_total,na.rm = T),
+                                                 ifelse(fertilizer_list == "Ammonium sulfate",sum(crop_parameters$ammonium_sulfate*crop_parameters$area_total,na.rm = T),
+                                                        ifelse(fertilizer_list == "DAP",sum(crop_parameters$dap*crop_parameters$area_total,na.rm = T),
+                                                               ifelse(fertilizer_list == "N solutions",sum(crop_parameters$n_solutions*crop_parameters$area_total,na.rm = T),
+                                                                      ifelse(fertilizer_list == "NPK",sum(crop_parameters$npk*crop_parameters$area_total,na.rm = T),
+                                                                             sum(crop_parameters$urea*crop_parameters$area_total,na.rm = T))))))))
+
+
+
     fertlizer_parameters <- para[["fertilizer"]]%>%
+      left_join(fertilizer_applied, by=c("fertilizer_desc"="fertilizer_list"))%>%
       left_join(ghg_ipcc_data[["fertilizer_table"]], by=c("fertilizer_desc"="fertilizer_type"))%>%
-      mutate(fertlizer_ghg_emissions = quantity*emissions_factor_kg_CO2_eq_per_kg_fertilizer)
+      mutate(fertlizer_ghg_emissions = fertilizer_quantity*emissions_factor_kg_CO2_eq_per_kg_fertilizer)
 
     fertlizer_ghg_emissions_per_ha <- sum(fertlizer_parameters$fertlizer_ghg_emissions,na.rm = TRUE)/sum(land_used$area_total,na.rm = TRUE)
 
