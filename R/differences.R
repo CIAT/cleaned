@@ -117,7 +117,7 @@ calculate_differences <- function(outFile,...){
                                         waterha_m3_ha,
                                         water_use_perkg_fpcm,
                                         water_use_perkg_meat,
-                                        water_use_perkg_protein)%>%cbind(annual_limiting_factor)
+                                        water_use_perkg_protein)
         }
 
       }
