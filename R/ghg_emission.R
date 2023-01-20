@@ -298,7 +298,8 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
     summarise(area_total = sum(area_total, na.rm = T),
               area_feed_total = sum(area_feed, na.rm = T))
 
-  crop_parameters <- left_join(feed_items,land_used, by = c("feed_item_name"="feed"))
+  crop_parameters <- left_join(feed_items,land_used, by = c("feed_item_name"="feed"))%>%
+    left_join(select(nitrogen_balance,feed,fertilizer_rate),by = c("feed_item_name"="feed"))
 
   #################################################################################################################################
   #GHG Soil
