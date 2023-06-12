@@ -41,8 +41,10 @@ land_productivity <- function(para){
 
     livestock_selected <- livestock_df[livestock_df$livetype_desc == livestock,]
 
-    livestock_selected <- na_if(livestock_selected, "NA") %>%
-      as.data.frame()
+    # This section was removed
+    # livestock_selected <- na_if(livestock_selected, "NA") %>%
+    #   as.data.frame()
+    #
 
     livestock_selected[is.na(livestock_selected)] <- 0
 
