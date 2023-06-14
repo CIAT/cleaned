@@ -50,8 +50,9 @@ biomass_calculation <- function(para, land_required){
   # add feed category
   feed_production <- unnest(para[["feed_items"]], cols = c(feed_type_name))
 
-  feed_production <- na_if(feed_production, "NA") %>%
-    as.data.frame()
+  # Changes in dplyr caused an error running the section below
+  # feed_production <- na_if(feed_production, "NA") %>%
+  #   as.data.frame()
 
   # add area_feed to feed_production sheet
   feed_production$area_feed <- land_requirement_per_feed$area_feed[match(feed_production$feed_item_name,

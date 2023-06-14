@@ -485,7 +485,7 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
       soil_type_scaling_factor <- ghg_ipcc_data[["table_5.11"]]$soil_type_scaling_factor
 
 
-      ghg_rice <- left_join(rice,land_used, by=c("feed_type_name"="feed"))%>%
+      ghg_rice <- rice%>%
         left_join(ghg_ipcc_data[["table_5.12"]],by="ecosystem_type")%>%
         left_join(ghg_ipcc_data[["table_5.13"]],by="water_regime")%>%
         left_join(ghg_ipcc_data[["table_5.14"]],by="organic_amendment")%>%
