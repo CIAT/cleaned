@@ -21,12 +21,11 @@
 #' water_required <- water_requirement(mufindi,land_required)
 #' nitrogen_balance <- n_balance(mufindi, land_required, soil_erosion)
 #' livestock_productivity <- land_productivity(mufindi)
-#' economics <- economics_payback(mufindi, energy_required)
 #' biomass <- biomass_calculation(mufindi, land_required)
 #' soil_carbon <- soil_organic_carbon(para, land_required, biomass)
 #' ghg_emissions <- ghg_emission(mufindi,energy_required,ghg_para,land_required,nitrogen_balance)
 #' combineOutputs(feed_basket_quality,energy_required,land_required,soil_erosion,water_required,
-#' nitrogen_balance,livestock_productivity,economics,biomass,soil_carbon,ghg_emissions)
+#' nitrogen_balance,livestock_productivity,biomass,soil_carbon,ghg_emissions)
 #' calculate_differences(...)
 #' }
 #'

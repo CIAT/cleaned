@@ -16,8 +16,6 @@
 #'
 #' @param livestock_productivity A dataframe computed using the `land_productivity` function
 #'
-#' @param economics A dataframe computed using the `economics_payback` function
-#'
 #' @param biomass A dataframe computed using the `biomass_calculation` function
 #'
 #' @param soil_carbon A dataframe computed using the `soil_organic_carbon` function
@@ -39,19 +37,18 @@
 #' water_required <- water_requirement(mufindi,land_required)
 #' nitrogen_balance <- n_balance(mufindi, land_required, soil_erosion)
 #' livestock_productivity <- land_productivity(mufindi)
-#' economics <- economics_payback(mufindi, energy_required)
 #' biomass <- biomass_calculation(mufindi, land_required)
 #' soil_carbon <- soil_organic_carbon(para, land_required, biomass)
 #' ghg_emission <- ghg_emission(mufindi,energy_required,ghg_para,land_required,nitrogen_balance)
 #' combineOutputs(feed_basket_quality,energy_required,land_required,soil_erosion,water_required,
-#' nitrogen_balance,livestock_productivity,economics,biomass,soil_carbon,ghg_emission)
+#' nitrogen_balance,livestock_productivity,biomass,soil_carbon,ghg_emission)
 #' }
 #'
 #' @export
 #'
 combineOutputs <- function(feed_basket_quality, energy_required, land_required,
                                   soil_erosion, water_required, nitrogen_balance,
-                                  livestock_productivity, economics, biomass,soil_carbon, ghg_emission){
+                                  livestock_productivity, biomass,soil_carbon, ghg_emission){
 
   land_required <- land_required[["land_requirements_all"]]
 
@@ -84,10 +81,6 @@ combineOutputs <- function(feed_basket_quality, energy_required, land_required,
     livestock_productivity = livestock_productivity
   }else {livestock_productivity = "ERROR: Livestock productivity was not computed"}
 
-  if (exists("economics")) {
-    economics = economics
-  }else {economics = "ERROR: Farm economics were not computed"}
-
   if (exists("biomass")) {
     biomass = biomass
   }else {biomass = "ERROR: Biomass was not computed"}
@@ -111,7 +104,6 @@ combineOutputs <- function(feed_basket_quality, energy_required, land_required,
                       water_required = water_required,
                       nitrogen_balance = nitrogen_balance,
                       livestock_productivity = livestock_productivity,
-                      economics = economics,
                       biomass = biomass,
                       soil_carbon = soil_carbon,
                       ghg_emission = ghg_emission)
