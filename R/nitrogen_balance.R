@@ -71,7 +71,7 @@ n_balance <- function(para, land_required, soil_erosion){
     #
     # feed_item_selected[is.na(feed_item_selected)] <- 0
 
-    manure_fraction <- as.numeric(feed_selected$fraction_as_manure)
+    manure_fraction <- as.numeric(feed_selected$fraction_as_fertilizer)
 
     # Computing fertilizer rate
     ammonia_n_frac <- ifelse(feed_selected$ammonia==0,0,
