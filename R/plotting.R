@@ -72,13 +72,17 @@ clean_plotting <- function(outFile,oDir){
       title = "GHG (CO2eq/kg meat)"
     }else if (tt == "ghgprotein_kg_co2eq_kg"){
       title = "GHG (CO2eq/kg protein)"
+    }else if (tt == "percent_of_precipitation_used_for_feed_production"){
+      title = "% Precipitation use for feed production"
     }else if (tt == "water_m3_yr"){
       title = "Water (m3/yr)"
     }else if (tt == "waterha_m3_ha"){
       title = "Water (m3/ha)"
-    }else if (tt == "watermilk_m3_kg"){
-      title = "Water (m3/kg milk)"
-    }else if (tt == "waterprotein_m3_kg"){
+    }else if (tt == "water_use_perkg_fpcm"){
+      title = "Water (m3/kg FPCM)"
+    }else if (tt == "water_use_perkg_meat"){
+      title = "Water (m3/kg meat)"
+    }else if (tt == "water_use_perkg_protein"){
       title = "Water (m3/kg protein)"
     }else{
       NA
