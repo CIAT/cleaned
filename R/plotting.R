@@ -17,27 +17,30 @@
 #' water_required <- water_requirement(mufindi,land_required)
 #' nitrogen_balance <- n_balance(mufindi, land_required, soil_erosion)
 #' livestock_productivity <- land_productivity(mufindi)
-#' economics <- economics_payback(mufindi, energy_required)
 #' biomass <- biomass_calculation(mufindi, land_required)
 #' soil_carbon <- soil_organic_carbon(para, land_required, biomass)
 #' ghg_emissions <- ghg_emission(mufindi,energy_required,ghg_para,land_required,nitrogen_balance)
 #' combineOutputs(feed_basket_quality,energy_required,land_required,soil_erosion,water_required,
 #' nitrogen_balance,livestock_productivity,economics,biomass,soil_carbon,ghg_emissions)
 #' calculate_differences(iDir)
-#' clean_plotting(scenarios_all)
+#' clean_plotting(outFile)
 #' }
 #'
 #' @export
 #'
 
-clean_plotting <- function(scenarios_all){
+clean_plotting <- function(outFile,oDir){
 
-  for(i in 2:ncol(scenarios_all)){
+  outFile <- jsonlite::fromJSON(outFile, flatten = TRUE)
 
-    oDir <- paste0(getwd(), "/outputs/", sep="")
-    if (!file.exists(oDir)) {dir.create(oDir, recursive=T)}
+  outFile$scenario <- as.factor(outFile$scenario)
 
-    datos <- scenarios_all %>% select(1, all_of(i))
+  oDir <- oDir
+  if (!file.exists(oDir)) {dir.create(oDir, recursive=T)}
+
+  for(i in 2:ncol(outFile)){
+
+    datos <- outFile %>% select(1, all_of(i))
 
     # titles
     tt <- colnames(datos[2])
@@ -86,7 +89,8 @@ clean_plotting <- function(scenarios_all){
                position = "dodge",
                width = 0.2,
                colour = "black") +
-      ggtitle(label = title)
+      ggtitle(label = title)+
+      theme_bw()
 
     ggsave(paste0(oDir, tt, ".png"), width = 150, height = 100, units = "mm")
 
