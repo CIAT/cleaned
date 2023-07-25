@@ -87,8 +87,7 @@ clean_plotting <- function(outFile,oDir){
     ggplot(datos, aes_string("scenario", y = tt, fill = "scenario")) +
       geom_bar(stat = "identity",
                position = "dodge",
-               width = 0.2,
-               colour = "black") +
+               width = 0.2) +
       ggtitle(label = title)+
       theme_bw()
 
