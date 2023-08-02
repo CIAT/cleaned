@@ -43,69 +43,69 @@ soil_health <- function(para, land_required) {
 
     #feed_item_selected <- as.data.frame(feed_selected[["feed_items"]])
 
-    slope_p_factor <- feed_selected$slope_p_factor
+    slope_desc <- feed_selected$slope_desc
 
     slope <- as.numeric(feed_selected$slope)
 
     slope_length <- feed_selected$slope_length
 
-    # slope_steepness_length_conversion <- function(x, y){
-    #   z <- ifelse(x == "Flat (0-5%)" & y == "1", 0.3,
-    #               ifelse(x == "Hilly (5-20%)" & y == "1", 0.52,
-    #                      ifelse(x == "Steep (20-30%)" & y == "1", 0.59,
-    #                             ifelse(x == "Extremely steep (30%+)" & y == "1", 0.65,
-    #                                    ifelse(x == "Flat (0-5%)" & y == "3", 0.3,
-    #                                           ifelse(x == "Hilly (5-20%)" & y == "3", 0.85,
-    #                                                  ifelse(x == "Steep (20-30%)" & y == "3", 1.13,
-    #                                                         ifelse(x == "Extremely steep (30%+)" & y == "3", 1.36,
-    #                                                                ifelse(x == "Flat (0-5%)" & y == "5", 0.3,
-    #                                                                       ifelse(x == "Hilly (5-20%)" & y == "5", 1.06,
-    #                                                                              ifelse(x == "Steep (20-30%)" & y == "5", 1.53,
-    #                                                                                     ifelse(x == "Extremely steep (30%+)" & y == "5", 1.95,
-    #                                                                                            ifelse(x == "Flat (0-5%)" & y == "15", 0.49,
-    #                                                                                                   ifelse(x == "Hilly (5-20%)" & y == "15", 2.22,
-    #                                                                                                          ifelse(x == "Steep (20-30%)" & y == "15", 3.39,
-    #                                                                                                                 ifelse(x == "Extremely steep (30%+)" & y == "15", 4.45,
-    #                                                                                                                        ifelse(x == "Flat (0-5%)" & y == "30", 0.65,
-    #                                                                                                                               ifelse(x == "Hilly (5-20%)" & y == "30", 3.4,
-    #                                                                                                                                      ifelse(x == "Steep (20-30%)" & y == "30", 5.34,
-    #                                                                                                                                             ifelse(x == "Extremely steep (30%+)" & y == "30", 7.14,
-    #                                                                                                                                                    ifelse(x == "Flat (0-5%)" & y == "90", 1.01,
-    #                                                                                                                                                           ifelse(x == "Hilly (5-20%)" & y == "90", 6.68,
-    #                                                                                                                                                                  ifelse(x == "Steep (20-30%)" & y == "90", 11.01,
-    #                                                                                                                                                                         ifelse(x == "Extremely steep (30%+)" & y == "90", 15.14, NA))))))))))))))))))))))))
-    #   return(z)
-    # }
-
     slope_steepness_length_conversion <- function(x, y){
-      z <- ifelse(x >= 0 & x <= 5 & y == "1", 0.3,
-                  ifelse(x > 5 & x <= 20 & y == "1", 0.52,
-                         ifelse(x > 20 & x <= 30 & y == "1", 0.59,
-                                ifelse(x >30 & y == "1", 0.65,
-                                       ifelse(x >= 0 & x <= 5 & y == "3", 0.3,
-                                              ifelse(x > 5 & x <= 20 & y == "3", 0.85,
-                                                     ifelse(x > 20 & x <= 30 & y == "3", 1.13,
-                                                            ifelse(x >30 & y == "3", 1.36,
-                                                                   ifelse(x >= 0 & x <= 5 & y == "5", 0.3,
-                                                                          ifelse(x > 5 & x <= 20 & y == "5", 1.06,
-                                                                                 ifelse(x > 20 & x <= 30 & y == "5", 1.53,
-                                                                                        ifelse(x >30 & y == "5", 1.95,
-                                                                                               ifelse(x >= 0 & x <= 5 & y == "15", 0.49,
-                                                                                                      ifelse(x > 5 & x <= 20 & y == "15", 2.22,
-                                                                                                             ifelse(x > 20 & x <= 30 & y == "15", 3.39,
-                                                                                                                    ifelse(x >30 & y == "15", 4.45,
-                                                                                                                           ifelse(x >= 0 & x <= 5 & y == "30", 0.65,
-                                                                                                                                  ifelse(x > 5 & x <= 20 & y == "30", 3.4,
-                                                                                                                                         ifelse(x > 20 & x <= 30 & y == "30", 5.34,
-                                                                                                                                                ifelse(x >30 & y == "30", 7.14,
-                                                                                                                                                       ifelse(x >= 0 & x <= 5 & y == "90", 1.01,
-                                                                                                                                                              ifelse(x > 5 & x <= 20 & y == "90", 6.68,
-                                                                                                                                                                     ifelse(x > 20 & x <= 30 & y == "90", 11.01,
-                                                                                                                                                                            ifelse(x >30 & y == "90", 15.14, 0))))))))))))))))))))))))
+      z <- ifelse(x == "Flat (0-5%)" & y >= 0 & y <= 1, 0.3,
+                  ifelse(x == "Hilly (5-20%)" & y >= 0 & y <= 1, 0.52,
+                         ifelse(x == "Steep (20-30%)" & y >= 0 & y <= 1, 0.59,
+                                ifelse(x == "Extremely steep (30%+)" & y >= 0 & x <= 1, 0.65,
+                                       ifelse(x == "Flat (0-5%)" & y > 1 & y <= 3, 0.3,
+                                              ifelse(x == "Hilly (5-20%)" & y > 1 & y <= 3, 0.85,
+                                                     ifelse(x == "Steep (20-30%)" & y > 1 & y <= 3, 1.13,
+                                                            ifelse(x == "Extremely steep (30%+)" & y > 1 & y <= 3, 1.36,
+                                                                   ifelse(x == "Flat (0-5%)" & y > 3 & y <= 5, 0.3,
+                                                                          ifelse(x == "Hilly (5-20%)" & y > 3 & y <= 5, 1.06,
+                                                                                 ifelse(x == "Steep (20-30%)" & y > 3 & y <= 5, 1.53,
+                                                                                        ifelse(x == "Extremely steep (30%+)" & y > 3 & y <= 5, 1.95,
+                                                                                               ifelse(x == "Flat (0-5%)" & y > 5 & y <= 15, 0.49,
+                                                                                                      ifelse(x == "Hilly (5-20%)" & y > 5 & y <= 15, 2.22,
+                                                                                                             ifelse(x == "Steep (20-30%)" & y > 5 & y <= 15, 3.39,
+                                                                                                                    ifelse(x == "Extremely steep (30%+)" & y > 5 & y <= 15, 4.45,
+                                                                                                                           ifelse(x == "Flat (0-5%)" & y > 15 & y <= 30, 0.65,
+                                                                                                                                  ifelse(x == "Hilly (5-20%)" & y > 15 & y <= 30, 3.4,
+                                                                                                                                         ifelse(x == "Steep (20-30%)" & y > 15 & y <= 30, 5.34,
+                                                                                                                                                ifelse(x == "Extremely steep (30%+)" & y > 15 & y <= 30, 7.14,
+                                                                                                                                                       ifelse(x == "Flat (0-5%)" & y > 30, 1.01,
+                                                                                                                                                              ifelse(x == "Hilly (5-20%)" & y > 30, 6.68,
+                                                                                                                                                                     ifelse(x == "Steep (20-30%)" & y > 30, 11.01,
+                                                                                                                                                                            ifelse(x == "Extremely steep (30%+)" & y > 30, 15.14, NA))))))))))))))))))))))))
       return(z)
     }
 
-    ls <- slope_steepness_length_conversion(slope_p_factor, slope_length)
+    # slope_steepness_length_conversion <- function(x, y){
+    #   z <- ifelse(x >= 0 & x <= 5 & y == "1", 0.3,
+    #               ifelse(x > 5 & x <= 20 & y == "1", 0.52,
+    #                      ifelse(x > 20 & x <= 30 & y == "1", 0.59,
+    #                             ifelse(x >30 & y == "1", 0.65,
+    #                                    ifelse(x >= 0 & x <= 5 & y == "3", 0.3,
+    #                                           ifelse(x > 5 & x <= 20 & y == "3", 0.85,
+    #                                                  ifelse(x > 20 & x <= 30 & y == "3", 1.13,
+    #                                                         ifelse(x >30 & y == "3", 1.36,
+    #                                                                ifelse(x >= 0 & x <= 5 & y == "5", 0.3,
+    #                                                                       ifelse(x > 5 & x <= 20 & y == "5", 1.06,
+    #                                                                              ifelse(x > 20 & x <= 30 & y == "5", 1.53,
+    #                                                                                     ifelse(x >30 & y == "5", 1.95,
+    #                                                                                            ifelse(x >= 0 & x <= 5 & y == "15", 0.49,
+    #                                                                                                   ifelse(x > 5 & x <= 20 & y == "15", 2.22,
+    #                                                                                                          ifelse(x > 20 & x <= 30 & y == "15", 3.39,
+    #                                                                                                                 ifelse(x >30 & y == "15", 4.45,
+    #                                                                                                                        ifelse(x >= 0 & x <= 5 & y == "30", 0.65,
+    #                                                                                                                               ifelse(x > 5 & x <= 20 & y == "30", 3.4,
+    #                                                                                                                                      ifelse(x > 20 & x <= 30 & y == "30", 5.34,
+    #                                                                                                                                             ifelse(x >30 & y == "30", 7.14,
+    #                                                                                                                                                    ifelse(x >= 0 & x <= 5 & y == "90", 1.01,
+    #                                                                                                                                                           ifelse(x > 5 & x <= 20 & y == "90", 6.68,
+    #                                                                                                                                                                  ifelse(x > 20 & x <= 30 & y == "90", 11.01,
+    #                                                                                                                                                                         ifelse(x >30 & y == "90", 15.14, 0))))))))))))))))))))))))
+    #   return(z)
+    # }
+
+    ls <- slope_steepness_length_conversion(slope_desc, slope_length)
 
     # calculate cover factor
     c_factor <- feed_selected$landcover_c_factor
