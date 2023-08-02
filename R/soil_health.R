@@ -29,7 +29,9 @@ soil_health <- function(para, land_required) {
 
   erodibility_k <- as.numeric(para[["soil_k_value"]])
 
-  feed_production <- unnest(para[["feed_items"]], cols = c(feed_type_name))
+  # feed_production <- unnest(para[["feed_items"]], cols = c(feed_type_name))
+
+  feed_production <- para[["feed_items"]]
 
   feed_items <- unique(feed_production$feed_item_name)
 
@@ -147,7 +149,7 @@ soil_health <- function(para, land_required) {
     #
     # p_factor <- management_factor_conversion(slope_p_factor)
 
-    p_factor <- slope_p_factor
+    p_factor <- feed_selected$slope_p_factor
 
     # calculate Soil loss (t/ha/year)
     soil_loss_ha_year <- erosivity_r*erodibility_k*ls*c_factor*p_factor
