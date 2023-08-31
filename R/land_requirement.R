@@ -110,7 +110,13 @@ land_requirement <- function(feed_basket_quality, energy_required, para){
                  conc_ip = ifelse(stringr::str_detect(selected_feed$feed, "IP"), area_feed, 0),
                  farm = (area_feed - rough_of - conc_of - conc_ip),
                  grasses = ifelse(feed_item_selected$category == "grass", area_feed, 0),
-                 tree_legume = ifelse(feed_item_selected$category == "tree crop" | feed_item_selected$category == "tree legume", area_feed, 0)) %>%
+                 tree_legume = ifelse(feed_item_selected$category == "tree crop" | feed_item_selected$category == "tree legume", area_feed, 0),
+                 rough_of_dm = ifelse(stringr::str_detect(selected_feed$feed, "OFR"), feed_item_dm, 0),
+                 conc_of_dm = ifelse(stringr::str_detect(selected_feed$feed, "OFC"), feed_item_dm, 0),
+                 conc_ip_dm = ifelse(stringr::str_detect(selected_feed$feed, "IP"), feed_item_dm, 0),
+                 farm_dm = (feed_item_dm - rough_of_dm - conc_of_dm - conc_ip_dm),
+                 grasses_dm = ifelse(feed_item_selected$category == "grass", feed_item_dm, 0),
+                 tree_legume_dm = ifelse(feed_item_selected$category == "tree crop" | feed_item_selected$category == "tree legume", feed_item_dm, 0)) %>%
           dplyr::mutate_if(is.numeric, list(~na_if(.,Inf))) %>%
           replace(is.na(.), 0)
 
