@@ -111,7 +111,7 @@ combineOutputs <- function(feed_basket_quality, energy_required, land_required,
     summarise(area_feed_total = sum(area_feed, na.rm = T)) %>%
     ggplot2::ggplot(aes(x=feed, y=area_feed_total, fill=season_name))+
     geom_bar(stat = "identity", width = 0.6)+
-    labs(x = "Feed Item", y = "Area (Ha)", fill = "Seasons") +
+    labs(x = "Feed Item", y = "Area (Ha)", fill = "Seasons", title = "Land Requirement and Feed Basket") +
     theme_bw()+
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
@@ -196,12 +196,24 @@ combineOutputs <- function(feed_basket_quality, energy_required, land_required,
   ###############################################################################################
   ## Soil impact
   ###############################################################################################
+  # Plotting N balance
+  nitrogen_balance %>%
+    group_by(feed) %>%
+    summarise(nbalance_kg_n_total = sum(nbalance_kg_n_total, na.rm = T)) %>%
+    ggplot2::ggplot(aes(x=feed, y=nbalance_kg_n_total))+
+    geom_bar(stat = "identity", width = 0.6)+
+    labs(x = "Feed Item", y = "Kg N", title = "Total Nitrogen Balance by Feed Item") +
+    theme_bw()+
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+  ggsave(paste0(directoryPath, "/nbalance.png"), width = 150, height = 100, units = "mm")
+
   ## OVERALL SOIL IMPACTS
   nitrogen_balance <- nitrogen_balance %>%
     mutate(rough_of_kg_n = ifelse(stringr::str_detect(feed, "OFR"), nbalance_feed_only_kg_n, 0),
            conc_of_kg_n = ifelse(stringr::str_detect(feed, "OFC"), nbalance_feed_only_kg_n, 0),
            conc_ip_kg_n = ifelse(stringr::str_detect(feed, "IP"), nbalance_feed_only_kg_n, 0),
-           farm_kg_n = (nbalance_feed_only_kg_n - rough_of_n - conc_of_n - conc_ip_n),
+           farm_kg_n = (nbalance_feed_only_kg_n - rough_of_kg_n - conc_of_kg_n - conc_ip_kg_n),
            rough_of_kg_n_ha = ifelse(stringr::str_detect(feed, "OFR"), nbalance_feed_only_kg_n_ha, 0),
            conc_of_kg_n_ha = ifelse(stringr::str_detect(feed, "OFC"), nbalance_feed_only_kg_n_ha, 0),
            conc_ip_kg_n_ha = ifelse(stringr::str_detect(feed, "IP"), nbalance_feed_only_kg_n_ha, 0),
@@ -210,20 +222,26 @@ combineOutputs <- function(feed_basket_quality, energy_required, land_required,
            conc_of_nue = ifelse(stringr::str_detect(feed, "OFC"), nue, 0),
            conc_ip_nue = ifelse(stringr::str_detect(feed, "IP"), nue, 0),
            farm_nue = (nue - rough_of_nue - conc_of_nue - conc_ip_nue),
-           area_mining = ifelse(nue>0.9,nue,0),
-           farm_area_mining = ifelse(farm_nue>0.9,farm_nue,0),
-           rough_of_area_mining = ifelse(rough_of_nue>0.9,rough_of_nue,0),
-           conc_of_nue_area_mining = ifelse(conc_of_nue>0.9,conc_of_nue,0),
-           conc_ip_nue_area_mining = ifelse(conc_ip_nue>0.9,conc_ip_nue,0),
            rough_of_area = ifelse(stringr::str_detect(feed, "OFR"), area_total, 0),
            conc_of_area = ifelse(stringr::str_detect(feed, "OFC"), area_total, 0),
            conc_ip_area = ifelse(stringr::str_detect(feed, "IP"), area_total, 0),
            farm_area = (area_total - rough_of_area - conc_of_area - conc_ip_area),
-           area_leaching = ifelse(nue>0.9,nue,0),
-           farm_area_mining = ifelse(farm_nue>0.9,farm_nue,0),
-           rough_of_area_mining = ifelse(rough_of_nue>0.9,rough_of_nue,0),
-           conc_of_nue_area_mining = ifelse(conc_of_nue>0.9,conc_of_nue,0),
-           conc_ip_nue_area_mining = ifelse(conc_ip_nue>0.9,conc_ip_nue,0))
+           area_mining = ifelse(nue>0.9,area_total,0),
+           farm_area_mining = ifelse(farm_nue>0.9,farm_area,0),
+           rough_of_area_mining = ifelse(rough_of_nue>0.9,rough_of_area,0),
+           conc_of_nue_area_mining = ifelse(conc_of_nue>0.9,conc_of_area,0),
+           conc_ip_nue_area_mining = ifelse(conc_ip_nue>0.9,conc_ip_area,0),
+           area_leaching = ifelse(nue<0.5,area_total,0),
+           farm_area_leaching = ifelse(farm_nue<0.5,farm_area,0),
+           rough_of_area_leaching = ifelse(rough_of_nue<0.5,rough_of_area,0),
+           conc_of_nue_area_leaching = ifelse(conc_of_nue<0.5,conc_of_area,0),
+           conc_ip_nue_area_leaching = ifelse(conc_ip_nue<0.5,conc_ip_area,0))
+
+  soil_erosion <- soil_erosion %>%
+    mutate(rough_of_soil_loss = ifelse(stringr::str_detect(feed_item, "OFR"), as.numeric(soil_loss_plot), 0),
+           conc_of_soil_loss = ifelse(stringr::str_detect(feed_item, "OFC"), as.numeric(soil_loss_plot), 0),
+           conc_ip_soil_loss = ifelse(stringr::str_detect(feed_item, "IP"), as.numeric(soil_loss_plot), 0),
+           farm_soil_loss = (as.numeric(soil_loss_plot) - rough_of_soil_loss - conc_of_soil_loss - conc_ip_soil_loss))
 
     overal_soil_impact <- data.frame(
     sources = c("total", "on-farm", "rough of", "conc of", "conc ip"),
@@ -232,24 +250,48 @@ combineOutputs <- function(feed_basket_quality, energy_required, land_required,
     balance_N_kg_N_ha = c(sum(nitrogen_balance$nbalance_feed_only_kg_n_ha, na.rm = T), sum(nitrogen_balance$farm_kg_n_ha, na.rm = T),
                           sum(nitrogen_balance$rough_of_kg_n_ha, na.rm = T), sum(nitrogen_balance$conc_of_kg_n_ha, na.rm = T), sum(nitrogen_balance$conc_ip_kg_n_ha, na.rm = T)),
     percent_area_mining = c(sum(nitrogen_balance$area_mining, na.rm = T)*100/sum(nitrogen_balance$area_total, na.rm = T), sum(nitrogen_balance$farm_area_mining, na.rm = T)*100/sum(nitrogen_balance$farm_area, na.rm = T),
-                            sum(nitrogen_balance$rough_of_area_mining, na.rm = T)*100/sum(nitrogen_balance$rough_of_area, na.rm = T),sum(nitrogen_balance$conc_of_nue_area_mining, na.rm = T)*100/sum(nitrogen_balance$conc_of_area, na.rm = T),sum(nitrogen_balance$conc_ip_nue_area_mining, na.rm = T)*100/sum(nitrogen_balance$conc_ip_area, na.rm = T))
+                            sum(nitrogen_balance$rough_of_area_mining, na.rm = T)*100/sum(nitrogen_balance$rough_of_area, na.rm = T),sum(nitrogen_balance$conc_of_nue_area_mining, na.rm = T)*100/sum(nitrogen_balance$conc_of_area, na.rm = T),sum(nitrogen_balance$conc_ip_nue_area_mining, na.rm = T)*100/sum(nitrogen_balance$conc_ip_area, na.rm = T)),
+    percent_area_leaching = c(sum(nitrogen_balance$area_leaching, na.rm = T)*100/sum(nitrogen_balance$area_total, na.rm = T), sum(nitrogen_balance$farm_area_leaching, na.rm = T)*100/sum(nitrogen_balance$farm_area, na.rm = T),
+                              sum(nitrogen_balance$rough_of_area_leaching, na.rm = T)*100/sum(nitrogen_balance$rough_of_area, na.rm = T),sum(nitrogen_balance$conc_of_nue_area_leaching, na.rm = T)*100/sum(nitrogen_balance$conc_of_area, na.rm = T),sum(nitrogen_balance$conc_ip_nue_area_leaching, na.rm = T)*100/sum(nitrogen_balance$conc_ip_area, na.rm = T)),
+    erosion_t_soil_year = c(sum(as.numeric(soil_erosion$soil_loss_plot, na.rm = T)), sum(soil_erosion$rough_of_soil_loss, na.rm = T), sum(soil_erosion$conc_of_soil_loss, na.rm = T),
+                            sum(soil_erosion$conc_ip_soil_loss, na.rm = T), sum(soil_erosion$farm_soil_loss, na.rm = T))
   )%>%
-      mutate(percent_area_mining = ifelse(!is.finite(percent_area_mining),0,percent_area_mining))
+      mutate(percent_area_mining = ifelse(!is.finite(percent_area_mining),0,percent_area_mining),
+             percent_area_leaching = ifelse(!is.finite(percent_area_leaching),0,percent_area_leaching),
+             erosion_t_soil_ha = erosion_t_soil_year/c(sum(nitrogen_balance$area_total, na.rm = T), sum(nitrogen_balance$farm_area, na.rm = T), sum(nitrogen_balance$rough_of_area, na.rm = T),
+                                                       sum(nitrogen_balance$conc_of_area, na.rm = T), sum(nitrogen_balance$conc_ip_area, na.rm = T)))
 
-
+  # Feed items specific N balance
   nitrogen_balance <- nitrogen_balance %>%
-    select(c(feed,nin,nout,nbalance_kg_n_total,nbalance_kg_n_ha_total,nbalance_feed_only_kg_n,nbalance_feed_only_kg_n_ha)) %>%
-    mutate(nbalance_food_only_kg_n = nbalance_kg_n_total-nbalance_feed_only_kg_n,
-           nbalance_food_only_kg_n_ha = nbalance_kg_n_ha_total-nbalance_feed_only_kg_n_ha)
+      select(c(feed,nin,nout,nbalance_kg_n_total,nbalance_kg_n_ha_total,nbalance_feed_only_kg_n,nbalance_feed_only_kg_n_ha)) %>%
+      mutate(nbalance_food_only_kg_n = nbalance_kg_n_total-nbalance_feed_only_kg_n,
+             nbalance_food_only_kg_n_ha = nbalance_kg_n_ha_total-nbalance_feed_only_kg_n_ha)
+
+  soil_impacts <- list(overal_soil_impact = overal_soil_impact,
+                       nitrogen_balance = nitrogen_balance)
+
+  ###############################################################################################
+  ## Water Impacts
+  ###############################################################################################
+  water_use_per_feed_item <- water_required[["water_use_per_feed_item"]]
+
+  ggplot(water_use_per_feed_item, aes(x = "", y = feed_water_use, fill = feed)) +
+    geom_bar(stat = "identity", width = 1) +
+    coord_polar("y", start = 0) +
+    labs(fill = "Feed Item", title = "Water Use per Feed Crop") +
+    theme_bw()+
+    geom_text(aes(label = scales::percent(feed_water_use / sum(feed_water_use))),
+              position = position_stack(vjust = 0.5),
+              size = 1)
+
+  ggsave(paste0(directoryPath, "/water_use_per_feed.png"), width = 150, height = 100, units = "mm")
 
 
 
 
 
-  output_list <- list(feed_basket_quality = feed_basket_quality,
-                      energy_required = energy_required,
-                      land_required = land_required,
-                      soil_erosion = soil_erosion,
+  output_list <- list(land_required = land_required,
+                      soil_impacts = soil_impacts,
                       water_required = water_required,
                       nitrogen_balance = nitrogen_balance,
                       livestock_productivity = livestock_productivity,
