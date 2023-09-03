@@ -309,7 +309,10 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
   purchased_bedding <-  as.numeric(para[["purchased_bedding"]])
   manure_produced <-  as.numeric(para[["manure_produced"]])
 
-  n_synthetic_fertilizer_managed_soil <- sum(nitrogen_balance$in1,na.rm = TRUE)
+  farm_n_synthetic_fertilizer_managed_soil <- sum(nitrogen_balance$farm_min_fert_n,na.rm = TRUE)
+  rough_of_n_synthetic_fertilizer_managed_soil <- sum(nitrogen_balance$rough_of_min_fert_n,na.rm = TRUE)
+  conc_of_n_synthetic_fertilizer_managed_soil <- sum(nitrogen_balance$conc_of_min_fert_n,na.rm = TRUE)
+  conc_ip_n_synthetic_fertilizer_managed_soil <- sum(nitrogen_balance$conc_ip_min_fert_n,na.rm = TRUE)
 
   sum_total_n_from_manure_mgmt <- sum(total_n_from_manure_mgmt$total_n_from_manure_mgmt,na.rm = TRUE)
   ###############################################################################################################################
@@ -323,13 +326,28 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
            # dm_per_ha = fresh_yield*dm_content,
            # crop_residue_n_per_area = dm_per_ha*residue_n*1000,
            crop_residue_n_per_area = dry_yield*residue_n*1000,
-           n_from_crop_residue = area_total*fraction_crop_residue*crop_residue_n_per_area)
+           n_from_crop_residue = area_total*fraction_crop_residue*crop_residue_n_per_area,
+           rough_of_n_from_crop_residue = ifelse(stringr::str_detect(feed_item_name, "OFR"), n_from_crop_residue, 0),
+           conc_of_n_from_crop_residue = ifelse(stringr::str_detect(feed_item_name, "OFC"), n_from_crop_residue, 0),
+           conc_ip_n_from_crop_residue = ifelse(stringr::str_detect(feed_item_name, "IP"), n_from_crop_residue, 0),
+           farm_n_from_crop_residue = (n_from_crop_residue - rough_of_n_from_crop_residue - conc_of_n_from_crop_residue - conc_ip_n_from_crop_residue))
 
-  n_from_crop_residue_managed_soil <- sum(n_from_crop_residues$crop_residue_n_per_area,na.rm = TRUE)
+  farm_n_from_crop_residue_managed_soil <- sum(n_from_crop_residues$farm_n_from_crop_residue,na.rm = TRUE)
+  rough_of_n_from_crop_residue_managed_soil <- sum(nitrogen_balance$rough_of_n_from_crop_residue,na.rm = TRUE)
+  conc_of_n_from_crop_residue_managed_soil <- sum(nitrogen_balance$conc_of_min_fert_n,na.rm = TRUE)
+  conc_ip_n_from_crop_residue_managed_soil <- sum(nitrogen_balance$conc_ip_min_fert_n,na.rm = TRUE)
 
   emission_factor_managed_soil <- "EF1"
 
-  n_managed_soil <- data.frame(rbind(n_synthetic_fertilizer_managed_soil, n_organic_manure_managed_soil, n_from_crop_residue_managed_soil))%>%
+  n_managed_soil <- data.frame(rbind(farm_n_synthetic_fertilizer_managed_soil,
+                                     rough_of_n_synthetic_fertilizer_managed_soil,
+                                     conc_of_n_synthetic_fertilizer_managed_soil,
+                                     conc_ip_n_synthetic_fertilizer_managed_soil,
+                                     n_organic_manure_managed_soil,
+                                     farm_n_from_crop_residue_managed_soil,
+                                     rough_of_n_from_crop_residue_managed_soil,
+                                     conc_of_n_from_crop_residue_managed_soil,
+                                     conc_ip_n_from_crop_residue_managed_soil))%>%
     tibble::rownames_to_column()%>%
     mutate(emission_factor_managed_soil)
 
@@ -375,26 +393,34 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
 
   names(n_grazed_soils) <- c("anthropogenic_N_input","amount_of_N_applied","emission_factors")
 
-  annual_N20N_onfarm_direct_emission <- data.frame(rbind(n_managed_soil,n_flooded_rice,n_grazed_soils))%>%
+  annual_N20N_soil_direct_emission <- data.frame(rbind(n_managed_soil,n_flooded_rice,n_grazed_soils))%>%
     left_join(ghg_ipcc_data[["table_11.1_&_table_11.3"]],by="emission_factors")%>%
-    mutate(annual_N20N_direct_emission_from_managed_soil = amount_of_N_applied*n2o_emissions_from_managed_soils*(44/28))
+    mutate(annual_N20N_direct_emission_from_managed_soil = amount_of_N_applied*n2o_emissions_from_managed_soils*(44/28))%>%
+    replace(is.na(.), 0)
 
   ###############################################################################################################################
   ## Indirect N emission
 
-  organic_n <- sum(n_organic_manure_managed_soil,n_from_crop_residue_managed_soil,n_organic_manure_flooded_rice,n_from_crop_residue_flooded_rice,na.rm = TRUE)
+  organic_n <- sum(n_organic_manure_managed_soil,farm_n_from_crop_residue_managed_soil,n_organic_manure_flooded_rice,n_from_crop_residue_flooded_rice,na.rm = TRUE)
 
   n_pasture_onfarm <- sum(cattle_pig_poultry_n_pasture_onfarm,sheep_and_other_n_pasture_onfarm,na.rm = TRUE)
 
-  N20_indirect_emission <- as.data.frame(cbind(n_synthetic_fertilizer_managed_soil,
-                                               organic_n,
-                                               n_pasture_onfarm))
+  N20_indirect_emission <- as.data.frame(rbind(farm_n_synthetic_fertilizer_managed_soil,
+                                               rough_of_n_synthetic_fertilizer_managed_soil,
+                                               conc_of_n_synthetic_fertilizer_managed_soil,
+                                               conc_ip_n_synthetic_fertilizer_managed_soil))%>%
+    tibble::rownames_to_column() %>%
+    rename(anthropogenic_N_input = rowname, amount_of_N_applied = V1) %>%
+    mutate(organic_n = ifelse(grepl("farm", anthropogenic_N_input),organic_n, 0),
+           n_pasture_onfarm = ifelse(grepl("farm", anthropogenic_N_input),n_pasture_onfarm, 0))
 
-  names(N20_indirect_emission) <- c("n_synthetic_fertilizer_managed_soil","n_organic","n_pasture_onfarm")
+  # names(N20_indirect_emission) <- c("n_synthetic_fertilizer_managed_soil","organic_n","n_pasture_onfarm")
 
   FracGASF <- dplyr::filter(ghg_ipcc_data[["table_11.1_&_table_11.3"]],emission_factors == "FracGASF")
 
   FracGASM <- dplyr::filter(ghg_ipcc_data[["table_11.1_&_table_11.3"]],emission_factors == "FracGASM")
+
+  EF1 <- dplyr::filter(ghg_ipcc_data[["table_11.1_&_table_11.3"]],emission_factors == "EF1")
 
   EF4 <- dplyr::filter(ghg_ipcc_data[["table_11.1_&_table_11.3"]],emission_factors == "EF4")
 
@@ -402,11 +428,11 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
 
   EF3PRP_SO <- dplyr::filter(ghg_ipcc_data[["table_11.1_&_table_11.3"]],emission_factors == "EF3PRP-SO")
 
-  N20_onfarm_indirect_emission <- N20_indirect_emission%>%
+  annual_N20N_soil_indirect_emission <- N20_indirect_emission%>%
     mutate(FracGASF = FracGASF$n2o_emissions_from_managed_soils,
            FracGASM = FracGASM$n2o_emissions_from_managed_soils,
            EF4 = EF4$n2o_emissions_from_managed_soils,
-           annual_N20N_from_atmospheric_deposition = ((n_synthetic_fertilizer_managed_soil*FracGASF)+((n_organic+n_pasture_onfarm)*FracGASM))*EF4*(44/28))
+           annual_N20N_from_atmospheric_deposition = ((amount_of_N_applied*FracGASF)+((organic_n+n_pasture_onfarm)*FracGASM))*EF4*(44/28))
   ###############################################################################################################################
   ## Off-farm soil
   cattle_pig_poultry_n_pasture_off_farm <-sum(cattle_pig_poultry_n_pasture$off_farm,na.rm = TRUE)
@@ -421,8 +447,8 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
            EF4 = EF4$n2o_emissions_from_managed_soils,
            annual_N20N_from_atmospheric_deposition =annual_N20N_off_farm_direct_emission*FracGASM*EF4*(44/28))
 
-  ghg_soil <- list(annual_N20N_onfarm_direct_emission = annual_N20N_onfarm_direct_emission,
-                   N20_onfarm_indirect_emission = N20_onfarm_indirect_emission,
+  ghg_soil <- list(annual_N20N_soil_direct_emission = annual_N20N_soil_direct_emission,
+                   annual_N20N_soil_indirect_emission = annual_N20N_soil_indirect_emission,
                    N20N_off_farm = N20N_off_farm)
 
   ################################################################################################################################################################################################################################
@@ -448,7 +474,7 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
     fertlizer_ghg_emissions_per_ha <- 0
   }else{
     # Fertilizer applied to each feed per hectare
-    fertilizer_list <- c("Ammonia","Ammonium nitrate","Ammonium sulfate","DAP","N solutions","NPK","Urea")
+    fertilizer_list <- c("Ammonia","Ammonium nitrate","Ammonium sulfate","DAP","N solutions","NPK","Urea","Anhydrous ammonia")
 
     fertilizer_applied <- as.data.frame(fertilizer_list)%>%
       mutate(fertilizer_quantity = ifelse(fertilizer_list == "Ammonia",sum(crop_parameters$ammonia*crop_parameters$area_total,na.rm = T),
@@ -457,19 +483,43 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
                                                         ifelse(fertilizer_list == "DAP",sum(crop_parameters$dap*crop_parameters$area_total,na.rm = T),
                                                                ifelse(fertilizer_list == "N solutions",sum(crop_parameters$n_solutions*crop_parameters$area_total,na.rm = T),
                                                                       ifelse(fertilizer_list == "NPK",sum(crop_parameters$npk*crop_parameters$area_total,na.rm = T),
-                                                                             sum(crop_parameters$urea*crop_parameters$area_total,na.rm = T))))))))
-
-
-
-    fertlizer_parameters <- para[["fertilizer"]]%>%
-      left_join(fertilizer_applied, by=c("fertilizer_desc"="fertilizer_list"))%>%
-      left_join(ghg_ipcc_data[["fertilizer_table"]], by=c("fertilizer_desc"="fertilizer_type"))%>%
+                                                                             sum(crop_parameters$urea*crop_parameters$area_total,na.rm = T))))))))%>%
+      left_join(ghg_ipcc_data[["fertilizer_table"]], by=c("fertilizer_list"="fertilizer_type"))%>%
       mutate(fertlizer_ghg_emissions = fertilizer_quantity*emissions_factor_kg_CO2_eq_per_kg_fertilizer)
 
-    fertlizer_ghg_emissions_per_ha <- sum(fertlizer_parameters$fertlizer_ghg_emissions,na.rm = TRUE)/sum(land_used$area_total,na.rm = TRUE)
 
-    fetilizer_ghg <- list(fertlizer_parameters=fertlizer_parameters,
-                          fertlizer_ghg_emissions_per_ha = fertlizer_ghg_emissions_per_ha)
+    fertlizer_emission_by_crop <- crop_parameters %>%
+      mutate(ammonia_emission = ammonia*area_total*fertilizer_applied[fertilizer_applied$fertilizer_list == "Ammonia","emissions_factor_kg_CO2_eq_per_kg_fertilizer"],
+             ammonium_nitrate_emission = ammonium_nitrate*area_total*fertilizer_applied[fertilizer_applied$fertilizer_list == "Ammonium nitrate","emissions_factor_kg_CO2_eq_per_kg_fertilizer"],
+             ammonium_sulfate_emission = ammonium_sulfate*area_total*fertilizer_applied[fertilizer_applied$fertilizer_list == "Ammonium sulfate","emissions_factor_kg_CO2_eq_per_kg_fertilizer"],
+             dap_emission = dap*area_total*fertilizer_applied[fertilizer_applied$fertilizer_list == "DAP","emissions_factor_kg_CO2_eq_per_kg_fertilizer"],
+             n_solutions_emission = n_solutions*area_total*fertilizer_applied[fertilizer_applied$fertilizer_list == "N solutions","emissions_factor_kg_CO2_eq_per_kg_fertilizer"],
+             npk_emission = npk*area_total*fertilizer_applied[fertilizer_applied$fertilizer_list == "NPK","emissions_factor_kg_CO2_eq_per_kg_fertilizer"],
+             urea_emission = urea*area_total*fertilizer_applied[fertilizer_applied$fertilizer_list == "Urea","emissions_factor_kg_CO2_eq_per_kg_fertilizer"],
+             # anhydrous_ammonia_emission = anhydrous_ammonia_emission*area_total*fertilizer_applied[fertilizer_applied$fertilizer_list == "Anhydrous ammonia","emissions_factor_kg_CO2_eq_per_kg_fertilizer"],
+             total_fertiliser_emission = ammonia_emission+ammonium_nitrate_emission+ammonium_sulfate_emission+dap_emission+n_solutions_emission+npk_emission+urea_emission,
+             rough_of_fertiliser_emission = ifelse(stringr::str_detect(feed_item_name, "OFR"), total_fertiliser_emission, 0),
+             conc_of_fertiliser_emission = ifelse(stringr::str_detect(feed_item_name, "OFC"), total_fertiliser_emission, 0),
+             conc_ip_fertiliser_emission = ifelse(stringr::str_detect(feed_item_name, "IP"), total_fertiliser_emission, 0),
+             farm_fertiliser_emission = (total_fertiliser_emission - rough_of_fertiliser_emission - conc_of_fertiliser_emission - conc_ip_fertiliser_emission)) %>%
+      dplyr::select(feed_item_name,
+                    ammonia_emission,
+                    ammonium_nitrate_emission,
+                    ammonium_sulfate_emission,
+                    dap_emission,
+                    n_solutions_emission,
+                    npk_emission,
+                    urea_emission,
+                    total_fertiliser_emission,
+                    farm_fertiliser_emission,
+                    rough_of_fertiliser_emission,
+                    conc_of_fertiliser_emission,
+                    conc_ip_fertiliser_emission)
+
+
+
+    fetilizer_ghg <- list(fertilizer_applied = fertilizer_applied,
+                          fertlizer_emission_by_crop = fertlizer_emission_by_crop)
   }
 
   ################################################################################################################################################################################################################################
@@ -504,36 +554,21 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
 
   ################################################################################################################################################################################################################################
   #GHG data merge
-  Methane	<- 28
-  N2O	<- 265
 
 
-  Enteric_fermentation_Methane <- sum(ef$enteric_methane_emissions,na.rm = T)/sum(land_used$area_total,na.rm = T)
-  Manure_Methane <- sum(eft$emission_factor,na.rm = T)/sum(land_used$area_total,na.rm = T)
-  Manure_Direct_N2O <- sum(direct_N2O$direct_N2O_emission,na.rm = T)/sum(land_used$area_total,na.rm = T)
-  Manure_Indirect_N2O <- sum(indirect_N2O$indirect_N2O_emission,na.rm = T)/sum(land_used$area_total,na.rm = T)
-  Soil_Direct_N2O <- sum(annual_N20N_onfarm_direct_emission$annual_N20N_direct_emission_from_managed_soil,na.rm = T)/sum(land_used$area_total,na.rm = T)
-  Soil_Indirect_N2O <- sum(N20_onfarm_indirect_emission$annual_N20N_from_atmospheric_deposition,na.rm = T)/sum(land_used$area_total,na.rm = T)
-  OFF_Farm_Soil_Direct_N2O <- sum(N20N_off_farm$annual_N20N_off_farm_direct_emission,na.rm = T)/sum(land_used$area_total,na.rm = T)
-  OFF_Farm_Soil_Indirect_N2O <- sum(N20N_off_farm$annual_N20N_from_atmospheric_deposition,na.rm = T)/sum(land_used$area_total,na.rm = T)
-  Burning <- ((ghg_burn[ghg_burn$ghg_gas=="CO2",5])+(ghg_burn[ghg_burn$ghg_gas=="CH4",5]*Methane)+(ghg_burn[ghg_burn$ghg_gas=="Nox",5]*N2O))/sum(land_used$area_total,na.rm = T)
-  Rice_production_Methane <- sum(ghg_rice$annual_methane_emission,na.rm = T)
-  Off_farm_emissions <- fertlizer_ghg_emissions_per_ha
 
 
-  ghg_emissions <- data.frame(rbind(Enteric_fermentation_Methane,
-                                    Manure_Methane,
-                                    Manure_Direct_N2O,
-                                    Manure_Indirect_N2O,
-                                    Soil_Direct_N2O,
-                                    Soil_Indirect_N2O,
-                                    OFF_Farm_Soil_Direct_N2O,
-                                    OFF_Farm_Soil_Indirect_N2O,
-                                    Burning,
-                                    Rice_production_Methane,
-                                    Off_farm_emissions))%>%
-    tibble::rownames_to_column()%>%
-    rename(GHG_balance = rowname,kg_per_ha = rbind.Enteric_fermentation_Methane..Manure_Methane..Manure_Direct_N2O..)
+  ghg_emissions <- list(ef = ef,
+                        eft = eft,
+                        n_excretion = n_excretion,
+                        direct_N2O = direct_N2O,
+                        indirect_N2O = indirect_N2O,
+                        land_used = land_used,
+                        ghg_soil = ghg_soil,
+                        ghg_burn = ghg_burn,
+                        fetilizer_ghg = fetilizer_ghg,
+                        ghg_rice = ghg_rice)
+
 
   return(ghg_emissions)
 

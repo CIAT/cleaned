@@ -3897,8 +3897,43 @@
           "percent_N": null,
           "emission_factor_kg_CO2eq_per_kg N": null,
           "kg_N_per_1_kg_of_fertilzer": null,
-          "emissions_factor_kg_CO2_eq_per_kg_fertilizer": null
-       }
+          "emissions_factor_kg_CO2_eq_per_kg_fertilizer": 0
+       },
+       {
+         "fertilizer_type": "Ammonia",
+         "percent_N": null,
+         "emission_factor_kg_CO2eq_per_kg N": null,
+         "kg_N_per_1_kg_of_fertilzer": null,
+         "emissions_factor_kg_CO2_eq_per_kg_fertilizer": 0
+      },
+      {
+         "fertilizer_type": "Ammonium nitrate",
+         "percent_N": null,
+         "emission_factor_kg_CO2eq_per_kg N": null,
+         "kg_N_per_1_kg_of_fertilzer": null,
+         "emissions_factor_kg_CO2_eq_per_kg_fertilizer": 2.8
+      },
+      {
+         "fertilizer_type": "Ammonium sulfate",
+         "percent_N": null,
+         "emission_factor_kg_CO2eq_per_kg N": null,
+         "kg_N_per_1_kg_of_fertilzer": null,
+         "emissions_factor_kg_CO2_eq_per_kg_fertilizer": 0.6
+      },
+      {
+         "fertilizer_type": "N solutions",
+         "percent_N": null,
+         "emission_factor_kg_CO2eq_per_kg N": null,
+         "kg_N_per_1_kg_of_fertilzer": null,
+         "emissions_factor_kg_CO2_eq_per_kg_fertilizer": 1.9
+      },
+      {
+         "fertilizer_type": "Anhydrous ammonia",
+         "percent_N": null,
+         "emission_factor_kg_CO2eq_per_kg N": null,
+         "kg_N_per_1_kg_of_fertilzer": null,
+         "emissions_factor_kg_CO2_eq_per_kg_fertilizer": 2.6
+      }
     ],
     "table_5.11": {
        "baseline_emission_factor": 1.3,

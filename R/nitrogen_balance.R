@@ -243,7 +243,37 @@ n_balance <- function(para, land_required, soil_erosion){
            nbalance_feed_only_kg_n = ifelse(nbalance_kg_n_total==0, 0, ifelse(out2==0, nbalance_kg_n_total*out2/(out2+out1), 0)),
            nbalance_feed_only_kg_n_ha = ifelse(is.na(nbalance_feed_only_kg_n/area_total), 0, nbalance_feed_only_kg_n/area_total)) %>%
     dplyr::mutate_if(is.numeric, list(~na_if(.,Inf))) %>%
-    replace(is.na(.), 0)
+    replace(is.na(.), 0)%>%
+    mutate(rough_of_kg_n = ifelse(stringr::str_detect(feed, "OFR"), nbalance_feed_only_kg_n, 0),
+           conc_of_kg_n = ifelse(stringr::str_detect(feed, "OFC"), nbalance_feed_only_kg_n, 0),
+           conc_ip_kg_n = ifelse(stringr::str_detect(feed, "IP"), nbalance_feed_only_kg_n, 0),
+           farm_kg_n = (nbalance_feed_only_kg_n - rough_of_kg_n - conc_of_kg_n - conc_ip_kg_n),
+           rough_of_kg_n_ha = ifelse(stringr::str_detect(feed, "OFR"), nbalance_feed_only_kg_n_ha, 0),
+           conc_of_kg_n_ha = ifelse(stringr::str_detect(feed, "OFC"), nbalance_feed_only_kg_n_ha, 0),
+           conc_ip_kg_n_ha = ifelse(stringr::str_detect(feed, "IP"), nbalance_feed_only_kg_n_ha, 0),
+           farm_kg_n_ha = (nbalance_feed_only_kg_n_ha - rough_of_kg_n_ha - conc_of_kg_n_ha - conc_ip_kg_n_ha),
+           rough_of_nue = ifelse(stringr::str_detect(feed, "OFR"), nue, 0),
+           conc_of_nue = ifelse(stringr::str_detect(feed, "OFC"), nue, 0),
+           conc_ip_nue = ifelse(stringr::str_detect(feed, "IP"), nue, 0),
+           farm_nue = (nue - rough_of_nue - conc_of_nue - conc_ip_nue),
+           rough_of_area = ifelse(stringr::str_detect(feed, "OFR"), area_total, 0),
+           conc_of_area = ifelse(stringr::str_detect(feed, "OFC"), area_total, 0),
+           conc_ip_area = ifelse(stringr::str_detect(feed, "IP"), area_total, 0),
+           farm_area = (area_total - rough_of_area - conc_of_area - conc_ip_area),
+           area_mining = ifelse(nue>0.9,area_total,0),
+           farm_area_mining = ifelse(farm_nue>0.9,farm_area,0),
+           rough_of_area_mining = ifelse(rough_of_nue>0.9,rough_of_area,0),
+           conc_of_nue_area_mining = ifelse(conc_of_nue>0.9,conc_of_area,0),
+           conc_ip_nue_area_mining = ifelse(conc_ip_nue>0.9,conc_ip_area,0),
+           area_leaching = ifelse(nue<0.5,area_total,0),
+           farm_area_leaching = ifelse(farm_nue<0.5,farm_area,0),
+           rough_of_area_leaching = ifelse(rough_of_nue<0.5,rough_of_area,0),
+           conc_of_nue_area_leaching = ifelse(conc_of_nue<0.5,conc_of_area,0),
+           conc_ip_nue_area_leaching = ifelse(conc_ip_nue<0.5,conc_ip_area,0),
+           rough_of_min_fert_n = ifelse(stringr::str_detect(feed, "OFR"), in1, 0),
+           conc_of_min_fert_n = ifelse(stringr::str_detect(feed, "OFC"), in1, 0),
+           conc_ip_min_fert_n = ifelse(stringr::str_detect(feed, "IP"), in1, 0),
+           farm_min_fert_n = (in1 - rough_of_min_fert_n - conc_of_min_fert_n - conc_ip_min_fert_n))
 
   # arrange values
   n_balance_all <- n_balance_all %>%
@@ -293,7 +323,37 @@ n_balance <- function(para, land_required, soil_erosion){
            nbalance_kg_n_total,
            nbalance_kg_n_ha_total,
            nbalance_feed_only_kg_n,
-           nbalance_feed_only_kg_n_ha)
+           nbalance_feed_only_kg_n_ha,
+           rough_of_kg_n,
+           conc_of_kg_n,
+           conc_ip_kg_n,
+           farm_kg_n,
+           rough_of_kg_n_ha,
+           conc_of_kg_n_ha,
+           conc_ip_kg_n_ha,
+           farm_kg_n_ha,
+           rough_of_nue,
+           conc_of_nue,
+           conc_ip_nue,
+           farm_nue,
+           rough_of_area,
+           conc_of_area,
+           conc_ip_area,
+           farm_area,
+           area_mining,
+           farm_area_mining,
+           rough_of_area_mining,
+           conc_of_nue_area_mining,
+           conc_ip_nue_area_mining,
+           area_leaching,
+           farm_area_leaching,
+           rough_of_area_leaching,
+           conc_of_nue_area_leaching,
+           conc_ip_nue_area_leaching,
+           rough_of_min_fert_n,
+           conc_of_min_fert_n,
+           conc_ip_min_fert_n,
+           farm_min_fert_n)
 
 
 }
