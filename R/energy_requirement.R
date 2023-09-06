@@ -203,9 +203,10 @@ energy_requirement <- function(para, feed_basket_quality,energy_parameters){
                                                         (time_in_non_roofed_enclosure*manure_in_non_roofed_enclosure)+
                                                         (time_in_onfarm_grazing*manure_in_field))*manure_onfarm_fraction,
            n_content_manure_collected = manure_collected*n_content,
-           n_content_manure_total = n_content_manure_grazing+n_content_manure_collected)%>%
+           n_content_manure_total = n_content_manure_grazing+n_content_manure_collected,
+           manure_exported = manure_collected*manure_sales_fraction)%>%
     select(livestock_category_code,me_intake,dmi_tot,de_intake,ge_intake,annual_manure_produced,daily_manure_produced,manure_onfarm_grazing,
-           n_content_manure_grazing,manure_collected,n_content_manure_collected,n_content_manure_total)
+           n_content_manure_grazing,manure_collected,n_content_manure_collected,n_content_manure_total,manure_exported)
 
   annual_results <- left_join(annual_requirement, limiting_factor, by = c("livestock_category_code","livestock_category_name"))%>%
     left_join(manure_comp, by = "livestock_category_code")

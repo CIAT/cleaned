@@ -12,6 +12,8 @@
 #' Average annual milk (kilogram), \code{fat_content}: Fat content milk (percent), \code{protein_milkcontent}:
 #' Protein content milk (percent).
 #'
+#' @param energy_required A list computed using the `energy_required` function
+#'
 #' @return dataframe
 #'
 #' @importFrom dplyr mutate
@@ -24,12 +26,12 @@
 #' land_required <- land_requirement(feed_basket_quality, energy_required, para)
 #' soil_erosion <- soil_health(para, land_required)
 #' nitrogen_balance <- nitrogen_balance(para, land_required, soil_erosion)
-#' land_productivity(para)
+#' land_productivity(para, energy_required)
 #' }
 #'
 #' @export
 
-land_productivity <- function(para){
+land_productivity <- function(para, energy_required){
 
   livestock_df <- para[["livestock"]]
 
@@ -67,6 +69,7 @@ land_productivity <- function(para){
 
   }
 
-  livestock_production_all <- livestock_production %>% bind_rows()
+  livestock_production_all <- livestock_production %>% bind_rows() %>%
+    left_join(energy_required[["annual_results"]][,c("livestock_category_name","manure_exported")], by = c("livetype_name" = "livestock_category_name"))
 
 }

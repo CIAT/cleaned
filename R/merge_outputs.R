@@ -36,7 +36,7 @@
 #' soil_erosion <- soil_health(mufindi, land_required)
 #' water_required <- water_requirement(mufindi,land_required)
 #' nitrogen_balance <- n_balance(mufindi, land_required, soil_erosion)
-#' livestock_productivity <- land_productivity(mufindi)
+#' livestock_productivity <- land_productivity(mufindi, energy_required)
 #' biomass <- biomass_calculation(mufindi, land_required)
 #' soil_carbon <- soil_organic_carbon(para, land_required, biomass)
 #' ghg_emission <- ghg_emission(mufindi,energy_required,ghg_para,land_required,nitrogen_balance)
@@ -158,24 +158,28 @@ combineOutputs <- function(feed_basket_quality, energy_required, land_required,
   dm_required <- left_join(seasonal_dm_required, ex_dm_required, by = "feed")
 
   total_area_used_for_feed_production_ha <- sum(land_required$total_area, na.rm = T)
+  area_required_per_milk_unit <- total_area_used_for_feed_production_ha/sum(as.data.frame.numeric(livestock_productivity$total_milk),na.rm = T)
   area_required_on_farm_ha <- sum(land_required$farm, na.rm = T)
   area_required_roughages_off_farm_ha <- sum(land_required$rough_of, na.rm = T)
   area_required_concentrates_off_farm_ha <- sum(land_required$conc_of, na.rm = T)
   area_required_imported_concentrates_ha <- sum(land_required$conc_ip, na.rm = T)
 
   total_dm_used_for_feed_production_kg <- sum(dm_required$total_dm, na.rm = T)
+  dm_required_per_milk_unit <- total_dm_used_for_feed_production_kg/sum(as.data.frame.numeric(livestock_productivity$total_milk),na.rm = T)
   dm_required_on_farm_kg <- sum(dm_required$farm_dm, na.rm = T)
   dm_required_roughages_off_farm_kg <- sum(dm_required$rough_of_dm, na.rm = T)
   dm_required_concentrates_off_farm_kg <- sum(dm_required$conc_of_dm, na.rm = T)
   dm_required_imported_concentrates_kg <- sum(dm_required$conc_ip_dm, na.rm = T)
 
   land_and_dm_required <- rbind(total_area_used_for_feed_production_ha,
+                                area_required_per_milk_unit,
                                 area_required_on_farm_ha,
                                 area_required_roughages_off_farm_ha,
                                 area_required_concentrates_off_farm_ha,
                                 area_required_imported_concentrates_ha,
                                 NA,
                                 total_dm_used_for_feed_production_kg,
+                                dm_required_per_milk_unit,
                                 dm_required_on_farm_kg,
                                 dm_required_roughages_off_farm_kg,
                                 dm_required_concentrates_off_farm_kg,
@@ -192,7 +196,98 @@ combineOutputs <- function(feed_basket_quality, energy_required, land_required,
   ###############################################################################################
   ## Productivity
   ###############################################################################################
+  # Consumable produce
+  livestock_productivity <- livestock_productivity %>%
+    mutate(total_cattle_milk_kg = ifelse(stringr::str_detect(livetype_name, "Cattle"), as.numeric(total_milk), 0),
+           total_cattle_meat_kg = ifelse(stringr::str_detect(livetype_name, "Cattle"), as.numeric(meat_production_animal), 0),
+           total_other_milk_kg = ifelse(!stringr::str_detect(livetype_name, "Cattle"), as.numeric(total_milk), 0),
+           total_other_meat_kg = ifelse(!stringr::str_detect(livetype_name, "Cattle"), as.numeric(meat_production_animal), 0),
+           total_cattle_milk_energy = ifelse(stringr::str_detect(livetype_name, "Cattle"), as.numeric(energy_kcal_year_milk), 0),
+           total_cattle_meat_energy = ifelse(stringr::str_detect(livetype_name, "Cattle"), as.numeric(energy_kcal_year_meat), 0),
+           total_other_milk_energy = ifelse(!stringr::str_detect(livetype_name, "Cattle"), as.numeric(energy_kcal_year_milk), 0),
+           total_other_meat_energy = ifelse(!stringr::str_detect(livetype_name, "Cattle"), as.numeric(energy_kcal_year_meat), 0),
+           total_cattle_milk_protein = ifelse(stringr::str_detect(livetype_name, "Cattle"), as.numeric(total_milk), 0),
+           total_cattle_meat_protein = ifelse(stringr::str_detect(livetype_name, "Cattle"), as.numeric(meat_production_animal), 0),
+           total_other_milk_protein = ifelse(!stringr::str_detect(livetype_name, "Cattle"), as.numeric(total_milk), 0),
+           total_other_meat_protein = ifelse(!stringr::str_detect(livetype_name, "Cattle"), as.numeric(meat_production_animal), 0),
+           total_cattle_tlu = ifelse(stringr::str_detect(livetype_name, "Cattle"), as.numeric(tlu), 0),
+           total_buffalo_tlu = ifelse(stringr::str_detect(livetype_name, "Buffalo"), as.numeric(tlu), 0),
+           total_sheep_tlu = ifelse(stringr::str_detect(livetype_name, "Sheep"), as.numeric(tlu), 0),
+           total_goat_tlu = ifelse(stringr::str_detect(livetype_name, "Goat"), as.numeric(tlu), 0),
+           total_pig_tlu = ifelse(stringr::str_detect(livetype_name, "Pig"), as.numeric(tlu), 0),
+           sold_cattle_manure = ifelse(stringr::str_detect(livetype_name, "Cattle"), as.numeric(manure_exported), 0),
+           sold_buffalo_manure = ifelse(stringr::str_detect(livetype_name, "Buffalo"), as.numeric(manure_exported), 0),
+           sold_sheep_manure = ifelse(stringr::str_detect(livetype_name, "Sheep"), as.numeric(manure_exported), 0),
+           sold_goat_manure = ifelse(stringr::str_detect(livetype_name, "Goat"), as.numeric(manure_exported), 0),
+           sold_pig_manure = ifelse(stringr::str_detect(livetype_name, "Pig"), as.numeric(manure_exported), 0),
+           number_cattle = ifelse(stringr::str_detect(livetype_name, "Cattle"), as.numeric(number), 0),
+           number_buffalo = ifelse(stringr::str_detect(livetype_name, "Buffalo"), as.numeric(number), 0),
+           number_sheep = ifelse(stringr::str_detect(livetype_name, "Sheep"), as.numeric(number), 0),
+           number_goat = ifelse(stringr::str_detect(livetype_name, "Goat"), as.numeric(number), 0),
+           number_pig = ifelse(stringr::str_detect(livetype_name, "Pig"), as.numeric(number), 0))
 
+  cattle_milk_kg <- sum(livestock_productivity$total_cattle_milk_kg, na.rm = T)
+  cattle_meat_kg <- sum(livestock_productivity$total_cattle_meat_kg, na.rm = T)
+
+  other_milk_kg <- sum(livestock_productivity$total_other_milk_kg, na.rm = T)
+  other_meat_kg <- sum(livestock_productivity$total_other_meat_kg, na.rm = T)
+
+  total_milk_kg <- cattle_milk_kg + other_milk_kg
+  total_meat_kg <- cattle_meat_kg + other_meat_kg
+
+  cattle_milk_energy <- sum(livestock_productivity$total_cattle_milk_energy, na.rm = T)
+  cattle_meat_energy <- sum(livestock_productivity$total_cattle_meat_energy, na.rm = T)
+
+  other_milk_energy <- sum(livestock_productivity$total_other_milk_energy, na.rm = T)
+  other_meat_energy <- sum(livestock_productivity$total_other_meat_energy, na.rm = T)
+
+  total_milk_energy <- cattle_milk_energy + other_milk_energy
+  total_meat_energy <- cattle_meat_energy + other_meat_energy
+
+  cattle_milk_protein <- sum(livestock_productivity$total_cattle_milk_protein, na.rm = T)
+  cattle_meat_protein <- sum(livestock_productivity$total_cattle_meat_protein, na.rm = T)
+
+  other_milk_protein <- sum(livestock_productivity$total_other_milk_protein, na.rm = T)
+  other_meat_protein <- sum(livestock_productivity$total_other_meat_protein, na.rm = T)
+
+  total_milk_protein <- cattle_milk_protein + other_milk_protein
+  total_meat_protein <- cattle_meat_protein + other_meat_protein
+
+  consumable_livestock_product <- data.frame(
+    produced_item = c("Cattle","Milk (FPCM)","Meat","Other","Milk (FPCM)","Meat","Total","Milk (FPCM)","Meat"),
+    production_kg_per_year = c("",cattle_milk_kg,cattle_meat_kg,"",other_milk_kg,other_meat_kg,"",total_milk_kg,total_meat_kg),
+    production_energy_kcal_per_year = c("",cattle_milk_energy,cattle_meat_energy,"",other_milk_energy,other_meat_energy,"",total_milk_energy,total_meat_energy),
+    protein_kg_per_year = c("",cattle_milk_protein,cattle_meat_protein,"",other_milk_protein,other_meat_protein,"",total_milk_protein,total_meat_protein)
+    ) %>% mutate(ame_days = as.numeric(production_energy_kcal_per_year)/2500)
+
+  # Produced manure
+  cattle_number <- sum(livestock_productivity$number_cattle, na.rm = T)
+  buffalo_number <- sum(livestock_productivity$number_buffalo, na.rm = T)
+  sheep_number <- sum(livestock_productivity$number_sheep, na.rm = T)
+  goat_number <- sum(livestock_productivity$number_goat, na.rm = T)
+  pig_number <- sum(livestock_productivity$number_pig, na.rm = T)
+
+  cattle_manure <- sum(livestock_productivity$sold_cattle_manure, na.rm = T)
+  buffalo_manure <- sum(livestock_productivity$sold_buffalo_manure, na.rm = T)
+  sheep_manure <- sum(livestock_productivity$sold_sheep_manure, na.rm = T)
+  goat_manure <- sum(livestock_productivity$sold_goat_manure, na.rm = T)
+  pig_manure <- sum(livestock_productivity$sold_pig_manure, na.rm = T)
+
+  cattle_tlu <- sum(livestock_productivity$total_cattle_tlu, na.rm = T)
+  buffalo_tlu <- sum(livestock_productivity$total_buffalo_tlu, na.rm = T)
+  sheep_tlu <- sum(livestock_productivity$total_sheep_tlu, na.rm = T)
+  goat_tlu <- sum(livestock_productivity$total_goat_tlu, na.rm = T)
+  pig_tlu <- sum(livestock_productivity$total_pig_tlu, na.rm = T)
+
+  manure_produced <- data.frame(
+    livestock = c("Cattle","Buffalo","Sheep","Goat","Pig"),
+    livestock_number = c(cattle_number,buffalo_number,sheep_number,goat_number,pig_number),
+    manure_kg_per_year = c(cattle_manure,buffalo_manure,sheep_manure,goat_manure,pig_manure),
+    tlu = c(cattle_tlu,buffalo_tlu,sheep_tlu,goat_tlu,pig_tlu)
+  )
+
+  livestock_productivity <- list(consumable_livestock_product = consumable_livestock_product,
+                                 manure_produced = manure_produced)
 
   ###############################################################################################
   ## Soil impact
