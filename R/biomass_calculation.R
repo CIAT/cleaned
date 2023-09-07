@@ -6,7 +6,7 @@
 #'
 #' @param land_required A dataframe computed using the `land_requirement` function
 #'
-#' @return list
+#' @return dataframe
 #'
 #' @importFrom dplyr summarise select mutate group_by na_if %>%
 #'
@@ -138,7 +138,7 @@ biomass_calculation <- function(para, land_required){
   #                              tier3 = tier3,
   #                              trees_non_feed_biomass = trees_non_feed_biomass)
 
-  carbon_stocks_change <- list(trees_non_feed_biomass = trees_non_feed_biomass)
+  carbon_stocks_change <- trees_non_feed_biomass
 
   #returning results
   return(carbon_stocks_change)

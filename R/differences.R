@@ -49,74 +49,109 @@ calculate_differences <- function(outFile,...){
 
       for (i in 1:length(outputList)){
 
-        scenario <- i
+        scenario <- sub("\\.\\w+$", "", basename(outputList[[i]]))
 
         output <- jsonlite::fromJSON(outputList[[i]], flatten = TRUE)
 
-        nitrogen_balance <- output[["nitrogen_balance"]]
+        # Productivity
+        total_milk_produced_kg_fpcm_per_year <- as.numeric(output[["livestock_productivity"]][["consumable_livestock_product"]][output[["livestock_productivity"]][["consumable_livestock_product"]]$produced_item == "Milk (FPCM)","production_kg_per_year"][3])
+        total_meat_produced_kg_per_year <- as.numeric(output[["livestock_productivity"]][["consumable_livestock_product"]][output[["livestock_productivity"]][["consumable_livestock_product"]]$produced_item == "Meat","production_kg_per_year"][3])
+        total_protein_produced_kg_per_year <- as.numeric(output[["livestock_productivity"]][["consumable_livestock_product"]][output[["livestock_productivity"]][["consumable_livestock_product"]]$produced_item == "Milk (FPCM)","protein_kg_per_year"][3]) +
+          as.numeric(output[["livestock_productivity"]][["consumable_livestock_product"]][output[["livestock_productivity"]][["consumable_livestock_product"]]$produced_item == "Meat","protein_kg_per_year"][3])
+        total_tlu <- sum(output[["livestock_productivity"]][["manure_produced"]]$tlu, na.rm = T)
 
-        soil_mining_perc <- sum(nitrogen_balance[nitrogen_balance$area_total > 0.9,]$area_total)*100/sum(nitrogen_balance$area_total)
+        # Land requirement
+        total_land_requirement_ha <- as.numeric(output[["land_required"]][["land_and_dm_required"]][output[["land_required"]][["land_and_dm_required"]]$Names == "total_area_used_for_feed_production_ha","Value"])
+        total_land_requirement_ha_per_kg_fpcm <- ifelse(!is.finite(total_land_requirement_ha/total_milk_produced_kg_fpcm_per_year),0,total_land_requirement_ha/total_milk_produced_kg_fpcm_per_year)*1000
+        total_land_requirement_ha_per_kg_meat <- ifelse(!is.finite(total_land_requirement_ha/total_meat_produced_kg_per_year),0,total_land_requirement_ha/total_meat_produced_kg_per_year)*1000
+        total_land_requirement_ha_per_kg_protein <- ifelse(!is.finite(total_land_requirement_ha/total_protein_produced_kg_per_year),0,total_land_requirement_ha/total_protein_produced_kg_per_year)*1000
+        total_land_requirement_ha_per_tlu <- ifelse(!is.finite(total_land_requirement_ha/total_tlu),0,total_land_requirement_ha/total_tlu)
 
-        soil_leaching_perc <- sum(nitrogen_balance[nitrogen_balance$area_total < 0.5,]$area_total)*100/sum(nitrogen_balance$area_total)
+        # N balance
+        total_n_balance_kg_n_per_year <- output[["soil_impacts"]][["overal_soil_impact"]][output[["soil_impacts"]][["overal_soil_impact"]]$sources == "total", "balance_N_kg_N_year"]
+        percent_area_mining <- output[["soil_impacts"]][["overal_soil_impact"]][output[["soil_impacts"]][["overal_soil_impact"]]$sources == "total", "percent_area_mining"]
+        percent_area_leaching <- output[["soil_impacts"]][["overal_soil_impact"]][output[["soil_impacts"]][["overal_soil_impact"]]$sources == "total", "percent_area_leaching"]
+        n_balance_kg_n_per_ha_per_year <- ifelse(!is.finite(total_n_balance_kg_n_per_year/total_land_requirement_ha),0,total_n_balance_kg_n_per_year/total_land_requirement_ha)
+        n_balance_kg_n_per_kg_fpcm <- ifelse(!is.finite(total_n_balance_kg_n_per_year/total_milk_produced_kg_fpcm_per_year),0,total_n_balance_kg_n_per_year/total_milk_produced_kg_fpcm_per_year)
+        n_balance_kg_n_per_kg_meat <- ifelse(!is.finite(total_n_balance_kg_n_per_year/total_meat_produced_kg_per_year),0,total_n_balance_kg_n_per_year/total_meat_produced_kg_per_year)
+        n_balance_kg_n_per_kg_protein <- ifelse(!is.finite(total_n_balance_kg_n_per_year/total_protein_produced_kg_per_year),0,total_n_balance_kg_n_per_year/total_protein_produced_kg_per_year)
 
-        erosion_tyr <- sum(as.numeric(output[["soil_erosion"]]$soil_loss_plot))
+        # Soil Erosion
+        erosion_t_soil_year <- output[["soil_impacts"]][["overal_soil_impact"]][output[["soil_impacts"]][["overal_soil_impact"]]$sources == "total", "erosion_t_soil_year"]
+        erosion_t_soil_per_ha_per_year <- ifelse(!is.finite(erosion_t_soil_year/total_land_requirement_ha),0,erosion_t_soil_year/total_land_requirement_ha)
+        erosion_kgsoil_per_kg_fpcm <- ifelse(!is.finite(erosion_t_soil_year/total_milk_produced_kg_fpcm_per_year), 0, erosion_t_soil_year/total_milk_produced_kg_fpcm_per_year)*1000
+        erosion_kgsoil_per_kg_meat <- ifelse(!is.finite(erosion_t_soil_year/total_meat_produced_kg_per_year), 0, erosion_t_soil_year/total_meat_produced_kg_per_year)*1000
+        erosion_kgsoil_per_kg_protein <- ifelse(!is.finite(erosion_t_soil_year/total_protein_produced_kg_per_year), 0, erosion_t_soil_year/total_protein_produced_kg_per_year)*1000
 
-        land_required <- output[["land_required"]] %>%
-          dplyr::bind_rows()
+        # GHG emission
+        ghg_emission_t_co2_eq_per_year <- sum(as.numeric(output[["ghg_emission"]][["ghg_balance"]]$value),na.rm = T)
+        ghg_emission_t_co2_eq_per_ha_per_year <- ifelse(!is.finite(ghg_emission_t_co2_eq_per_year/total_land_requirement_ha),0,ghg_emission_t_co2_eq_per_year/total_land_requirement_ha)
+        ghg_emission_t_co2_eq_per_kg_fpcm <- ifelse(!is.finite(ghg_emission_t_co2_eq_per_year/total_milk_produced_kg_fpcm_per_year),0,ghg_emission_t_co2_eq_per_year/total_milk_produced_kg_fpcm_per_year)*1000
+        ghg_emission_t_co2_eq_per_kg_meat <- ifelse(!is.finite(ghg_emission_t_co2_eq_per_year/total_meat_produced_kg_per_year),0,ghg_emission_t_co2_eq_per_year/total_meat_produced_kg_per_year)*1000
+        ghg_emission_t_co2_eq_per_kg_protein <- ifelse(!is.finite(ghg_emission_t_co2_eq_per_year/total_protein_produced_kg_per_year),0,ghg_emission_t_co2_eq_per_year/total_protein_produced_kg_per_year)*1000
 
-        erosion_thayr <- sum(land_required$area_feed)/erosion_tyr
+        # Water impacts
+        percent_precipitation_used_for_feed_production <- output[["water_required"]][["water_use_for_production"]][output[["water_required"]][["water_use_for_production"]]$Names == "fraction_of_precipitation_used_for_feed_production", "Value"]*100
+        total_water_use_m3 <- output[["water_required"]][["water_use_for_production"]][output[["water_required"]][["water_use_for_production"]]$Names == "total_water_use", "Value"]
+        total_water_use_m3_per_ha <- ifelse(!is.finite(total_water_use_m3/total_land_requirement_ha), 0, total_water_use_m3/total_land_requirement_ha)
+        total_water_use_m3_per_kg_fpcm <- output[["water_required"]][["water_use_for_production"]][output[["water_required"]][["water_use_for_production"]]$Names == "water_use_fpcm", "Value"]
+        total_water_use_m3_per_kg_meat <- output[["water_required"]][["water_use_for_production"]][output[["water_required"]][["water_use_for_production"]]$Names == "water_use_meat", "Value"]
+        total_water_use_m3_per_kg_protein <- output[["water_required"]][["water_use_for_production"]][output[["water_required"]][["water_use_for_production"]]$Names == "water_use_protein", "Value"]
 
-        average_annual_milk_kg_yr <- sum(output[["livestock_productivity"]]$total_milk)
+        # Carbon stock changes
+        carbon_stock_change_t_co2eq_per_year <- sum(c(output[["soil_carbon"]]$total_change_co2_soils, output[["biomass"]]$co2_increase), na.rm = T)
+        carbon_stock_change_t_co2eq_per_ha_per_year <- carbon_stock_change_t_co2eq_per_year/total_land_requirement_ha
+        carbon_stock_change_t_co2eq_per_fpcm <- ifelse(!is.finite(carbon_stock_change_t_co2eq_per_year/total_milk_produced_kg_fpcm_per_year),0, carbon_stock_change_t_co2eq_per_year/total_milk_produced_kg_fpcm_per_year)*1000
+        carbon_stock_change_t_co2eq_per_meat <- ifelse(!is.finite(carbon_stock_change_t_co2eq_per_year/total_land_requirement_ha_per_kg_meat),0, carbon_stock_change_t_co2eq_per_year/total_land_requirement_ha_per_kg_meat)*1000
+        carbon_stock_change_t_co2eq_per_protein <- ifelse(!is.finite(carbon_stock_change_t_co2eq_per_year/total_protein_produced_kg_per_year),0, carbon_stock_change_t_co2eq_per_year/total_protein_produced_kg_per_year)*1000
 
-        erosion_kgsoil_kg_fpcm <- ifelse(is.na(erosion_tyr/sum(output[["livestock_productivity"]]$total_milk)), 0, erosion_tyr/sum(output[["livestock_productivity"]]$total_milk))*1000
 
-        land_requirement_ha <- sum(land_required$area_feed)
+        # Productivity / Energy
+        total_milk_produced_energy_kcal_per_year <- as.numeric(output[["livestock_productivity"]][["consumable_livestock_product"]][output[["livestock_productivity"]][["consumable_livestock_product"]]$produced_item == "Milk (FPCM)","production_energy_kcal_per_year"][3])
+        total_meat_produced_energy_kcal_per_year <- as.numeric(output[["livestock_productivity"]][["consumable_livestock_product"]][output[["livestock_productivity"]][["consumable_livestock_product"]]$produced_item == "Meat","production_energy_kcal_per_year"][3])
 
-        total_land_required_ha_mt_fpcm <- ifelse(is.na(land_requirement_ha/sum(output[["livestock_productivity"]]$total_milk)), 0, land_requirement_ha/sum(output[["livestock_productivity"]]$total_milk))*1000
+        total_milk_produced_ame_days_per_year <- as.numeric(output[["livestock_productivity"]][["consumable_livestock_product"]][output[["livestock_productivity"]][["consumable_livestock_product"]]$produced_item == "Milk (FPCM)","ame_days"][3])
+        total_meat_produced_ame_days_per_year <- as.numeric(output[["livestock_productivity"]][["consumable_livestock_product"]][output[["livestock_productivity"]][["consumable_livestock_product"]]$produced_item == "Meat","ame_days"][3])
 
-        ghg_emission <- output[["ghg_emission"]]
-
-        ghgtot_t_co2eq_yr <- (sum(ghg_emission$kg_per_ha,na.rm = T)/1000)*land_requirement_ha
-        ghgtot_t_co2eq_ha_yr <- sum(ghg_emission$kg_per_ha,na.rm = T)/1000
-        ghgmeat_kg_co2eq_kg <- ifelse(is.na(ghgtot_t_co2eq_yr/sum(output[["livestock_productivity"]]$meat_production_animal)), 0, ghgtot_t_co2eq_yr/sum(output[["livestock_productivity"]]$meat_production_animal))
-        ghgmilk_kg_co2eq_kg <- ifelse(is.na(ghgtot_t_co2eq_yr/sum(output[["livestock_productivity"]]$total_milk)), 0, ghgtot_t_co2eq_yr/sum(output[["livestock_productivity"]]$total_milk))
-        tot_protein_kg_year_meat <- sum(output[["livestock_productivity"]]$protein_kg_year_meat)
-        tot_protein_kg_year_milk <- sum(output[["livestock_productivity"]]$protein_kg_year_milk)
-        ghgprotein_kg_co2eq_kg <- ifelse(tot_protein_kg_year_meat==0 & tot_protein_kg_year_milk == 0,0,
-                                         ifelse(tot_protein_kg_year_meat==0 & tot_protein_kg_year_milk != 0, ghgtot_t_co2eq_yr/tot_protein_kg_year_milk,
-                                                ifelse(tot_protein_kg_year_meat!=0 & tot_protein_kg_year_milk == 0,ghgtot_t_co2eq_yr/tot_protein_kg_year_meat,
-                                                       (ghgtot_t_co2eq_yr/tot_protein_kg_year_milk)+(ghgtot_t_co2eq_yr/tot_protein_kg_year_meat))))
-
-        water_requirement <- output[["water_required"]]
-        water_use_for_production <- as.data.frame(water_requirement[["water_use_for_production"]])
-
-        percent_of_precipitation_used_for_feed_production <- water_use_for_production[which(water_use_for_production$Names=="fraction_of_precipitation_used_for_feed_production"),2]*100
-        water_m3_yr <-water_use_for_production[which(water_use_for_production$Names=="total_water_use"),2]
-        waterha_m3_ha <- water_m3_yr/sum(land_required$area_feed)
-        water_use_perkg_fpcm <- water_use_for_production[which(water_use_for_production$Names=="water_use_fpcm"),2]
-        water_use_perkg_meat <- water_use_for_production[which(water_use_for_production$Names=="water_use_meat"),2]
-        water_use_perkg_protein <- water_use_for_production[which(water_use_for_production$Names=="water_use_protein"),2]
+        #Total Carbon balance
+        total_carbon_balance_per_fpcm <- ghg_emission_t_co2_eq_per_kg_fpcm-carbon_stock_change_t_co2eq_per_fpcm
+        total_carbon_balance_per_meat <- ghg_emission_t_co2_eq_per_kg_meat-carbon_stock_change_t_co2eq_per_meat
+        total_carbon_balance_per_protein <- ghg_emission_t_co2_eq_per_kg_protein-carbon_stock_change_t_co2eq_per_protein
 
         scenarioList[[i]] <- data.frame(scenario,
-                                        average_annual_milk_kg_yr,
-                                        soil_mining_perc,
-                                        soil_leaching_perc,
-                                        erosion_tyr,
-                                        erosion_thayr,
-                                        erosion_kgsoil_kg_fpcm,
-                                        land_requirement_ha,
-                                        total_land_required_ha_mt_fpcm,
-                                        ghgtot_t_co2eq_yr,
-                                        ghgtot_t_co2eq_ha_yr,
-                                        ghgmilk_kg_co2eq_kg,
-                                        ghgmeat_kg_co2eq_kg,
-                                        ghgprotein_kg_co2eq_kg,
-                                        percent_of_precipitation_used_for_feed_production,
-                                        water_m3_yr,
-                                        waterha_m3_ha,
-                                        water_use_perkg_fpcm,
-                                        water_use_perkg_meat,
-                                        water_use_perkg_protein)
+                                        total_milk_produced_kg_fpcm_per_year,
+                                        total_meat_produced_kg_per_year,
+                                        total_protein_produced_kg_per_year,
+                                        total_tlu,
+                                        total_land_requirement_ha,
+                                        total_land_requirement_ha_per_kg_fpcm,
+                                        total_land_requirement_ha_per_kg_meat,
+                                        total_land_requirement_ha_per_kg_protein,
+                                        total_land_requirement_ha_per_tlu,
+                                        total_n_balance_kg_n_per_year,
+                                        percent_area_mining,
+                                        percent_area_leaching,
+                                        n_balance_kg_n_per_ha_per_year,
+                                        n_balance_kg_n_per_kg_fpcm,
+                                        n_balance_kg_n_per_kg_meat,
+                                        n_balance_kg_n_per_kg_protein,
+                                        erosion_t_soil_year,
+                                        erosion_t_soil_per_ha_per_year,
+                                        erosion_kgsoil_per_kg_fpcm,
+                                        ghg_emission_t_co2_eq_per_kg_meat,
+                                        total_water_use_m3_per_kg_protein,
+                                        carbon_stock_change_t_co2eq_per_year,
+                                        carbon_stock_change_t_co2eq_per_ha_per_year,
+                                        carbon_stock_change_t_co2eq_per_fpcm,
+                                        carbon_stock_change_t_co2eq_per_meat,
+                                        carbon_stock_change_t_co2eq_per_protein,
+                                        total_milk_produced_energy_kcal_per_year,
+                                        total_meat_produced_energy_kcal_per_year,
+                                        total_milk_produced_ame_days_per_year,
+                                        total_meat_produced_ame_days_per_year,
+                                        total_carbon_balance_per_fpcm,
+                                        total_carbon_balance_per_meat,
+                                        total_carbon_balance_per_protein)
         }
 
       }

@@ -46,12 +46,12 @@
 #'
 #' @export
 #'
-combineOutputs <- function(feed_basket_quality, energy_required, land_required,
-                                  soil_erosion, water_required, nitrogen_balance,
-                                  livestock_productivity, biomass,soil_carbon, ghg_emission, filePath){
-
-  land_required <- land_required[["land_requirements_all"]]
-
+combineOutputs <- function(para, feed_basket_quality, energy_required, land_required,
+                           soil_erosion, water_required, nitrogen_balance, livestock_productivity,
+                           biomass,soil_carbon, ghg_emission, filePath){
+  if (exists("para")) {
+    para = para
+  }else {para = "ERROR: Data is not provided"}
 
   if (exists("feed_basket_quality")) {
     feed_basket_quality = split(feed_basket_quality, f=feed_basket_quality$season_name)
@@ -62,7 +62,7 @@ combineOutputs <- function(feed_basket_quality, energy_required, land_required,
   }else {energy_required = "ERROR: Energy requirement was not computed"}
 
   if (exists("land_required")) {
-    land_required = land_required
+    land_required = land_required[["land_requirements_all"]]
   }else {land_required = "ERROR: Land requirement was not computed"}
 
   if (exists("soil_erosion")) {
@@ -85,7 +85,7 @@ combineOutputs <- function(feed_basket_quality, energy_required, land_required,
     biomass = biomass
   }else {biomass = "ERROR: Biomass was not computed"}
 
-  if (exists("biomass")) {
+  if (exists("soil_carbon")) {
     soil_carbon = soil_carbon
   }else {soil_carbon = "ERROR: Soil carbon was not computed"}
 
@@ -97,6 +97,8 @@ combineOutputs <- function(feed_basket_quality, energy_required, land_required,
     filePath = filePath
     # Extract the directory path
     directoryPath <- dirname(filePath)
+    # Extract the file name
+    fileName <- sub("\\.\\w+$", "", basename(filePath))
   }else {filePath = "ERROR: File path is not provided"}
 
 
@@ -106,17 +108,32 @@ combineOutputs <- function(feed_basket_quality, energy_required, land_required,
   ###############################################################################################
 
   # Plotting land requirement
+  # land_required %>%
+  #   group_by(feed, season_name) %>%
+  #   summarise(area_feed_total = sum(area_feed, na.rm = T)) %>%
+  #   ggplot2::ggplot(aes(x=feed, y=area_feed_total, fill=season_name))+
+  #   geom_bar(stat = "identity", width = 0.6)+
+  #   labs(x = "Feed Item", y = "Area (Ha)", fill = "Seasons", title = "Land Requirement and Feed Basket") +
+  #   geom_text(aes(label = round(area_feed_total, 2)), vjust = -0.5, size = 1, angle = 45) +
+  #   theme_bw()+
+  #   theme(axis.text.x = element_text(angle = 45, hjust = 1))
   land_required %>%
     group_by(feed, season_name) %>%
-    summarise(area_feed_total = sum(area_feed, na.rm = T)) %>%
-    ggplot2::ggplot(aes(x=feed, y=area_feed_total, fill=season_name))+
-    geom_bar(stat = "identity", width = 0.6)+
+    summarise(area_feed_total = sum(area_feed, na.rm = TRUE)) %>%
+    group_by(feed) %>%
+    mutate(cumulative_area = cumsum(area_feed_total),
+           label_position = cumulative_area - 0.7 * area_feed_total) %>%
+    ggplot(aes(x = feed, y = area_feed_total, fill = season_name)) +
+    geom_bar(stat = "identity", width = 0.6) +
+    geom_text(aes(label = round(area_feed_total, 2), y = label_position),
+              size = 1, angle = 45, vjust = -0.) +
     labs(x = "Feed Item", y = "Area (Ha)", fill = "Seasons", title = "Land Requirement and Feed Basket") +
-    geom_text(aes(label = round(area_feed_total, 2)), vjust = -0.5, size = 3, angle = 45) +
-    theme_bw()+
-    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+    theme_bw() +
+    theme(axis.text.x = element_text(size = 5, angle = 45, hjust = 1),
+          axis.text.y = element_text(size = 5)) +
+    scale_fill_discrete(guide = guide_legend(title = "Seasons"))
 
-  ggsave(paste0(directoryPath, "/land_required.png"), width = 150, height = 100, units = "mm")
+  ggsave(paste0(directoryPath, "/", fileName, "_land_required.png"), width = 150, height = 100, units = "mm")
 
 
   # Expanded table land requirement
@@ -299,11 +316,12 @@ combineOutputs <- function(feed_basket_quality, energy_required, land_required,
     ggplot2::ggplot(aes(x=feed, y=nbalance_kg_n_total))+
     geom_bar(stat = "identity", width = 0.6)+
     labs(x = "Feed Item", y = "Kg N", title = "Total Nitrogen Balance by Feed Item") +
-    geom_text(aes(label = round(nbalance_kg_n_total, 2)), vjust = -0.5, size = 3, angle = 45) +
+    geom_text(aes(label = round(nbalance_kg_n_total, 2)), vjust = -0.5, size = 1, angle = 0) +
     theme_bw()+
-    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+    theme(axis.text.x = element_text(size = 5, angle = 45, hjust = 1),
+          axis.text.y = element_text(size = 5))
 
-  ggsave(paste0(directoryPath, "/nbalance.png"), width = 150, height = 100, units = "mm")
+  ggsave(paste0(directoryPath, "/", fileName, "_nbalance.png"), width = 150, height = 100, units = "mm")
 
   ## OVERALL SOIL IMPACTS
   nitrogen_balance <- nitrogen_balance
@@ -355,7 +373,7 @@ combineOutputs <- function(feed_basket_quality, energy_required, land_required,
               position = position_stack(vjust = 0.5),
               size = 1)
 
-  ggsave(paste0(directoryPath, "/water_use_per_feed.png"), width = 150, height = 100, units = "mm")
+  ggsave(paste0(directoryPath, "/", fileName, "_water_use_per_feed.png"), width = 150, height = 100, units = "mm")
 
   ###############################################################################################
   ## GHG Impacts
@@ -364,27 +382,28 @@ combineOutputs <- function(feed_basket_quality, energy_required, land_required,
   # GHG Balance
   methane	<- 28
   N2O	<- 265
+  total_milk_produced_kg_fpcm_per_year <- as.numeric(livestock_productivity[["consumable_livestock_product"]][livestock_productivity[["consumable_livestock_product"]]$produced_item == "Milk (FPCM)","production_kg_per_year"][3])
 
   # On-farm
   enteric_fermentation_methane <- sum(ghg_emissions[["ef"]]$enteric_methane_emissions,na.rm = T)
   enteric_fermentation_methane_tot_kg_co2_e <- enteric_fermentation_methane*methane
   enteric_fermentation_methane_per_ha_kg_co2_e <- ifelse(area_required_on_farm_ha<0.001,0,enteric_fermentation_methane_tot_kg_co2_e/area_required_on_farm_ha)
-  enteric_fermentation_methane_kg_co2_e_per_kg_fpcm <- enteric_fermentation_methane_tot_kg_co2_e/sum(livestock_productivity$total_milk, na.rm = T)
+  enteric_fermentation_methane_kg_co2_e_per_kg_fpcm <- enteric_fermentation_methane_tot_kg_co2_e/total_milk_produced_kg_fpcm_per_year
 
   manure_methane <- sum(ghg_emissions[["eft"]]$emission_factor,na.rm = T)
   manure_methane_tot_kg_co2_e <- manure_methane*methane
   manure_methane_per_ha_kg_co2_e <- ifelse(area_required_on_farm_ha<0.001,0,manure_methane_tot_kg_co2_e/area_required_on_farm_ha)
-  manure_methane_kg_co2_e_per_kg_fpcm <- manure_methane_tot_kg_co2_e/sum(livestock_productivity$total_milk, na.rm = T)
+  manure_methane_kg_co2_e_per_kg_fpcm <- manure_methane_tot_kg_co2_e/total_milk_produced_kg_fpcm_per_year
 
   manure_direct_N2O <- sum(ghg_emissions[["direct_N2O"]]$direct_N2O_emission,na.rm = T)
   manure_direct_N2O_tot_kg_co2_e <- manure_direct_N2O*N2O
   manure_direct_N2O_per_ha_kg_co2_e <- ifelse(area_required_on_farm_ha<0.001,0,manure_direct_N2O_tot_kg_co2_e/area_required_on_farm_ha)
-  manure_direct_N2O_kg_co2_e_per_kg_fpcm <- manure_direct_N2O_tot_kg_co2_e/sum(livestock_productivity$total_milk, na.rm = T)
+  manure_direct_N2O_kg_co2_e_per_kg_fpcm <- manure_direct_N2O_tot_kg_co2_e/total_milk_produced_kg_fpcm_per_year
 
   manure_Indirect_N2O <- sum(ghg_emissions[["indirect_N2O"]]$indirect_N2O_emission,na.rm = T)
   manure_Indirect_N2O_tot_kg_co2_e <- manure_Indirect_N2O*N2O
   manure_Indirect_N2O_per_ha_kg_co2_e <- ifelse(area_required_on_farm_ha<0.001,0,manure_Indirect_N2O_tot_kg_co2_e/area_required_on_farm_ha)
-  manure_Indirect_N2O_kg_co2_e_per_kg_fpcm <- manure_Indirect_N2O_tot_kg_co2_e/sum(livestock_productivity$total_milk, na.rm = T)
+  manure_Indirect_N2O_kg_co2_e_per_kg_fpcm <- manure_Indirect_N2O_tot_kg_co2_e/total_milk_produced_kg_fpcm_per_year
 
   soil_direct_N2O <- sum(ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]][ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]]$anthropogenic_N_input == "farm_n_synthetic_fertilizer_managed_soil","annual_N20N_direct_emission_from_managed_soil"],
                          ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]][ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]]$anthropogenic_N_input == "farm_n_from_crop_residue_managed_soil","annual_N20N_direct_emission_from_managed_soil"],
@@ -395,73 +414,73 @@ combineOutputs <- function(feed_basket_quality, energy_required, land_required,
                          ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]][ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]]$anthropogenic_N_input == "sheep_and_other_n_pasture_onfarm","annual_N20N_direct_emission_from_managed_soil"],na.rm = T)
   soil_direct_N2O_tot_kg_co2_e <- soil_direct_N2O*N2O
   soil_direct_N2O_per_ha_kg_co2_e <- ifelse(area_required_on_farm_ha<0.001,0,soil_direct_N2O_tot_kg_co2_e/area_required_on_farm_ha)
-  soil_direct_N2O_kg_co2_e_per_kg_fpcm <- soil_direct_N2O_tot_kg_co2_e/sum(livestock_productivity$total_milk, na.rm = T)
+  soil_direct_N2O_kg_co2_e_per_kg_fpcm <- soil_direct_N2O_tot_kg_co2_e/total_milk_produced_kg_fpcm_per_year
 
   soil_indirect_N2O <- sum(ghg_emissions[["ghg_soil"]][["annual_N20N_soil_indirect_emission"]][ghg_emissions[["ghg_soil"]][["annual_N20N_soil_indirect_emission"]]$anthropogenic_N_input == "farm_n_synthetic_fertilizer_managed_soil", "annual_N20N_from_atmospheric_deposition"],na.rm = T)
   soil_indirect_N2O_tot_kg_co2_e <- soil_indirect_N2O*N2O
   soil_indirect_N2O_per_ha_kg_co2_e <- ifelse(area_required_on_farm_ha<0.001,0,soil_indirect_N2O_tot_kg_co2_e/area_required_on_farm_ha)
-  soil_indirect_N2O_kg_co2_e_per_kg_fpcm <- soil_indirect_N2O_tot_kg_co2_e/sum(livestock_productivity$total_milk, na.rm = T)
+  soil_indirect_N2O_kg_co2_e_per_kg_fpcm <- soil_indirect_N2O_tot_kg_co2_e/total_milk_produced_kg_fpcm_per_year
 
   burning <- ((ghg_emissions$ghg_burn[ghg_emissions$ghg_burn$ghg_gas=="CO2",5])+(ghg_emissions$ghg_burn[ghg_emissions$ghg_burn$ghg_gas=="CH4",5]*methane)+(ghg_emissions$ghg_burn[ghg_emissions$ghg_burn$ghg_gas=="Nox",5]*N2O))
   burning_per_ha_kg_co2_e <- ifelse(area_required_on_farm_ha<0.001,0,burning/area_required_on_farm_ha)
-  burning_kg_co2_e_per_kg_fpcm <- burning/sum(livestock_productivity$total_milk, na.rm = T)
+  burning_kg_co2_e_per_kg_fpcm <- burning/total_milk_produced_kg_fpcm_per_year
 
   rice_production_methane <- sum(ghg_emissions$ghg_rice$annual_methane_emission,na.rm = T)
   rice_production_methane_tot_kg_co2_e <- rice_production_methane*methane
   rice_production_methane_per_ha_kg_co2_e <- ifelse(area_required_on_farm_ha<0.001,0,rice_production_methane_tot_kg_co2_e/area_required_on_farm_ha)
-  rice_production_methane_kg_co2_e_per_kg_fpcm <- rice_production_methane_tot_kg_co2_e/sum(livestock_productivity$total_milk, na.rm = T)
+  rice_production_methane_kg_co2_e_per_kg_fpcm <- rice_production_methane_tot_kg_co2_e/total_milk_produced_kg_fpcm_per_year
 
   on_farm_fertilizer_emission <- sum(ghg_emissions[["fetilizer_ghg"]][["fertlizer_emission_by_crop"]]$farm_fertiliser_emission)
   on_farm_fertilizer_emission_per_ha_kg_co2_e <- ifelse(area_required_on_farm_ha<0.001,0,on_farm_fertilizer_emission/area_required_on_farm_ha)
-  on_farm_fertilizer_emission_kg_co2_e_per_kg_fpcm <- on_farm_fertilizer_emission/sum(livestock_productivity$total_milk, na.rm = T)
+  on_farm_fertilizer_emission_kg_co2_e_per_kg_fpcm <- on_farm_fertilizer_emission/total_milk_produced_kg_fpcm_per_year
 
   # Roughage off farm
   rough_of_Soil_direct_N2O <- sum(ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]][ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]]$anthropogenic_N_input == "rough_of_n_synthetic_fertilizer_managed_soil","annual_N20N_direct_emission_from_managed_soil"],
                                   ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]][ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]]$anthropogenic_N_input == "rough_of_n_from_crop_residue_managed_soil","annual_N20N_direct_emission_from_managed_soil"],na.rm = T)
   rough_of_Soil_direct_N2O_tot_kg_co2_e <- rough_of_Soil_direct_N2O*N2O
-  rough_of_Soil_direct_N2O_per_ha_kg_co2_e <- ifelse(area_required_on_farm_ha<0.001,0,rough_of_Soil_direct_N2O_tot_kg_co2_e/area_required_on_farm_ha)
-  rough_of_Soil_direct_N2O_kg_co2_e_per_kg_fpcm <- rough_of_Soil_direct_N2O_tot_kg_co2_e/sum(livestock_productivity$total_milk, na.rm = T)
+  rough_of_Soil_direct_N2O_per_ha_kg_co2_e <- ifelse(area_required_roughages_off_farm_ha<0.001,0,rough_of_Soil_direct_N2O_tot_kg_co2_e/area_required_roughages_off_farm_ha)
+  rough_of_Soil_direct_N2O_kg_co2_e_per_kg_fpcm <- rough_of_Soil_direct_N2O_tot_kg_co2_e/total_milk_produced_kg_fpcm_per_year
 
   rough_of_soil_indirect_N2O <- sum(ghg_emissions[["ghg_soil"]][["annual_N20N_soil_indirect_emission"]][ghg_emissions[["ghg_soil"]][["annual_N20N_soil_indirect_emission"]]$anthropogenic_N_input == "rough_of_n_synthetic_fertilizer_managed_soil", "annual_N20N_from_atmospheric_deposition"],na.rm = T)
   rough_of_soil_indirect_N2O_tot_kg_co2_e <- rough_of_soil_indirect_N2O*N2O
-  rough_of_soil_indirect_N2O_per_ha_kg_co2_e <- ifelse(area_required_on_farm_ha<0.001,0,rough_of_soil_indirect_N2O_tot_kg_co2_e/area_required_on_farm_ha)
-  rough_of_soil_indirect_N2O_kg_co2_e_per_kg_fpcm <- rough_of_soil_indirect_N2O_tot_kg_co2_e/sum(livestock_productivity$total_milk, na.rm = T)
+  rough_of_soil_indirect_N2O_per_ha_kg_co2_e <- ifelse(area_required_roughages_off_farm_ha<0.001,0,rough_of_soil_indirect_N2O_tot_kg_co2_e/area_required_roughages_off_farm_ha)
+  rough_of_soil_indirect_N2O_kg_co2_e_per_kg_fpcm <- rough_of_soil_indirect_N2O_tot_kg_co2_e/total_milk_produced_kg_fpcm_per_year
 
   rough_of_fertilizer_emission <- sum(ghg_emissions[["fetilizer_ghg"]][["fertlizer_emission_by_crop"]]$rough_of_fertiliser_emission)
-  rough_of_fertilizer_emission_per_ha_kg_co2_e <- ifelse(area_required_on_farm_ha<0.001,0,rough_of_fertilizer_emission/area_required_on_farm_ha)
-  rough_of_fertilizer_emission_kg_co2_e_per_kg_fpcm <- rough_of_fertilizer_emission/sum(livestock_productivity$total_milk, na.rm = T)
+  rough_of_fertilizer_emission_per_ha_kg_co2_e <- ifelse(area_required_roughages_off_farm_ha<0.001,0,rough_of_fertilizer_emission/area_required_roughages_off_farm_ha)
+  rough_of_fertilizer_emission_kg_co2_e_per_kg_fpcm <- rough_of_fertilizer_emission/total_milk_produced_kg_fpcm_per_year
 
   # Concentrates off-farm
   conc_of_Soil_direct_N2O <- sum(ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]][ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]]$anthropogenic_N_input == "conc_of_n_synthetic_fertilizer_managed_soil","annual_N20N_direct_emission_from_managed_soil"],
                                   ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]][ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]]$anthropogenic_N_input == "conc_of_n_from_crop_residue_managed_soil","annual_N20N_direct_emission_from_managed_soil"],na.rm = T)
   conc_of_Soil_direct_N2O_tot_kg_co2_e <- conc_of_Soil_direct_N2O*N2O
-  conc_of_Soil_direct_N2O_per_ha_kg_co2_e <- ifelse(area_required_on_farm_ha<0.001,0,conc_of_Soil_direct_N2O_tot_kg_co2_e/area_required_on_farm_ha)
-  conc_of_Soil_direct_N2O_kg_co2_e_per_kg_fpcm <- conc_of_Soil_direct_N2O_tot_kg_co2_e/sum(livestock_productivity$total_milk, na.rm = T)
+  conc_of_Soil_direct_N2O_per_ha_kg_co2_e <- ifelse(area_required_concentrates_off_farm_ha<0.001,0,conc_of_Soil_direct_N2O_tot_kg_co2_e/area_required_concentrates_off_farm_ha)
+  conc_of_Soil_direct_N2O_kg_co2_e_per_kg_fpcm <- conc_of_Soil_direct_N2O_tot_kg_co2_e/total_milk_produced_kg_fpcm_per_year
 
   conc_of_soil_indirect_N2O <- sum(ghg_emissions[["ghg_soil"]][["annual_N20N_soil_indirect_emission"]][ghg_emissions[["ghg_soil"]][["annual_N20N_soil_indirect_emission"]]$anthropogenic_N_input == "conc_of_n_synthetic_fertilizer_managed_soil", "annual_N20N_from_atmospheric_deposition"],na.rm = T)
   conc_of_soil_indirect_N2O_tot_kg_co2_e <- conc_of_soil_indirect_N2O*N2O
-  conc_of_soil_indirect_N2O_per_ha_kg_co2_e <- ifelse(area_required_on_farm_ha<0.001,0,conc_of_soil_indirect_N2O_tot_kg_co2_e/area_required_on_farm_ha)
-  conc_of_soil_indirect_N2O_kg_co2_e_per_kg_fpcm <- conc_of_soil_indirect_N2O_tot_kg_co2_e/sum(livestock_productivity$total_milk, na.rm = T)
+  conc_of_soil_indirect_N2O_per_ha_kg_co2_e <- ifelse(area_required_concentrates_off_farm_ha<0.001,0,conc_of_soil_indirect_N2O_tot_kg_co2_e/area_required_concentrates_off_farm_ha)
+  conc_of_soil_indirect_N2O_kg_co2_e_per_kg_fpcm <- conc_of_soil_indirect_N2O_tot_kg_co2_e/total_milk_produced_kg_fpcm_per_year
 
   conc_of_fertilizer_emission <- sum(ghg_emissions[["fetilizer_ghg"]][["fertlizer_emission_by_crop"]]$conc_of_fertiliser_emission)
-  conc_of_fertilizer_emission_per_ha_kg_co2_e <- ifelse(area_required_on_farm_ha<0.001,0,conc_of_fertilizer_emission/area_required_on_farm_ha)
-  conc_of_fertilizer_emission_kg_co2_e_per_kg_fpcm <- conc_of_fertilizer_emission/sum(livestock_productivity$total_milk, na.rm = T)
+  conc_of_fertilizer_emission_per_ha_kg_co2_e <- ifelse(area_required_concentrates_off_farm_ha<0.001,0,conc_of_fertilizer_emission/area_required_concentrates_off_farm_ha)
+  conc_of_fertilizer_emission_kg_co2_e_per_kg_fpcm <- conc_of_fertilizer_emission/total_milk_produced_kg_fpcm_per_year
 
   # Imported concentrates
   conc_ip_Soil_direct_N2O <- sum(ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]][ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]]$anthropogenic_N_input == "conc_ip_n_synthetic_fertilizer_managed_soil","annual_N20N_direct_emission_from_managed_soil"],
                                  ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]][ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]]$anthropogenic_N_input == "conc_ip_n_from_crop_residue_managed_soil","annual_N20N_direct_emission_from_managed_soil"],na.rm = T)
   conc_ip_Soil_direct_N2O_tot_kg_co2_e <- conc_ip_Soil_direct_N2O*N2O
-  conc_ip_Soil_direct_N2O_per_ha_kg_co2_e <- ifelse(area_required_on_farm_ha<0.001,0,conc_ip_Soil_direct_N2O_tot_kg_co2_e/area_required_on_farm_ha)
-  conc_ip_Soil_direct_N2O_kg_co2_e_per_kg_fpcm <- conc_ip_Soil_direct_N2O_tot_kg_co2_e/sum(livestock_productivity$total_milk, na.rm = T)
+  conc_ip_Soil_direct_N2O_per_ha_kg_co2_e <- ifelse(area_required_imported_concentrates_ha<0.001,0,conc_ip_Soil_direct_N2O_tot_kg_co2_e/area_required_imported_concentrates_ha)
+  conc_ip_Soil_direct_N2O_kg_co2_e_per_kg_fpcm <- conc_ip_Soil_direct_N2O_tot_kg_co2_e/total_milk_produced_kg_fpcm_per_year
 
   conc_ip_soil_indirect_N2O <- sum(ghg_emissions[["ghg_soil"]][["annual_N20N_soil_indirect_emission"]][ghg_emissions[["ghg_soil"]][["annual_N20N_soil_indirect_emission"]]$anthropogenic_N_input == "conc_ip_n_synthetic_fertilizer_managed_soil", "annual_N20N_from_atmospheric_deposition"],na.rm = T)
   conc_ip_soil_indirect_N2O_tot_kg_co2_e <- conc_ip_soil_indirect_N2O*N2O
-  conc_ip_soil_indirect_N2O_per_ha_kg_co2_e <- ifelse(area_required_on_farm_ha<0.001,0,conc_ip_soil_indirect_N2O_tot_kg_co2_e/area_required_on_farm_ha)
-  conc_ip_soil_indirect_N2O_kg_co2_e_per_kg_fpcm <- conc_ip_soil_indirect_N2O_tot_kg_co2_e/sum(livestock_productivity$total_milk, na.rm = T)
+  conc_ip_soil_indirect_N2O_per_ha_kg_co2_e <- ifelse(area_required_imported_concentrates_ha<0.001,0,conc_ip_soil_indirect_N2O_tot_kg_co2_e/area_required_imported_concentrates_ha)
+  conc_ip_soil_indirect_N2O_kg_co2_e_per_kg_fpcm <- conc_ip_soil_indirect_N2O_tot_kg_co2_e/total_milk_produced_kg_fpcm_per_year
 
   conc_ip_fertilizer_emission <- sum(ghg_emissions[["fetilizer_ghg"]][["fertlizer_emission_by_crop"]]$conc_ip_fertiliser_emission)
-  conc_ip_fertilizer_emission_per_ha_kg_co2_e <- ifelse(area_required_on_farm_ha<0.001,0,conc_ip_fertilizer_emission/area_required_on_farm_ha)
-  conc_ip_fertilizer_emission_kg_co2_e_per_kg_fpcm <- conc_ip_fertilizer_emission/sum(livestock_productivity$total_milk, na.rm = T)
+  conc_ip_fertilizer_emission_per_ha_kg_co2_e <- ifelse(area_required_imported_concentrates_ha<0.001,0,conc_ip_fertilizer_emission/area_required_imported_concentrates_ha)
+  conc_ip_fertilizer_emission_kg_co2_e_per_kg_fpcm <- conc_ip_fertilizer_emission/total_milk_produced_kg_fpcm_per_year
 
   ghg_balance <- data.frame(
     GHG_balance = c("On-farm", "Enteric fermentation-Methane",
@@ -621,7 +640,7 @@ combineOutputs <- function(feed_basket_quality, energy_required, land_required,
   global_warming_potential <- rbind(data.frame(sources_and_sinks = c("On-farm"),t_CO2e_per_ha = c("")),
                                     on_farm_table,
                                     off_farm_table)
-  ghg_emissions <- list(ghg_balance = ghg_balance,
+  ghg_emission <- list(ghg_balance = ghg_balance,
                         global_warming_potential = global_warming_potential)
 
   # Plotting GHG emission
@@ -629,18 +648,30 @@ combineOutputs <- function(feed_basket_quality, energy_required, land_required,
     ggplot2::ggplot(aes(x=sources_and_sinks, y=t_CO2e_per_ha))+
     geom_bar(stat = "identity", width = 0.6)+
     labs(x = "", y = "t CO2e/ha", title = "GHG emissions") +
-    geom_text(aes(label = round(t_CO2e_per_ha, 2)), vjust = -0.5, size = 3, angle = 45) +
+    geom_text(aes(label = round(t_CO2e_per_ha, 2)), vjust = -0.5, size = 1, angle = 0) +
     theme_bw()+
-    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+    theme(axis.text.x = element_text(size = 5, angle = 45, hjust = 1),
+          axis.text.y = element_text(size = 5))
 
-  ggsave(paste0(directoryPath, "/ghg_emission.png"), width = 150, height = 100, units = "mm")
+  ggsave(paste0(directoryPath, "/", fileName, "_ghg_emission.png"), width = 150, height = 100, units = "mm")
 
+  ###############################################################################################
+  ## Waste
+  ###############################################################################################
+  product_waste <- data.frame(
+    waste = c("waste - prod","waste - distribution", "waste - processing", "waste - consume"),
+    milk = c(para$waste_production_milk, para$waste_distribution_milk, para$waste_processing_milk, para$waste_consume_milk),
+    meat = c(para$waste_production_meat, para$waste_distribution_meat, para$waste_processing_meat, para$waste_consume_meat)
+  )
 
   output_list <- list(land_required = land_required,
                       soil_impacts = soil_impacts,
                       water_required = water_required,
                       livestock_productivity = livestock_productivity,
-                      ghg_emission = ghg_emission)
+                      ghg_emission = ghg_emission,
+                      biomass = biomass,
+                      soil_carbon = soil_carbon,
+                      product_waste = product_waste)
 
   jsonlite::toJSON(output_list, pretty = TRUE)
 

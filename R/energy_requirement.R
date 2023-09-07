@@ -7,7 +7,7 @@
 #'
 #' @param feed_basket_quality A dataframe computed using the `feed_quality` function
 #'
-#' @param energy_parameters A JSON file containing energy coeficients
+#' @param energy_parameters A JSON file containing energy coefficients
 #'
 #' @importFrom dplyr summarise mutate filter left_join %>%
 #'
