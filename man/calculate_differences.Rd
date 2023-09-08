@@ -4,35 +4,36 @@
 \alias{calculate_differences}
 \title{Calculate Differences}
 \usage{
-calculate_differences(iDir)
+calculate_differences(outFile, ...)
 }
 \arguments{
-\item{iDir}{A path to a directory where output files are stored}
+\item{outFile}{Path to the new comparison output json}
+
+\item{...}{Paths of the different scenario outputs}
 }
 \value{
-dataframe
+json file
 }
 \description{
 It computes difference in environmental impact between scenarios
 }
 \examples{
 \dontrun{
-data(mufindi)
+data(para)
 data(ghg_para)
-feed_basket_quality <- feed_quality(mufindi)
-energy_required <- energy_requirement(mufindi,feed_basket_quality)
-land_required <- land_requirement(feed_basket_quality, energy_required, mufindi)
-soil_erosion <- soil_health(mufindi, land_required)
-water_required <- water_requirement(mufindi,land_required)
-nitrogen_balance <- n_balance(mufindi, land_required, soil_erosion)
-livestock_productivity <- land_productivity(mufindi)
-economics <- economics_payback(mufindi, energy_required)
-biomass <- biomass_calculation(mufindi, land_required)
+feed_basket_quality <- feed_quality(para)
+energy_required <- energy_requirement(para,feed_basket_quality)
+land_required <- land_requirement(feed_basket_quality, energy_required, para)
+soil_erosion <- soil_health(para, land_required)
+water_required <- water_requirement(para,land_required)
+nitrogen_balance <- n_balance(para, land_required, soil_erosion)
+livestock_productivity <- land_productivity(para)
+biomass <- biomass_calculation(para, land_required)
 soil_carbon <- soil_organic_carbon(para, land_required, biomass)
-ghg_emissions <- ghg_emission(mufindi,energy_required,ghg_para,land_required,nitrogen_balance)
-combineOutputs(feed_basket_quality,energy_required,land_required,soil_erosion,water_required,
-nitrogen_balance,livestock_productivity,economics,biomass,soil_carbon,ghg_emissions)
-calculate_differences(iDir)
+ghg_emissions <- ghg_emission(para,energy_required,ghg_para,land_required,nitrogen_balance)
+combineOutputs(para,feed_basket_quality,energy_required,land_required,soil_erosion,water_required,
+nitrogen_balance,livestock_productivity,biomass,soil_carbon,ghg_emissions,filePath)
+calculate_differences(outFile,...)
 }
 
 }

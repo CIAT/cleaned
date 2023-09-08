@@ -2,11 +2,11 @@
 #'
 #' @description It computes greenhouse gas emissions.
 #'
-#' @param para A JSON file
+#' @param para A JSON file containing user inputs
 #'
-#' @param ghg_ipcc_data A JSON file
+#' @param ghg_ipcc_data A JSON file containing IpCC coeficients
 #'
-#' @param land_required A dataframe computed using the `land_requirement` function
+#' @param land_required A list computed using the `land_requirement` function
 #'
 #' @param energy_required A list computed using the `energy_required` function
 #'

@@ -5,6 +5,7 @@
 \title{JSON output}
 \usage{
 combineOutputs(
+  para,
   feed_basket_quality,
   energy_required,
   land_required,
@@ -12,34 +13,36 @@ combineOutputs(
   water_required,
   nitrogen_balance,
   livestock_productivity,
-  economics,
   biomass,
   soil_carbon,
-  ghg_emission
+  ghg_emission,
+  filePath
 )
 }
 \arguments{
+\item{para}{A JSON file containing user inputs}
+
 \item{feed_basket_quality}{A dataframe computed using the `feed_quality` function}
 
 \item{energy_required}{A list computed using the `energy_required` function}
 
-\item{land_required}{A dataframe computed using the `land_requirement` function}
+\item{land_required}{A list computed using the `land_requirement` function}
 
 \item{soil_erosion}{A dataframe computed using the `soil_health` function}
 
-\item{water_required}{A dataframe computed using the `water_required` function}
+\item{water_required}{A list computed using the `water_required` function}
 
 \item{nitrogen_balance}{A dataframe computed using the `n_balance` function}
 
 \item{livestock_productivity}{A dataframe computed using the `land_productivity` function}
 
-\item{economics}{A dataframe computed using the `economics_payback` function}
-
 \item{biomass}{A dataframe computed using the `biomass_calculation` function}
 
 \item{soil_carbon}{A dataframe computed using the `soil_organic_carbon` function}
 
-\item{ghg_emission}{A dataframe computed using the `n_balance` ghg_emission}
+\item{ghg_emission}{A list computed using the `n_balance` ghg_emission}
+
+\item{filePath}{A path to where the JSON is to be saved}
 }
 \value{
 saved JSON file
@@ -49,21 +52,20 @@ It generates a JSON file of all CLEANED model computation.
 }
 \examples{
 \dontrun{
-data(mufindi)
+data(para)
 data(ghg_para)
-feed_basket_quality <- feed_quality(mufindi)
-energy_required <- energy_requirement(mufindi,feed_basket_quality)
-land_required <- land_requirement(feed_basket_quality, energy_required, mufindi)
-soil_erosion <- soil_health(mufindi, land_required)
-water_required <- water_requirement(mufindi,land_required)
-nitrogen_balance <- n_balance(mufindi, land_required, soil_erosion)
-livestock_productivity <- land_productivity(mufindi)
-economics <- economics_payback(mufindi, energy_required)
-biomass <- biomass_calculation(mufindi, land_required)
+feed_basket_quality <- feed_quality(para)
+energy_required <- energy_requirement(para,feed_basket_quality)
+land_required <- land_requirement(feed_basket_quality, energy_required, para)
+soil_erosion <- soil_health(para, land_required)
+water_required <- water_requirement(para,land_required)
+nitrogen_balance <- n_balance(para, land_required, soil_erosion)
+livestock_productivity <- land_productivity(para, energy_required)
+biomass <- biomass_calculation(para, land_required)
 soil_carbon <- soil_organic_carbon(para, land_required, biomass)
-ghg_emission <- ghg_emission(mufindi,energy_required,ghg_para,land_required,nitrogen_balance)
-combineOutputs(feed_basket_quality,energy_required,land_required,soil_erosion,water_required,
-nitrogen_balance,livestock_productivity,economics,biomass,soil_carbon,ghg_emission)
+ghg_emission <- ghg_emission(para,energy_required,ghg_para,land_required,nitrogen_balance)
+combineOutputs(para,feed_basket_quality,energy_required,land_required,soil_erosion,water_required,
+nitrogen_balance,livestock_productivity,biomass,soil_carbon,ghg_emission,filePath)
 }
 
 }

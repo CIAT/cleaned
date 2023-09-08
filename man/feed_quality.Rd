@@ -7,7 +7,7 @@
 feed_quality(para)
 }
 \arguments{
-\item{para}{A list}
+\item{para}{A JSON file containing user inputs}
 }
 \value{
 dataframe

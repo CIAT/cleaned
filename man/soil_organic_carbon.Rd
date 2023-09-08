@@ -7,11 +7,11 @@
 soil_organic_carbon(para, stock_change_para, land_required, biomass)
 }
 \arguments{
-\item{para}{A JSON file}
+\item{para}{A JSON file containing user inputs}
 
 \item{stock_change_para}{A JSON file with stock change parameters}
 
-\item{land_required}{A dataframe computed using the `land_requirement` function}
+\item{land_required}{A list computed using the `land_requirement` function}
 
 \item{biomass}{A dataframe computed using the `biomass_calculation` function}
 }

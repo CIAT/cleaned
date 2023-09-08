@@ -2,7 +2,7 @@
 #'
 #' @description It computes feed quality
 #'
-#' @param para A list
+#' @param para A JSON file containing user inputs
 #'
 #' @importFrom dplyr mutate_at bind_rows
 #'

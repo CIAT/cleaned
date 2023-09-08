@@ -2,9 +2,9 @@
 #'
 #' @description It computes nitrogen balance
 #'
-#' @param para A JSON file
+#' @param para A JSON file containing user inputs
 #'
-#' @param land_required A dataframe computed using the `land_requirement` function
+#' @param land_required A list computed using the `land_requirement` function
 #'
 #' @param soil_erosion A dataframe computed using the `soil_health` function
 #'

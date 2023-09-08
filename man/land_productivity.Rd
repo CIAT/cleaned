@@ -4,7 +4,7 @@
 \alias{land_productivity}
 \title{Land productivity}
 \usage{
-land_productivity(para)
+land_productivity(para, energy_required)
 }
 \arguments{
 \item{para}{A JSON file which contains an object named \code{livestock} which contains
@@ -16,6 +16,8 @@ Average annual growth per animal (kilogram), \code{body_weight}: Average Body we
 Energy content meat, \code{protein_meatcontent}: Protein content meat (percent), \code{annual_milk}:
 Average annual milk (kilogram), \code{fat_content}: Fat content milk (percent), \code{protein_milkcontent}:
 Protein content milk (percent).}
+
+\item{energy_required}{A list computed using the `energy_required` function}
 }
 \value{
 dataframe
@@ -31,7 +33,7 @@ energy_required <- energy_requirement(para,feed_basket_quality)
 land_required <- land_requirement(feed_basket_quality, energy_required, para)
 soil_erosion <- soil_health(para, land_required)
 nitrogen_balance <- nitrogen_balance(para, land_required, soil_erosion)
-land_productivity(para)
+land_productivity(para, energy_required)
 }
 
 }

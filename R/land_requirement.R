@@ -2,13 +2,13 @@
 #'
 #' @description It compute land requirements
 #'
-#' @param para A JSON file
+#' @param para A JSON file containing user inputs
 #'
 #' @param feed_basket_quality A dataframe computed using the `feed_quality` function
 #'
 #' @param energy_required A list computed using the `energy_required` function
 #'
-#' @return dataframe
+#' @return list
 #'
 #' @importFrom dplyr summarise mutate filter left_join %>% mutate_if
 #'

@@ -7,11 +7,11 @@
 energy_requirement(para, feed_basket_quality, energy_parameters)
 }
 \arguments{
-\item{para}{A JSON file}
+\item{para}{A JSON file containing user inputs}
 
 \item{feed_basket_quality}{A dataframe computed using the `feed_quality` function}
 
-\item{energy_parameters}{A JSON file containing energy coeficients}
+\item{energy_parameters}{A JSON file containing energy coefficients}
 }
 \value{
 list

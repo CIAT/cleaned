@@ -2,11 +2,11 @@
 #'
 #' @description It computes soil organic carbon status
 #'
-#' @param para A JSON file
+#' @param para A JSON file containing user inputs
 #'
 #' @param stock_change_para A JSON file with stock change parameters
 #'
-#' @param land_required A dataframe computed using the `land_requirement` function
+#' @param land_required A list computed using the `land_requirement` function
 #'
 #' @param biomass A dataframe computed using the `biomass_calculation` function
 #'
