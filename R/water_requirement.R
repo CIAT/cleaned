@@ -46,7 +46,7 @@ water_requirement <- function(para,land_required){
            kc_average = (kc_initial+kc_midseason+kc_late)/3,
            kc_frac = fraction_of_land_required*kc_average,
            ET = kc_frac*et,
-           water_use = ET*sum(area_feed),
+           water_use = ifelse(is.nan(ET*sum(area_feed)),0,ET*sum(area_feed)),
            feed_water_use = ifelse(is.nan(water_use*(1-(area_non_feed/area_total))),0,
                                    (water_use*(1-(area_non_feed/area_total)))),
            non_feed_water_use = water_use-feed_water_use,

@@ -14,7 +14,7 @@ compare_scenario(baseRun, outFile, oDir2)
 \item{oDir2}{directory where the plots are to be saved}
 }
 \description{
-It plots the change in scenarios to base run
+It plots the change in scenarios from the base run
 }
 \examples{
 \dontrun{
