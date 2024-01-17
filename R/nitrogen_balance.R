@@ -76,18 +76,31 @@ n_balance <- function(para, land_required, soil_erosion){
     # Computing fertilizer rate
     ammonia_n_frac <- ifelse(feed_selected$ammonia==0,0,
                              as.numeric(para[["fertilizer"]][which(para[["fertilizer"]]$fertilizer_desc == "Ammonia"),]$fraction))
+    ammonia_n_frac <- ifelse(!is.finite(ammonia_n_frac),0,ammonia_n_frac)
+
     ammonium_nitrate_n_frac <- ifelse(feed_selected$ammonium_nitrate==0,0,
                              as.numeric(para[["fertilizer"]][which(para[["fertilizer"]]$fertilizer_desc == "Ammonium nitrate"),]$fraction))
+    ammonium_nitrate_n_frac <- ifelse(!is.finite(ammonium_nitrate_n_frac),0,ammonium_nitrate_n_frac)
+
     ammonium_sulfate_n_frac <- ifelse(feed_selected$ammonium_sulfate==0,0,
                                       as.numeric(para[["fertilizer"]][which(para[["fertilizer"]]$fertilizer_desc == "Ammonium sulfate"),]$fraction))
+    ammonium_sulfate_n_frac <- ifelse(!is.finite(ammonium_sulfate_n_frac),0,ammonium_sulfate_n_frac)
+
     dap_n_frac <- ifelse(feed_selected$dap==0,0,
                          as.numeric(para[["fertilizer"]][which(para[["fertilizer"]]$fertilizer_desc == "DAP"),]$fraction))
+    dap_n_frac <- ifelse(!is.finite(dap_n_frac),0,dap_n_frac)
+
     n_solutions_n_frac <- ifelse(feed_selected$n_solutions==0,0,
                          as.numeric(para[["fertilizer"]][which(para[["fertilizer"]]$fertilizer_desc == "N solutions"),]$fraction))
+    n_solutions_n_frac <- ifelse(!is.finite(n_solutions_n_frac),0,n_solutions_n_frac)
+
     npk_n_frac <- ifelse(feed_selected$npk==0,0,
                          as.numeric(para[["fertilizer"]][which(para[["fertilizer"]]$fertilizer_desc == "NPK"),]$fraction))
+    npk_n_frac <- ifelse(!is.finite(npk_n_frac),0,npk_n_frac)
+
     urea_n_frac <- ifelse(feed_selected$urea==0,0,
                          as.numeric(para[["fertilizer"]][which(para[["fertilizer"]]$fertilizer_desc == "Urea"),]$fraction))
+    urea_n_frac <- ifelse(!is.finite(urea_n_frac),0,urea_n_frac)
 
 
     fertilizer_rate <- (feed_selected$ammonia*ammonia_n_frac)+(feed_selected$ammonium_nitrate*ammonium_nitrate_n_frac)+(feed_selected$ammonium_sulfate*ammonium_sulfate_n_frac)+
@@ -169,7 +182,7 @@ n_balance <- function(para, land_required, soil_erosion){
     out2 <- ifelse(feed_selected$source_type == "Main", 0, residue_removed_dm_ha * nres * area_total)
 
     # soil loss per plot per feed type
-    soil_loss_plot <- as.numeric(soil_erosion[soil_erosion$feed_type == feed,]$soil_loss_plot)
+    soil_loss_plot <- sum(as.numeric(soil_erosion[soil_erosion$feed_type == feed,]$soil_loss_plot),na.rm = T)
 
     # Soil erosion
     out5 <- soil_loss_plot*soil_n*1.5
@@ -183,6 +196,7 @@ n_balance <- function(para, land_required, soil_erosion){
                                              n_fixing,
                                              area_total,
                                              fertilizer_rate,
+                                             sum_n_content_manure_grazing,
                                              animal_manure_collected,
                                              organic_n_imported,
                                              yield_dm_ha,
@@ -215,7 +229,7 @@ n_balance <- function(para, land_required, soil_erosion){
 
   n_balance_all <- n_balance %>%
     bind_rows() %>%
-    mutate_at(c(-1, -19), as.numeric)
+    mutate_at(c(-1, -20), as.numeric)
 
   # Animal manure (N kg) grazing, Organic N (kg N) total, Organic N (kg N/ha) total
   n_balance_all <- n_balance_all %>%
