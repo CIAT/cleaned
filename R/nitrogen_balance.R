@@ -254,7 +254,7 @@ n_balance <- function(para, land_required, soil_erosion){
            nue = ifelse(is.na(nout/nin), 0, nout/nin),
            nbalance_kg_n_total = nin-nout,
            nbalance_kg_n_ha_total = ifelse(is.na(nbalance_kg_n_total/area_total), 0, nbalance_kg_n_total/area_total),
-           nbalance_feed_only_kg_n = ifelse(nbalance_kg_n_total==0, 0, ifelse(out2==0, nbalance_kg_n_total*out2/(out2+out1), 0)),
+           nbalance_feed_only_kg_n = ifelse(nbalance_kg_n_total==0, 0, ifelse(out2==0, nbalance_kg_n_total, nbalance_kg_n_total*out2/(out2+out1))),
            nbalance_feed_only_kg_n_ha = ifelse(is.na(nbalance_feed_only_kg_n/area_total), 0, nbalance_feed_only_kg_n/area_total)) %>%
     dplyr::mutate_if(is.numeric, list(~na_if(.,Inf))) %>%
     replace(is.na(.), 0)%>%
