@@ -133,8 +133,8 @@ energy_requirement <- function(para, feed_basket_quality,energy_parameters){
   annual_requirement <- wool_er%>%
     mutate(energy_required_annually=(er_maintenance+er_activity+er_growth+er_lactation+er_pregnancy+er_work+er_wool)*no_days*herd_composition,
            protein_required_annually =((cp_maintenance*no_days)+(cp_grazing*grazing_displacement*no_days)+
-                                         ifelse(is.nan(((cp_pregnancy/(no_days*birth_interval))*no_days)),0,((cp_pregnancy/(no_days*birth_interval))*no_days))+
-                                         ifelse(is.nan(((cp_lactation/(no_days*birth_interval))*no_days)),0,((cp_lactation/(no_days*birth_interval))*no_days))+
+                                         ifelse(!is.finite(((cp_pregnancy/(no_days*birth_interval))*no_days)),0,((cp_pregnancy/(no_days*birth_interval))*no_days))+
+                                         ifelse(!is.finite(((cp_lactation/(no_days*birth_interval))*no_days)),0,((cp_lactation/(no_days*birth_interval))*no_days))+
                                          (annual_milk*cp_lactmilk)+(annual_growth*cp_growth))*herd_composition)
 
   #get livestock energy and protein requirement per season
