@@ -10,6 +10,8 @@
 #'
 #' @importFrom dplyr %>%
 #'
+#' @importFrom openxlsx write.xlsx
+#'
 #' @examples
 #' \dontrun{
 #' data(para)
@@ -170,5 +172,9 @@ calculate_differences <- function(outFile,...){
   results <- scenarioList %>% dplyr::bind_rows()
 
   write(jsonlite::toJSON(results, pretty = TRUE),output_path)
+
+  # Save to Excel with multiple sheets
+  excel_output_path <- paste0(output_path, "/runs_comparison.xlsx") # Change this to your desired output path
+  write.xlsx(results, excel_output_path)
 
 }

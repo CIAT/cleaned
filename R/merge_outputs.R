@@ -30,6 +30,8 @@
 #'
 #' @importFrom jsonlite toJSON
 #'
+#' @importFrom openxlsx write.xlsx
+#'
 #' @examples
 #' \dontrun{
 #' data(para)
@@ -678,5 +680,39 @@ combineOutputs <- function(para, feed_basket_quality, energy_required, land_requ
                       product_waste = product_waste)
 
   jsonlite::toJSON(output_list, pretty = TRUE)
+
+  # Flatten the nested structure
+  df_land_required <- output_list$land_required$land_required
+  df_dm_required <- output_list$land_required$dm_required
+  df_land_and_dm_required <- output_list$land_required$land_and_dm_required
+  df_overall_soil_impact <- output_list$soil_impacts$overal_soil_impact
+  df_nitrogen_balance <- output_list$soil_impacts$nitrogen_balance
+  df_water_use_per_feed_item <- output_list$water_required$water_use_per_feed_item
+  df_water_use_for_production <- output_list$water_required$water_use_for_production
+  df_consumable_livestock_product <- output_list$livestock_productivity$consumable_livestock_product
+  df_manure_produced <- output_list$livestock_productivity$manure_produced
+  df_ghg_balance <- output_list$ghg_emission$ghg_balance
+  df_global_warming_potential <- output_list$ghg_emission$global_warming_potential
+  df_biomass <- output_list$biomass
+  df_soil_carbon <- output_list$soil_carbon
+  df_product_waste <- output_list$product_waste
+
+  # Save to Excel with multiple sheets
+  excel_output_path <- paste0(directoryPath, "/", fileName, ".xlsx") # Change this to your desired output path
+  write.xlsx(list("Land Required" = df_land_required,
+                  "DM Required" = df_dm_required,
+                  "Land and DM Required" = df_land_and_dm_required,
+                  "Overall Soil Impact" = df_overall_soil_impact,
+                  "Nitrogen Balance" = df_nitrogen_balance,
+                  "Water Use Per Feed Item" = df_water_use_per_feed_item,
+                  "Water Use For Production" = df_water_use_for_production,
+                  "Consumable Livestock Product" = df_consumable_livestock_product,
+                  "Manure Produced" = df_manure_produced,
+                  "GHG Balance" = df_ghg_balance,
+                  "Global Warming Potential" = df_global_warming_potential,
+                  "Biomass" = df_biomass,
+                  "Soil Carbon" = df_soil_carbon,
+                  "Product Waste" = df_product_waste),
+             excel_output_path)
 
 } #end of output function
