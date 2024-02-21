@@ -3170,13 +3170,13 @@
          "direct_nitrous_oxide_factor": 0.01
       },
       {
-         "system": "Solid storage-Covered/compacted",
+         "system": "Solid storage - Covered/compacted",
          "systems": "Solid storage-Covered/compacted",
          "definition": "Similar to solid storage, but the manure pile is a) covered with a plastic sheet to reduce the surface of manure exposed to air and/or b) compacted to increase the density and reduce the free air space within the material.",
          "direct_nitrous_oxide_factor": 0.01
       },
       {
-         "system": "Solidstorage-Bulking agent addition",
+         "system": "Solid storage - Bulking agent addition",
          "systems": "Solidstorage-Bulking agent addition",
          "definition": "Specific materials (bulking agents) are mixed with the manure to provide structural support. This allows the natural aeration of the pile, thus enhancing decomposition. (e.g. sawdust, straw, coffee husks, maize stover)",
          "direct_nitrous_oxide_factor": 0.005
