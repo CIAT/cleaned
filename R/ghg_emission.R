@@ -148,13 +148,13 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
   table_10.17 <- ghg_ipcc_data[["Table 10.17"]][ghg_ipcc_data[["Table 10.17"]]$climate_zone_2==climate_zone,]
 
   mcf <- max_meth_bo%>%
-    left_join(table_10.17[,c(1,4)], by = c("manureman_non_roofed_enclosure"="Manure_management_systems"))%>%
+    left_join(table_10.17[,c(1,5)], by = c("manureman_non_roofed_enclosure"="Manure_management_systems"))%>%
     rename(mfc_non_roofed_enclosure=MCFs)%>%
-    left_join(table_10.17[,c(1,4)], by = c("manureman_offfarm_grazing"="Manure_management_systems"))%>%
+    left_join(table_10.17[,c(1,5)], by = c("manureman_offfarm_grazing"="Manure_management_systems"))%>%
     rename(mfc_offfarm_grazing=MCFs)%>%
-    left_join(table_10.17[,c(1,4)], by = c("manureman_onfarm_grazing"="Manure_management_systems"))%>%
+    left_join(table_10.17[,c(1,5)], by = c("manureman_onfarm_grazing"="Manure_management_systems"))%>%
     rename(mfc_onfarm_grazing=MCFs)%>%
-    left_join(table_10.17[,c(1,4)], by = c("manureman_stable"="Manure_management_systems"))%>%
+    left_join(table_10.17[,c(1,5)], by = c("manureman_stable"="Manure_management_systems"))%>%
     rename(mfc_stable=MCFs)%>%
     select(-de_intake,-ge_intake,-de,-er_growth,-dmi_tot)
 
@@ -199,16 +199,16 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
   #Direct N2O emissions
   table_10.21 <- ghg_ipcc_data[["Table 10.21"]]
   direct_N2O <- n_excretion%>%
-    left_join(table_10.21[,c(1,3)],by = c("manureman_stable"="system"))%>%
+    left_join(table_10.21[,c(1,4)],by = c("manureman_stable"="system"))%>%
     mutate(direct_nitrous_oxide_factor = ifelse(is.na(direct_nitrous_oxide_factor),0,direct_nitrous_oxide_factor))%>%
     rename(ef3_stable=direct_nitrous_oxide_factor)%>%
-    left_join(table_10.21[,c(1,3)],by = c("manureman_non_roofed_enclosure"="system"))%>%
+    left_join(table_10.21[,c(1,4)],by = c("manureman_non_roofed_enclosure"="system"))%>%
     mutate(direct_nitrous_oxide_factor = ifelse(is.na(direct_nitrous_oxide_factor),0,direct_nitrous_oxide_factor))%>%
     rename(ef3_non_roofed_enclosure=direct_nitrous_oxide_factor)%>%
-    left_join(table_10.21[,c(1,3)],by = c("manureman_offfarm_grazing"="system"))%>%
+    left_join(table_10.21[,c(1,4)],by = c("manureman_offfarm_grazing"="system"))%>%
     mutate(direct_nitrous_oxide_factor = ifelse(is.na(direct_nitrous_oxide_factor),0,direct_nitrous_oxide_factor))%>%
     rename(ef3_offfarm_grazing=direct_nitrous_oxide_factor)%>%
-    left_join(table_10.21[,c(1,3)],by = c("manureman_onfarm_grazing"="system"))%>%
+    left_join(table_10.21[,c(1,4)],by = c("manureman_onfarm_grazing"="system"))%>%
     mutate(direct_nitrous_oxide_factor = ifelse(is.na(direct_nitrous_oxide_factor),0,direct_nitrous_oxide_factor))%>%
     rename(ef3_onfarm_grazing=direct_nitrous_oxide_factor)%>%
     mutate(direct_N2O_emission = ((n_excretion_rate*time_in_stable*ef3_stable)+(n_excretion_rate*time_in_non_roofed_enclosure*ef3_non_roofed_enclosure)+(n_excretion_rate*time_in_offfarm_grazing*ef3_offfarm_grazing)+(n_excretion_rate*time_in_onfarm_grazing*ef3_onfarm_grazing))*(44/28))#Equation 10.25
@@ -223,19 +223,19 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
                                         ifelse(livetype_desc %in% non_dairy_cattle,"Other Cattle",
                                                ifelse(grepl("Pigs",livetype_desc),"Swine","Other animals"))),
            ef4 = ghg_ipcc_data[["table_11.1_&_table_11.3"]][ghg_ipcc_data[["table_11.1_&_table_11.3"]]$emission_factors=="EF4",4])%>%
-    left_join(table_10.22[,1:5],by = c("indirect_n20_animal"="livestock_category","manureman_stable"="system"))%>%
+    left_join(table_10.22[,1:6],by = c("indirect_n20_animal"="livestock_category","manureman_stable"="system"))%>%
     rename(FracGasMS_stable = FracGas_MS,
            Frac_leach_MS_stable = Frac_leach_MS,
            FracGas_MS_range_stable = FracGas_MS_range)%>%
-    left_join(table_10.22[,1:5],by = c("indirect_n20_animal"="livestock_category","manureman_non_roofed_enclosure"="system"))%>%
+    left_join(table_10.22[,1:6],by = c("indirect_n20_animal"="livestock_category","manureman_non_roofed_enclosure"="system"))%>%
     rename(FracGasMS_non_roofed_enclosure = FracGas_MS,
            Frac_leach_MS_non_roofed_enclosure = Frac_leach_MS,
            FracGas_MS_range_non_roofed_enclosure = FracGas_MS_range)%>%
-    left_join(table_10.22[,1:5],by = c("indirect_n20_animal"="livestock_category","manureman_offfarm_grazing"="system"))%>%
+    left_join(table_10.22[,1:6],by = c("indirect_n20_animal"="livestock_category","manureman_offfarm_grazing"="system"))%>%
     rename(FracGasMS_offfarm_grazing = FracGas_MS,
            Frac_leach_MS_offfarm_grazing = Frac_leach_MS,
            FracGas_MS_range_offfarm_grazing = FracGas_MS_range)%>%
-    left_join(table_10.22[,1:5],by = c("indirect_n20_animal"="livestock_category","manureman_onfarm_grazing"="system"))%>%
+    left_join(table_10.22[,1:6],by = c("indirect_n20_animal"="livestock_category","manureman_onfarm_grazing"="system"))%>%
     rename(FracGasMS_onfarm_grazing = FracGas_MS,
            Frac_leach_MS_onfarm_grazing = Frac_leach_MS,
            FracGas_MS_range_onfarm_grazing = FracGas_MS_range)%>%

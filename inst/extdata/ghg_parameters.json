@@ -1190,696 +1190,812 @@
    "Table 10.17": [
      {
         "Manure_management_systems": "Uncovered anaerobic lagoon",
+        "Manure management systems": "Uncovered anaerobic lagoon",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Moist",
         "MCFs": 0.6
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 1 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 1 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 1 Month",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Moist",
         "MCFs": 0.06
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 3 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 3 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 3 Month",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Moist",
         "MCFs": 0.12
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 4 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 4 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 4 Month",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Moist",
         "MCFs": 0.15
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 6 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 6 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 6 Month",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Moist",
         "MCFs": 0.21
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 12\nMonth",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 12 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 12\nMonth",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Moist",
         "MCFs": 0.31
      },
      {
-        "Manure_management_systems": "Cattle and Swine deep\nbedding (cont.) > 1\nmonth",
+        "Manure_management_systems": "Cattle and swine deep bedding > 1 month",
+        "Manure management systems": "Cattle and Swine deep\nbedding (cont.) > 1\nmonth",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Moist",
         "MCFs": 0.21
      },
      {
-        "Manure_management_systems": "Cattle and Swine deep\nbedding < 1\nmonth",
+        "Manure_management_systems": "Cattle and swine deep bedding < 1 month",
+        "Manure management systems": "Cattle and Swine deep\nbedding < 1\nmonth",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Moist",
         "MCFs": 0.0275
      },
      {
         "Manure_management_systems": "Solid storage",
+        "Manure management systems": "Solid storage",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Moist",
         "MCFs": 0.02
      },
      {
         "Manure_management_systems": "Solid storage - Covered/compacted",
+        "Manure management systems": "Solid storage - Covered/compacted",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Moist",
         "MCFs": 0.02
      },
      {
         "Manure_management_systems": "Solid storage - Bulking agent addition",
+        "Manure management systems": "Solid storage - Bulking agent addition",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Moist",
         "MCFs": 0.005
      },
      {
         "Manure_management_systems": "Solid storage - Additives",
+        "Manure management systems": "Solid storage - Additives",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Moist",
         "MCFs": 0.01
      },
      {
         "Manure_management_systems": "Dry lot",
+        "Manure management systems": "Dry lot",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Moist",
         "MCFs": 0.01
      },
      {
         "Manure_management_systems": "Daily spread",
+        "Manure management systems": "Daily spread",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Moist",
         "MCFs": 0
      },
      {
         "Manure_management_systems": "Composting - In-vessel",
+        "Manure management systems": "Composting - In-vessel",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Moist",
         "MCFs": 0.01
      },
      {
         "Manure_management_systems": "Uncovered anaerobic lagoon",
+        "Manure management systems": "Uncovered anaerobic lagoon",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Dry",
         "MCFs": 0.67
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 1 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 1 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 1 Month",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Dry",
         "MCFs": 0.08
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 3 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 3 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 3 Month",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Dry",
         "MCFs": 0.16
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 4 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 4 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 4 Month",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Dry",
         "MCFs": 0.19
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 6 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 6 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 6 Month",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Dry",
         "MCFs": 0.26
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 12\nMonth",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 12 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 12\nMonth",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Dry",
         "MCFs": 0.42
      },
      {
-        "Manure_management_systems": "Cattle and Swine deep\nbedding (cont.) > 1\nmonth",
+        "Manure_management_systems": "Cattle and swine deep bedding > 1 month",
+        "Manure management systems": "Cattle and Swine deep\nbedding (cont.) > 1\nmonth",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Dry",
         "MCFs": 0.26
      },
      {
-        "Manure_management_systems": "Cattle and Swine deep\nbedding < 1\nmonth",
+        "Manure_management_systems": "Cattle and swine deep bedding < 1 month",
+        "Manure management systems": "Cattle and Swine deep\nbedding < 1\nmonth",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Dry",
         "MCFs": 0.0275
      },
      {
         "Manure_management_systems": "Solid storage",
+        "Manure management systems": "Solid storage",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Dry",
         "MCFs": 0.02
      },
      {
         "Manure_management_systems": "Solid storage - Covered/compacted",
+        "Manure management systems": "Solid storage - Covered/compacted",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Dry",
         "MCFs": 0.02
      },
      {
         "Manure_management_systems": "Solid storage - Bulking agent addition",
+        "Manure management systems": "Solid storage - Bulking agent addition",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Dry",
         "MCFs": 0.005
      },
      {
         "Manure_management_systems": "Solid storage - Additives",
+        "Manure management systems": "Solid storage - Additives",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Dry",
         "MCFs": 0.01
      },
      {
         "Manure_management_systems": "Dry lot",
+        "Manure management systems": "Dry lot",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Dry",
         "MCFs": 0.01
      },
      {
         "Manure_management_systems": "Daily spread",
+        "Manure management systems": "Daily spread",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Dry",
         "MCFs": 0
      },
      {
         "Manure_management_systems": "Composting - In-vessel",
+        "Manure management systems": "Composting - In-vessel",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Dry",
         "MCFs": 0.01
      },
      {
         "Manure_management_systems": "Uncovered anaerobic lagoon",
+        "Manure management systems": "Uncovered anaerobic lagoon",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Moist",
         "MCFs": 0.5
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 1 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 1 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 1 Month",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Moist",
         "MCFs": 0.04
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 3 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 3 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 3 Month",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Moist",
         "MCFs": 0.08
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 4 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 4 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 4 Month",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Moist",
         "MCFs": 0.09
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 6 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 6 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 6 Month",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Moist",
         "MCFs": 0.14
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 12\nMonth",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 12 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 12\nMonth",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Moist",
         "MCFs": 0.21
      },
      {
-        "Manure_management_systems": "Cattle and Swine deep\nbedding (cont.) > 1\nmonth",
+        "Manure_management_systems": "Cattle and swine deep bedding > 1 month",
+        "Manure management systems": "Cattle and Swine deep\nbedding (cont.) > 1\nmonth",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Moist",
         "MCFs": 0.14
      },
      {
-        "Manure_management_systems": "Cattle and Swine deep\nbedding < 1\nmonth",
+        "Manure_management_systems": "Cattle and swine deep bedding < 1 month",
+        "Manure management systems": "Cattle and Swine deep\nbedding < 1\nmonth",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Moist",
         "MCFs": 0.0275
      },
      {
         "Manure_management_systems": "Solid storage",
+        "Manure management systems": "Solid storage",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Moist",
         "MCFs": 0.02
      },
      {
         "Manure_management_systems": "Solid storage - Covered/compacted",
+        "Manure management systems": "Solid storage - Covered/compacted",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Moist",
         "MCFs": 0.02
      },
      {
         "Manure_management_systems": "Solid storage - Bulking agent addition",
+        "Manure management systems": "Solid storage - Bulking agent addition",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Moist",
         "MCFs": 0.005
      },
      {
         "Manure_management_systems": "Solid storage - Additives",
+        "Manure management systems": "Solid storage - Additives",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Moist",
         "MCFs": 0.01
      },
      {
         "Manure_management_systems": "Dry lot",
+        "Manure management systems": "Dry lot",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Moist",
         "MCFs": 0.01
      },
      {
         "Manure_management_systems": "Daily spread",
+        "Manure management systems": "Daily spread",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Moist",
         "MCFs": 0
      },
      {
         "Manure_management_systems": "Composting - In-vessel",
+        "Manure management systems": "Composting - In-vessel",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Moist",
         "MCFs": 0.01
      },
      {
         "Manure_management_systems": "Uncovered anaerobic lagoon",
+        "Manure management systems": "Uncovered anaerobic lagoon",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Dry",
         "MCFs": 0.49
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 1 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 1 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 1 Month",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Dry",
         "MCFs": 0.04
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 3 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 3 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 3 Month",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Dry",
         "MCFs": 0.08
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 4 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 4 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 4 Month",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Dry",
         "MCFs": 0.09
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 6 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 6 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 6 Month",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Dry",
         "MCFs": 0.14
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 12\nMonth",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 12 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 12\nMonth",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Dry",
         "MCFs": 0.2
      },
      {
-        "Manure_management_systems": "Cattle and Swine deep\nbedding (cont.) > 1\nmonth",
+        "Manure_management_systems": "Cattle and swine deep bedding > 1 month",
+        "Manure management systems": "Cattle and Swine deep\nbedding (cont.) > 1\nmonth",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Dry",
         "MCFs": 0.14
      },
      {
-        "Manure_management_systems": "Cattle and Swine deep\nbedding < 1\nmonth",
+        "Manure_management_systems": "Cattle and swine deep bedding < 1 month",
+        "Manure management systems": "Cattle and Swine deep\nbedding < 1\nmonth",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Dry",
         "MCFs": 0.0275
      },
      {
         "Manure_management_systems": "Solid storage",
+        "Manure management systems": "Solid storage",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Dry",
         "MCFs": 0.02
      },
      {
         "Manure_management_systems": "Solid storage - Covered/compacted",
+        "Manure management systems": "Solid storage - Covered/compacted",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Dry",
         "MCFs": 0.02
      },
      {
         "Manure_management_systems": "Solid storage - Bulking agent addition",
+        "Manure management systems": "Solid storage - Bulking agent addition",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Dry",
         "MCFs": 0.005
      },
      {
         "Manure_management_systems": "Solid storage - Additives",
+        "Manure management systems": "Solid storage - Additives",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Dry",
         "MCFs": 0.01
      },
      {
         "Manure_management_systems": "Dry lot",
+        "Manure management systems": "Dry lot",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Dry",
         "MCFs": 0.01
      },
      {
         "Manure_management_systems": "Daily spread",
+        "Manure management systems": "Daily spread",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Dry",
         "MCFs": 0
      },
      {
         "Manure_management_systems": "Composting - In-vessel",
+        "Manure management systems": "Composting - In-vessel",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Dry",
         "MCFs": 0.01
      },
      {
         "Manure_management_systems": "Uncovered anaerobic lagoon",
+        "Manure management systems": "Uncovered anaerobic lagoon",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Moist",
         "MCFs": 0.73
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 1 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 1 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 1 Month",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Moist",
         "MCFs": 0.13
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 3 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 3 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 3 Month",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Moist",
         "MCFs": 0.24
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 4 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 4 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 4 Month",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Moist",
         "MCFs": 0.29
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 6 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 6 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 6 Month",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Moist",
         "MCFs": 0.37
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 12\nMonth",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 12 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 12\nMonth",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Moist",
         "MCFs": 0.55
      },
      {
-        "Manure_management_systems": "Cattle and Swine deep\nbedding (cont.) > 1\nmonth",
+        "Manure_management_systems": "Cattle and swine deep bedding > 1 month",
+        "Manure management systems": "Cattle and Swine deep\nbedding (cont.) > 1\nmonth",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Moist",
         "MCFs": 0.37
      },
      {
-        "Manure_management_systems": "Cattle and Swine deep\nbedding < 1\nmonth",
+        "Manure_management_systems": "Cattle and swine deep bedding < 1 month",
+        "Manure management systems": "Cattle and Swine deep\nbedding < 1\nmonth",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Moist",
         "MCFs": 0.065
      },
      {
         "Manure_management_systems": "Solid storage",
+        "Manure management systems": "Solid storage",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Moist",
         "MCFs": 0.04
      },
      {
         "Manure_management_systems": "Solid storage - Covered/compacted",
+        "Manure management systems": "Solid storage - Covered/compacted",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Moist",
         "MCFs": 0.04
      },
      {
         "Manure_management_systems": "Solid storage - Bulking agent addition",
+        "Manure management systems": "Solid storage - Bulking agent addition",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Moist",
         "MCFs": 0.01
      },
      {
         "Manure_management_systems": "Solid storage - Additives",
+        "Manure management systems": "Solid storage - Additives",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Moist",
         "MCFs": 0.02
      },
      {
         "Manure_management_systems": "Dry lot",
+        "Manure management systems": "Dry lot",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Moist",
         "MCFs": 0.015
      },
      {
         "Manure_management_systems": "Daily spread",
+        "Manure management systems": "Daily spread",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Moist",
         "MCFs": 0.01
      },
      {
         "Manure_management_systems": "Composting - In-vessel",
+        "Manure management systems": "Composting - In-vessel",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Moist",
         "MCFs": 0.01
      },
      {
         "Manure_management_systems": "Uncovered anaerobic lagoon",
+        "Manure management systems": "Uncovered anaerobic lagoon",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Dry",
         "MCFs": 0.76
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 1 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 1 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 1 Month",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Dry",
         "MCFs": 0.15
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 3 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 3 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 3 Month",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Dry",
         "MCFs": 0.28
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 4 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 4 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 4 Month",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Dry",
         "MCFs": 0.32
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 6 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 6 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 6 Month",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Dry",
         "MCFs": 0.41
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 12\nMonth",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 12 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 12\nMonth",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Dry",
         "MCFs": 0.64
      },
      {
-        "Manure_management_systems": "Cattle and Swine deep\nbedding (cont.) > 1\nmonth",
+        "Manure_management_systems": "Cattle and swine deep bedding > 1 month",
+        "Manure management systems": "Cattle and Swine deep\nbedding (cont.) > 1\nmonth",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Dry",
         "MCFs": 0.41
      },
      {
-        "Manure_management_systems": "Cattle and Swine deep\nbedding < 1\nmonth",
+        "Manure_management_systems": "Cattle and swine deep bedding < 1 month",
+        "Manure management systems": "Cattle and Swine deep\nbedding < 1\nmonth",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Dry",
         "MCFs": 0.065
      },
      {
         "Manure_management_systems": "Solid storage",
+        "Manure management systems": "Solid storage",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Dry",
         "MCFs": 0.04
      },
      {
         "Manure_management_systems": "Solid storage - Covered/compacted",
+        "Manure management systems": "Solid storage - Covered/compacted",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Dry",
         "MCFs": 0.04
      },
      {
         "Manure_management_systems": "Solid storage - Bulking agent addition",
+        "Manure management systems": "Solid storage - Bulking agent addition",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Dry",
         "MCFs": 0.01
      },
      {
         "Manure_management_systems": "Solid storage - Additives",
+        "Manure management systems": "Solid storage - Additives",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Dry",
         "MCFs": 0.02
      },
      {
         "Manure_management_systems": "Dry lot",
+        "Manure management systems": "Dry lot",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Dry",
         "MCFs": 0.015
      },
      {
         "Manure_management_systems": "Daily spread",
+        "Manure management systems": "Daily spread",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Dry",
         "MCFs": 0.01
      },
      {
         "Manure_management_systems": "Composting - In-vessel",
+        "Manure management systems": "Composting - In-vessel",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Dry",
         "MCFs": 0.01
      },
      {
         "Manure_management_systems": "Uncovered anaerobic lagoon",
+        "Manure management systems": "Uncovered anaerobic lagoon",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Montane",
         "MCFs": 0.76
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 1 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 1 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 1 Month",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Montane",
         "MCFs": 0.25
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 3 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 3 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 3 Month",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Montane",
         "MCFs": 0.43
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 4 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 4 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 4 Month",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Montane",
         "MCFs": 0.5
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 6 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 6 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 6 Month",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Montane",
         "MCFs": 0.59
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 12\nMonth",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 12 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 12\nMonth",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Montane",
         "MCFs": 0.73
      },
      {
-        "Manure_management_systems": "Cattle and Swine deep\nbedding (cont.) > 1\nmonth",
+        "Manure_management_systems": "Cattle and swine deep bedding > 1 month",
+        "Manure management systems": "Cattle and Swine deep\nbedding (cont.) > 1\nmonth",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Montane",
         "MCFs": 0.59
      },
      {
-        "Manure_management_systems": "Cattle and Swine deep\nbedding < 1\nmonth",
+        "Manure_management_systems": "Cattle and swine deep bedding < 1 month",
+        "Manure management systems": "Cattle and Swine deep\nbedding < 1\nmonth",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Montane",
         "MCFs": 0.18
      },
      {
         "Manure_management_systems": "Solid storage",
+        "Manure management systems": "Solid storage",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Montane",
         "MCFs": 0.05
      },
      {
         "Manure_management_systems": "Solid storage - Covered/compacted",
+        "Manure management systems": "Solid storage - Covered/compacted",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Montane",
         "MCFs": 0.05
      },
      {
         "Manure_management_systems": "Solid storage - Bulking agent addition",
+        "Manure management systems": "Solid storage - Bulking agent addition",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Montane",
         "MCFs": 0.015
      },
      {
         "Manure_management_systems": "Solid storage - Additives",
+        "Manure management systems": "Solid storage - Additives",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Montane",
         "MCFs": 0.025
      },
      {
         "Manure_management_systems": "Dry lot",
+        "Manure management systems": "Dry lot",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Montane",
         "MCFs": 0.02
      },
      {
         "Manure_management_systems": "Daily spread",
+        "Manure management systems": "Daily spread",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Montane",
         "MCFs": 0.01
      },
      {
         "Manure_management_systems": "Composting - In-vessel",
+        "Manure management systems": "Composting - In-vessel",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Montane",
         "MCFs": 0.01
      },
      {
         "Manure_management_systems": "Uncovered anaerobic lagoon",
+        "Manure management systems": "Uncovered anaerobic lagoon",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Wet",
         "MCFs": 0.8
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 1 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 1 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 1 Month",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Wet",
         "MCFs": 0.38
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 3 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 3 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 3 Month",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Wet",
         "MCFs": 0.61
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 4 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 4 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 4 Month",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Wet",
         "MCFs": 0.67
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 6 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 6 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 6 Month",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Wet",
         "MCFs": 0.76
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 12\nMonth",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 12 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 12\nMonth",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Wet",
         "MCFs": 0.8
      },
      {
-        "Manure_management_systems": "Cattle and Swine deep\nbedding (cont.) > 1\nmonth",
+        "Manure_management_systems": "Cattle and swine deep bedding > 1 month",
+        "Manure management systems": "Cattle and Swine deep\nbedding (cont.) > 1\nmonth",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Wet",
         "MCFs": 0.76
      },
      {
-        "Manure_management_systems": "Cattle and Swine deep\nbedding < 1\nmonth",
+        "Manure_management_systems": "Cattle and swine deep bedding < 1 month",
+        "Manure management systems": "Cattle and Swine deep\nbedding < 1\nmonth",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Wet",
         "MCFs": 0.18
      },
      {
         "Manure_management_systems": "Solid storage",
+        "Manure management systems": "Solid storage",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Wet",
         "MCFs": 0.05
      },
      {
         "Manure_management_systems": "Solid storage - Covered/compacted",
+        "Manure management systems": "Solid storage - Covered/compacted",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Wet",
         "MCFs": 0.05
      },
      {
         "Manure_management_systems": "Solid storage - Bulking agent addition",
+        "Manure management systems": "Solid storage - Bulking agent addition",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Wet",
         "MCFs": 0.015
@@ -1887,984 +2003,1148 @@
      },
      {
         "Manure_management_systems": "Solid storage - Additives",
+        "Manure management systems": "Solid storage - Additives",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Wet",
         "MCFs": 0.025
      },
      {
         "Manure_management_systems": "Dry lot",
+        "Manure management systems": "Dry lot",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Wet",
         "MCFs": 0.02
      },
      {
         "Manure_management_systems": "Daily spread",
+        "Manure management systems": "Daily spread",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Wet",
         "MCFs": 0.01
      },
      {
         "Manure_management_systems": "Composting - In-vessel",
+        "Manure management systems": "Composting - In-vessel",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Wet",
         "MCFs": 0.01
      },
      {
         "Manure_management_systems": "Uncovered anaerobic lagoon",
+        "Manure management systems": "Uncovered anaerobic lagoon",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Moist",
         "MCFs": 0.8
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 1 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 1 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 1 Month",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Moist",
         "MCFs": 0.36
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 3 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 3 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 3 Month",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Moist",
         "MCFs": 0.57
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 4 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 4 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 4 Month",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Moist",
         "MCFs": 0.64
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 6 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 6 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 6 Month",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Moist",
         "MCFs": 0.73
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 12\nMonth",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 12 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 12\nMonth",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Moist",
         "MCFs": 0.8
      },
      {
-        "Manure_management_systems": "Cattle and Swine deep\nbedding (cont.) > 1\nmonth",
+        "Manure_management_systems": "Cattle and swine deep bedding > 1 month",
+        "Manure management systems": "Cattle and Swine deep\nbedding (cont.) > 1\nmonth",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Moist",
         "MCFs": 0.73
      },
      {
-        "Manure_management_systems": "Cattle and Swine deep\nbedding < 1\nmonth",
+        "Manure_management_systems": "Cattle and swine deep bedding < 1 month",
+        "Manure management systems": "Cattle and Swine deep\nbedding < 1\nmonth",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Moist",
         "MCFs": 0.18
      },
      {
         "Manure_management_systems": "Solid storage",
+        "Manure management systems": "Solid storage",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Moist",
         "MCFs": 0.05
      },
      {
         "Manure_management_systems": "Solid storage - Covered/compacted",
+        "Manure management systems": "Solid storage - Covered/compacted",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Moist",
         "MCFs": 0.05
      },
      {
         "Manure_management_systems": "Solid storage - Bulking agent addition",
+        "Manure management systems": "Solid storage - Bulking agent addition",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Moist",
         "MCFs": 0.015
      },
      {
         "Manure_management_systems": "Solid storage - Additives",
+        "Manure management systems": "Solid storage - Additives",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Moist",
         "MCFs": 0.025
      },
      {
         "Manure_management_systems": "Dry lot",
+        "Manure management systems": "Dry lot",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Moist",
         "MCFs": 0.02
      },
      {
         "Manure_management_systems": "Daily spread",
+        "Manure management systems": "Daily spread",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Moist",
         "MCFs": 0.01
      },
      {
         "Manure_management_systems": "Composting - In-vessel",
+        "Manure management systems": "Composting - In-vessel",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Moist",
         "MCFs": 0.01
      },
      {
         "Manure_management_systems": "Uncovered anaerobic lagoon",
+        "Manure management systems": "Uncovered anaerobic lagoon",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Dry",
         "MCFs": 0.8
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 1 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 1 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 1 Month",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Dry",
         "MCFs": 0.42
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 3 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 3 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 3 Month",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Dry",
         "MCFs": 0.62
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 4 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 4 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 4 Month",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Dry",
         "MCFs": 0.68
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 6 Month",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 6 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 6 Month",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Dry",
         "MCFs": 0.74
      },
      {
-        "Manure_management_systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 12\nMonth",
+        "Manure_management_systems": "Liquid/Slurry Pit below animals 12 Month",
+        "Manure management systems": "Liquid/Slurry, and Pit\nstorage below animal \nconfinements 12\nMonth",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Dry",
         "MCFs": 0.8
      },
      {
-        "Manure_management_systems": "Cattle and Swine deep\nbedding (cont.) > 1\nmonth",
+        "Manure_management_systems": "Cattle and swine deep bedding > 1 month",
+        "Manure management systems": "Cattle and Swine deep\nbedding (cont.) > 1\nmonth",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Dry",
         "MCFs": 0.74
      },
      {
-        "Manure_management_systems": "Cattle and Swine deep\nbedding < 1\nmonth",
+        "Manure_management_systems": "Cattle and swine deep bedding < 1 month",
+        "Manure management systems": "Cattle and Swine deep\nbedding < 1\nmonth",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Dry",
         "MCFs": 0.18
      },
      {
         "Manure_management_systems": "Solid storage",
+        "Manure management systems": "Solid storage",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Dry",
         "MCFs": 0.05
      },
      {
         "Manure_management_systems": "Solid storage - Covered/compacted",
+        "Manure management systems": "Solid storage - Covered/compacted",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Dry",
         "MCFs": 0.05
      },
      {
         "Manure_management_systems": "Solid storage - Bulking agent addition",
+        "Manure management systems": "Solid storage - Bulking agent addition",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Dry",
         "MCFs": 0.015
      },
      {
         "Manure_management_systems": "Solid storage - Additives",
+        "Manure management systems": "Solid storage - Additives",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Dry",
         "MCFs": 0.025
      },
      {
         "Manure_management_systems": "Dry lot",
+        "Manure management systems": "Dry lot",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Dry",
         "MCFs": 0.02
      },
      {
         "Manure_management_systems": "Daily spread",
+        "Manure management systems": "Daily spread",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Dry",
         "MCFs": 0.01
      },
      {
         "Manure_management_systems": "Composting - In-vessel",
+        "Manure management systems": "Composting - In-vessel",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Dry",
         "MCFs": 0.01
      },
      {
-        "Manure_management_systems": "Composting - Static pile (Forced aeration)",
+        "Manure_management_systems": "Composting - Static pile (forced aeration)",
+        "Manure management systems": "Composting - Static pile (Forced aeration)",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Moist",
         "MCFs": 0.01
      },
      {
         "Manure_management_systems": "Composting - Intensive windrow",
+        "Manure management systems": "Composting - Intensive windrow",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Moist",
         "MCFs": 0.005
      },
      {
-        "Manure_management_systems": "Composting - Passive windrow (Unfrequent turning)",
+        "Manure_management_systems": "Composting - Unfrequent turning",
+        "Manure management systems": "Composting - Passive windrow (Unfrequent turning)",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Moist",
         "MCFs": 0.01
      },
      {
-        "Manure_management_systems": "Pasture / range / paddock",
+        "Manure_management_systems": "Pasture/Range/Paddock",
+        "Manure management systems": "Pasture / range / paddock",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Moist",
         "MCFs": 0.0047
      },
      {
         "Manure_management_systems": "Poultry manure with and without litter",
+        "Manure management systems": "Poultry manure with and without litter",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Moist",
         "MCFs": 0.015
      },
      {
         "Manure_management_systems": "Aerobic treatment",
+        "Manure management systems": "Aerobic treatment",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Moist",
         "MCFs": 0
      },
      {
         "Manure_management_systems": "Burned for fuel",
+        "Manure management systems": "Burned for fuel",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Moist",
         "MCFs": 0.1
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, Low leakage, High quality gastight storage, best complete industrial technology",
+        "Manure_management_systems": "Anaer digester, Low leak, HQ stor, HQ tec",
+        "Manure management systems": "Anaerobic Digester, Low leakage, High quality gastight storage, best complete industrial technology",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Moist",
         "MCFs": 0.01
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, Low leakage, High quality industrial technology, low quality gastight storage technology",
+        "Manure_management_systems": "Anaer digester, Low leak, HQ stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, Low leakage, High quality industrial technology, low quality gastight storage technology",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Moist",
         "MCFs": 0.0141
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, Low leakage, High quality industrial technology, open storage",
+        "Manure_management_systems": "Anaer digester, Low leak, open stor, HQ tec",
+        "Manure management systems": "Anaerobic Digester, Low leakage, High quality industrial technology, open storage",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Moist",
         "MCFs": 0.0355
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, High leakage, low quality technology, high quality gastight storage technology",
+        "Manure_management_systems": "Anaer digester, High leak, HQ stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, High leakage, low quality technology, high quality gastight storage technology",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Moist",
         "MCFs": 0.0959
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, High leakage, low quality technology, low quality gastight storage technology",
+        "Manure_management_systems": "Anaer digester, High leak, LQ stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, High leakage, low quality technology, low quality gastight storage technology",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Moist",
         "MCFs": 0.1085
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, High leakage, low quality technology, open storage",
+        "Manure_management_systems": "Anaer digester, High leak, open stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, High leakage, low quality technology, open storage",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Moist",
         "MCFs": 0.1214
      },
      {
-        "Manure_management_systems": "Composting - Static pile (Forced aeration)",
+        "Manure_management_systems": "Composting - Static pile (forced aeration)",
+        "Manure management systems": "Composting - Static pile (Forced aeration)",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Dry",
         "MCFs": 0.01
      },
      {
         "Manure_management_systems": "Composting - Intensive windrow",
+        "Manure management systems": "Composting - Intensive windrow",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Dry",
         "MCFs": 0.005
      },
      {
-        "Manure_management_systems": "Composting - Passive windrow (Unfrequent turning)",
+        "Manure_management_systems": "Composting - Unfrequent turning",
+        "Manure management systems": "Composting - Passive windrow (Unfrequent turning)",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Dry",
         "MCFs": 0.01
      },
      {
-        "Manure_management_systems": "Pasture / range / paddock",
+        "Manure_management_systems": "Pasture/Range/Paddock",
+        "Manure management systems": "Pasture / range / paddock",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Dry",
         "MCFs": 0.0047
      },
      {
         "Manure_management_systems": "Poultry manure with and without litter",
+        "Manure management systems": "Poultry manure with and without litter",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Dry",
         "MCFs": 0.015
      },
      {
         "Manure_management_systems": "Aerobic treatment",
+        "Manure management systems": "Aerobic treatment",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Dry",
         "MCFs": 0
      },
      {
         "Manure_management_systems": "Burned for fuel",
+        "Manure management systems": "Burned for fuel",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Dry",
         "MCFs": 0.1
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, Low leakage, High quality gastight storage, best complete industrial technology",
+        "Manure_management_systems": "Anaer digester, Low leak, HQ stor, HQ tec",
+        "Manure management systems": "Anaerobic Digester, Low leakage, High quality gastight storage, best complete industrial technology",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Dry",
         "MCFs": 0.01
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, Low leakage, High quality industrial technology, low quality gastight storage technology",
+        "Manure_management_systems": "Anaer digester, Low leak, HQ stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, Low leakage, High quality industrial technology, low quality gastight storage technology",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Dry",
         "MCFs": 0.0141
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, Low leakage, High quality industrial technology, open storage",
+        "Manure_management_systems": "Anaer digester, Low leak, open stor, HQ tec",
+        "Manure management systems": "Anaerobic Digester, Low leakage, High quality industrial technology, open storage",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Dry",
         "MCFs": 0.0355
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, High leakage, low quality technology, high quality gastight storage technology",
+        "Manure_management_systems": "Anaer digester, High leak, HQ stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, High leakage, low quality technology, high quality gastight storage technology",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Dry",
         "MCFs": 0.0959
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, High leakage, low quality technology, low quality gastight storage technology",
+        "Manure_management_systems": "Anaer digester, High leak, LQ stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, High leakage, low quality technology, low quality gastight storage technology",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Dry",
         "MCFs": 0.1085
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, High leakage, low quality technology, open storage",
+        "Manure_management_systems": "Anaer digester, High leak, open stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, High leakage, low quality technology, open storage",
         "climate_zone": "Cool",
         "climate_zone_2": "Cool Temperate Dry",
         "MCFs": 0.1214
      },
      {
-        "Manure_management_systems": "Composting - Static pile (Forced aeration)",
+        "Manure_management_systems": "Composting - Static pile (forced aeration)",
+        "Manure management systems": "Composting - Static pile (Forced aeration)",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Moist",
         "MCFs": 0.01
      },
      {
         "Manure_management_systems": "Composting - Intensive windrow",
+        "Manure management systems": "Composting - Intensive windrow",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Moist",
         "MCFs": 0.005
      },
      {
-        "Manure_management_systems": "Composting - Passive windrow (Unfrequent turning)",
+        "Manure_management_systems": "Composting - Unfrequent turning",
+        "Manure management systems": "Composting - Passive windrow (Unfrequent turning)",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Moist",
         "MCFs": 0.01
      },
      {
-        "Manure_management_systems": "Pasture / range / paddock",
+        "Manure_management_systems": "Pasture/Range/Paddock",
+        "Manure management systems": "Pasture / range / paddock",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Moist",
         "MCFs": 0.0047
      },
      {
         "Manure_management_systems": "Poultry manure with and without litter",
+        "Manure management systems": "Poultry manure with and without litter",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Moist",
         "MCFs": 0.015
      },
      {
         "Manure_management_systems": "Aerobic treatment",
+        "Manure management systems": "Aerobic treatment",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Moist",
         "MCFs": 0
      },
      {
         "Manure_management_systems": "Burned for fuel",
+        "Manure management systems": "Burned for fuel",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Moist",
         "MCFs": 0.1
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, Low leakage, High quality gastight storage, best complete industrial technology",
+        "Manure_management_systems": "Anaer digester, Low leak, HQ stor, HQ tec",
+        "Manure management systems": "Anaerobic Digester, Low leakage, High quality gastight storage, best complete industrial technology",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Moist",
         "MCFs": 0.01
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, Low leakage, High quality industrial technology, low quality gastight storage technology",
+        "Manure_management_systems": "Anaer digester, Low leak, HQ stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, Low leakage, High quality industrial technology, low quality gastight storage technology",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Moist",
         "MCFs": 0.0141
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, Low leakage, High quality industrial technology, open storage",
+        "Manure_management_systems": "Anaer digester, Low leak, open stor, HQ tec",
+        "Manure management systems": "Anaerobic Digester, Low leakage, High quality industrial technology, open storage",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Moist",
         "MCFs": 0.0355
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, High leakage, low quality technology, high quality gastight storage technology",
+        "Manure_management_systems": "Anaer digester, High leak, HQ stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, High leakage, low quality technology, high quality gastight storage technology",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Moist",
         "MCFs": 0.0959
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, High leakage, low quality technology, low quality gastight storage technology",
+        "Manure_management_systems": "Anaer digester, High leak, LQ stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, High leakage, low quality technology, low quality gastight storage technology",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Moist",
         "MCFs": 0.1085
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, High leakage, low quality technology, open storage",
+        "Manure_management_systems": "Anaer digester, High leak, open stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, High leakage, low quality technology, open storage",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Moist",
         "MCFs": 0.1214
      },
      {
-        "Manure_management_systems": "Composting - Static pile (Forced aeration)",
+        "Manure_management_systems": "Composting - Static pile (forced aeration)",
+        "Manure management systems": "Composting - Static pile (Forced aeration)",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Dry",
         "MCFs": 0.01
      },
      {
         "Manure_management_systems": "Composting - Intensive windrow",
+        "Manure management systems": "Composting - Intensive windrow",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Dry",
         "MCFs": 0.005
      },
      {
-        "Manure_management_systems": "Composting - Passive windrow (Unfrequent turning)",
+        "Manure_management_systems": "Composting - Unfrequent turning",
+        "Manure management systems": "Composting - Passive windrow (Unfrequent turning)",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Dry",
         "MCFs": 0.01
      },
      {
-        "Manure_management_systems": "Pasture / range / paddock",
+        "Manure_management_systems": "Pasture/Range/Paddock",
+        "Manure management systems": "Pasture / range / paddock",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Dry",
         "MCFs": 0.0047
      },
      {
         "Manure_management_systems": "Poultry manure with and without litter",
+        "Manure management systems": "Poultry manure with and without litter",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Dry",
         "MCFs": 0.015
      },
      {
         "Manure_management_systems": "Aerobic treatment",
+        "Manure management systems": "Aerobic treatment",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Dry",
         "MCFs": 0
      },
      {
         "Manure_management_systems": "Burned for fuel",
+        "Manure management systems": "Burned for fuel",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Dry",
         "MCFs": 0.1
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, Low leakage, High quality gastight storage, best complete industrial technology",
+        "Manure_management_systems": "Anaer digester, Low leak, HQ stor, HQ tec",
+        "Manure management systems": "Anaerobic Digester, Low leakage, High quality gastight storage, best complete industrial technology",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Dry",
         "MCFs": 0.01
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, Low leakage, High quality industrial technology, low quality gastight storage technology",
+        "Manure_management_systems": "Anaer digester, Low leak, HQ stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, Low leakage, High quality industrial technology, low quality gastight storage technology",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Dry",
         "MCFs": 0.0141
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, Low leakage, High quality industrial technology, open storage",
+        "Manure_management_systems": "Anaer digester, Low leak, open stor, HQ tec",
+        "Manure management systems": "Anaerobic Digester, Low leakage, High quality industrial technology, open storage",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Dry",
         "MCFs": 0.0355
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, High leakage, low quality technology, high quality gastight storage technology",
+        "Manure_management_systems": "Anaer digester, High leak, HQ stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, High leakage, low quality technology, high quality gastight storage technology",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Dry",
         "MCFs": 0.0959
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, High leakage, low quality technology, low quality gastight storage technology",
+        "Manure_management_systems": "Anaer digester, High leak, LQ stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, High leakage, low quality technology, low quality gastight storage technology",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Dry",
         "MCFs": 0.1085
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, High leakage, low quality technology, open storage",
+        "Manure_management_systems": "Anaer digester, High leak, open stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, High leakage, low quality technology, open storage",
         "climate_zone": "Cool",
         "climate_zone_2": "Boreal Dry",
         "MCFs": 0.1214
      },
      {
-        "Manure_management_systems": "Composting - Static pile (Forced aeration)",
+        "Manure_management_systems": "Composting - Static pile (forced aeration)",
+        "Manure management systems": "Composting - Static pile (Forced aeration)",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Moist",
         "MCFs": 0.02
      },
      {
         "Manure_management_systems": "Composting - Intensive windrow",
+        "Manure management systems": "Composting - Intensive windrow",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Moist",
         "MCFs": 0.01
      },
      {
-        "Manure_management_systems": "Composting - Passive windrow (Unfrequent turning)",
+        "Manure_management_systems": "Composting - Unfrequent turning",
+        "Manure management systems": "Composting - Passive windrow (Unfrequent turning)",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Moist",
         "MCFs": 0.02
      },
      {
-        "Manure_management_systems": "Pasture / range / paddock",
+        "Manure_management_systems": "Pasture/Range/Paddock",
+        "Manure management systems": "Pasture / range / paddock",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Moist",
         "MCFs": 0.0047
      },
      {
         "Manure_management_systems": "Poultry manure with and without litter",
+        "Manure management systems": "Poultry manure with and without litter",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Moist",
         "MCFs": 0.015
      },
      {
         "Manure_management_systems": "Aerobic treatment",
+        "Manure management systems": "Aerobic treatment",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Moist",
         "MCFs": 0
      },
      {
         "Manure_management_systems": "Burned for fuel",
+        "Manure management systems": "Burned for fuel",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Moist",
         "MCFs": 0.1
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, Low leakage, High quality gastight storage, best complete industrial technology",
+        "Manure_management_systems": "Anaer digester, Low leak, HQ stor, HQ tec",
+        "Manure management systems": "Anaerobic Digester, Low leakage, High quality gastight storage, best complete industrial technology",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Moist",
         "MCFs": 0.01
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, Low leakage, High quality industrial technology, low quality gastight storage technology",
+        "Manure_management_systems": "Anaer digester, Low leak, HQ stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, Low leakage, High quality industrial technology, low quality gastight storage technology",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Moist",
         "MCFs": 0.0141
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, Low leakage, High quality industrial technology, open storage",
+        "Manure_management_systems": "Anaer digester, Low leak, open stor, HQ tec",
+        "Manure management systems": "Anaerobic Digester, Low leakage, High quality industrial technology, open storage",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Moist",
         "MCFs": 0.0438
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, High leakage, low quality technology, high quality gastight storage technology",
+        "Manure_management_systems": "Anaer digester, High leak, HQ stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, High leakage, low quality technology, high quality gastight storage technology",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Moist",
         "MCFs": 0.0959
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, High leakage, low quality technology, low quality gastight storage technology",
+        "Manure_management_systems": "Anaer digester, High leak, LQ stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, High leakage, low quality technology, low quality gastight storage technology",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Moist",
         "MCFs": 0.1085
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, High leakage, low quality technology, open storage",
+        "Manure_management_systems": "Anaer digester, High leak, open stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, High leakage, low quality technology, open storage",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Moist",
         "MCFs": 0.1297
      },
      {
-        "Manure_management_systems": "Composting - Static pile (Forced aeration)",
+        "Manure_management_systems": "Composting - Static pile (forced aeration)",
+        "Manure management systems": "Composting - Static pile (Forced aeration)",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Dry",
         "MCFs": 0.02
      },
      {
         "Manure_management_systems": "Composting - Intensive windrow",
+        "Manure management systems": "Composting - Intensive windrow",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Dry",
         "MCFs": 0.01
      },
      {
-        "Manure_management_systems": "Composting - Passive windrow (Unfrequent turning)",
+        "Manure_management_systems": "Composting - Unfrequent turning",
+        "Manure management systems": "Composting - Passive windrow (Unfrequent turning)",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Dry",
         "MCFs": 0.02
      },
      {
-        "Manure_management_systems": "Pasture / range / paddock",
+        "Manure_management_systems": "Pasture/Range/Paddock",
+        "Manure management systems": "Pasture / range / paddock",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Dry",
         "MCFs": 0.0047
      },
      {
         "Manure_management_systems": "Poultry manure with and without litter",
+        "Manure management systems": "Poultry manure with and without litter",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Dry",
         "MCFs": 0.015
      },
      {
         "Manure_management_systems": "Aerobic treatment",
+        "Manure management systems": "Aerobic treatment",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Dry",
         "MCFs": 0
      },
      {
         "Manure_management_systems": "Burned for fuel",
+        "Manure management systems": "Burned for fuel",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Dry",
         "MCFs": 0.1
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, Low leakage, High quality gastight storage, best complete industrial technology",
+        "Manure_management_systems": "Anaer digester, Low leak, HQ stor, HQ tec",
+        "Manure management systems": "Anaerobic Digester, Low leakage, High quality gastight storage, best complete industrial technology",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Dry",
         "MCFs": 0.01
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, Low leakage, High quality industrial technology, low quality gastight storage technology",
+        "Manure_management_systems": "Anaer digester, Low leak, HQ stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, Low leakage, High quality industrial technology, low quality gastight storage technology",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Dry",
         "MCFs": 0.0141
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, Low leakage, High quality industrial technology, open storage",
+        "Manure_management_systems": "Anaer digester, Low leak, open stor, HQ tec",
+        "Manure management systems": "Anaerobic Digester, Low leakage, High quality industrial technology, open storage",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Dry",
         "MCFs": 0.0438
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, High leakage, low quality technology, high quality gastight storage technology",
+        "Manure_management_systems": "Anaer digester, High leak, HQ stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, High leakage, low quality technology, high quality gastight storage technology",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Dry",
         "MCFs": 0.0959
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, High leakage, low quality technology, low quality gastight storage technology",
+        "Manure_management_systems": "Anaer digester, High leak, LQ stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, High leakage, low quality technology, low quality gastight storage technology",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Dry",
         "MCFs": 0.1085
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, High leakage, low quality technology, open storage",
+        "Manure_management_systems": "Anaer digester, High leak, open stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, High leakage, low quality technology, open storage",
         "climate_zone": "Temperate",
         "climate_zone_2": "Warm Temperate Dry",
         "MCFs": 0.1297
      },
      {
-        "Manure_management_systems": "Composting - Static pile (Forced aeration)",
+        "Manure_management_systems": "Composting - Static pile (forced aeration)",
+        "Manure management systems": "Composting - Static pile (Forced aeration)",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Montane",
         "MCFs": 0.025
      },
      {
         "Manure_management_systems": "Composting - Intensive windrow",
+        "Manure management systems": "Composting - Intensive windrow",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Montane",
         "MCFs": 0.015
      },
      {
-        "Manure_management_systems": "Composting - Passive windrow (Unfrequent turning)",
+        "Manure_management_systems": "Composting - Unfrequent turning",
+        "Manure management systems": "Composting - Passive windrow (Unfrequent turning)",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Montane",
         "MCFs": 0.025
      },
      {
-        "Manure_management_systems": "Pasture / range / paddock",
+        "Manure_management_systems": "Pasture/Range/Paddock",
+        "Manure management systems": "Pasture / range / paddock",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Montane",
         "MCFs": 0.0047
      },
      {
         "Manure_management_systems": "Poultry manure with and without litter",
+        "Manure management systems": "Poultry manure with and without litter",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Montane",
         "MCFs": 0.015
      },
      {
         "Manure_management_systems": "Aerobic treatment",
+        "Manure management systems": "Aerobic treatment",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Montane",
         "MCFs": 0
      },
      {
         "Manure_management_systems": "Burned for fuel",
+        "Manure management systems": "Burned for fuel",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Montane",
         "MCFs": 0.1
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, Low leakage, High quality gastight storage, best complete industrial technology",
+        "Manure_management_systems": "Anaer digester, Low leak, HQ stor, HQ tec",
+        "Manure management systems": "Anaerobic Digester, Low leakage, High quality gastight storage, best complete industrial technology",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Montane",
         "MCFs": 0.01
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, Low leakage, High quality industrial technology, low quality gastight storage technology",
+        "Manure_management_systems": "Anaer digester, Low leak, HQ stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, Low leakage, High quality industrial technology, low quality gastight storage technology",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Montane",
         "MCFs": 0.0141
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, Low leakage, High quality industrial technology, open storage",
+        "Manure_management_systems": "Anaer digester, Low leak, open stor, HQ tec",
+        "Manure management systems": "Anaerobic Digester, Low leakage, High quality industrial technology, open storage",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Montane",
         "MCFs": 0.0438
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, High leakage, low quality technology, high quality gastight storage technology",
+        "Manure_management_systems": "Anaer digester, High leak, HQ stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, High leakage, low quality technology, high quality gastight storage technology",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Montane",
         "MCFs": 0.0959
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, High leakage, low quality technology, low quality gastight storage technology",
+        "Manure_management_systems": "Anaer digester, High leak, LQ stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, High leakage, low quality technology, low quality gastight storage technology",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Montane",
         "MCFs": 0.1085
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, High leakage, low quality technology, open storage",
+        "Manure_management_systems": "Anaer digester, High leak, open stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, High leakage, low quality technology, open storage",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Montane",
         "MCFs": 0.1297
      },
      {
-        "Manure_management_systems": "Composting - Static pile (Forced aeration)",
+        "Manure_management_systems": "Composting - Static pile (forced aeration)",
+        "Manure management systems": "Composting - Static pile (Forced aeration)",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Wet",
         "MCFs": 0.025
      },
      {
         "Manure_management_systems": "Composting - Intensive windrow",
+        "Manure management systems": "Composting - Intensive windrow",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Wet",
         "MCFs": 0.015
      },
      {
-        "Manure_management_systems": "Composting - Passive windrow (Unfrequent turning)",
+        "Manure_management_systems": "Composting - Unfrequent turning",
+        "Manure management systems": "Composting - Passive windrow (Unfrequent turning)",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Wet",
         "MCFs": 0.025
      },
      {
-        "Manure_management_systems": "Pasture / range / paddock",
+        "Manure_management_systems": "Pasture/Range/Paddock",
+        "Manure management systems": "Pasture / range / paddock",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Wet",
         "MCFs": 0.0047
      },
      {
         "Manure_management_systems": "Poultry manure with and without litter",
+        "Manure management systems": "Poultry manure with and without litter",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Wet",
         "MCFs": 0.015
      },
      {
         "Manure_management_systems": "Aerobic treatment",
+        "Manure management systems": "Aerobic treatment",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Wet",
         "MCFs": 0
      },
      {
         "Manure_management_systems": "Burned for fuel",
+        "Manure management systems": "Burned for fuel",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Wet",
         "MCFs": 0.1
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, Low leakage, High quality gastight storage, best complete industrial technology",
+        "Manure_management_systems": "Anaer digester, Low leak, HQ stor, HQ tec",
+        "Manure management systems": "Anaerobic Digester, Low leakage, High quality gastight storage, best complete industrial technology",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Wet",
         "MCFs": 0.01
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, Low leakage, High quality industrial technology, low quality gastight storage technology",
+        "Manure_management_systems": "Anaer digester, Low leak, HQ stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, Low leakage, High quality industrial technology, low quality gastight storage technology",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Wet",
         "MCFs": 0.0141
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, Low leakage, High quality industrial technology, open storage",
+        "Manure_management_systems": "Anaer digester, Low leak, open stor, HQ tec",
+        "Manure management systems": "Anaerobic Digester, Low leakage, High quality industrial technology, open storage",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Wet",
         "MCFs": 0.0459
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, High leakage, low quality technology, high quality gastight storage technology",
+        "Manure_management_systems": "Anaer digester, High leak, HQ stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, High leakage, low quality technology, high quality gastight storage technology",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Wet",
         "MCFs": 0.0959
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, High leakage, low quality technology, low quality gastight storage technology",
+        "Manure_management_systems": "Anaer digester, High leak, LQ stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, High leakage, low quality technology, low quality gastight storage technology",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Wet",
         "MCFs": 0.1085
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, High leakage, low quality technology, open storage",
+        "Manure_management_systems": "Anaer digester, High leak, open stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, High leakage, low quality technology, open storage",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Wet",
         "MCFs": 0.1317
      },
      {
-        "Manure_management_systems": "Composting - Static pile (Forced aeration)",
+        "Manure_management_systems": "Composting - Static pile (forced aeration)",
+        "Manure management systems": "Composting - Static pile (Forced aeration)",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Moist",
         "MCFs": 0.025
      },
      {
         "Manure_management_systems": "Composting - Intensive windrow",
+        "Manure management systems": "Composting - Intensive windrow",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Moist",
         "MCFs": 0.015
      },
      {
-        "Manure_management_systems": "Composting - Passive windrow (Unfrequent turning)",
+        "Manure_management_systems": "Composting - Unfrequent turning",
+        "Manure management systems": "Composting - Passive windrow (Unfrequent turning)",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Moist",
         "MCFs": 0.025
      },
      {
-        "Manure_management_systems": "Pasture / range / paddock",
+        "Manure_management_systems": "Pasture/Range/Paddock",
+        "Manure management systems": "Pasture / range / paddock",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Moist",
         "MCFs": 0.0047
      },
      {
         "Manure_management_systems": "Poultry manure with and without litter",
+        "Manure management systems": "Poultry manure with and without litter",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Moist",
         "MCFs": 0.015
      },
      {
         "Manure_management_systems": "Aerobic treatment",
+        "Manure management systems": "Aerobic treatment",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Moist",
         "MCFs": 0
      },
      {
         "Manure_management_systems": "Burned for fuel",
+        "Manure management systems": "Burned for fuel",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Moist",
         "MCFs": 0.1
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, Low leakage, High quality gastight storage, best complete industrial technology",
+        "Manure_management_systems": "Anaer digester, Low leak, HQ stor, HQ tec",
+        "Manure management systems": "Anaerobic Digester, Low leakage, High quality gastight storage, best complete industrial technology",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Moist",
         "MCFs": 0.01
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, Low leakage, High quality industrial technology, low quality gastight storage technology",
+        "Manure_management_systems": "Anaer digester, Low leak, HQ stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, Low leakage, High quality industrial technology, low quality gastight storage technology",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Moist",
         "MCFs": 0.0141
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, Low leakage, High quality industrial technology, open storage",
+        "Manure_management_systems": "Anaer digester, Low leak, open stor, HQ tec",
+        "Manure management systems": "Anaerobic Digester, Low leakage, High quality industrial technology, open storage",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Moist",
         "MCFs": 0.0459
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, High leakage, low quality technology, high quality gastight storage technology",
+        "Manure_management_systems": "Anaer digester, High leak, HQ stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, High leakage, low quality technology, high quality gastight storage technology",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Moist",
         "MCFs": 0.0959
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, High leakage, low quality technology, low quality gastight storage technology",
+        "Manure_management_systems": "Anaer digester, High leak, LQ stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, High leakage, low quality technology, low quality gastight storage technology",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Moist",
         "MCFs": 0.1085
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, High leakage, low quality technology, open storage",
+        "Manure_management_systems": "Anaer digester, High leak, open stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, High leakage, low quality technology, open storage",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Moist",
         "MCFs": 0.1317
      },
      {
-        "Manure_management_systems": "Composting - Static pile (Forced aeration)",
+        "Manure_management_systems": "Composting - Static pile (forced aeration)",
+        "Manure management systems": "Composting - Static pile (Forced aeration)",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Dry",
         "MCFs": 0.025
      },
      {
         "Manure_management_systems": "Composting - Intensive windrow",
+        "Manure management systems": "Composting - Intensive windrow",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Dry",
         "MCFs": 0.015
      },
      {
-        "Manure_management_systems": "Composting - Passive windrow (Unfrequent turning)",
+        "Manure_management_systems": "Composting - Unfrequent turning",
+        "Manure management systems": "Composting - Passive windrow (Unfrequent turning)",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Dry",
         "MCFs": 0.025
      },
      {
-        "Manure_management_systems": "Pasture / range / paddock",
+        "Manure_management_systems": "Pasture/Range/Paddock",
+        "Manure management systems": "Pasture / range / paddock",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Dry",
         "MCFs": 0.0047
      },
      {
         "Manure_management_systems": "Poultry manure with and without litter",
+        "Manure management systems": "Poultry manure with and without litter",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Dry",
         "MCFs": 0.015
      },
      {
         "Manure_management_systems": "Aerobic treatment",
+        "Manure management systems": "Aerobic treatment",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Dry",
         "MCFs": 0
      },
      {
         "Manure_management_systems": "Burned for fuel",
+        "Manure management systems": "Burned for fuel",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Dry",
         "MCFs": 0.1
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, Low leakage, High quality gastight storage, best complete industrial technology",
+        "Manure_management_systems": "Anaer digester, Low leak, HQ stor, HQ tec",
+        "Manure management systems": "Anaerobic Digester, Low leakage, High quality gastight storage, best complete industrial technology",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Dry",
         "MCFs": 0.01
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, Low leakage, High quality industrial technology, low quality gastight storage technology",
+        "Manure_management_systems": "Anaer digester, Low leak, HQ stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, Low leakage, High quality industrial technology, low quality gastight storage technology",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Dry",
         "MCFs": 0.0141
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, Low leakage, High quality industrial technology, open storage",
+        "Manure_management_systems": "Anaer digester, Low leak, open stor, HQ tec",
+        "Manure management systems": "Anaerobic Digester, Low leakage, High quality industrial technology, open storage",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Dry",
         "MCFs": 0.0459
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, High leakage, low quality technology, high quality gastight storage technology",
+        "Manure_management_systems": "Anaer digester, High leak, HQ stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, High leakage, low quality technology, high quality gastight storage technology",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Dry",
         "MCFs": 0.0959
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, High leakage, low quality technology, low quality gastight storage technology",
+        "Manure_management_systems": "Anaer digester, High leak, LQ stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, High leakage, low quality technology, low quality gastight storage technology",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Dry",
         "MCFs": 0.1085
      },
      {
-        "Manure_management_systems": "Anaerobic Digester, High leakage, low quality technology, open storage",
+        "Manure_management_systems": "Anaer digester, High leak, open stor, LQ tec",
+        "Manure management systems": "Anaerobic Digester, High leakage, low quality technology, open storage",
         "climate_zone": "Warm",
         "climate_zone_2": "Tropical Dry",
         "MCFs": 0.1317
@@ -2872,127 +3152,206 @@
    ],
    "Table 10.21": [
       {
-         "system": "Pasture / range / paddock",
+         "system": "Pasture/Range/Paddock",
+         "systems": "Pasture / range / paddock",
          "definition": "The manure from pasture and range grazing animals is allowed to lie as is, and is not managed.",
          "direct_nitrous_oxide_factor": "NA"
       },
       {
          "system": "Daily spread",
+         "systems": "Daily spread",
          "definition": "Manure is routinely removed from a confinement facility and is applied to cropland or pasture within 24 hours of excretion. N2O emissions during storage and treatment are assumed to be zero. N2O emissions from land application are covered under the Agricultural Soils category.",
          "direct_nitrous_oxide_factor": 0
       },
       {
          "system": "Solid storage",
+         "systems": "Solid storage",
          "definition": "The storage of manure, typically for a period of several months, in unconfined piles or stacks. Manure is able to be stacked due to the presence of a sufficient amount of bedding material or loss of moisture by evaporation.",
          "direct_nitrous_oxide_factor": 0.01
       },
       {
          "system": "Solid storage-Covered/compacted",
+         "systems": "Solid storage-Covered/compacted",
          "definition": "Similar to solid storage, but the manure pile is a) covered with a plastic sheet to reduce the surface of manure exposed to air and/or b) compacted to increase the density and reduce the free air space within the material.",
          "direct_nitrous_oxide_factor": 0.01
       },
       {
          "system": "Solidstorage-Bulking agent addition",
+         "systems": "Solidstorage-Bulking agent addition",
          "definition": "Specific materials (bulking agents) are mixed with the manure to provide structural support. This allows the natural aeration of the pile, thus enhancing decomposition. (e.g. sawdust, straw, coffee husks, maize stover)",
          "direct_nitrous_oxide_factor": 0.005
       },
       {
          "system": "Solid storage - Additives",
+         "systems": "Solid storage - Additives",
          "definition": "The addition of specific substances to the pile in order to reduce gaseous emissions. Addition of certain compounds such as attapulgite, dicyandiamide or mature compost have shown to reduce N2O emissions; while phosphogypsum reduce CH4 emissions",
          "direct_nitrous_oxide_factor": 0.005
       },
       {
          "system": "Dry lot",
+         "systems": "Dry lot",
          "definition": "A paved or unpaved open confinement area without any significant vegetative cover where  accumulating manure may be removed periodically. Dry lots are most typically found in dry climates but also are used in humid climates.",
          "direct_nitrous_oxide_factor": 0.02
       },
       {
          "system": "Liquid/Slurry",
+         "systems": "Liquid/Slurry",
          "definition": "Manure is stored as excreted or with some minimal addition of water to facilitate handling and is stored in either tanks or earthen ponds:With a natural crust cover",
          "direct_nitrous_oxide_factor": 0.005
       },
       {
          "system": "Liquid/Slurry",
+         "systems": "Liquid/Slurry",
          "definition": "Manure is stored as excreted or with some minimal addition of water to facilitate handling and is stored in either tanks or earthen ponds:Without natural crust cover",
          "direct_nitrous_oxide_factor": 0
       },
       {
-         "system": "Liquid/Slurry",
+         "system": "Liquid/Slurry Pit below animals 1 Month",
+         "systems": "Liquid/Slurry",
+         "definition": "Manure is stored as excreted or with some minimal addition of water to facilitate handling and is stored in either tanks or earthen ponds:Cover",
+         "direct_nitrous_oxide_factor": 0.005
+      },
+      {
+         "system": "Liquid/Slurry Pit below animals 3 Month",
+         "systems": "Liquid/Slurry",
+         "definition": "Manure is stored as excreted or with some minimal addition of water to facilitate handling and is stored in either tanks or earthen ponds:Cover",
+         "direct_nitrous_oxide_factor": 0.005
+      },
+      {
+         "system": "Liquid/Slurry Pit below animals 4 Month",
+         "systems": "Liquid/Slurry",
+         "definition": "Manure is stored as excreted or with some minimal addition of water to facilitate handling and is stored in either tanks or earthen ponds:Cover",
+         "direct_nitrous_oxide_factor": 0.005
+      },
+      {
+         "system": "Liquid/Slurry Pit below animals 6 Month",
+         "systems": "Liquid/Slurry",
+         "definition": "Manure is stored as excreted or with some minimal addition of water to facilitate handling and is stored in either tanks or earthen ponds:Cover",
+         "direct_nitrous_oxide_factor": 0.005
+      },
+      {
+         "system": "Liquid/Slurry Pit below animals 12 Month",
+         "systems": "Liquid/Slurry",
          "definition": "Manure is stored as excreted or with some minimal addition of water to facilitate handling and is stored in either tanks or earthen ponds:Cover",
          "direct_nitrous_oxide_factor": 0.005
       },
       {
          "system": "Uncovered  anaerobic lagoon",
+         "systems": "Uncovered  anaerobic lagoon",
          "definition": "Anaerobic lagoons are designed and operated to combine waste stabilization and storage. Lagoon supernatant is usually used to remove manure from the associated confinement facilities to the lagoon. Anaerobic lagoons are designed with varying lengths of storage (up to a year or greater), depending on the climate region, the volatile solids loading rate, and other operational factors. The water from the lagoon may be recycled as flush water or used to irrigate and fertilise fields.",
          "direct_nitrous_oxide_factor": 0
       },
       {
          "system": "Pit storage  below animal confinements",
+         "systems": "Pit storage  below animal confinements",
          "definition": "Collection and storage of manure usually with little or no added water typically below a slatted floor in an enclosed animal confinement facility.",
          "direct_nitrous_oxide_factor": 0.002
       },
       {
-         "system": "Anaerobic  digester",
+         "system": "Anaer digester, Low leak, HQ stor, HQ tec",
+         "systems": "Anaerobic  digester",
+         "definition": "Anaerobic digesters are designed and operated for waste stabilization by the microbial reduction of complex organic compounds to CH4 and CO2, which is captured and flared or used as a fuel.",
+         "direct_nitrous_oxide_factor": 0.0006
+      },
+      {
+         "system": "Anaer digester, Low leak, HQ stor, LQ tec",
+         "systems": "Anaerobic  digester",
+         "definition": "Anaerobic digesters are designed and operated for waste stabilization by the microbial reduction of complex organic compounds to CH4 and CO2, which is captured and flared or used as a fuel.",
+         "direct_nitrous_oxide_factor": 0.0006
+      },
+      {
+         "system": "Anaer digester, Low leak, open stor, HQ tec",
+         "systems": "Anaerobic  digester",
+         "definition": "Anaerobic digesters are designed and operated for waste stabilization by the microbial reduction of complex organic compounds to CH4 and CO2, which is captured and flared or used as a fuel.",
+         "direct_nitrous_oxide_factor": 0.0006
+      },
+      {
+         "system": "Anaer digester, High leak, HQ stor, LQ tec",
+         "systems": "Anaerobic  digester",
+         "definition": "Anaerobic digesters are designed and operated for waste stabilization by the microbial reduction of complex organic compounds to CH4 and CO2, which is captured and flared or used as a fuel.",
+         "direct_nitrous_oxide_factor": 0.0006
+      },
+      {
+         "system": "Anaer digester, High leak, LQ stor, LQ tec",
+         "systems": "Anaerobic  digester",
+         "definition": "Anaerobic digesters are designed and operated for waste stabilization by the microbial reduction of complex organic compounds to CH4 and CO2, which is captured and flared or used as a fuel.",
+         "direct_nitrous_oxide_factor": 0.0006
+      },
+      {
+         "system": "Anaer digester, High leak, open stor, LQ tec",
+         "systems": "Anaerobic  digester",
          "definition": "Anaerobic digesters are designed and operated for waste stabilization by the microbial reduction of complex organic compounds to CH4 and CO2, which is captured and flared or used as a fuel.",
          "direct_nitrous_oxide_factor": 0.0006
       },
       {
          "system": "Burned for fuel or as waste",
+         "systems": "Burned for fuel or as waste",
          "definition": "The dung is excreted on fields. The sun dried dung cakes are burned for fuel.",
          "direct_nitrous_oxide_factor": "NA"
       },
       {
          "system": "Burned for fuel or as waste",
+         "systems": "Burned for fuel or as waste",
          "definition": "Urine N deposited on pasture and paddock",
          "direct_nitrous_oxide_factor": "NA"
       },
       {
-         "system": "Cattle and  swine deep bedding",
+         "system": "Cattle and swine deep bedding > 1 month",
+         "systems": "Cattle and  swine deep bedding",
          "definition": "As manure accumulates, bedding is continually added to absorb moisture over a production cycle and possibly for as long as 6 to 12 months. This manure management system also is known as a bedded pack manure management system and may be combined with a dry lot or pasture: No mixing",
          "direct_nitrous_oxide_factor": 0.01
       },
       {
-         "system": "Cattle and  swine deep bedding",
+         "system": "Cattle and swine deep bedding < 1 month",
+         "systems": "Cattle and  swine deep bedding",
          "definition": "As manure accumulates, bedding is continually added to absorb moisture over a production cycle and possibly for as long as 6 to 12 months. This manure management system also is known as a bedded pack manure management system and may be combined with a dry lot or pasture: Active mixing",
          "direct_nitrous_oxide_factor": 0.07
       },
       {
-         "system": "Composting - In- Vessel",
+         "system": "Composting - In-vessel",
+         "systems": "Composting - In- Vessel",
          "definition": "Composting, typically in an enclosed channel, with forced aeration and continuous mixing.",
          "direct_nitrous_oxide_factor": 0.006
       },
       {
-         "system": "Composting -  Static Pile (Forced aeration)",
+         "system": "Composting - Static pile (forced aeration)",
+         "systems": "Composting -  Static Pile (Forced aeration)",
          "definition": "Composting in piles with forced aeration but no mixing.",
          "direct_nitrous_oxide_factor": 0.01
       },
       {
-         "system": "Composting - Intensive Windrow (Frequent turning)",
+         "system": "Composting - Intensive windrow",
+         "systems": "Composting - Intensive Windrow (Frequent turning)",
          "definition": "Composting in windrows with regular turning for mixing and aeration.",
          "direct_nitrous_oxide_factor": 0.005
       },
       {
-         "system": "Composting- Passive windrow (infrequent turning)",
+         "system": "Composting - Unfrequent turning",
+         "systems": "Composting- Passive windrow (infrequent turning)",
          "definition": "Composting in windrows with infrequent turning for mixing and aeration.",
          "direct_nitrous_oxide_factor": 0.005
       },
       {
          "system": "Poultry manure with litter",
+         "systems": "Poultry manure with litter",
          "definition": "Similar to deep bedding systems. Typically used for all poultry breeder flocks and for the production of meat type chickens (broilers) and other fowl.",
          "direct_nitrous_oxide_factor": 0.001
       },
       {
-         "system": "Poultry manure  without litter",
+         "system": "Poultry manure without litter",
+         "systems": "Poultry manure without litter",
          "definition": "May be similar to open pits in enclosed animal confinement facilities or may be designed and operated to dry the manure as it accumulates. The latter is known as a high-rise manure management system and is a form of passive windrow composting when designed and operated properly.",
          "direct_nitrous_oxide_factor": 0.001
       },
       {
          "system": "Aerobic treatment",
+         "systems": "Aerobic treatment",
          "definition": "The biological oxidation of manure collected as a liquid with either forced or natural aeration. Natural aeration is limited to aerobic and facultative ponds and wetland systems and is due primarily to photosynthesis. Hence, these systems typically become anoxic during periods without sunlight: Natural aeration systems",
          "direct_nitrous_oxide_factor": 0.01
       },
       {
-         "system": "Aerobic treatment",
+         "system": "Aerobic treatment2",
+         "systems": "Aerobic treatment",
          "definition": "The biological oxidation of manure collected as a liquid with either forced or natural aeration. Natural aeration is limited to aerobic and facultative ponds and wetland systems and is due primarily to photosynthesis. Hence, these systems typically become anoxic during periods without sunlight:Forced aeration systems",
          "direct_nitrous_oxide_factor": 0.005
       }
@@ -3000,13 +3359,47 @@
    "Table 10.22":[
      {
        "system": "Uncovered anaerobic lagoon",
+       "systems": "Uncovered anaerobic lagoon",
        "livestock_category": "Swine",
        "FracGas_MS": 0.4,
        "FracGas_MS_range": "(0.25 - 0.75)",
        "Frac_leach_MS": 0
      },
      {
-       "system": "Liquid/Slurry: With natural crust cover",
+       "system": "Liquid/Slurry Pit below animals 1 Month",
+       "systems": "Liquid/Slurry: With natural crust cover",
+       "livestock_category": "Swine",
+       "FracGas_MS": 0.3,
+       "FracGas_MS_range": "(0.09 - 0.36)",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Liquid/Slurry Pit below animals 3 Month",
+       "systems": "Liquid/Slurry: With natural crust cover",
+       "livestock_category": "Swine",
+       "FracGas_MS": 0.3,
+       "FracGas_MS_range": "(0.09 - 0.36)",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Liquid/Slurry Pit below animals 4 Month",
+       "systems": "Liquid/Slurry: With natural crust cover",
+       "livestock_category": "Swine",
+       "FracGas_MS": 0.3,
+       "FracGas_MS_range": "(0.09 - 0.36)",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Liquid/Slurry Pit below animals 6 Month",
+       "systems": "Liquid/Slurry: With natural crust cover",
+       "livestock_category": "Swine",
+       "FracGas_MS": 0.3,
+       "FracGas_MS_range": "(0.09 - 0.36)",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Liquid/Slurry Pit below animals 12 Month",
+       "systems": "Liquid/Slurry: With natural crust cover",
        "livestock_category": "Swine",
        "FracGas_MS": 0.3,
        "FracGas_MS_range": "(0.09 - 0.36)",
@@ -3014,6 +3407,7 @@
      },
      {
        "system": "Liquid/Slurry: Without natural crust cover",
+       "systems": "Liquid/Slurry: Without natural crust cover",
        "livestock_category": "Swine",
        "FracGas_MS": 0.48,
        "FracGas_MS_range": "(0.15 - 0.60)",
@@ -3021,6 +3415,7 @@
      },
      {
        "system": "Liquid/Slurry: With cover",
+       "systems": "Liquid/Slurry: With cover",
        "livestock_category": "Swine",
        "FracGas_MS": 0.1,
        "FracGas_MS_range": "(0.03 - 0.12)",
@@ -3028,6 +3423,7 @@
      },
      {
        "system": "Pit storage below animal confinements",
+       "systems": "Pit storage below animal confinements",
        "livestock_category": "Swine",
        "FracGas_MS": 0.25,
        "FracGas_MS_range": "(0.15 - 0.30)",
@@ -3035,6 +3431,7 @@
      },
      {
        "system": "Daily spread",
+       "systems": "Daily spread",
        "livestock_category": "Swine",
        "FracGas_MS": 0.07,
        "FracGas_MS_range": "(0.05 - 0.60)",
@@ -3042,6 +3439,7 @@
      },
      {
        "system": "Solid storage",
+       "systems": "Solid storage",
        "livestock_category": "Swine",
        "FracGas_MS": 0.45,
        "FracGas_MS_range": "(0.10 - 0.65)",
@@ -3049,6 +3447,7 @@
      },
      {
        "system": "Solid storage - Covered/compacted",
+       "systems": "Solid storage - Covered/compacted",
        "livestock_category": "Swine",
        "FracGas_MS": 0.22,
        "FracGas_MS_range": "(0.04-0.26)",
@@ -3056,6 +3455,7 @@
      },
      {
        "system": "Solid storage - Bulking agent addition",
+       "systems": "Solid storage - Bulking agent addition",
        "livestock_category": "Swine",
        "FracGas_MS": 0.58,
        "FracGas_MS_range": "(0.11-0.70)",
@@ -3063,6 +3463,7 @@
      },
      {
        "system": "Solid storage - Additives",
+       "systems": "Solid storage - Additives",
        "livestock_category": "Swine",
        "FracGas_MS": 0.17,
        "FracGas_MS_range": "(0.03-0.21)",
@@ -3070,6 +3471,7 @@
      },
      {
        "system": "Dry lot",
+       "systems": "Dry lot",
        "livestock_category": "Swine",
        "FracGas_MS": 0.45,
        "FracGas_MS_range": "(0.10 - 0.65)",
@@ -3077,13 +3479,47 @@
      },
      {
        "system": "Uncovered anaerobic lagoon",
+       "systems": "Uncovered anaerobic lagoon",
        "livestock_category": "Dairy Cow",
        "FracGas_MS": 0.35,
        "FracGas_MS_range": "(0.20 - 0.80)",
        "Frac_leach_MS": 0
      },
      {
-       "system": "Liquid/Slurry: With natural crust cover",
+       "system": "Liquid/Slurry Pit below animals 1 Month",
+       "systems": "Liquid/Slurry: With natural crust cover",
+       "livestock_category": "Dairy Cow",
+       "FracGas_MS": 0.3,
+       "FracGas_MS_range": "(0.09 - 0.36)",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Liquid/Slurry Pit below animals 3 Month",
+       "systems": "Liquid/Slurry: With natural crust cover",
+       "livestock_category": "Dairy Cow",
+       "FracGas_MS": 0.3,
+       "FracGas_MS_range": "(0.09 - 0.36)",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Liquid/Slurry Pit below animals 4 Month",
+       "systems": "Liquid/Slurry: With natural crust cover",
+       "livestock_category": "Dairy Cow",
+       "FracGas_MS": 0.3,
+       "FracGas_MS_range": "(0.09 - 0.36)",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Liquid/Slurry Pit below animals 6 Month",
+       "systems": "Liquid/Slurry: With natural crust cover",
+       "livestock_category": "Dairy Cow",
+       "FracGas_MS": 0.3,
+       "FracGas_MS_range": "(0.09 - 0.36)",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Liquid/Slurry Pit below animals 12 Month",
+       "systems": "Liquid/Slurry: With natural crust cover",
        "livestock_category": "Dairy Cow",
        "FracGas_MS": 0.3,
        "FracGas_MS_range": "(0.09 - 0.36)",
@@ -3091,6 +3527,7 @@
      },
      {
        "system": "Liquid/Slurry: Without natural crust cover",
+       "systems": "Liquid/Slurry: Without natural crust cover",
        "livestock_category": "Dairy Cow",
        "FracGas_MS": 0.48,
        "FracGas_MS_range": "(0.15 - 0.60)",
@@ -3098,6 +3535,7 @@
      },
      {
        "system": "Liquid/Slurry: With cover",
+       "systems": "Liquid/Slurry: With cover",
        "livestock_category": "Dairy Cow",
        "FracGas_MS": 0.1,
        "FracGas_MS_range": "(0.03 - 0.12)",
@@ -3105,6 +3543,7 @@
      },
      {
        "system": "Pit storage below animal confinements",
+       "systems": "Pit storage below animal confinements",
        "livestock_category": "Dairy Cow",
        "FracGas_MS": 0.28,
        "FracGas_MS_range": "(0.10 - 0.40)",
@@ -3112,6 +3551,7 @@
      },
      {
        "system": "Daily spread",
+       "systems": "Daily spread",
        "livestock_category": "Dairy Cow",
        "FracGas_MS": 0.07,
        "FracGas_MS_range": "(0.05 - 0.60)",
@@ -3119,6 +3559,7 @@
      },
      {
        "system": "Solid storage",
+       "systems": "Solid storage",
        "livestock_category": "Dairy Cow",
        "FracGas_MS": 0.3,
        "FracGas_MS_range": "(0.10 -0.40)",
@@ -3126,6 +3567,7 @@
      },
      {
        "system": "Solid storage - Covered/compacted",
+       "systems": "Solid storage - Covered/compacted",
        "livestock_category": "Dairy Cow",
        "FracGas_MS": 0.14,
        "FracGas_MS_range": "(0.02-0.17)",
@@ -3133,6 +3575,7 @@
      },
      {
        "system": "Solid storage - Bulking agent addition",
+       "systems": "Solid storage - Bulking agent addition",
        "livestock_category": "Dairy Cow",
        "FracGas_MS": 0.38,
        "FracGas_MS_range": "(0.06-0.46)",
@@ -3140,6 +3583,7 @@
      },
      {
        "system": "Solid storage - Additives",
+       "systems": "Solid storage - Additives",
        "livestock_category": "Dairy Cow",
        "FracGas_MS": 0.11,
        "FracGas_MS_range": "(0.01-0.14)",
@@ -3147,6 +3591,7 @@
      },
      {
        "system": "Dry lot",
+       "systems": "Dry lot",
        "livestock_category": "Dairy Cow",
        "FracGas_MS": 0.3,
        "FracGas_MS_range": "(0.20 - 0.50)",
@@ -3154,13 +3599,47 @@
      },
      {
        "system": "Uncovered anaerobic lagoon",
+       "systems": "Uncovered anaerobic lagoon",
        "livestock_category": "Poultry",
        "FracGas_MS": 0.4,
        "FracGas_MS_range": "(0.25 - 0.75)",
        "Frac_leach_MS": 0
      },
      {
-       "system": "Liquid/Slurry: With natural crust cover",
+       "system": "Liquid/Slurry Pit below animals 1 Month",
+       "systems": "Liquid/Slurry: With natural crust cover",
+       "livestock_category": "Poultry",
+       "FracGas_MS": "NA",
+       "FracGas_MS_range": "NA",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Liquid/Slurry Pit below animals 3 Month",
+       "systems": "Liquid/Slurry: With natural crust cover",
+       "livestock_category": "Poultry",
+       "FracGas_MS": "NA",
+       "FracGas_MS_range": "NA",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Liquid/Slurry Pit below animals 4 Month",
+       "systems": "Liquid/Slurry: With natural crust cover",
+       "livestock_category": "Poultry",
+       "FracGas_MS": "NA",
+       "FracGas_MS_range": "NA",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Liquid/Slurry Pit below animals 6 Month",
+       "systems": "Liquid/Slurry: With natural crust cover",
+       "livestock_category": "Poultry",
+       "FracGas_MS": "NA",
+       "FracGas_MS_range": "NA",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Liquid/Slurry Pit below animals 12 Month",
+       "systems": "Liquid/Slurry: With natural crust cover",
        "livestock_category": "Poultry",
        "FracGas_MS": "NA",
        "FracGas_MS_range": "NA",
@@ -3168,6 +3647,7 @@
      },
      {
        "system": "Liquid/Slurry: Without natural crust cover",
+       "systems": "Liquid/Slurry: Without natural crust cover",
        "livestock_category": "Poultry",
        "FracGas_MS": 0.4,
        "FracGas_MS_range": "(0.25 - 0.75)",
@@ -3175,6 +3655,7 @@
      },
      {
        "system": "Liquid/Slurry: With cover",
+       "systems": "Liquid/Slurry: With cover",
        "livestock_category": "Poultry",
        "FracGas_MS": 0.08,
        "FracGas_MS_range": "(0.05-0.15)",
@@ -3182,6 +3663,7 @@
      },
      {
        "system": "Pit storage below animal confinements",
+       "systems": "Pit storage below animal confinements",
        "livestock_category": "Poultry",
        "FracGas_MS": 0.28,
        "FracGas_MS_range": "(0.10 - 0.40)",
@@ -3189,6 +3671,7 @@
      },
      {
        "system": "Daily spread",
+       "systems": "Daily spread",
        "livestock_category": "Poultry",
        "FracGas_MS": 0.07,
        "FracGas_MS_range": "(0.05 - 0.60)",
@@ -3196,6 +3679,7 @@
      },
      {
        "system": "Solid storage",
+       "systems": "Solid storage",
        "livestock_category": "Poultry",
        "FracGas_MS": 0.4,
        "FracGas_MS_range": "(0.12 - 0.60)",
@@ -3203,6 +3687,7 @@
      },
      {
        "system": "Solid storage - Covered/compacted",
+       "systems": "Solid storage - Covered/compacted",
        "livestock_category": "Poultry",
        "FracGas_MS": 0.2,
        "FracGas_MS_range": "(0.04-0.24)",
@@ -3210,6 +3695,7 @@
      },
      {
        "system": "Solid storage - Bulking agent addition",
+       "systems": "Solid storage - Bulking agent addition",
        "livestock_category": "Poultry",
        "FracGas_MS": 0.54,
        "FracGas_MS_range": "(0.10-0.65)",
@@ -3217,6 +3703,7 @@
      },
      {
        "system": "Solid storage - Additives",
+       "systems": "Solid storage - Additives",
        "livestock_category": "Poultry",
        "FracGas_MS": 0.16,
        "FracGas_MS_range": "(0.03-0.20)",
@@ -3224,6 +3711,7 @@
      },
      {
        "system": "Dry lot",
+       "systems": "Dry lot",
        "livestock_category": "Poultry",
        "FracGas_MS": "NA",
        "FracGas_MS_range": "NA",
@@ -3231,13 +3719,47 @@
      },
      {
        "system": "Uncovered anaerobic lagoon",
+       "systems": "Uncovered anaerobic lagoon",
        "livestock_category": "Other Cattle",
        "FracGas_MS": 0.35,
        "FracGas_MS_range": "(0.20 - 0.80)",
        "Frac_leach_MS": 0
      },
      {
-       "system": "Liquid/Slurry: With natural crust cover",
+       "system": "Liquid/Slurry Pit below animals 1 Month",
+       "systems": "Liquid/Slurry: With natural crust cover",
+       "livestock_category": "Other Cattle",
+       "FracGas_MS": 0.3,
+       "FracGas_MS_range": "(0.09 - 0.36)",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Liquid/Slurry Pit below animals 3 Month",
+       "systems": "Liquid/Slurry: With natural crust cover",
+       "livestock_category": "Other Cattle",
+       "FracGas_MS": 0.3,
+       "FracGas_MS_range": "(0.09 - 0.36)",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Liquid/Slurry Pit below animals 4 Month",
+       "systems": "Liquid/Slurry: With natural crust cover",
+       "livestock_category": "Other Cattle",
+       "FracGas_MS": 0.3,
+       "FracGas_MS_range": "(0.09 - 0.36)",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Liquid/Slurry Pit below animals 6 Month",
+       "systems": "Liquid/Slurry: With natural crust cover",
+       "livestock_category": "Other Cattle",
+       "FracGas_MS": 0.3,
+       "FracGas_MS_range": "(0.09 - 0.36)",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Liquid/Slurry Pit below animals 12 Month",
+       "systems": "Liquid/Slurry: With natural crust cover",
        "livestock_category": "Other Cattle",
        "FracGas_MS": 0.3,
        "FracGas_MS_range": "(0.09 - 0.36)",
@@ -3245,6 +3767,7 @@
      },
      {
        "system": "Liquid/Slurry: Without natural crust cover",
+       "systems": "Liquid/Slurry: Without natural crust cover",
        "livestock_category": "Other Cattle",
        "FracGas_MS": 0.48,
        "FracGas_MS_range": "(0.15 - 0.60)",
@@ -3252,6 +3775,7 @@
      },
      {
        "system": "Liquid/Slurry: With cover",
+       "systems": "Liquid/Slurry: With cover",
        "livestock_category": "Other Cattle",
        "FracGas_MS": 0.1,
        "FracGas_MS_range": "(0.03 - 0.12)",
@@ -3259,6 +3783,7 @@
      },
      {
        "system": "Pit storage below animal confinements",
+       "systems": "Pit storage below animal confinements",
        "livestock_category": "Other Cattle",
        "FracGas_MS": 0.25,
        "FracGas_MS_range": "(0.15 - 0.30)",
@@ -3266,6 +3791,7 @@
      },
      {
        "system": "Daily spread",
+       "systems": "Daily spread",
        "livestock_category": "Other Cattle",
        "FracGas_MS": 0.07,
        "FracGas_MS_range": "(0.05 - 0.60)",
@@ -3273,6 +3799,7 @@
      },
      {
        "system": "Solid storage",
+       "systems": "Solid storage",
        "livestock_category": "Other Cattle",
        "FracGas_MS": 0.45,
        "FracGas_MS_range": "(0.10 - 0.65)",
@@ -3280,6 +3807,7 @@
      },
      {
        "system": "Solid storage - Covered/compacted",
+       "systems": "Solid storage - Covered/compacted",
        "livestock_category": "Other Cattle",
        "FracGas_MS": 0.22,
        "FracGas_MS_range": "(0.03-0.26)",
@@ -3287,6 +3815,7 @@
      },
      {
        "system": "Solid storage - Bulking agent addition",
+       "systems": "Solid storage - Bulking agent addition",
        "livestock_category": "Other Cattle",
        "FracGas_MS": 0.58,
        "FracGas_MS_range": "(0.08-0.70)",
@@ -3294,6 +3823,7 @@
      },
      {
        "system": "Solid storage - Additives",
+       "systems": "Solid storage - Additives",
        "livestock_category": "Other Cattle",
        "FracGas_MS": 0.17,
        "FracGas_MS_range": "(0.02-0.21)",
@@ -3301,6 +3831,7 @@
      },
      {
        "system": "Dry lot",
+       "systems": "Dry lot",
        "livestock_category": "Other Cattle",
        "FracGas_MS": 0.3,
        "FracGas_MS_range": "(0.20 - 0.50)",
@@ -3308,13 +3839,47 @@
      },
      {
        "system": "Uncovered anaerobic lagoon",
+       "systems": "Uncovered anaerobic lagoon",
        "livestock_category": "Other animals",
        "FracGas_MS": 0.35,
        "FracGas_MS_range": "(0.20 - 0.80)",
        "Frac_leach_MS": 0
      },
      {
-       "system": "Liquid/Slurry: With natural crust cover",
+       "system": "Liquid/Slurry Pit below animals 1 Month",
+       "systems": "Liquid/Slurry: With natural crust cover",
+       "livestock_category": "Other animals",
+       "FracGas_MS": 0.09,
+       "FracGas_MS_range": "",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Liquid/Slurry Pit below animals 3 Month",
+       "systems": "Liquid/Slurry: With natural crust cover",
+       "livestock_category": "Other animals",
+       "FracGas_MS": 0.09,
+       "FracGas_MS_range": "",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Liquid/Slurry Pit below animals 4 Month",
+       "systems": "Liquid/Slurry: With natural crust cover",
+       "livestock_category": "Other animals",
+       "FracGas_MS": 0.09,
+       "FracGas_MS_range": "",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Liquid/Slurry Pit below animals 6 Month",
+       "systems": "Liquid/Slurry: With natural crust cover",
+       "livestock_category": "Other animals",
+       "FracGas_MS": 0.09,
+       "FracGas_MS_range": "",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Liquid/Slurry Pit below animals 12 Month",
+       "systems": "Liquid/Slurry: With natural crust cover",
        "livestock_category": "Other animals",
        "FracGas_MS": 0.09,
        "FracGas_MS_range": "",
@@ -3322,6 +3887,7 @@
      },
      {
        "system": "Liquid/Slurry: Without natural crust cover",
+       "systems": "Liquid/Slurry: Without natural crust cover",
        "livestock_category": "Other animals",
        "FracGas_MS": 0.15,
        "FracGas_MS_range": "",
@@ -3329,6 +3895,7 @@
      },
      {
        "system": "Liquid/Slurry: With cover",
+       "systems": "Liquid/Slurry: With cover",
        "livestock_category": "Other animals",
        "FracGas_MS": 0.03,
        "FracGas_MS_range": "",
@@ -3336,6 +3903,7 @@
      },
      {
        "system": "Pit storage below animal confinements",
+       "systems": "Pit storage below animal confinements",
        "livestock_category": "Other animals",
        "FracGas_MS": 0.25,
        "FracGas_MS_range": "(0.15 - 0.30)",
@@ -3343,6 +3911,7 @@
      },
      {
        "system": "Daily spread",
+       "systems": "Daily spread",
        "livestock_category": "Other animals",
        "FracGas_MS": 0.07,
        "FracGas_MS_range": "(0.05 - 0.60)",
@@ -3350,6 +3919,7 @@
      },
      {
        "system": "Solid storage",
+       "systems": "Solid storage",
        "livestock_category": "Other animals",
        "FracGas_MS": 0.12,
        "FracGas_MS_range": "(0.05 - 0.20)",
@@ -3357,6 +3927,7 @@
      },
      {
        "system": "Solid storage - Covered/compacted",
+       "systems": "Solid storage - Covered/compacted",
        "livestock_category": "Other animals",
        "FracGas_MS": 0.05,
        "FracGas_MS_range": "(0-0.07)",
@@ -3364,6 +3935,7 @@
      },
      {
        "system": "Solid storage - Bulking agent addition",
+       "systems": "Solid storage - Bulking agent addition",
        "livestock_category": "Other animals",
        "FracGas_MS": 0.15,
        "FracGas_MS_range": "(0.06-0.18)",
@@ -3371,6 +3943,7 @@
      },
      {
        "system": "Solid storage - Additives",
+       "systems": "Solid storage - Additives",
        "livestock_category": "Other animals",
        "FracGas_MS": 0.04,
        "FracGas_MS_range": "(0.01-0.05)",
@@ -3378,13 +3951,55 @@
      },
      {
        "system": "Dry lot",
+       "systems": "Dry lot",
        "livestock_category": "Other animals",
        "FracGas_MS": 0.3,
        "FracGas_MS_range": "(0.20 - 0.50)",
        "Frac_leach_MS": 0.04
      },
      {
-       "system": "Anaerobic digester",
+       "system": "Anaer digester, Low leak, HQ stor, HQ tec",
+       "systems": "Anaerobic digester",
+       "livestock_category": "Swine",
+       "FracGas_MS": "NA",
+       "FracGas_MS_range": "(0.05-0.50)",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Anaer digester, Low leak, HQ stor, LQ tec",
+       "systems": "Anaerobic digester",
+       "livestock_category": "Swine",
+       "FracGas_MS": "NA",
+       "FracGas_MS_range": "(0.05-0.50)",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Anaer digester, Low leak, open stor, HQ tec",
+       "systems": "Anaerobic digester",
+       "livestock_category": "Swine",
+       "FracGas_MS": "NA",
+       "FracGas_MS_range": "(0.05-0.50)",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Anaer digester, High leak, HQ stor, LQ tec",
+       "systems": "Anaerobic digester",
+       "livestock_category": "Swine",
+       "FracGas_MS": "NA",
+       "FracGas_MS_range": "(0.05-0.50)",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Anaer digester, High leak, LQ stor, LQ tec",
+       "systems": "Anaerobic digester",
+       "livestock_category": "Swine",
+       "FracGas_MS": "NA",
+       "FracGas_MS_range": "(0.05-0.50)",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Anaer digester, High leak, open stor, LQ tec",
+       "systems": "Anaerobic digester",
        "livestock_category": "Swine",
        "FracGas_MS": "NA",
        "FracGas_MS_range": "(0.05-0.50)",
@@ -3392,41 +4007,55 @@
      },
      {
        "system": "Burned for fuel or as waste",
+       "systems": "Burned for fuel or as waste",
        "livestock_category": "Swine",
        "FracGas_MS": "NA",
        "FracGas_MS_range": "NA",
        "Frac_leach_MS": "NA"
      },
      {
-       "system": "Cattle and swine deep bedding",
+       "system": "Cattle and swine deep bedding < 1 month",
+       "systems": "Cattle and swine deep bedding",
        "livestock_category": "Swine",
        "FracGas_MS": 0.4,
        "FracGas_MS_range": "(0.10 - 0.60)",
        "Frac_leach_MS": 0.04
      },
      {
-       "system": "Composting - In Vessel",
+       "system": "Cattle and swine deep bedding > 1 month",
+       "systems": "Cattle and swine deep bedding",
+       "livestock_category": "Swine",
+       "FracGas_MS": 0.4,
+       "FracGas_MS_range": "(0.10 - 0.60)",
+       "Frac_leach_MS": 0.04
+     },
+     {
+       "system": "Composting - In-vessel",
+       "systems": "Composting - In Vessel",
        "livestock_category": "Swine",
        "FracGas_MS": 0.6,
        "FracGas_MS_range": "(0.12-0.65)",
        "Frac_leach_MS": 0
      },
      {
-       "system": "Composting - Static Pile",
+       "system": "Composting - Static pile (forced aeration)",
+       "systems": "Composting - Static Pile",
        "livestock_category": "Swine",
        "FracGas_MS": 0.65,
        "FracGas_MS_range": "(0.14-0.70)",
        "Frac_leach_MS": 0.06
      },
      {
-       "system": "Composting - Intensive Windrow",
+       "system": "Composting - Intensive windrow",
+       "systems": "Composting - Intensive Windrow",
        "livestock_category": "Swine",
        "FracGas_MS": 0.65,
        "FracGas_MS_range": "(0.14-0.70)",
        "Frac_leach_MS": 0.06
      },
      {
-       "system": "Composting - Passive Windrow",
+       "system": "Composting - Unfrequent turning",
+       "systems": "Composting - Passive Windrow",
        "livestock_category": "Swine",
        "FracGas_MS": 0.6,
        "FracGas_MS_range": "(0.12-0.65)",
@@ -3434,13 +4063,55 @@
      },
      {
        "system": "Poultry manure with litter",
+       "systems": "Poultry manure with litter",
        "livestock_category": "Swine",
        "FracGas_MS": "NA",
        "FracGas_MS_range": "NA",
        "Frac_leach_MS": "NA"
      },
      {
-       "system": "Anaerobic digester",
+       "system": "Anaer digester, Low leak, HQ stor, HQ tec",
+       "systems": "Anaerobic digester",
+       "livestock_category": "Dairy Cow",
+       "FracGas_MS": "NA",
+       "FracGas_MS_range": "(0.05-0.50)",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Anaer digester, Low leak, HQ stor, LQ tec",
+       "systems": "Anaerobic digester",
+       "livestock_category": "Dairy Cow",
+       "FracGas_MS": "NA",
+       "FracGas_MS_range": "(0.05-0.50)",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Anaer digester, Low leak, open stor, HQ tec",
+       "systems": "Anaerobic digester",
+       "livestock_category": "Dairy Cow",
+       "FracGas_MS": "NA",
+       "FracGas_MS_range": "(0.05-0.50)",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Anaer digester, High leak, HQ stor, LQ tec",
+       "systems": "Anaerobic digester",
+       "livestock_category": "Dairy Cow",
+       "FracGas_MS": "NA",
+       "FracGas_MS_range": "(0.05-0.50)",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Anaer digester, High leak, LQ stor, LQ tec",
+       "systems": "Anaerobic digester",
+       "livestock_category": "Dairy Cow",
+       "FracGas_MS": "NA",
+       "FracGas_MS_range": "(0.05-0.50)",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Anaer digester, High leak, open stor, LQ tec",
+       "systems": "Anaerobic digester",
        "livestock_category": "Dairy Cow",
        "FracGas_MS": "NA",
        "FracGas_MS_range": "(0.05-0.50)",
@@ -3448,41 +4119,55 @@
      },
      {
        "system": "Burned for fuel or as waste",
+       "systems": "Burned for fuel or as waste",
        "livestock_category": "Dairy Cow",
        "FracGas_MS": "NA",
        "FracGas_MS_range": "NA",
        "Frac_leach_MS": "NA"
      },
      {
-       "system": "Cattle and swine deep bedding",
+       "system": "Cattle and swine deep bedding < 1 month",
+       "systems": "Cattle and swine deep bedding",
        "livestock_category": "Dairy Cow",
        "FracGas_MS": 0.25,
        "FracGas_MS_range": "(0.10 - 0.30)",
        "Frac_leach_MS": 0.04
      },
      {
-       "system": "Composting - In Vessel",
+       "system": "Cattle and swine deep bedding > 1 month",
+       "systems": "Cattle and swine deep bedding",
+       "livestock_category": "Dairy Cow",
+       "FracGas_MS": 0.25,
+       "FracGas_MS_range": "(0.10 - 0.30)",
+       "Frac_leach_MS": 0.04
+     },
+     {
+       "system": "Composting - In-vessel",
+       "systems": "Composting - In Vessel",
        "livestock_category": "Dairy Cow",
        "FracGas_MS": 0.45,
        "FracGas_MS_range": "(0.07-0.54)",
        "Frac_leach_MS": 0
      },
      {
-       "system": "Composting - Static Pile",
+       "system": "Composting - Static pile (forced aeration)",
+       "systems": "Composting - Static Pile",
        "livestock_category": "Dairy Cow",
        "FracGas_MS": 0.5,
        "FracGas_MS_range": "(0.07-0.60)",
        "Frac_leach_MS": 0.06
      },
      {
-       "system": "Composting - Intensive Windrow",
+       "system": "Composting - Intensive windrow",
+       "systems": "Composting - Intensive Windrow",
        "livestock_category": "Dairy Cow",
        "FracGas_MS": 0.5,
        "FracGas_MS_range": "(0.07-0.60)",
        "Frac_leach_MS": 0.06
      },
      {
-       "system": "Composting - Passive Windrow",
+       "system": "Composting - Unfrequent turning",
+       "systems": "Composting - Passive Windrow",
        "livestock_category": "Dairy Cow",
        "FracGas_MS": 0.45,
        "FracGas_MS_range": "(0.07-0.54)",
@@ -3490,13 +4175,55 @@
      },
      {
        "system": "Poultry manure with litter",
+       "systems": "Poultry manure with litter",
        "livestock_category": "Dairy Cow",
        "FracGas_MS": "NA",
        "FracGas_MS_range": "NA",
        "Frac_leach_MS": "NA"
      },
      {
-       "system": "Anaerobic digester",
+       "system": "Anaer digester, Low leak, HQ stor, HQ tec",
+       "systems": "Anaerobic digester",
+       "livestock_category": "Poultry",
+       "FracGas_MS": "NA",
+       "FracGas_MS_range": "(0.05-0.50)",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Anaer digester, Low leak, HQ stor, LQ tec",
+       "systems": "Anaerobic digester",
+       "livestock_category": "Poultry",
+       "FracGas_MS": "NA",
+       "FracGas_MS_range": "(0.05-0.50)",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Anaer digester, Low leak, open stor, HQ tec",
+       "systems": "Anaerobic digester",
+       "livestock_category": "Poultry",
+       "FracGas_MS": "NA",
+       "FracGas_MS_range": "(0.05-0.50)",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Anaer digester, High leak, HQ stor, LQ tec",
+       "systems": "Anaerobic digester",
+       "livestock_category": "Poultry",
+       "FracGas_MS": "NA",
+       "FracGas_MS_range": "(0.05-0.50)",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Anaer digester, High leak, LQ stor, LQ tec",
+       "systems": "Anaerobic digester",
+       "livestock_category": "Poultry",
+       "FracGas_MS": "NA",
+       "FracGas_MS_range": "(0.05-0.50)",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Anaer digester, High leak, open stor, LQ tec",
+       "systems": "Anaerobic digester",
        "livestock_category": "Poultry",
        "FracGas_MS": "NA",
        "FracGas_MS_range": "(0.05-0.50)",
@@ -3504,41 +4231,55 @@
      },
      {
        "system": "Burned for fuel or as waste",
+       "systems": "Burned for fuel or as waste",
        "livestock_category": "Poultry",
        "FracGas_MS": "NA",
        "FracGas_MS_range": "NA",
        "Frac_leach_MS": "NA"
      },
      {
-       "system": "Cattle and swine deep bedding",
+       "system": "Cattle and swine deep bedding < 1 month",
+       "systems": "Cattle and swine deep bedding",
        "livestock_category": "Poultry",
        "FracGas_MS": 0.3,
        "FracGas_MS_range": "(0.20 - 0.40)",
        "Frac_leach_MS": "NA"
      },
      {
-       "system": "Composting - In Vessel",
+       "system": "Cattle and swine deep bedding > 1 month",
+       "systems": "Cattle and swine deep bedding",
+       "livestock_category": "Poultry",
+       "FracGas_MS": 0.3,
+       "FracGas_MS_range": "(0.20 - 0.40)",
+       "Frac_leach_MS": "NA"
+     },
+     {
+       "system": "Composting - In-vessel",
+       "systems": "Composting - In Vessel",
        "livestock_category": "Poultry",
        "FracGas_MS": 0.6,
        "FracGas_MS_range": "(0.12-0.65)",
        "Frac_leach_MS": 0
      },
      {
-       "system": "Composting - Static Pile",
+       "system": "Composting - Static pile (forced aeration)",
+       "systems": "Composting - Static Pile",
        "livestock_category": "Poultry",
        "FracGas_MS": 0.65,
        "FracGas_MS_range": "(0.14-0.70)",
        "Frac_leach_MS": 0.06
      },
      {
-       "system": "Composting - Intensive Windrow",
+       "system": "Composting - Intensive windrow",
+       "systems": "Composting - Intensive Windrow",
        "livestock_category": "Poultry",
        "FracGas_MS": 0.65,
        "FracGas_MS_range": "(0.14-0.70)",
        "Frac_leach_MS": 0.06
      },
      {
-       "system": "Composting - Passive Windrow",
+       "system": "Composting - Unfrequent turning",
+       "systems": "Composting - Passive Windrow",
        "livestock_category": "Poultry",
        "FracGas_MS": 0.6,
        "FracGas_MS_range": "(0.12-0.65)",
@@ -3546,13 +4287,55 @@
      },
      {
        "system": "Poultry manure with litter",
+       "systems": "Poultry manure with litter",
        "livestock_category": "Poultry",
        "FracGas_MS": 0.4,
        "FracGas_MS_range": "(0.10 - 0.60)",
        "Frac_leach_MS": 0
      },
      {
-       "system": "Anaerobic digester",
+       "system": "Anaer digester, Low leak, HQ stor, HQ tec",
+       "systems": "Anaerobic digester",
+       "livestock_category": "Other Cattle",
+       "FracGas_MS": "NA",
+       "FracGas_MS_range": "(0.05-0.50)",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Anaer digester, Low leak, HQ stor, LQ tec",
+       "systems": "Anaerobic digester",
+       "livestock_category": "Other Cattle",
+       "FracGas_MS": "NA",
+       "FracGas_MS_range": "(0.05-0.50)",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Anaer digester, Low leak, open stor, HQ tec",
+       "systems": "Anaerobic digester",
+       "livestock_category": "Other Cattle",
+       "FracGas_MS": "NA",
+       "FracGas_MS_range": "(0.05-0.50)",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Anaer digester, High leak, HQ stor, LQ tec",
+       "systems": "Anaerobic digester",
+       "livestock_category": "Other Cattle",
+       "FracGas_MS": "NA",
+       "FracGas_MS_range": "(0.05-0.50)",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Anaer digester, High leak, LQ stor, LQ tec",
+       "systems": "Anaerobic digester",
+       "livestock_category": "Other Cattle",
+       "FracGas_MS": "NA",
+       "FracGas_MS_range": "(0.05-0.50)",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Anaer digester, High leak, open stor, LQ tec",
+       "systems": "Anaerobic digester",
        "livestock_category": "Other Cattle",
        "FracGas_MS": "NA",
        "FracGas_MS_range": "(0.05-0.50)",
@@ -3560,41 +4343,55 @@
      },
      {
        "system": "Burned for fuel or as waste",
+       "systems": "Burned for fuel or as waste",
        "livestock_category": "Other Cattle",
        "FracGas_MS": "NA",
        "FracGas_MS_range": "NA",
        "Frac_leach_MS": "NA"
      },
      {
-       "system": "Cattle and swine deep bedding",
+       "system": "Cattle and swine deep bedding < 1 month",
+       "systems": "Cattle and swine deep bedding",
        "livestock_category": "Other Cattle",
        "FracGas_MS": 0.25,
        "FracGas_MS_range": "(0.10 - 0.30)",
        "Frac_leach_MS": 0.04
      },
      {
-       "system": "Composting - In Vessel",
+       "system": "Cattle and swine deep bedding > 1 month",
+       "systems": "Cattle and swine deep bedding",
+       "livestock_category": "Other Cattle",
+       "FracGas_MS": 0.25,
+       "FracGas_MS_range": "(0.10 - 0.30)",
+       "Frac_leach_MS": 0.04
+     },
+     {
+       "system": "Composting - In-vessel",
+       "systems": "Composting - In Vessel",
        "livestock_category": "Other Cattle",
        "FracGas_MS": 0.6,
        "FracGas_MS_range": "(0.12-0.65)",
        "Frac_leach_MS": 0
      },
      {
-       "system": "Composting - Static Pile",
+       "system": "Composting - Static pile (forced aeration)",
+       "systems": "Composting - Static Pile",
        "livestock_category": "Other Cattle",
        "FracGas_MS": 0.65,
        "FracGas_MS_range": "(0.14-0.70)",
        "Frac_leach_MS": 0.06
      },
      {
-       "system": "Composting - Intensive Windrow",
+       "system": "Composting - Intensive windrow",
+       "systems": "Composting - Intensive Windrow",
        "livestock_category": "Other Cattle",
        "FracGas_MS": 0.65,
        "FracGas_MS_range": "(0.14-0.70)",
        "Frac_leach_MS": 0.06
      },
      {
-       "system": "Composting - Passive Windrow",
+       "system": "Composting - Unfrequent turning",
+       "systems": "Composting - Passive Windrow",
        "livestock_category": "Other Cattle",
        "FracGas_MS": 0.6,
        "FracGas_MS_range": "(0.12-0.65)",
@@ -3602,13 +4399,55 @@
      },
      {
        "system": "Poultry manure with litter",
+       "systems": "Poultry manure with litter",
        "livestock_category": "Other Cattle",
        "FracGas_MS": "NA",
        "FracGas_MS_range": "NA",
        "Frac_leach_MS": "NA"
      },
      {
-       "system": "Anaerobic digester",
+       "system": "Anaer digester, Low leak, HQ stor, HQ tec",
+       "systems": "Anaerobic digester",
+       "livestock_category": "Other animals",
+       "FracGas_MS": "NA",
+       "FracGas_MS_range": "(0.05-0.50)",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Anaer digester, Low leak, HQ stor, LQ tec",
+       "systems": "Anaerobic digester",
+       "livestock_category": "Other animals",
+       "FracGas_MS": "NA",
+       "FracGas_MS_range": "(0.05-0.50)",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Anaer digester, Low leak, open stor, HQ tec",
+       "systems": "Anaerobic digester",
+       "livestock_category": "Other animals",
+       "FracGas_MS": "NA",
+       "FracGas_MS_range": "(0.05-0.50)",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Anaer digester, High leak, HQ stor, LQ tec",
+       "systems": "Anaerobic digester",
+       "livestock_category": "Other animals",
+       "FracGas_MS": "NA",
+       "FracGas_MS_range": "(0.05-0.50)",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Anaer digester, High leak, LQ stor, LQ tec",
+       "systems": "Anaerobic digester",
+       "livestock_category": "Other animals",
+       "FracGas_MS": "NA",
+       "FracGas_MS_range": "(0.05-0.50)",
+       "Frac_leach_MS": 0
+     },
+     {
+       "system": "Anaer digester, High leak, open stor, LQ tec",
+       "systems": "Anaerobic digester",
        "livestock_category": "Other animals",
        "FracGas_MS": "NA",
        "FracGas_MS_range": "(0.05-0.50)",
@@ -3616,41 +4455,55 @@
      },
      {
        "system": "Burned for fuel or as waste",
+       "systems": "Burned for fuel or as waste",
        "livestock_category": "Other animals",
        "FracGas_MS": "NA",
        "FracGas_MS_range": "NA",
        "Frac_leach_MS": "NA"
      },
      {
-       "system": "Cattle and swine deep bedding",
+       "system": "Cattle and swine deep bedding < 1 month",
+       "systems": "Cattle and swine deep bedding",
        "livestock_category": "Other animals",
        "FracGas_MS": 0.4,
        "FracGas_MS_range": "(0.10 - 0.60)",
        "Frac_leach_MS": 0.04
      },
      {
-       "system": "Composting - In Vessel",
+       "system": "Cattle and swine deep bedding > 1 month",
+       "systems": "Cattle and swine deep bedding",
+       "livestock_category": "Other animals",
+       "FracGas_MS": 0.4,
+       "FracGas_MS_range": "(0.10 - 0.60)",
+       "Frac_leach_MS": 0.04
+     },
+     {
+       "system": "Composting - In-vessel",
+       "systems": "Composting - In Vessel",
        "livestock_category": "Other animals",
        "FracGas_MS": 0.18,
        "FracGas_MS_range": "(0.04-0.21)",
        "Frac_leach_MS": 0
      },
      {
-       "system": "Composting - Static Pile",
+       "system": "Composting - Static pile (forced aeration)",
+       "systems": "Composting - Static Pile",
        "livestock_category": "Other animals",
        "FracGas_MS": 0.2,
        "FracGas_MS_range": "(0.05-0.24)",
        "Frac_leach_MS": 0.06
      },
      {
-       "system": "Composting - Intensive Windrow",
+       "system": "Composting - Intensive windrow",
+       "systems": "Composting - Intensive Windrow",
        "livestock_category": "Other animals",
        "FracGas_MS": 0.2,
        "FracGas_MS_range": "(0.05-0.24)",
        "Frac_leach_MS": 0.06
      },
      {
-       "system": "Composting - Passive Windrow",
+       "system": "Composting - Unfrequent turning",
+       "systems": "Composting - Passive Windrow",
        "livestock_category": "Other animals",
        "FracGas_MS": 0.18,
        "FracGas_MS_range": "(0.04-0.21)",
@@ -3658,6 +4511,7 @@
      },
      {
        "system": "Poultry manure with litter",
+       "systems": "Poultry manure with litter",
        "livestock_category": "Other animals",
        "FracGas_MS": "NA",
        "FracGas_MS_range": "NA",
@@ -3665,20 +4519,23 @@
      },
      {
        "system": "Poultry manure without litter",
+       "systems": "Poultry manure without litter",
        "livestock_category": "Swine",
        "FracGas_MS": "NA",
        "FracGas_MS_range": "NA",
        "Frac_leach_MS": "NA"
      },
      {
-       "system": "Aerobic treatment: Natural aeration systems",
+       "system": "Aerobic treatment",
+       "systems": "Aerobic treatment: Natural aeration systems",
        "livestock_category": "Swine",
        "FracGas_MS": "NA",
        "FracGas_MS_range": "NA",
        "Frac_leach_MS": 0
      },
      {
-       "system": "Aerobic treatment: Forced aeration systems",
+       "system": "Aerobic treatment2",
+       "systems": "Aerobic treatment: Forced aeration systems",
        "livestock_category": "Swine",
        "FracGas_MS": 0.85,
        "FracGas_MS_range": "(0.27 - 1)",
@@ -3686,20 +4543,23 @@
      },
      {
        "system": "Poultry manure without litter",
+       "systems": "Poultry manure without litter",
        "livestock_category": "Dairy Cow",
        "FracGas_MS": "NA",
        "FracGas_MS_range": "NA",
        "Frac_leach_MS": "NA"
      },
      {
-       "system": "Aerobic treatment: Natural aeration systems",
+       "system": "Aerobic treatment",
+       "systems": "Aerobic treatment: Natural aeration systems",
        "livestock_category": "Dairy Cow",
        "FracGas_MS": "NA",
        "FracGas_MS_range": "NA",
        "Frac_leach_MS": 0
      },
      {
-       "system": "Aerobic treatment: Forced aeration systems",
+       "system": "Aerobic treatment2",
+       "systems": "Aerobic treatment: Forced aeration systems",
        "livestock_category": "Dairy Cow",
        "FracGas_MS": 0.85,
        "FracGas_MS_range": "(0.27 - 1)",
@@ -3707,20 +4567,23 @@
      },
      {
        "system": "Poultry manure without litter",
+       "systems": "Poultry manure without litter",
        "livestock_category": "Poultry",
        "FracGas_MS": 0.48,
        "FracGas_MS_range": "(0.15 - 0.60)",
        "Frac_leach_MS": 0
      },
      {
-       "system": "Aerobic treatment: Natural aeration systems",
+       "system": "Aerobic treatment",
+       "systems": "Aerobic treatment: Natural aeration systems",
        "livestock_category": "Poultry",
        "FracGas_MS": "NA",
        "FracGas_MS_range": "NA",
        "Frac_leach_MS": 0
      },
      {
-       "system": "Aerobic treatment: Forced aeration systems",
+       "system": "Aerobic treatment2",
+       "systems": "Aerobic treatment: Forced aeration systems",
        "livestock_category": "Poultry",
        "FracGas_MS": "NA",
        "FracGas_MS_range": "NA",
@@ -3728,20 +4591,23 @@
      },
      {
        "system": "Poultry manure without litter",
+       "systems": "Poultry manure without litter",
        "livestock_category": "Other Cattle",
        "FracGas_MS": "NA",
        "FracGas_MS_range": "NA",
        "Frac_leach_MS": "NA"
      },
      {
-       "system": "Aerobic treatment: Natural aeration systems",
+       "system": "Aerobic treatment",
+       "systems": "Aerobic treatment: Natural aeration systems",
        "livestock_category": "Other Cattle",
        "FracGas_MS": "NA",
        "FracGas_MS_range": "NA",
        "Frac_leach_MS": 0
      },
      {
-       "system": "Aerobic treatment: Forced aeration systems",
+       "system": "Aerobic treatment2",
+       "systems": "Aerobic treatment: Forced aeration systems",
        "livestock_category": "Other Cattle",
        "FracGas_MS": 0.85,
        "FracGas_MS_range": "(0.27 - 1)",
@@ -3749,20 +4615,23 @@
      },
      {
        "system": "Poultry manure without litter",
+       "systems": "Poultry manure without litter",
        "livestock_category": "Other animals",
        "FracGas_MS": "NA",
        "FracGas_MS_range": "NA",
        "Frac_leach_MS": "NA"
      },
      {
-       "system": "Aerobic treatment: Natural aeration systems",
+       "system": "Aerobic treatment",
+       "systems": "Aerobic treatment: Natural aeration systems",
        "livestock_category": "Other animals",
        "FracGas_MS": "NA",
        "FracGas_MS_range": "NA",
        "Frac_leach_MS": 0
      },
      {
-       "system": "Aerobic treatment: Forced aeration systems",
+       "system": "Aerobic treatment2",
+       "systems": "Aerobic treatment: Forced aeration systems",
        "livestock_category": "Other animals",
        "FracGas_MS": 0.27,
        "FracGas_MS_range": 0.27,
