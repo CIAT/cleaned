@@ -3236,7 +3236,7 @@
          "direct_nitrous_oxide_factor": 0.005
       },
       {
-         "system": "Uncovered  anaerobic lagoon",
+         "system": "Uncovered anaerobic lagoon",
          "systems": "Uncovered  anaerobic lagoon",
          "definition": "Anaerobic lagoons are designed and operated to combine waste stabilization and storage. Lagoon supernatant is usually used to remove manure from the associated confinement facilities to the lagoon. Anaerobic lagoons are designed with varying lengths of storage (up to a year or greater), depending on the climate region, the volatile solids loading rate, and other operational factors. The water from the lagoon may be recycled as flush water or used to irrigate and fertilise fields.",
          "direct_nitrous_oxide_factor": 0
