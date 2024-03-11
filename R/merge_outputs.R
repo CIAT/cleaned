@@ -679,8 +679,6 @@ combineOutputs <- function(para, feed_basket_quality, energy_required, land_requ
                       soil_carbon = soil_carbon,
                       product_waste = product_waste)
 
-  jsonlite::toJSON(output_list, pretty = TRUE)
-
   # Flatten the nested structure
   df_land_required <- output_list$land_required$land_required
   df_dm_required <- output_list$land_required$dm_required
@@ -714,5 +712,7 @@ combineOutputs <- function(para, feed_basket_quality, energy_required, land_requ
                   "Soil Carbon" = df_soil_carbon,
                   "Product Waste" = df_product_waste),
              excel_output_path)
+
+  jsonlite::toJSON(output_list, pretty = TRUE)
 
 } #end of output function
