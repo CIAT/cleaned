@@ -54,7 +54,7 @@ water_requirement <- function(para,land_required){
            kc_water_use_of_concentrates = ifelse(grepl("OFC",feed),feed_water_use,0),
            kc_water_use_ip_concentrates = ifelse(grepl("IP",feed),feed_water_use,0),
            kc_water_use_on_farm = feed_water_use-kc_water_use_of_roughages-kc_water_use_ip_concentrates,
-           kc_water_use_m3_per_kg = ifelse(is.nan(feed_water_use/area_feed),0,(feed_water_use/area_feed)))%>%
+           kc_water_use_m3_per_ha = ifelse(is.nan(feed_water_use/area_feed),0,(feed_water_use/area_feed)))%>%
     select(feed,
            area_feed,
            kc_average,
