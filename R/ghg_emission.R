@@ -471,7 +471,7 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
 
   if(length(para[["fertilizer"]]) == 0) {
 
-    fertlizer_ghg_emissions_per_ha <- 0
+    fetilizer_ghg <- 0
   }else{
     # Fertilizer applied to each feed per hectare
     fertilizer_list <- c("Ammonia","Ammonium nitrate","Ammonium sulfate","DAP","N solutions","NPK","Urea","Anhydrous ammonia")

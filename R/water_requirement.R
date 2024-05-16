@@ -66,7 +66,7 @@ water_requirement <- function(para,land_required){
            kc_water_use_of_concentrates,
            kc_water_use_ip_concentrates,
            kc_water_use_on_farm,
-           kc_water_use_m3_per_kg)
+           kc_water_use_m3_per_ha)
 
   #computing water use for production
   ET <- et*sum(water_use_per_feed_item$kc_frac)
