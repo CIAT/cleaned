@@ -16,7 +16,9 @@ combineOutputs(
   biomass,
   soil_carbon,
   ghg_emission,
-  filePath
+  filePath,
+  readMe,
+  benchMark
 )
 }
 \arguments{
@@ -65,7 +67,7 @@ biomass <- biomass_calculation(para, land_required)
 soil_carbon <- soil_organic_carbon(para, land_required, biomass)
 ghg_emission <- ghg_emission(para,energy_required,ghg_para,land_required,nitrogen_balance)
 combineOutputs(para,feed_basket_quality,energy_required,land_required,soil_erosion,water_required,
-nitrogen_balance,livestock_productivity,biomass,soil_carbon,ghg_emission,filePath)
+nitrogen_balance,livestock_productivity,biomass,soil_carbon,ghg_emission,filePath,readMe,benchMark)
 }
 
 }

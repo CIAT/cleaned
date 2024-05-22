@@ -47,14 +47,14 @@
 #' soil_carbon <- soil_organic_carbon(para, land_required, biomass)
 #' ghg_emission <- ghg_emission(para,energy_required,ghg_para,land_required,nitrogen_balance)
 #' combineOutputs(para,feed_basket_quality,energy_required,land_required,soil_erosion,water_required,
-#' nitrogen_balance,livestock_productivity,biomass,soil_carbon,ghg_emission,filePath)
+#' nitrogen_balance,livestock_productivity,biomass,soil_carbon,ghg_emission,filePath,readMe,benchMark)
 #' }
 #'
 #' @export
 #'
 combineOutputs <- function(para, feed_basket_quality, energy_required, land_required,
                            soil_erosion, water_required, nitrogen_balance, livestock_productivity,
-                           biomass,soil_carbon, ghg_emission, filePath){
+                           biomass,soil_carbon, ghg_emission, filePath, readMe, benchMark){
   if (exists("para")) {
     para = para
   }else {para = "ERROR: Data is not provided"}
@@ -106,6 +106,18 @@ combineOutputs <- function(para, feed_basket_quality, energy_required, land_requ
     # Extract the file name
     fileName <- sub("\\.\\w+$", "", basename(filePath))
   }else {filePath = "ERROR: File path is not provided"}
+
+  if (exists("readMe")) {
+    readMe = readMe
+    # Load readme workbook
+    readMe_wb <- loadWorkbook(readMe)
+  }else {filePath = "ERROR: ReadMe file is not provided"}
+
+  if (exists("benchMark")) {
+    benchMark = benchMark
+    # Load Benchmark workbook
+    benchMark_wb <- loadWorkbook(benchMark)
+  }else {filePath = "ERROR: Benchmark file is not provided"}
 
 
   feed_basket_quality <- lapply(feed_basket_quality, function(x) {x <- x[,-1]})
@@ -679,40 +691,45 @@ combineOutputs <- function(para, feed_basket_quality, energy_required, land_requ
                       soil_carbon = soil_carbon,
                       product_waste = product_waste)
 
-  # Flatten the nested structure
-  df_land_required <- output_list$land_required$land_required
-  df_dm_required <- output_list$land_required$dm_required
-  df_land_and_dm_required <- output_list$land_required$land_and_dm_required
-  df_overall_soil_impact <- output_list$soil_impacts$overal_soil_impact
-  df_nitrogen_balance <- output_list$soil_impacts$nitrogen_balance
-  df_water_use_per_feed_item <- output_list$water_required$water_use_per_feed_item
-  df_water_use_for_production <- output_list$water_required$water_use_for_production
-  df_consumable_livestock_product <- output_list$livestock_productivity$consumable_livestock_product
-  df_manure_produced <- output_list$livestock_productivity$manure_produced
-  df_ghg_balance <- output_list$ghg_emission$ghg_balance
-  df_global_warming_potential <- output_list$ghg_emission$global_warming_potential
-  df_biomass <- output_list$biomass
-  df_soil_carbon <- output_list$soil_carbon
-  df_product_waste <- output_list$product_waste
+  # Add worksheet to the readme workbook
+  addWorksheet(readMe_wb, "Land Required")
+  writeData(readMe_wb, sheet = "Land Required", x = output_list$land_required$land_required)
+  addWorksheet(readMe_wb, "DM Required")
+  writeData(readMe_wb, sheet = "DM Required", x = output_list$land_required$dm_required)
+  addWorksheet(readMe_wb, "Land and DM Required")
+  writeData(readMe_wb, sheet = "Land and DM Required", x = output_list$land_required$land_and_dm_required)
+  addWorksheet(readMe_wb, "Overall Soil Impact")
+  writeData(readMe_wb, sheet = "Overall Soil Impact", x = output_list$soil_impacts$overal_soil_impact)
+  addWorksheet(readMe_wb, "Nitrogen Balance")
+  writeData(readMe_wb, sheet = "Nitrogen Balance", x = output_list$soil_impacts$nitrogen_balance)
+  addWorksheet(readMe_wb, "Water Use Per Feed Item")
+  writeData(readMe_wb, sheet = "Water Use Per Feed Item", x = output_list$water_required$water_use_per_feed_item)
+  addWorksheet(readMe_wb, "Water Use For Production")
+  writeData(readMe_wb, sheet = "Water Use For Production", x = output_list$water_required$water_use_for_production)
+  addWorksheet(readMe_wb, "Consumable Livestock Product")
+  writeData(readMe_wb, sheet = "Consumable Livestock Product", x = output_list$livestock_productivity$consumable_livestock_product)
+  addWorksheet(readMe_wb, "Manure Produced")
+  writeData(readMe_wb, sheet = "Manure Produced", x = output_list$livestock_productivity$manure_produced)
+  addWorksheet(readMe_wb, "GHG Balance")
+  writeData(readMe_wb, sheet = "GHG Balance", x = output_list$ghg_emission$ghg_balance)
+  addWorksheet(readMe_wb, "Global Warming Potential")
+  writeData(readMe_wb, sheet = "Global Warming Potential", x = output_list$ghg_emission$global_warming_potential)
+  addWorksheet(readMe_wb, "Biomass")
+  writeData(readMe_wb, sheet = "Biomass", x = output_list$biomass)
+  addWorksheet(readMe_wb, "Soil Carbon")
+  writeData(readMe_wb, sheet = "Soil Carbon", x = output_list$soil_carbon)
+  addWorksheet(readMe_wb, "Product Waste")
+  writeData(readMe_wb, sheet = "Product Waste", x = output_list$product_waste)
 
   # Save to Excel with multiple sheets
-  excel_output_path <- paste0(directoryPath, "/", fileName, ".xlsx") # Change this to your desired output path
-  write.xlsx(list("Land Required" = df_land_required,
-                  "DM Required" = df_dm_required,
-                  "Land and DM Required" = df_land_and_dm_required,
-                  "Overall Soil Impact" = df_overall_soil_impact,
-                  "Nitrogen Balance" = df_nitrogen_balance,
-                  "Water Use Per Feed Item" = df_water_use_per_feed_item,
-                  "Water Use For Production" = df_water_use_for_production,
-                  "Consumable Livestock Product" = df_consumable_livestock_product,
-                  "Manure Produced" = df_manure_produced,
-                  "GHG Balance" = df_ghg_balance,
-                  "Global Warming Potential" = df_global_warming_potential,
-                  "Biomass" = df_biomass,
-                  "Soil Carbon" = df_soil_carbon,
-                  "Product Waste" = df_product_waste),
-             excel_output_path)
+  excel_output_path <- paste0(directoryPath, "/", fileName, ".xlsx") # Create path for excel
+  saveWorkbook(readMe_wb, excel_output_path, overwrite = TRUE)
 
+  # Save the benchmark
+  benchmark_path <- paste0(directoryPath, "/benchMark.xlsx")
+  saveWorkbook(benchMark_wb, benchmark_path, overwrite = TRUE)
+
+  # Save json
   jsonlite::toJSON(output_list, pretty = TRUE)
 
 } #end of output function
