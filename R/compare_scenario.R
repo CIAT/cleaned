@@ -232,6 +232,12 @@ compare_scenario <- function(baseRun, outFile, oDir2){
 
   results <- scenarioList %>% dplyr::bind_rows()
 
+  # Save results in excel
+  excel_output_path <- paste0(oDir2, "/scenario_comparison.xlsx")
+  write.xlsx(results, excel_output_path, overwrite = TRUE)
+
+  # Generate plots
+
   for(i in 2:ncol(results)){
 
     datos <- results %>% select(1, all_of(i))
