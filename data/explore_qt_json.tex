@@ -1,0 +1,1852 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={Exploration of CLEANED QT json file},
+  pdfauthor={Peter Steward},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Exploration of CLEANED QT json file}
+\author{Peter Steward}
+\date{2024-07-01}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{6}
+\tableofcontents
+}
+\begin{verbatim}
+## Loading required package: pacman
+\end{verbatim}
+
+\hypertarget{cleaned-data}{%
+\subsection{Cleaned Data}\label{cleaned-data}}
+
+\hypertarget{input-data-structure}{%
+\subsubsection{Input data structure}\label{input-data-structure}}
+
+The aim of this markdown document is to summarize the structure of the
+.json object provided from the QT UI.
+
+\hypertarget{load-the-json-file-into-r}{%
+\paragraph{Load the json file into R}\label{load-the-json-file-into-r}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Read in example json file \#\#\#\#\#}
+\NormalTok{json\_data }\OtherTok{\textless{}{-}} \FunctionTok{fromJSON}\NormalTok{(}\StringTok{"qt\_example.json"}\NormalTok{)}
+
+\CommentTok{\# Summarize level 1 of the list}
+\NormalTok{json\_names}\OtherTok{\textless{}{-}}\FunctionTok{data.table}\NormalTok{(}\AttributeTok{field\_name=}\FunctionTok{names}\NormalTok{(json\_data),}
+                          \AttributeTok{class=}\FunctionTok{sapply}\NormalTok{(json\_data,base}\SpecialCharTok{::}\NormalTok{class),}
+                          \AttributeTok{length=}\FunctionTok{sapply}\NormalTok{(json\_data,length))}
+
+\FunctionTok{kable}\NormalTok{(json\_names, }\AttributeTok{caption =} \StringTok{"Summary of Level 1 of the JSON Object"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llr@{}}
+\caption{Summary of Level 1 of the JSON Object}\tabularnewline
+\toprule()
+field\_name & class & length \\
+\midrule()
+\endfirsthead
+\toprule()
+field\_name & class & length \\
+\midrule()
+\endhead
+annual\_prec & integer & 1 \\
+arable\_tograssland & integer & 1 \\
+climate\_zone & character & 1 \\
+climate\_zone\_2 & character & 1 \\
+cropland\_orgmatter & character & 1 \\
+cropland\_orgmatter\_ipcc & numeric & 1 \\
+cropland\_system & character & 1 \\
+cropland\_system\_ipcc & numeric & 1 \\
+cropland\_tillage & character & 1 \\
+cropland\_tillage\_ipcc & integer & 1 \\
+database\_code & character & 1 \\
+et & integer & 1 \\
+farm\_code & character & 1 \\
+farm\_name & character & 1 \\
+feed\_basket & data.frame & 2 \\
+feed\_items & data.frame & 65 \\
+fertilizer & data.frame & 4 \\
+grassland\_implevel & character & 1 \\
+grassland\_implevel\_ipcc & integer & 1 \\
+grassland\_management & character & 1 \\
+grassland\_management\_ipcc & integer & 1 \\
+grassland\_toarable & integer & 1 \\
+livestock & data.frame & 59 \\
+purchased\_bedding & integer & 1 \\
+purchased\_compost & integer & 1 \\
+purchased\_manure & integer & 1 \\
+purchased\_organic\_n & integer & 1 \\
+rain\_length & integer & 1 \\
+region & character & 1 \\
+seasons & data.frame & 2 \\
+soil\_bulk & integer & 1 \\
+soil\_c & integer & 1 \\
+soil\_clay & integer & 1 \\
+soil\_depth & integer & 1 \\
+soil\_description & character & 1 \\
+soil\_k\_value & numeric & 1 \\
+soil\_n & numeric & 1 \\
+waste\_consume\_meat & integer & 1 \\
+waste\_consume\_milk & integer & 1 \\
+waste\_distribution\_meat & integer & 1 \\
+waste\_distribution\_milk & integer & 1 \\
+waste\_processing\_meat & integer & 1 \\
+waste\_processing\_milk & integer & 1 \\
+waste\_production\_meat & integer & 1 \\
+waste\_production\_milk & integer & 1 \\
+\bottomrule()
+\end{longtable}
+
+\hypertarget{simple-fields}{%
+\paragraph{Simple fields}\label{simple-fields}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{simple\_fields}\OtherTok{\textless{}{-}}\NormalTok{json\_names[class}\SpecialCharTok{!=}\StringTok{"data.frame"} \SpecialCharTok{\&}\NormalTok{ length}\SpecialCharTok{==}\DecValTok{1}\NormalTok{,field\_name]}
+\NormalTok{simple\_fields}\OtherTok{\textless{}{-}}\NormalTok{json\_data[json\_names[class}\SpecialCharTok{!=}\StringTok{"data.frame"} \SpecialCharTok{\&}\NormalTok{ length}\SpecialCharTok{==}\DecValTok{1}\NormalTok{,field\_name]]}
+\NormalTok{simple\_fields}\OtherTok{\textless{}{-}}\FunctionTok{data.table}\NormalTok{(}\AttributeTok{field=}\FunctionTok{names}\NormalTok{(simple\_fields),}
+                          \AttributeTok{value=}\FunctionTok{unlist}\NormalTok{(simple\_fields),}
+                          \AttributeTok{class=}\NormalTok{json\_names[class}\SpecialCharTok{!=}\StringTok{"data.frame"} \SpecialCharTok{\&}\NormalTok{ length}\SpecialCharTok{==}\DecValTok{1}\NormalTok{,class])}
+\FunctionTok{kable}\NormalTok{(simple\_fields, }\AttributeTok{caption =} \StringTok{"Summary of simple fields containing a single value"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3250}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.5500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.1250}}@{}}
+\caption{Summary of simple fields containing a single
+value}\tabularnewline
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+field
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+value
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+class
+\end{minipage} \\
+\midrule()
+\endfirsthead
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+field
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+value
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+class
+\end{minipage} \\
+\midrule()
+\endhead
+annual\_prec & 1500 & integer \\
+arable\_tograssland & 0 & integer \\
+climate\_zone & Temperate & character \\
+climate\_zone\_2 & Warm Temperate Dry & character \\
+cropland\_orgmatter & Low, temperate/boreal, dry & character \\
+cropland\_orgmatter\_ipcc & 0.95 & numeric \\
+cropland\_system & Long term cultivated, temperate/boreal, dry &
+character \\
+cropland\_system\_ipcc & 0.8 & numeric \\
+cropland\_tillage & Full & character \\
+cropland\_tillage\_ipcc & 1 & integer \\
+database\_code & base & character \\
+et & 1460 & integer \\
+farm\_code & 001 & character \\
+farm\_name & test 3 & character \\
+grassland\_implevel & Medium & character \\
+grassland\_implevel\_ipcc & 1 & integer \\
+grassland\_management & Nominally managed & character \\
+grassland\_management\_ipcc & 1 & integer \\
+grassland\_toarable & 0 & integer \\
+purchased\_bedding & 0 & integer \\
+purchased\_compost & 0 & integer \\
+purchased\_manure & 0 & integer \\
+purchased\_organic\_n & 0 & integer \\
+rain\_length & 5 & integer \\
+region & AFRICA & character \\
+soil\_bulk & 6 & integer \\
+soil\_c & 12 & integer \\
+soil\_clay & 45 & integer \\
+soil\_depth & 2 & integer \\
+soil\_description & Lixisol & character \\
+soil\_k\_value & 0.25 & numeric \\
+soil\_n & 3.5 & numeric \\
+waste\_consume\_meat & 2 & integer \\
+waste\_consume\_milk & 2 & integer \\
+waste\_distribution\_meat & 3 & integer \\
+waste\_distribution\_milk & 3 & integer \\
+waste\_processing\_meat & 5 & integer \\
+waste\_processing\_milk & 5 & integer \\
+waste\_production\_meat & 3 & integer \\
+waste\_production\_milk & 3 & integer \\
+\bottomrule()
+\end{longtable}
+
+\hypertarget{livestock}{%
+\paragraph{Livestock}\label{livestock}}
+
+The livestock level of the json list is a data.table that contains
+information about livestock herd structure and management, manure
+management and productivity.
+
+Here is the data transposed into long form so it is easier to fit onto
+the page.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{livestock}\OtherTok{\textless{}{-}}\FunctionTok{t}\NormalTok{(json\_data}\SpecialCharTok{$}\NormalTok{livestock) }\CommentTok{\# Transpose}
+\FunctionTok{colnames}\NormalTok{(livestock)}\OtherTok{\textless{}{-}}\FunctionTok{paste0}\NormalTok{(}\StringTok{"livetype\_code\_"}\NormalTok{,json\_data}\SpecialCharTok{$}\NormalTok{livestock}\SpecialCharTok{$}\NormalTok{livetype\_code)}
+\FunctionTok{kable}\NormalTok{(livestock,}\AttributeTok{caption=}\StringTok{"Transposed livestock herd data"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2818}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2273}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2364}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2545}}@{}}
+\caption{Transposed livestock herd data}\tabularnewline
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+livetype\_code\_2
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+livetype\_code\_1
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+livetype\_code\_5
+\end{minipage} \\
+\midrule()
+\endfirsthead
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+livetype\_code\_2
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+livetype\_code\_1
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+livetype\_code\_5
+\end{minipage} \\
+\midrule()
+\endhead
+adult\_weight & 800 & 400 & 0 \\
+annual\_growth & 0 & 0 & 90 \\
+annual\_milk & 3000 & 1500 & 0 \\
+annual\_wool & 0 & 0 & 0 \\
+birth\_interval & 1.166667 & 1.500000 & 0.000000 \\
+body\_weight & 600 & 350 & 200 \\
+body\_weight\_weaning & 0 & 0 & 0 \\
+body\_weight\_year\_one & 0 & 0 & 0 \\
+carcass\_fraction & 0.48 & 0.00 & 0.48 \\
+cp\_grazing & 0 & 3 & 0 \\
+cp\_growth & 0.0 & 0.0 & 0.4 \\
+cp\_lactation & 5 & 2 & 0 \\
+cp\_lactmilk & 0.09 & 0.09 & 0.00 \\
+cp\_maintenance & 0.60 & 0.35 & 0.20 \\
+cp\_pregnancy & 12.21 & 9.64 & 0.00 \\
+distance\_to\_pasture & 0.0 & 0.5 & 0.5 \\
+energy\_eggcontent & 0 & 0 & 0 \\
+energy\_meatcontent & 2200 & 2200 & 2200 \\
+energy\_milkcontent & 970 & 970 & 0 \\
+fat\_content & 4.3 & 5.8 & 0.0 \\
+grazing\_displacement & 0 & 2 & 0 \\
+herd\_composition & 2 & 5 & 0 \\
+ipcc\_ef\_category\_t1 & Dairy cattle & Other mature female & Other
+mature female-grazing \\
+ipcc\_ef\_category\_t2 & Dairy cows & Dairy cows & Non-dairy \\
+ipcc\_meth\_man\_category & Dairy cows & Dairy cows & Other cattle \\
+ipcc\_n\_exc\_category & Dairy cattle & Dairy cattle & Other cattle \\
+lactation\_length & 0 & 0 & 0 \\
+litter\_size & 0 & 0 & 0 \\
+livetype\_code & 2 & 1 & 5 \\
+livetype\_desc & Cattle - Cows (improved) & Cattle - Cows (local) &
+Cattle - Steers/heifers \\
+lw\_gain & 0 & 0 & 0 \\
+manure\_in\_field & 0 & 0 & 0 \\
+manure\_in\_non\_roofed\_enclosure & 0 & 0 & 0 \\
+manure\_in\_stable & 1 & 0 & 0 \\
+manure\_onfarm\_fraction & 1 & 0 & 0 \\
+manure\_sales\_fraction & 0 & 0 & 0 \\
+manureman\_non\_roofed\_enclosure & Solid storage & Solid storage &
+Solid storage \\
+manureman\_offfarm\_grazing & Solid storage & Solid storage & Solid
+storage \\
+manureman\_onfarm\_grazing & Solid storage & Pasture / range / paddock &
+Solid storage \\
+manureman\_stable & Solid storage & Solid storage & Solid storage \\
+me\_grazing & 2.0 & 2.0 & 1.5 \\
+me\_growth & 0 & 0 & 50 \\
+me\_lactation & 5 & 2 & 0 \\
+me\_lactmilk & 5.5 & 5.5 & 0.0 \\
+me\_maintenance & 60.61547 & 40.45955 & 26.59148 \\
+me\_pregnancy & 1500 & 1260 & 0 \\
+meat\_product & beef & beef & beef \\
+milk\_product & cow milk & cow milk & cow milk \\
+n\_content & 0.029 & 0.029 & 0.029 \\
+piglets\_relying\_on\_milk & 0 & 0 & 0 \\
+proportion\_growth & 0 & 0 & 0 \\
+protein\_meatcontent & 26 & 26 & 26 \\
+protein\_milkcontent & 3.7 & 3.2 & 0.0 \\
+time\_in\_non\_roofed\_enclosure & 0 & 0 & 0 \\
+time\_in\_offfarm\_grazing & 0 & 0 & 0 \\
+time\_in\_onfarm\_grazing & 0 & 1 & 1 \\
+time\_in\_stable & 1 & 0 & 0 \\
+water\_requirement & 140 & 120 & 80 \\
+work\_hour & 0 & 0 & 0 \\
+\bottomrule()
+\end{longtable}
+
+The \texttt{livestock} are linked to the \texttt{feed\_basket\$feeds}
+tables by the \texttt{livetype\_code} keyfield.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{json\_data}\SpecialCharTok{$}\NormalTok{livestock[,}\FunctionTok{c}\NormalTok{(}\StringTok{"livetype\_code"}\NormalTok{,}\StringTok{"livetype\_desc"}\NormalTok{)] }\CommentTok{\# Codes in the feed\_items table}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   livetype_code            livetype_desc
+## 1             2 Cattle - Cows (improved)
+## 2             1    Cattle - Cows (local)
+## 3             5  Cattle - Steers/heifers
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{lapply}\NormalTok{(json\_data}\SpecialCharTok{$}\NormalTok{feed\_basket}\SpecialCharTok{$}\NormalTok{feeds,}\StringTok{"[["}\NormalTok{,}\StringTok{"livestock"}\NormalTok{) }\CommentTok{\# Codes in the feed\_basket tables}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [[1]]
+## [[1]][[1]]
+##   allocation livetype_code
+## 1         40             2
+## 2         17             1
+## 3         40             5
+## 
+## [[1]][[2]]
+##   allocation livetype_code
+## 1         25             2
+## 2         43             1
+## 3         20             5
+## 
+## [[1]][[3]]
+##   allocation livetype_code
+## 1         35             2
+## 2         40             1
+## 3         40             5
+## 
+## 
+## [[2]]
+## [[2]][[1]]
+##   allocation livetype_code
+## 1         40             2
+## 2         17             1
+## 3         40             5
+## 
+## [[2]][[2]]
+##   allocation livetype_code
+## 1         25             2
+## 2         43             1
+## 3         20             5
+## 
+## [[2]][[3]]
+##   allocation livetype_code
+## 1         35             2
+## 2         40             1
+## 3         40             5
+\end{verbatim}
+
+\hypertarget{feed-items}{%
+\paragraph{Feed items}\label{feed-items}}
+
+The feed\_items level of the json list is a data.table that contains
+information about the production management and context of feed
+production.
+
+Here is the data transposed into long form so it is easier to fit onto
+the page.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{feed\_items}\OtherTok{\textless{}{-}}\FunctionTok{t}\NormalTok{(json\_data}\SpecialCharTok{$}\NormalTok{feed\_items) }\CommentTok{\# Transpose}
+\FunctionTok{colnames}\NormalTok{(feed\_items)}\OtherTok{\textless{}{-}}\FunctionTok{paste0}\NormalTok{(}\StringTok{"feed\_item\_code\_"}\NormalTok{,json\_data}\SpecialCharTok{$}\NormalTok{feed\_items}\SpecialCharTok{$}\NormalTok{feed\_item\_code)}
+\FunctionTok{kable}\NormalTok{(feed\_items,}\AttributeTok{caption=}\StringTok{"Transposed feed item data"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.1855}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2258}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.3387}}@{}}
+\caption{Transposed feed item data}\tabularnewline
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+feed\_item\_code\_65
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+feed\_item\_code\_99
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+feed\_item\_code\_18
+\end{minipage} \\
+\midrule()
+\endfirsthead
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+feed\_item\_code\_65
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+feed\_item\_code\_99
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+feed\_item\_code\_18
+\end{minipage} \\
+\midrule()
+\endhead
+ammonia & 0 & 0 & 0 \\
+ammonium\_nitrate & 0 & 0 & 0 \\
+ammonium\_sulfate & 0 & 0 & 0 \\
+average\_dbh25 & 0 & 0 & 0 \\
+average\_dbh2550 & 0 & 0 & 0 \\
+average\_dbh50 & 0 & 0 & 0 \\
+category & cereal & cereal & legume \\
+cp\_content & 13.60 & 3.85 & 18.40 \\
+cultivation\_period & 0 & 0 & 0 \\
+cut\_carry\_fraction & 0 & 0 & 0 \\
+dap & 0 & 0 & 0 \\
+diameter\_breast & 0 & 0 & 0 \\
+dm\_content & 89.00 & 91.88 & 90.00 \\
+dry\_yield & 30 & 15 & 8 \\
+ecosystem\_type & & & \\
+energy & 0 & 360 & 336 \\
+feed\_item\_code & 65 & 99 & 18 \\
+feed\_item\_name & Oats (Avena sativa) - grain IP & Rice (Oryza sativa)
+- straw & Cowpea (Vigna unguiculata) - crop residue \\
+feed\_type\_code & 2 & 45 & 9 \\
+feed\_type\_name & Avena sativa & Rice & Cowpea \\
+fraction\_as\_fertilizer & 1 & 1 & 0 \\
+fraction\_as\_manure & NA & NA & NA \\
+grassman & 1 & 1 & 1 \\
+grassman\_change\_factor & 1 & 1 & 1 \\
+grassman\_desc & Nominally managed & Nominally managed & Nominally
+managed \\
+increase\_dbh25 & 0 & 0 & 0 \\
+increase\_dbh2550 & 0 & 0 & 0 \\
+increase\_dbh50 & 0 & 0 & 0 \\
+intercrop & 0 & 0 & 0 \\
+intercrop\_fraction & 0 & 0 & 0 \\
+kc\_initial & 0.10 & 1.05 & 0.15 \\
+kc\_late & 0.55 & 0.75 & 0.60 \\
+kc\_midseason & 1.10 & 1.20 & 1.05 \\
+land\_cover & 7 & 7 & 1 \\
+land\_cover\_desc & Cereals & Cereals & Dense forest \\
+landcover\_c\_factor & 0.150 & 0.150 & 0.001 \\
+main\_n & 0.0176 & 0.0090 & 0.0380 \\
+main\_product\_removal & 1 & 1 & 0 \\
+me\_content & 12.267324 & 5.640000 & 9.880848 \\
+n\_content & 0.2 & 0.2 & 0.0 \\
+n\_fertilizer & NA & NA & NA \\
+n\_solutions & 50 & 300 & 100 \\
+npk & 0 & 0 & 0 \\
+organic\_amendment & & & \\
+residue\_burnt & 0 & 0 & 0 \\
+residue\_dry\_yield & 0 & 0 & 6 \\
+residue\_n & 0.0 & 0.2 & 0.0 \\
+residue\_removal & 0.0 & 0.8 & 0.0 \\
+slope & 1 & 1 & 1 \\
+slope\_desc & Flat (0-5\%) & Flat (0-5\%) & Flat (0-5\%) \\
+slope\_length & 0 & 0 & 0 \\
+slope\_p\_factor & 0.11 & 0.11 & 0.11 \\
+source\_type & Main & Residue & Main \\
+time\_horizon & 0 & 0 & 0 \\
+trees\_dhb & 0 & 0 & 0 \\
+trees\_growth & 0 & 0 & 0 \\
+trees\_ha & 0 & 0 & 0 \\
+trees\_ha\_dbh25 & 0 & 0 & 0 \\
+trees\_ha\_dbh2550 & 0 & 0 & 0 \\
+trees\_ha\_dbh50 & 0 & 0 & 0 \\
+trees\_removal & 0 & 0 & 0 \\
+urea & 400 & 700 & 200 \\
+usda\_value & 0 & 20450 & 16062 \\
+water\_content & 0.00 & 12.89 & 11.95 \\
+water\_regime & & & \\
+\bottomrule()
+\end{longtable}
+
+The \texttt{feed\_items} are linked to the \texttt{feed\_basket\$feeds}
+tables by the \texttt{feed\_item\_code} field.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{json\_data}\SpecialCharTok{$}\NormalTok{feed\_items[,}\FunctionTok{c}\NormalTok{(}\StringTok{"feed\_item\_code"}\NormalTok{,}\StringTok{"feed\_item\_name"}\NormalTok{)] }\CommentTok{\# Codes in the feed\_items table}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   feed_item_code                            feed_item_name
+## 1             65            Oats (Avena sativa) - grain IP
+## 2             99               Rice (Oryza sativa) - straw
+## 3             18 Cowpea (Vigna unguiculata) - crop residue
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{lapply}\NormalTok{(json\_data}\SpecialCharTok{$}\NormalTok{feed\_basket}\SpecialCharTok{$}\NormalTok{feeds,}\StringTok{"[["}\NormalTok{,}\StringTok{"feed\_item\_code"}\NormalTok{) }\CommentTok{\# Codes in the feed\_basket tables}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [[1]]
+## [1] "65" "99" "18"
+## 
+## [[2]]
+## [1] "65" "99" "18"
+\end{verbatim}
+
+Other keyfields include \texttt{feed\_type\_code} and
+\texttt{land\_cover}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{json\_data}\SpecialCharTok{$}\NormalTok{feed\_items[,}\FunctionTok{c}\NormalTok{(}\StringTok{"feed\_type\_code"}\NormalTok{,}\StringTok{"feed\_type\_name"}\NormalTok{,}\StringTok{"land\_cover"}\NormalTok{,}\StringTok{"land\_cover\_desc"}\NormalTok{)]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   feed_type_code feed_type_name land_cover land_cover_desc
+## 1              2   Avena sativa          7         Cereals
+## 2             45           Rice          7         Cereals
+## 3              9         Cowpea          1    Dense forest
+\end{verbatim}
+
+\hypertarget{fertilizer}{%
+\paragraph{Fertilizer}\label{fertilizer}}
+
+The fertilizer level of the json list is a data.table that contains
+information about the production management and context of feed
+production.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{json\_data}\SpecialCharTok{$}\NormalTok{fertilizer}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   fertilizer_code  fertilizer_desc fraction percentage_n
+## 1               4 Ammonium nitrate        0           12
+## 2               6      N solutions        0           10
+\end{verbatim}
+
+The values in \texttt{fertilizer\_code} field do not appear directly
+correspond to any fields in the feed basket or feed item tables. However
+columns with similar names do appear in the field item tables
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fertilizers}\OtherTok{\textless{}{-}}\NormalTok{json\_data}\SpecialCharTok{$}\NormalTok{fertilizer}\SpecialCharTok{$}\NormalTok{fertilizer\_desc}
+\NormalTok{fi\_cols}\OtherTok{\textless{}{-}}\FunctionTok{colnames}\NormalTok{(json\_data}\SpecialCharTok{$}\NormalTok{feed\_items)}
+
+\CommentTok{\# Reformat fertilizer names to match column names in the feed\_items table}
+\NormalTok{(fertilizers}\OtherTok{\textless{}{-}}\FunctionTok{gsub}\NormalTok{(}\StringTok{" "}\NormalTok{,}\StringTok{"\_"}\NormalTok{,}\FunctionTok{tolower}\NormalTok{(json\_data}\SpecialCharTok{$}\NormalTok{fertilizer}\SpecialCharTok{$}\NormalTok{fertilizer\_desc)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "ammonium_nitrate" "n_solutions"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Find matching columns}
+\NormalTok{fi\_cols[fi\_cols }\SpecialCharTok{\%in\%}\NormalTok{ fertilizers]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "ammonium_nitrate" "n_solutions"
+\end{verbatim}
+
+\hypertarget{seasons}{%
+\paragraph{Seasons}\label{seasons}}
+
+The seasons level is simple table that records the length of each season
+(adding up to 365 days max).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{json\_data}\SpecialCharTok{$}\NormalTok{seasons}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   season_length season_name
+## 1           200  Wet season
+## 2           165  Dry season
+\end{verbatim}
+
+The \texttt{season\_name} field is the key field that links to the feed
+basket.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{json\_data}\SpecialCharTok{$}\NormalTok{feed\_basket}\SpecialCharTok{$}\NormalTok{season\_name}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Wet season" "Dry season"
+\end{verbatim}
+
+\hypertarget{feed-basket}{%
+\paragraph{Feed basket}\label{feed-basket}}
+
+The feed basket data contains 2 levels called feeds and season\_name.
+These levels appear to be the same length: feeds = 2, season\_name = 2.
+
+\hypertarget{seasons-1}{%
+\subparagraph{Seasons}\label{seasons-1}}
+
+The season object is simple, being a vector containing the names of the
+seasons:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{json\_data}\SpecialCharTok{$}\NormalTok{feed\_basket}\SpecialCharTok{$}\NormalTok{season\_name}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Wet season" "Dry season"
+\end{verbatim}
+
+\hypertarget{feed-basket-1}{%
+\subparagraph{Feed Basket}\label{feed-basket-1}}
+
+The feed basket object is the most structurally complex element of the
+input json data containing several levels of nesting.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{str}\NormalTok{(json\_data}\SpecialCharTok{$}\NormalTok{feed\_basket}\SpecialCharTok{$}\NormalTok{feeds)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## List of 2
+##  $ :'data.frame':    3 obs. of  3 variables:
+##   ..$ feed_item_code: chr [1:3] "65" "99" "18"
+##   ..$ feed_type_code: chr [1:3] "2" "45" "9"
+##   ..$ livestock     :List of 3
+##   .. ..$ :'data.frame':  3 obs. of  2 variables:
+##   .. .. ..$ allocation   : int [1:3] 40 17 40
+##   .. .. ..$ livetype_code: chr [1:3] "2" "1" "5"
+##   .. ..$ :'data.frame':  3 obs. of  2 variables:
+##   .. .. ..$ allocation   : int [1:3] 25 43 20
+##   .. .. ..$ livetype_code: chr [1:3] "2" "1" "5"
+##   .. ..$ :'data.frame':  3 obs. of  2 variables:
+##   .. .. ..$ allocation   : int [1:3] 35 40 40
+##   .. .. ..$ livetype_code: chr [1:3] "2" "1" "5"
+##  $ :'data.frame':    3 obs. of  3 variables:
+##   ..$ feed_item_code: chr [1:3] "65" "99" "18"
+##   ..$ feed_type_code: chr [1:3] "2" "45" "9"
+##   ..$ livestock     :List of 3
+##   .. ..$ :'data.frame':  3 obs. of  2 variables:
+##   .. .. ..$ allocation   : int [1:3] 40 17 40
+##   .. .. ..$ livetype_code: chr [1:3] "2" "1" "5"
+##   .. ..$ :'data.frame':  3 obs. of  2 variables:
+##   .. .. ..$ allocation   : int [1:3] 25 43 20
+##   .. .. ..$ livetype_code: chr [1:3] "2" "1" "5"
+##   .. ..$ :'data.frame':  3 obs. of  2 variables:
+##   .. .. ..$ allocation   : int [1:3] 35 40 40
+##   .. .. ..$ livetype_code: chr [1:3] "2" "1" "5"
+\end{verbatim}
+
+Each feed basket table (e.g.,
+\texttt{json\_data\$feed\_basket\$feeds{[}{[}1{]}{]}}) is constructed
+using key fields that describe feed items found in the
+\texttt{json\_data\$feed\_items\ table}, specifically
+\texttt{feed\_item\_code} and \texttt{feed\_type\_code.} The feeds are
+then allocated to the herd elements described in the
+\texttt{json\_data\$livestock\ table}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{json\_data}\SpecialCharTok{$}\NormalTok{feed\_basket}\SpecialCharTok{$}\NormalTok{feeds[[}\DecValTok{1}\NormalTok{]]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   feed_item_code feed_type_code           livestock
+## 1             65              2 40, 17, 40, 2, 1, 5
+## 2             99             45 25, 43, 20, 2, 1, 5
+## 3             18              9 35, 40, 40, 2, 1, 5
+\end{verbatim}
+
+The livestock field in the feed basket table contains a list with 3
+elements, indicating a one-to-many relationship between the diet item
+and elements of the livestock herd. Each feed item represented by a row
+in the feed basket table is allocated to different herd elements, with
+the \texttt{livetype\_code} field serving as the key field linking the
+two tables.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{json\_data}\SpecialCharTok{$}\NormalTok{feed\_basket}\SpecialCharTok{$}\NormalTok{feeds[[}\DecValTok{1}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{livestock}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [[1]]
+##   allocation livetype_code
+## 1         40             2
+## 2         17             1
+## 3         40             5
+## 
+## [[2]]
+##   allocation livetype_code
+## 1         25             2
+## 2         43             1
+## 3         20             5
+## 
+## [[3]]
+##   allocation livetype_code
+## 1         35             2
+## 2         40             1
+## 3         40             5
+\end{verbatim}
+
+The first element of the livestock list contains no further nesting:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{str}\NormalTok{(json\_data}\SpecialCharTok{$}\NormalTok{feed\_basket}\SpecialCharTok{$}\NormalTok{feeds[[}\DecValTok{1}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{livestock[[}\DecValTok{1}\NormalTok{]])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 'data.frame':    3 obs. of  2 variables:
+##  $ allocation   : int  40 17 40
+##  $ livetype_code: chr  "2" "1" "5"
+\end{verbatim}
+
+\hypertarget{r-project-datasets}{%
+\subsubsection{R-project datasets}\label{r-project-datasets}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rda\_files}\OtherTok{\textless{}{-}}\FunctionTok{list.files}\NormalTok{(}\StringTok{".rda"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{ghg-parameters}{%
+\paragraph{GHG parameters}\label{ghg-parameters}}
+
+The ghg para object (\texttt{cleaned/data/ghg\_para.rda}) is a list of
+tables that appear to refer to IPCC equations, livestock parameters and
+fertilizers.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{load}\NormalTok{(}\StringTok{"ghg\_para.rda"}\NormalTok{)}
+
+\CommentTok{\# Summarize level 1 of the list}
+\NormalTok{ghg\_names}\OtherTok{\textless{}{-}}\FunctionTok{data.table}\NormalTok{(}\AttributeTok{field\_name=}\FunctionTok{names}\NormalTok{(ghg\_para),}
+                          \AttributeTok{dim=}\FunctionTok{sapply}\NormalTok{(ghg\_para,dim))}
+
+\FunctionTok{kable}\NormalTok{(ghg\_names,}\AttributeTok{caption=}\StringTok{"Tables within ghg\_names list"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}ll@{}}
+\caption{Tables within ghg\_names list}\tabularnewline
+\toprule()
+field\_name & dim \\
+\midrule()
+\endfirsthead
+\toprule()
+field\_name & dim \\
+\midrule()
+\endhead
+livestock\_parameters & 18, 7 \\
+Table\_10.12 & 6, 2 \\
+table\_10.17 & 3, 2 \\
+table\_10.19 & 12, 3 \\
+table\_10.21 & 3, 2 \\
+table\_10.22 & 7, 4 \\
+table\_10A\_9 & 18, 3 \\
+table\_11.1\_\&\_table\_11.3 & 10, 5 \\
+table\_2.5 & 5, 2 \\
+fertilizer\_table & 5, 5 \\
+table\_5.11 & NULL \\
+table\_5.12 & 8, 4 \\
+table\_5.13 & 5, 3 \\
+table\_5.14 & 6, 2 \\
+\bottomrule()
+\end{longtable}
+
+The exception is \texttt{ghg\_para\$table\_5.11} which is a list:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ghg\_para}\SpecialCharTok{$}\NormalTok{table\_5}\FloatTok{.11}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $baseline_emission_factor
+## [1] 1.3
+## 
+## $soil_type_scaling_factor
+## [1] 1
+\end{verbatim}
+
+\hypertarget{livestock_parameters}{%
+\subparagraph{Livestock\_parameters}\label{livestock_parameters}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ghg\_para}\SpecialCharTok{$}\NormalTok{livestock\_parameters}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##               livestock_category_name Urinary_energy_frac ash_content
+## 1                        Cows (local)                0.04        0.08
+## 2                     Cows (improved)                0.04        0.08
+## 3              Cows (high productive)                0.04        0.08
+## 4                 Adult cattle - male                0.04        0.08
+## 5                      Steers/heifers                0.04        0.08
+## 6           Steers/heifers (improved)                0.04        0.08
+## 7                              Calves                0.04        0.08
+## 8                   Calves (improved)                0.04        0.08
+## 9                     Buffalo (dairy)                0.04        0.08
+## 10             Buffalo steers/heifers                0.04        0.08
+## 11                     Buffalo calves                0.04        0.08
+## 12            Sheep/Goats - Ewes/Does                0.04        0.08
+## 13  Sheep/Goats - Breeding Rams/Bucks                0.04        0.08
+## 14 Sheep/Goats - Fattening Rams/Bucks                0.04        0.08
+## 15           Sheep/Goats - Lambs/Kids                0.04        0.08
+## 16     Pigs - lactating/pregnant sows                0.02        0.08
+## 17              Pigs - dry sows/boars                0.02        0.08
+## 18                     Pigs - growers                0.02        0.08
+##    IPCC Category - methane emissions enteric fermentation - Tier 1
+## 1                                              Other mature female
+## 2                                                     Dairy cattle
+## 3                                                     Dairy cattle
+## 4                                                 Other draft bull
+## 5                                     Other Mature female-grazing 
+## 6                                     Other Mature female-grazing 
+## 7                                                      Other young
+## 8                                                      Other young
+## 9                                                 Other draft bull
+## 10                                                     Other young
+## 11                                                     Other young
+## 12                                                           Goats
+## 13                                                           Goats
+## 14                                                           Goats
+## 15                                                           Goats
+## 16                                                            Pigs
+## 17                                                            Pigs
+## 18                                                            Pigs
+##                               IPCC Category - methane emissions enteric fermentation - Tier 2
+## 1                                                                                Dairy cattle
+## 2                                                                                Dairy cattle
+## 3                                                                                Dairy cattle
+## 4  Other Cattle and Buffaloes that are primarily fed low quality crop residues and byproducts
+## 5  Other Cattle and Buffaloes that are primarily fed low quality crop residues and byproducts
+## 6  Other Cattle and Buffaloes that are primarily fed low quality crop residues and byproducts
+## 7  Other Cattle and Buffaloes that are primarily fed low quality crop residues and byproducts
+## 8  Other Cattle and Buffaloes that are primarily fed low quality crop residues and byproducts
+## 9                                                           Other Cattle or Buffalo - grazing
+## 10                                                          Other Cattle or Buffalo - grazing
+## 11                                                          Other Cattle or Buffalo � grazing
+## 12                                                                                      Sheep
+## 13                                                                                      Sheep
+## 14                                                                                      Sheep
+## 15                                                                      lambs (less 1 yr old)
+## 16                                                                                        N/A
+## 17                                                                                        N/A
+## 18                                                                                        N/A
+##    IPCC Category - methane emissions manure - Tier 1
+## 1                                         Dairy cows
+## 2                                         Dairy cows
+## 3                                         Dairy cows
+## 4                                       Other cattle
+## 5                                       Other cattle
+## 6                                       Other cattle
+## 7                                       Other cattle
+## 8                                       Other cattle
+## 9                                            Buffalo
+## 10                                           Buffalo
+## 11                                           Buffalo
+## 12                                             Sheep
+## 13                                             Sheep
+## 14                                             Sheep
+## 15                                             Sheep
+## 16                                             Swine
+## 17                                             Swine
+## 18                                             Swine
+##    IPCC-Category - Default N-excretion rates Tier 1
+## 1                                      Dairy cattle
+## 2                                      Dairy cattle
+## 3                                      Dairy cattle
+## 4                                      Other cattle
+## 5                                      Other cattle
+## 6                                      Other cattle
+## 7                                      Other cattle
+## 8                                      Other cattle
+## 9                                      Other cattle
+## 10                                     Other cattle
+## 11                                     Other cattle
+## 12                                            Sheep
+## 13                                            Sheep
+## 14                                            sheep
+## 15                                            sheep
+## 16                                             pigs
+## 17                                             pigs
+## 18                                             pigs
+\end{verbatim}
+
+\hypertarget{fertilizer-table}{%
+\subparagraph{Fertilizer table}\label{fertilizer-table}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ghg\_para}\SpecialCharTok{$}\NormalTok{fertilizer\_table}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    fertilizer_type percent_N emission_factor_kg_CO2eq_per_kg N
+## 1              DAP        18                              2.80
+## 2              CAN        27                              8.66
+## 3             Urea        NA                                NA
+## 4              NPK        NA                                NA
+## 5 Lime-application        NA                                NA
+##   kg_N_per_1_kg_of_fertilzer emissions_factor_kg_CO2_eq_per_kg_fertilizer
+## 1                       0.18                                       0.5040
+## 2                       0.27                                       2.3382
+## 3                         NA                                       0.7850
+## 4                         NA                                       1.2100
+## 5                         NA                                           NA
+\end{verbatim}
+
+\hypertarget{ipcc-tables}{%
+\subparagraph{IPCC Tables}\label{ipcc-tables}}
+
+Table\_10.12
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{kable}\NormalTok{(ghg\_para}\SpecialCharTok{$}\NormalTok{Table\_10}\FloatTok{.12}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.7778}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.2222}}@{}}
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+animal\_category\_ipcc
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+methane\_conversion\_factor
+\end{minipage} \\
+\midrule()
+\endhead
+Dairy cattle & 6.5 \\
+Other Cattle and Buffaloes that are primarily fed low quality crop
+residues and byproducts & 6.5 \\
+Other Cattle or Buffalo - grazing & 6.5 \\
+sheep & 6.5 \\
+lambs (less 1 yr old) & 4.5 \\
+N/A & 0.0 \\
+\bottomrule()
+\end{longtable}
+
+table\_10.17
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{kable}\NormalTok{(ghg\_para}\SpecialCharTok{$}\NormalTok{table\_10}\FloatTok{.17}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lr@{}}
+\toprule()
+system & mcf\_by\_average\_annual\_temperature \\
+\midrule()
+\endhead
+Pasture / range / paddock & 0.015 \\
+solid storage & 0.040 \\
+dry lot & 0.015 \\
+\bottomrule()
+\end{longtable}
+
+table\_10.19
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{kable}\NormalTok{(ghg\_para}\SpecialCharTok{$}\NormalTok{table\_10}\FloatTok{.19}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llr@{}}
+\toprule()
+anaimal\_category & Continent & n\_rate \\
+\midrule()
+\endhead
+Dairy cattle & LATIN AMERICA & 0.48 \\
+Dairy cattle & AFRICA & 0.60 \\
+Dairy cattle & ASIA & 0.47 \\
+Other cattle & LATIN AMERICA & 0.37 \\
+Other cattle & AFRICA & 0.63 \\
+Other cattle & ASIA & 0.34 \\
+Sheep & LATIN AMERICA & 1.17 \\
+Sheep & AFRICA & 1.17 \\
+Sheep & ASIA & 1.17 \\
+Pigs & LATIN AMERICA & 1.64 \\
+Pigs & AFRICA & 1.64 \\
+Pigs & ASIA & 0.50 \\
+\bottomrule()
+\end{longtable}
+
+table\_10.21
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{kable}\NormalTok{(ghg\_para}\SpecialCharTok{$}\NormalTok{table\_10}\FloatTok{.21}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lr@{}}
+\toprule()
+system & direct\_nitrous\_oxide\_factor \\
+\midrule()
+\endhead
+Pasture / range / paddock & 0.010 \\
+solid storage & 0.005 \\
+dry lot & 0.020 \\
+\bottomrule()
+\end{longtable}
+
+table\_10.22
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{kable}\NormalTok{(ghg\_para}\SpecialCharTok{$}\NormalTok{table\_10}\FloatTok{.22}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llrl@{}}
+\toprule()
+anaimal\_category & system & fraction\_n\_loss\_mms & range \\
+\midrule()
+\endhead
+Dairy cows & pit storage & 0.28 & (10-40) \\
+Dairy cows & dry lot & 0.20 & (10-35) \\
+Dairy cows & solid storage & 0.30 & (10-40) \\
+Dairy cows & daily spread & 0.07 & (5-60) \\
+Other cattle & dry lot & 0.30 & (20-50) \\
+Other cattle & solid storage & 0.45 & (10-65) \\
+Other cattle & deep bedding & 0.30 & (20-40) \\
+\bottomrule()
+\end{longtable}
+
+table\_10A\_9
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{kable}\NormalTok{(ghg\_para}\SpecialCharTok{$}\NormalTok{Table\_10}\FloatTok{.12}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.7778}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.2222}}@{}}
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+animal\_category\_ipcc
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+methane\_conversion\_factor
+\end{minipage} \\
+\midrule()
+\endhead
+Dairy cattle & 6.5 \\
+Other Cattle and Buffaloes that are primarily fed low quality crop
+residues and byproducts & 6.5 \\
+Other Cattle or Buffalo - grazing & 6.5 \\
+sheep & 6.5 \\
+lambs (less 1 yr old) & 4.5 \\
+N/A & 0.0 \\
+\bottomrule()
+\end{longtable}
+
+table\_11.1\_\&\_table\_11.3
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{kable}\NormalTok{(ghg\_para}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{table\_11.1\_\&\_table\_11.3}\StringTok{\textasciigrave{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.0521}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1534}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.4571}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1012}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2362}}@{}}
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+emission\_factors
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+unit
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+description
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+n2o\_emissions\_from\_managed\_soils
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+uncertainty\_range
+\end{minipage} \\
+\midrule()
+\endhead
+EF1 & kg N2O-N (kg N input)-1 & emission factor for N2O emissions from N
+inputs & 0.0100 & 0.003-0.03 \\
+EF2 & kg N2O-N ha-1 yr-1 & emission factor for N2O emissions from
+drained/managed organic soils & 16.0000 & 5 TO 48 \\
+EF3PRP-CPP & kg N2O-N (kg N input)-1 & emission factor for N2O emissions
+from urine and dung N deposited on pasture, range and paddock by grazing
+animals & 0.0200 & 0.007-0.06 \\
+EF3PRP-SO & kg N2O-N (kg N input)-1 & emission factor for N2O emissions
+from urine and dung N deposited on pasture, range and paddock by grazing
+animals & 0.0100 & 0.003-0.03 \\
+EF4 & {[}kg N-N2O (kg NH3-N + NOx-N volatilised)-1{]} & emission factor
+for N2O emissions from atmospheric deposition of N on soils and water
+surfaces & 0.0100 & 0.002-0.05 \\
+EF5 & kg N2O-N (kg N leached and runoff)-1 & emission factor for N2O
+emissions from N leaching and runoff & 0.0075 & 0.005-0.025 \\
+EF1R & kg N2O-N (kg N input)-1 & emission factor for N2O emission from N
+inputs for flooded rice & 0.0030 & 0.000 - 0.006 \\
+FracGASF & kg N volatilised (kg of N applied)-1 & fraction of synthetic
+fertilzer N that volatilises as NH3 and NOx & 0.1000 & 0.03-0.3 \\
+FracGASM & kg N volatilised (kg of N applied or deposited)-1 & fraction
+of applied organic N fertiliser materials (FON) and of urine and dung N
+deposited by grazing animals (FPRP) that volatilises as NH3 and NOx &
+0.2000 & 0.05-0.5 \\
+FracLEACH-(H) & kg N (kg of N additions)-1 & fraction of all N added
+to/mineralised in managed soils in regions where leaching/runoff occurs
+that is lost through leaching and runoff & 0.3000 & if sum of rain - sum
+of PE \textgreater{} soil water holding capacity during rainy season \\
+\bottomrule()
+\end{longtable}
+
+table\_2.5
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{kable}\NormalTok{(ghg\_para}\SpecialCharTok{$}\NormalTok{table\_2}\FloatTok{.5}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lr@{}}
+\toprule()
+ghg\_gas & burnt\_emission\_factor \\
+\midrule()
+\endhead
+CO2 & 1515.00 \\
+CO & 92.00 \\
+CH4 & 2.70 \\
+N2O & 0.07 \\
+Nox & 2.50 \\
+\bottomrule()
+\end{longtable}
+
+table\_5.12
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{kable}\NormalTok{(ghg\_para}\SpecialCharTok{$}\NormalTok{table\_5}\FloatTok{.12}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.1935}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.3306}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2258}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2500}}@{}}
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+ecosystem
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+ecosystem\_type
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+aggregated\_scaling\_factor\_w
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+disaggregated\_scaling\_factor\_w
+\end{minipage} \\
+\midrule()
+\endhead
+irrigated & Irrigated-Continuously flooded & 0.78 & 1.00 \\
+irrigated & intermittently flooded-single aeration & 0.78 & 0.60 \\
+irrigated & Intermittently flooded-multiple aeration & 0.78 & 0.52 \\
+Rain fed and deep water & Rainfed-regular rainfed & 0.27 & 0.28 \\
+Rain fed and deep water & Rainfed-drought prone & 0.27 & 0.25 \\
+Rain fed and deep water & Rainfed-deep water & 0.27 & 0.31 \\
+Upland & Upland & 0.00 & 0.00 \\
+None & None & 0.00 & 0.00 \\
+\bottomrule()
+\end{longtable}
+
+table\_5.13
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{kable}\NormalTok{(ghg\_para}\SpecialCharTok{$}\NormalTok{table\_5}\FloatTok{.13}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.5816}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.1986}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2199}}@{}}
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+water\_regime
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+aggregated\_scaling\_factor\_p
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+disaggregated\_scaling\_factor\_p
+\end{minipage} \\
+\midrule()
+\endhead
+non-flooded pre-season \textless180 days( often in double cropping of
+rice) & 1.22 & 1.00 \\
+non-flooded pre-season \textgreater180 days (single rice crop following
+a dry fallow period) & 1.22 & 0.68 \\
+flooded pre-season (\textgreater30 days) & 1.22 & 1.90 \\
+flooded pre-season (\textless30 days) & 1.22 & 0.00 \\
+None & 0.00 & 0.00 \\
+\bottomrule()
+\end{longtable}
+
+table\_5.14
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{kable}\NormalTok{(ghg\_para}\SpecialCharTok{$}\NormalTok{table\_5}\FloatTok{.14}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.7831}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.2169}}@{}}
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+organic\_amendment
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+conversion\_factor
+\end{minipage} \\
+\midrule()
+\endhead
+straw incorporated in soil shortly (\textless30 days) before cultivation
+& 1.00 \\
+straw incorporated in soil long (\textgreater30 days) before cultivation
+& 0.29 \\
+Compost & 0.05 \\
+Farm yard manure & 0.14 \\
+green manure & 0.50 \\
+None & 0.00 \\
+\bottomrule()
+\end{longtable}
+
+\hypertarget{stock-change}{%
+\paragraph{Stock change}\label{stock-change}}
+
+The stock change object (\texttt{cleaned/data/stock\_change\_para.rda})
+is a series of nested lists that describe: 1) landuse, management, and
+input factor\_variables for grassland; and 2) landuse, tillage, and
+input input factor\_variables for cropland.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{load}\NormalTok{(}\StringTok{"stock\_change\_para.rda"}\NormalTok{)}
+\FunctionTok{str}\NormalTok{(stock\_change\_para)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## List of 2
+##  $ cropland :'data.frame':   1 obs. of  3 variables:
+##   ..$ landuse:List of 1
+##   .. ..$ :'data.frame':  1 obs. of  1 variable:
+##   .. .. ..$ factor_variables:List of 1
+##   .. .. .. ..$ :'data.frame':    1 obs. of  10 variables:
+##   .. .. .. .. ..$ Long term cultivated, temperate/boreal, dry                     : num 0.8
+##   .. .. .. .. ..$ Long term cultivated, temperate/boreal, moist                   : num 0.69
+##   .. .. .. .. ..$ Long term cultivated, tropical, dry                             : num 0.58
+##   .. .. .. .. ..$ Long term cultivated, tropical, moist/wet                       : num 0.48
+##   .. .. .. .. ..$ Long term cultivated, tropical montane, all                     : num 0.64
+##   .. .. .. .. ..$ Paddy rice                                                      : num 1.1
+##   .. .. .. .. ..$ Perennial/tree crop                                             : int 1
+##   .. .. .. .. ..$ Set aside (< 20 years), temperate/boreal and tropical, dry      : num 0.93
+##   .. .. .. .. ..$ Set aside (< 20 years), temperate/boreal and tropical, moist/wet: num 0.82
+##   .. .. .. .. ..$ Set aside (< 20 years),tropical montane, all                    : num 0.88
+##   ..$ tillage:List of 1
+##   .. ..$ :'data.frame':  1 obs. of  1 variable:
+##   .. .. ..$ factor_variables:List of 1
+##   .. .. .. ..$ :'data.frame':    1 obs. of  11 variables:
+##   .. .. .. .. ..$ Full                            : int 1
+##   .. .. .. .. ..$ Reduced, temperate/boreal, dry  : num 1.02
+##   .. .. .. .. ..$ Reduced, temperate/boreal, moist: num 1.08
+##   .. .. .. .. ..$ Reduced, tropical, dry          : num 1.09
+##   .. .. .. .. ..$ Reduced, tropical, moist        : num 1.15
+##   .. .. .. .. ..$ Reduced, tropical montane, all  : num 1.09
+##   .. .. .. .. ..$ No-till, temperate/boreal, dry  : num 1.1
+##   .. .. .. .. ..$ No-till, temperate/boreal, moist: num 1.15
+##   .. .. .. .. ..$ No-till, tropical, dry          : num 1.17
+##   .. .. .. .. ..$ No-till, tropical, moist/wet    : num 1.22
+##   .. .. .. .. ..$ No-till, tropical montane, all  : num 1.16
+##   ..$ input  :List of 1
+##   .. ..$ :'data.frame':  1 obs. of  1 variable:
+##   .. .. ..$ factor_variables:List of 1
+##   .. .. .. ..$ :'data.frame':    1 obs. of  12 variables:
+##   .. .. .. .. ..$ Low, temperate/boreal, dry                                : num 0.95
+##   .. .. .. .. ..$ Low, temperate/boreal, moist                              : num 0.92
+##   .. .. .. .. ..$ Low, tropical, dry                                        : num 0.95
+##   .. .. .. .. ..$ Low, tropical, moist                                      : num 0.92
+##   .. .. .. .. ..$ Low, tropical montane, all                                : num 0.94
+##   .. .. .. .. ..$ Medium, all                                               : int 1
+##   .. .. .. .. ..$ High w/OUT manure, temperate/boral and tropical, dry      : num 1.04
+##   .. .. .. .. ..$ High w/OUT manure, temperate/boral and tropical, moist/wet: num 1.11
+##   .. .. .. .. ..$ High w/OUT manure, tropical montane                       : num 1.08
+##   .. .. .. .. ..$ High with manure, temperate/boral and tropical, dry       : num 1.37
+##   .. .. .. .. ..$ High with manure, temperate/boral and tropical, moist/wet : num 1.44
+##   .. .. .. .. ..$ High with manure, tropical montane                        : num 1.41
+##  $ grassland:'data.frame':   1 obs. of  3 variables:
+##   ..$ landuse   :List of 1
+##   .. ..$ :'data.frame':  1 obs. of  1 variable:
+##   .. .. ..$ factor_variables:List of 1
+##   .. .. .. ..$ :'data.frame':    1 obs. of  1 variable:
+##   .. .. .. .. ..$ All: int 1
+##   ..$ management:List of 1
+##   .. ..$ :'data.frame':  1 obs. of  1 variable:
+##   .. .. ..$ factor_variables:List of 1
+##   .. .. .. ..$ :'data.frame':    1 obs. of  8 variables:
+##   .. .. .. .. ..$ Nominally managed                              : num 1
+##   .. .. .. .. ..$ Moderately degraded grassland, temperate/boreal: num 0.95
+##   .. .. .. .. ..$ Moderately degraded grassland, tropical        : num 0.97
+##   .. .. .. .. ..$ Moderately degraded grassland, tropical montane: num 0.96
+##   .. .. .. .. ..$ Severely degraded                              : num 0.7
+##   .. .. .. .. ..$ Improved grassland, temperate/boreal           : num 1.14
+##   .. .. .. .. ..$ Improved grassland, tropical                   : num 1.17
+##   .. .. .. .. ..$ Improved grassland, tropical montane           : num 1.16
+##   ..$ input     :List of 1
+##   .. ..$ :'data.frame':  1 obs. of  1 variable:
+##   .. .. ..$ factor_variables:List of 1
+##   .. .. .. ..$ :'data.frame':    1 obs. of  3 variables:
+##   .. .. .. .. ..$ Medium: int 1
+##   .. .. .. .. ..$ High  : num 1.11
+##   .. .. .. .. ..$ none  : int 1
+\end{verbatim}
+
+\hypertarget{grass-factor-variables}{%
+\subparagraph{Grass factor variables}\label{grass-factor-variables}}
+
+\textbf{Grassland: landuse}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x}\OtherTok{\textless{}{-}}\FunctionTok{unlist}\NormalTok{(stock\_change\_para}\SpecialCharTok{$}\NormalTok{grassland}\SpecialCharTok{$}\NormalTok{landuse[[}\DecValTok{1}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{factor\_variables)}
+\FunctionTok{kable}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{variable=}\FunctionTok{names}\NormalTok{(x),}\AttributeTok{value=}\FunctionTok{as.numeric}\NormalTok{(x)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lr@{}}
+\toprule()
+variable & value \\
+\midrule()
+\endhead
+All & 1 \\
+\bottomrule()
+\end{longtable}
+
+\textbf{Grassland: management}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x}\OtherTok{\textless{}{-}}\FunctionTok{unlist}\NormalTok{(stock\_change\_para}\SpecialCharTok{$}\NormalTok{grassland}\SpecialCharTok{$}\NormalTok{management[[}\DecValTok{1}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{factor\_variables)}
+\FunctionTok{kable}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{variable=}\FunctionTok{names}\NormalTok{(x),}\AttributeTok{value=}\FunctionTok{as.numeric}\NormalTok{(x)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lr@{}}
+\toprule()
+variable & value \\
+\midrule()
+\endhead
+Nominally managed & 1.00 \\
+Moderately degraded grassland, temperate/boreal & 0.95 \\
+Moderately degraded grassland, tropical & 0.97 \\
+Moderately degraded grassland, tropical montane & 0.96 \\
+Severely degraded & 0.70 \\
+Improved grassland, temperate/boreal & 1.14 \\
+Improved grassland, tropical & 1.17 \\
+Improved grassland, tropical montane & 1.16 \\
+\bottomrule()
+\end{longtable}
+
+\textbf{Grassland: input}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x}\OtherTok{\textless{}{-}}\FunctionTok{unlist}\NormalTok{(stock\_change\_para}\SpecialCharTok{$}\NormalTok{grassland}\SpecialCharTok{$}\NormalTok{input[[}\DecValTok{1}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{factor\_variables)}
+\FunctionTok{kable}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{variable=}\FunctionTok{names}\NormalTok{(x),}\AttributeTok{value=}\FunctionTok{as.numeric}\NormalTok{(x)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lr@{}}
+\toprule()
+variable & value \\
+\midrule()
+\endhead
+Medium & 1.00 \\
+High & 1.11 \\
+none & 1.00 \\
+\bottomrule()
+\end{longtable}
+
+\hypertarget{cropland-factor-variables}{%
+\subparagraph{Cropland factor
+variables}\label{cropland-factor-variables}}
+
+\textbf{Cropland: landuse}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x}\OtherTok{\textless{}{-}}\FunctionTok{unlist}\NormalTok{(stock\_change\_para}\SpecialCharTok{$}\NormalTok{cropland}\SpecialCharTok{$}\NormalTok{landuse[[}\DecValTok{1}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{factor\_variables)}
+\FunctionTok{kable}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{variable=}\FunctionTok{names}\NormalTok{(x),}\AttributeTok{value=}\FunctionTok{as.numeric}\NormalTok{(x)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.9155}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.0845}}@{}}
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+variable
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+value
+\end{minipage} \\
+\midrule()
+\endhead
+Long term cultivated, temperate/boreal, dry & 0.80 \\
+Long term cultivated, temperate/boreal, moist & 0.69 \\
+Long term cultivated, tropical, dry & 0.58 \\
+Long term cultivated, tropical, moist/wet & 0.48 \\
+Long term cultivated, tropical montane, all & 0.64 \\
+Paddy rice & 1.10 \\
+Perennial/tree crop & 1.00 \\
+Set aside (\textless{} 20 years), temperate/boreal and tropical, dry &
+0.93 \\
+Set aside (\textless{} 20 years), temperate/boreal and tropical,
+moist/wet & 0.82 \\
+Set aside (\textless{} 20 years),tropical montane, all & 0.88 \\
+\bottomrule()
+\end{longtable}
+
+\textbf{Cropland: tillage}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x}\OtherTok{\textless{}{-}}\FunctionTok{unlist}\NormalTok{(stock\_change\_para}\SpecialCharTok{$}\NormalTok{cropland}\SpecialCharTok{$}\NormalTok{tillage[[}\DecValTok{1}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{factor\_variables)}
+\FunctionTok{kable}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{variable=}\FunctionTok{names}\NormalTok{(x),}\AttributeTok{value=}\FunctionTok{as.numeric}\NormalTok{(x)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lr@{}}
+\toprule()
+variable & value \\
+\midrule()
+\endhead
+Full & 1.00 \\
+Reduced, temperate/boreal, dry & 1.02 \\
+Reduced, temperate/boreal, moist & 1.08 \\
+Reduced, tropical, dry & 1.09 \\
+Reduced, tropical, moist & 1.15 \\
+Reduced, tropical montane, all & 1.09 \\
+No-till, temperate/boreal, dry & 1.10 \\
+No-till, temperate/boreal, moist & 1.15 \\
+No-till, tropical, dry & 1.17 \\
+No-till, tropical, moist/wet & 1.22 \\
+No-till, tropical montane, all & 1.16 \\
+\bottomrule()
+\end{longtable}
+
+\textbf{Cropland: input}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x}\OtherTok{\textless{}{-}}\FunctionTok{unlist}\NormalTok{(stock\_change\_para}\SpecialCharTok{$}\NormalTok{cropland}\SpecialCharTok{$}\NormalTok{input[[}\DecValTok{1}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{factor\_variables)}
+\FunctionTok{kable}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{variable=}\FunctionTok{names}\NormalTok{(x),}\AttributeTok{value=}\FunctionTok{as.numeric}\NormalTok{(x)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lr@{}}
+\toprule()
+variable & value \\
+\midrule()
+\endhead
+Low, temperate/boreal, dry & 0.95 \\
+Low, temperate/boreal, moist & 0.92 \\
+Low, tropical, dry & 0.95 \\
+Low, tropical, moist & 0.92 \\
+Low, tropical montane, all & 0.94 \\
+Medium, all & 1.00 \\
+High w/OUT manure, temperate/boral and tropical, dry & 1.04 \\
+High w/OUT manure, temperate/boral and tropical, moist/wet & 1.11 \\
+High w/OUT manure, tropical montane & 1.08 \\
+High with manure, temperate/boral and tropical, dry & 1.37 \\
+High with manure, temperate/boral and tropical, moist/wet & 1.44 \\
+High with manure, tropical montane & 1.41 \\
+\bottomrule()
+\end{longtable}
+
+\hypertarget{mufindi}{%
+\paragraph{mufindi}\label{mufindi}}
+
+The mufindi object (\texttt{cleaned/data/mufindi.rda}) appears to be an
+input dataset similar to the \texttt{qt\_example.json} file.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{load}\NormalTok{(}\StringTok{"mufindi.rda"}\NormalTok{)}
+\FunctionTok{str}\NormalTok{(mufindi)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## List of 48
+##  $ cba_discount_rate            : int 0
+##  $ cba_years                    : int 0
+##  $ cropland_orgmatter           : chr "High w/OUT manure, temperate/boral and tropical, moist/wet"
+##  $ cropland_system              : chr "Long term cultivated, temperate/boreal, moist"
+##  $ cropland_tillage             : chr "Reduced, tropical, moist"
+##  $ farm_code                    : chr "ddd"
+##  $ farm_name                    : chr "ooo"
+##  $ feed_basket                  :'data.frame':   2 obs. of  2 variables:
+##   ..$ feeds      :List of 2
+##   .. ..$ :'data.frame':  4 obs. of  3 variables:
+##   .. .. ..$ feed_item_code: chr [1:4] "16" "31" "51" "82"
+##   .. .. ..$ feed_type_code: chr [1:4] "8" "17" "29" "40"
+##   .. .. ..$ livestock     :List of 4
+##   .. .. .. ..$ :'data.frame':    2 obs. of  2 variables:
+##   .. .. .. .. ..$ allocation   : int [1:2] 2 10
+##   .. .. .. .. ..$ livetype_code: chr [1:2] "3" "6"
+##   .. .. .. ..$ :'data.frame':    2 obs. of  2 variables:
+##   .. .. .. .. ..$ allocation   : int [1:2] 20 10
+##   .. .. .. .. ..$ livetype_code: chr [1:2] "3" "6"
+##   .. .. .. ..$ :'data.frame':    2 obs. of  2 variables:
+##   .. .. .. .. ..$ allocation   : int [1:2] 30 10
+##   .. .. .. .. ..$ livetype_code: chr [1:2] "3" "6"
+##   .. .. .. ..$ :'data.frame':    2 obs. of  2 variables:
+##   .. .. .. .. ..$ allocation   : int [1:2] 48 70
+##   .. .. .. .. ..$ livetype_code: chr [1:2] "3" "6"
+##   .. ..$ :'data.frame':  4 obs. of  3 variables:
+##   .. .. ..$ feed_item_code: chr [1:4] "16" "31" "51" "82"
+##   .. .. ..$ feed_type_code: chr [1:4] "8" "17" "29" "40"
+##   .. .. ..$ livestock     :List of 4
+##   .. .. .. ..$ :'data.frame':    2 obs. of  2 variables:
+##   .. .. .. .. ..$ allocation   : int [1:2] 70 50
+##   .. .. .. .. ..$ livetype_code: chr [1:2] "3" "6"
+##   .. .. .. ..$ :'data.frame':    2 obs. of  2 variables:
+##   .. .. .. .. ..$ allocation   : int [1:2] 20 5
+##   .. .. .. .. ..$ livetype_code: chr [1:2] "3" "6"
+##   .. .. .. ..$ :'data.frame':    2 obs. of  2 variables:
+##   .. .. .. .. ..$ allocation   : int [1:2] 5 5
+##   .. .. .. .. ..$ livetype_code: chr [1:2] "3" "6"
+##   .. .. .. ..$ :'data.frame':    2 obs. of  2 variables:
+##   .. .. .. .. ..$ allocation   : int [1:2] 5 40
+##   .. .. .. .. ..$ livetype_code: chr [1:2] "3" "6"
+##   ..$ season_name: chr [1:2] "Dry season" "Wet season"
+##  $ feed_items                   :'data.frame':   4 obs. of  64 variables:
+##   ..$ ammonia               : int [1:4] 14 0 0 8
+##   ..$ ammonium_nitrate      : int [1:4] 11 0 5 0
+##   ..$ ammonium_sulfate      : int [1:4] 12 6 0 0
+##   ..$ c_factor              : num [1:4] 0.05 0.117 0.05 0.027
+##   ..$ category              : chr [1:4] "" "legume" "cereal" "grass"
+##   ..$ cp_content            : num [1:4] 1.81 16.29 8.9 11
+##   ..$ cp_fresh              : num [1:4] 1.61 15.17 7.3 1.65
+##   ..$ crop_coefficient      : num [1:4] 0 0.633 0.533 0.917
+##   ..$ cut_carry_fraction    : int [1:4] 2 0 0 0
+##   ..$ dap                   : int [1:4] 10 0 0 4
+##   ..$ de                    : num [1:4] 0.71 0.433 0.674 0.652
+##   ..$ dm_content            : num [1:4] 88.8 93.1 82 15
+##   ..$ dry_yield             : num [1:4] 5.04 1.16 8.6 6
+##   ..$ emission_factor       : int [1:4] 0 0 0 0
+##   ..$ energy                : int [1:4] 160 567 365 0
+##   ..$ energy_dm             : num [1:4] 397 606 407 0
+##   ..$ establishment_cost    : int [1:4] 0 0 0 20
+##   ..$ establishment_labour  : int [1:4] 0 0 0 6
+##   ..$ feed_item_code        : chr [1:4] "16" "31" "51" "82"
+##   ..$ feed_item_name        : chr [1:4] "Cassava (Manihot esculenta) - tubers" "Groundnut (Arachis hypogaea) - seed hulls" "Maize (Zea mays) - forage" "Pennisetum purpureum - forage"
+##   ..$ feed_type_code        : chr [1:4] "8" "17" "29" "40"
+##   ..$ feed_type_name        : chr [1:4] "Cassava" "Groundnut" "Maize" "Pennisetum purpureum"
+##   ..$ fraction_as_fertilizer: int [1:4] 7 1 0 0
+##   ..$ fresh_yield           : num [1:4] 12.5 1.22 10 20
+##   ..$ grassman              : chr [1:4] "1" "1" "1" "1"
+##   ..$ grassman_change_factor: int [1:4] 1 1 1 1
+##   ..$ harvest_index         : num [1:4] 0.5 0.29 0.47 0.9
+##   ..$ intercrop             : int [1:4] 1 0 0 1
+##   ..$ intercrop_fraction    : int [1:4] 1 0 0 2
+##   ..$ kc_initial            : num [1:4] 0 0.15 0.15 0.6
+##   ..$ kc_late               : num [1:4] 0 0.6 0.3 1.05
+##   ..$ kc_midseason          : num [1:4] 0 1.15 1.15 1.1
+##   ..$ land_cover            : chr [1:4] "1" "1" "1" "1"
+##   ..$ landcover_c_factor    : num [1:4] 0.001 0.001 0.001 0.001
+##   ..$ main_n                : num [1:4] 0.004 0.037 0.017 0.023
+##   ..$ main_product_removal  : int [1:4] 4 0 0 0
+##   ..$ me_content            : num [1:4] 10.76 6.56 10.22 9.88
+##   ..$ me_fresh              : num [1:4] 9.56 6.11 8.38 1.48
+##   ..$ n_fertilizer          : int [1:4] 15 0 9 0
+##   ..$ n_fixation            : num [1:4] 0 38.2 0 0
+##   ..$ n_solutions           : int [1:4] 13 0 7 0
+##   ..$ npk                   : int [1:4] 9 0 3 0
+##   ..$ operational_cost      : int [1:4] 0 0 0 18
+##   ..$ operational_labour    : num [1:4] 0 0 0.203 0.5
+##   ..$ residue_burnt         : int [1:4] 6 0 0 0
+##   ..$ residue_dm_content    : num [1:4] 0.403 0.935 0.896 0.85
+##   ..$ residue_dry_yield     : num [1:4] 5.04 2.79 3 0
+##   ..$ residue_fresh_yield   : num [1:4] 12.5 2.99 3.5 2.22
+##   ..$ residue_n             : int [1:4] 0 0 0 0
+##   ..$ residue_n_dm          : num [1:4] 0.003 0.012 0.007 0.023
+##   ..$ residue_removal       : int [1:4] 5 0 0 0
+##   ..$ slope                 : chr [1:4] "1" "1" "1" "1"
+##   ..$ slope_length          : int [1:4] 3 0 0 0
+##   ..$ slope_p_factor        : num [1:4] 0.11 0.11 0.11 0.11
+##   ..$ trees_dhb             : int [1:4] 0 0 0 0
+##   ..$ trees_growth          : int [1:4] 0 0 0 0
+##   ..$ trees_ha              : int [1:4] 0 0 0 0
+##   ..$ trees_removal         : int [1:4] 0 0 0 0
+##   ..$ urea                  : int [1:4] 8 2 0 0
+##   ..$ usda_value            : int [1:4] 11134 16067 20314 0
+##   ..$ water_content         : num [1:4] 59.7 6.5 10.4 0
+##   ..$ wfp_blue              : num [1:4] 0 0 0.002 0
+##   ..$ wfp_green             : num [1:4] 0 0 0.199 0
+##   ..$ wfp_grey              : num [1:4] 0 0 0.002 0
+##  $ ferlitizer                   :'data.frame':   1 obs. of  5 variables:
+##   ..$ cost           : int 2
+##   ..$ fertilizer_code: chr "4"
+##   ..$ fertilizer_desc: chr "Ammonium nitrate"
+##   ..$ fraction       : int 3
+##   ..$ quantity       : int 1
+##  $ grassland_implevel           : chr "High"
+##  $ grassland_management         : chr "Moderately degraded grassland, tropical montane"
+##  $ land_oppcost                 : int 0
+##  $ livestock                    :'data.frame':   2 obs. of  53 variables:
+##   ..$ annual_growth                 : int [1:2] 3 9
+##   ..$ annual_milk                   : int [1:2] 2 10
+##   ..$ birth_interval                : num [1:2] 1.17 0
+##   ..$ body_weight                   : int [1:2] 600 300
+##   ..$ carcass_fraction              : num [1:2] 0.45 0.49
+##   ..$ cp_grazing                    : int [1:2] 0 0
+##   ..$ cp_growth                     : num [1:2] 0 0.4
+##   ..$ cp_lactation                  : int [1:2] 0 0
+##   ..$ cp_lactmilk                   : num [1:2] 0.09 0
+##   ..$ cp_maintenance                : num [1:2] 0.6 0.3
+##   ..$ cp_pregnancy                  : int [1:2] 15 0
+##   ..$ distance_to_pasture           : int [1:2] 8 4
+##   ..$ energy_eggcontent             : int [1:2] 0 0
+##   ..$ energy_meatcontent            : int [1:2] 2200 2200
+##   ..$ energy_milkcontent            : int [1:2] 970 0
+##   ..$ er_grazing                    : num [1:2] 2 1.5
+##   ..$ er_growth                     : int [1:2] 0 50
+##   ..$ er_lactation                  : int [1:2] 0 0
+##   ..$ er_lactmilk                   : num [1:2] 5.5 0
+##   ..$ er_maintenance                : num [1:2] 60.6 36
+##   ..$ er_pregnancy                  : int [1:2] 2000 0
+##   ..$ fat_content                   : int [1:2] 4 0
+##   ..$ grazing_displacement          : int [1:2] 2 2
+##   ..$ herd_composition              : int [1:2] 1 11
+##   ..$ ipcc_meth_ef_t1               : int [1:2] 68 46
+##   ..$ ipcc_meth_ef_t2               : num [1:2] 6.5 6.5
+##   ..$ ipcc_meth_exc                 : num [1:2] 0.47 0.34
+##   ..$ ipcc_meth_man                 : int [1:2] 19 1
+##   ..$ lactation_length              : int [1:2] 0 0
+##   ..$ litter_size                   : int [1:2] 0 0
+##   ..$ livetype_code                 : chr [1:2] "3" "6"
+##   ..$ livetype_desc                 : chr [1:2] "Cows (high productive)" "Steers/heifers (improved)"
+##   ..$ lw_gain                       : int [1:2] 0 0
+##   ..$ manure_in_field               : int [1:2] 11 1
+##   ..$ manure_in_non_roofed_enclosure: int [1:2] 10 2
+##   ..$ manure_in_stable              : int [1:2] 9 3
+##   ..$ meat_price                    : int [1:2] 23 23
+##   ..$ meat_product                  : chr [1:2] "beef" "beef"
+##   ..$ milk_price                    : num [1:2] 1.04 1.04
+##   ..$ milk_product                  : chr [1:2] "cow milk" "cow milk"
+##   ..$ n_content                     : num [1:2] 0.029 0.029
+##   ..$ oneoff_cost                   : int [1:2] 6400 3450
+##   ..$ oneoff_labour                 : int [1:2] 0 0
+##   ..$ operational_cost              : int [1:2] 4000 1650
+##   ..$ operational_labour            : num [1:2] 50.7 7.6
+##   ..$ proportion_growth             : int [1:2] 0 0
+##   ..$ protein_meatcontent           : int [1:2] 26 26
+##   ..$ protein_milkcontent           : num [1:2] 3.7 0
+##   ..$ time_in_non_roofed_enclosure  : int [1:2] 5 7
+##   ..$ time_in_offfarm_grazing       : int [1:2] 7 5
+##   ..$ time_in_onfarm_grazing        : int [1:2] 6 6
+##   ..$ time_in_stable                : int [1:2] 4 8
+##   ..$ water_requirement             : int [1:2] 160 100
+##  $ manure_onfarm_fraction       : int 1
+##  $ manure_sales_fraction        : int 2
+##  $ manureman_pasture            : chr "Pasture / range / paddock"
+##  $ manureman_stable             : chr "Solid storage"
+##  $ manureman_yard               : chr "Dry slot"
+##  $ purchased_bedding            : int 6
+##  $ purchased_compost            : int 4
+##  $ purchased_manure             : int 3
+##  $ purchased_organic_n          : int 5
+##  $ region                       : chr "ASIA"
+##  $ seasons                      :'data.frame':   2 obs. of  2 variables:
+##   ..$ season_length: int [1:2] 200 165
+##   ..$ season_name  : chr [1:2] "Dry season" "Wet season"
+##  $ txt_annual_prec              : int 1
+##  $ txt_arable_tograssland       : int 16
+##  $ txt_cropland_orgmatter_ipcc  : num 1.11
+##  $ txt_cropland_system_ipcc     : num 0.69
+##  $ txt_cropland_tillage_ipcc    : num 1.15
+##  $ txt_et                       : int 9
+##  $ txt_grassland_implevel_ipcc  : num 1.11
+##  $ txt_grassland_management_ipcc: num 0.96
+##  $ txt_grassland_toarable       : int 15
+##  $ txt_rain_length              : int 2
+##  $ txt_soil_bulk                : int 7
+##  $ txt_soil_c                   : int 5
+##  $ txt_soil_clay                : int 6
+##  $ txt_soil_depth               : int 8
+##  $ txt_soil_k_value             : num 0.25
+##  $ txt_soil_n                   : int 4
+##  $ waste_consume_milk           : int 0
+##  $ waste_distribution_meat      : int 0
+##  $ waste_distribution_milk      : int 0
+##  $ waste_processing_meat        : int 0
+##  $ waste_processing_milk        : int 0
+##  $ waste_production_meat        : int 0
+##  $ waste_production_milk        : int 0
+\end{verbatim}
+
+\end{document}
