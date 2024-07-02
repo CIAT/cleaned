@@ -27,7 +27,6 @@ if (!tinytex::is_tinytex()) {
   tinytex::install_tinytex()
 }
 
-
 # Use p_load to install if not present and load the packages
 p_load(jsonlite,data.table,rmarkdown,knitr)
 ```
@@ -57,17 +56,19 @@ simple_fields<-json_data[json_names[class!="data.frame" & length==1,field_name]]
 simple_fields<-data.table(field=names(simple_fields),
                           value=unlist(simple_fields),
                           class=json_names[class!="data.frame" & length==1,class])
+```
+
+```{r simple feilds 2,echo=F}
 kable(simple_fields, caption = "Summary of simple fields containing a single value")
 ```
 
 #### Livestock
-The livestock level of the json list is a data.table that contains information about livestock herd structure and management, manure management and productivity.
+The `json_data$livestock` of the json list is a data.table that contains information about livestock"]] herd structure and management, manure management and productivity.
 
-Here is the data transposed into long form so it is easier to fit onto the page.
-```{r livestock 0 ,echo=T}
+```{r livestock 0 ,echo=F}
 livestock<-t(json_data$livestock) # Transpose
 colnames(livestock)<-paste0("livetype_code_",json_data$livestock$livetype_code)
-kable(livestock,caption="Transposed livestock herd data")
+kable(livestock,caption="Transposed livestock herd data t(json_data$livestock)")
 ```
 
 The `livestock` are linked to the `feed_basket$feeds` tables by the `livetype_code` keyfield.
@@ -77,13 +78,12 @@ lapply(json_data$feed_basket$feeds,"[[","livestock") # Codes in the feed_basket 
 ```
 
 #### Feed items
-The feed_items level of the json list is a data.table that contains information about the production management and context of feed production.   
+The `json_data$feed_items` level of the json list is a data.table that contains information about the production management and context of feed production.   
 
-Here is the data transposed into long form so it is easier to fit onto the page.
-```{r feed items 0 ,echo=T}
+```{r feed items 0 ,echo=F}
 feed_items<-t(json_data$feed_items) # Transpose
 colnames(feed_items)<-paste0("feed_item_code_",json_data$feed_items$feed_item_code)
-kable(feed_items,caption="Transposed feed item data")
+kable(feed_items,caption="Transposed feed item data t(json_data$feed_items)")
 ```
 
 The `feed_items` are linked to the `feed_basket$feeds` tables by the `feed_item_code` field.
@@ -98,10 +98,10 @@ json_data$feed_items[,c("feed_type_code","feed_type_name","land_cover","land_cov
 ```
 
 #### Fertilizer
-The fertilizer level of the json list is a data.table that contains information about the production management and context of feed production.   
+The `json_data$fertilizer` level of the json list is a data.table that contains information about the production management and context of feed production.   
 
-```{r fertilizer 1,echo=T}
-json_data$fertilizer
+```{r fertilizer 1,echo=F}
+kable(json_data$fertilizer,caption="Fertilizer data input table  (json_data$fertilizer)")
 ```
 
 The values in `fertilizer_code` field do not appear directly correspond to any fields in the feed basket or feed item tables. However columns with similar names do appear in the field item tables
@@ -118,9 +118,9 @@ fi_cols[fi_cols %in% fertilizers]
 ```
 
 #### Seasons
-The seasons level is simple table that records the length of each season (adding up to 365 days max).
-```{r seasons 1,echo=T}
-json_data$seasons
+The `json_data$season` level of the input data is 2-column table that records the length of each season (adding up to 365 days max).
+```{r seasons 1,echo=F}
+kable(json_data$seasons,caption="Feed items data input table (json_data$season)")
 ```
 
 The `season_name` field is the key field that links to the feed basket.
@@ -129,31 +129,31 @@ json_data$feed_basket$season_name
 ```
 
 #### Feed basket
-The feed basket data  contains `r length(json_data$feed_basket)` levels called 
-`r paste(names(json_data$feed_basket),collapse=" and ")`. These levels appear to be the same length: `r paste0(names(json_data$feed_basket)," = ", sapply(json_data$feed_basket,length))`.
+The `json_data$feed_basket` level of the input data contains a futher `r length(json_data$feed_basket)` list levels called 
+`r paste(names(json_data$feed_basket),collapse=" and ")`. These sub-levels appear to be the same length: `r paste0(names(json_data$feed_basket)," = ", sapply(json_data$feed_basket,length))`.
 
 ##### Seasons 
-The season object is simple, being a vector containing the names of the seasons:
-```{r feed basket seasons,echo=T}
-json_data$feed_basket$season_name
+The `json_data$feed_basket$season` object is simple, being a vector containing the names of the seasons:
+```{r feed basket seasons,echo=F}
+kable(json_data$feed_basket$season_name,caption="Feed basket/season data input table  (json_data$feed_basket$season)")
 ```
 
 ##### Feed Basket 
-The feed basket object is the most structurally complex element of the input json data containing several levels of nesting.
+The `json_data$feed_basket$feed` object is the most structurally complex element of the input json data containing several levels of nesting.
 ```{r feed basket feeds 1 ,echo=T}
 str(json_data$feed_basket$feeds)
 ```
 
 Each feed basket table (e.g., `json_data$feed_basket$feeds[[1]]`) is constructed using key fields that describe feed items found in the `json_data$feed_items table`, specifically `feed_item_code` and `feed_type_code.` The feeds are then allocated to the herd elements described in the `json_data$livestock table`.
 
-```{r feed basket feeds 0 ,echo=T}
-json_data$feed_basket$feeds[[1]]
+```{r feed basket feeds 0 ,echo=F}
+kable(json_data$feed_basket$feeds[[1]],caption="Feed basket/feed data input table tablejson_data$feed_basket$feeds[[1]]")
 ```
 
 The livestock field in the feed basket table contains a list with `r length(json_data$feed_basket$feeds[[1]]$livestock)` elements, indicating a one-to-many relationship between the diet item and elements of the livestock herd. Each feed item represented by a row in the feed basket table is allocated to different herd elements, with the `livetype_code` field serving as the key field linking the two tables.
 
-```{r feed basket feeds 2 ,echo=T}
-json_data$feed_basket$feeds[[1]]$livestock
+```{r feed basket feeds 2 ,echo=F}
+kable(json_data$feed_basket$feeds[[1]]$livestock,caption="Feed basket/feed/livestock data input table tablejson_data$feed_basket$feeds[[1]]$livestock")
 ```
 
 The first element of the livestock list contains no further nesting:
@@ -183,13 +183,19 @@ ghg_para$table_5.11
 ```
 
 ##### Livestock_parameters
+Note there is an invalid character in this table:
+```{r ghg_para 3a}
+ghg_para$livestock_parameters$`IPCC Category - methane emissions enteric fermentation - Tier 2`[11]<-"Other Cattle or Buffalo - grazing"
+```
+
+
 ```{r ghg_para 3}
-ghg_para$livestock_parameters
+kable(ghg_para$livestock_parameters,caption="ghg_para$livestock_parameters")
 ```
 
 ##### Fertilizer table
 ```{r ghg_para 4}
-ghg_para$fertilizer_table
+kable(ghg_para$fertilizer_table,caption="ghg_para$fertilizer_table")
 ```
 
 ##### IPCC Tables

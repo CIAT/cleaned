@@ -3019,8 +3019,7 @@ kable(json_names, caption = &quot;Summary of Level 1 of the JSON Object&quot;)</
 simple_fields&lt;-json_data[json_names[class!=&quot;data.frame&quot; &amp; length==1,field_name]]
 simple_fields&lt;-data.table(field=names(simple_fields),
                           value=unlist(simple_fields),
-                          class=json_names[class!=&quot;data.frame&quot; &amp; length==1,class])
-kable(simple_fields, caption = &quot;Summary of simple fields containing a single value&quot;)</code></pre>
+                          class=json_names[class!=&quot;data.frame&quot; &amp; length==1,class])</code></pre>
 <table>
 <caption>Summary of simple fields containing a single value</caption>
 <colgroup>
@@ -3241,16 +3240,11 @@ kable(simple_fields, caption = &quot;Summary of simple fields containing a singl
 </div>
 <div id="livestock" class="section level4">
 <h4>Livestock</h4>
-<p>The livestock level of the json list is a data.table that contains
-information about livestock herd structure and management, manure
-management and productivity.</p>
-<p>Here is the data transposed into long form so it is easier to fit
-onto the page.</p>
-<pre class="r"><code>livestock&lt;-t(json_data$livestock) # Transpose
-colnames(livestock)&lt;-paste0(&quot;livetype_code_&quot;,json_data$livestock$livetype_code)
-kable(livestock,caption=&quot;Transposed livestock herd data&quot;)</code></pre>
+<p>The <code>json_data$livestock</code> of the json list is a data.table
+that contains information about livestock”]] herd structure and
+management, manure management and productivity.</p>
 <table style="width:100%;">
-<caption>Transposed livestock herd data</caption>
+<caption>Transposed livestock herd data t(json_data$livestock)</caption>
 <colgroup>
 <col width="28%" />
 <col width="22%" />
@@ -3673,16 +3667,11 @@ keyfield.</p>
 </div>
 <div id="feed-items" class="section level4">
 <h4>Feed items</h4>
-<p>The feed_items level of the json list is a data.table that contains
-information about the production management and context of feed
-production.</p>
-<p>Here is the data transposed into long form so it is easier to fit
-onto the page.</p>
-<pre class="r"><code>feed_items&lt;-t(json_data$feed_items) # Transpose
-colnames(feed_items)&lt;-paste0(&quot;feed_item_code_&quot;,json_data$feed_items$feed_item_code)
-kable(feed_items,caption=&quot;Transposed feed item data&quot;)</code></pre>
+<p>The <code>json_data$feed_items</code> level of the json list is a
+data.table that contains information about the production management and
+context of feed production.</p>
 <table>
-<caption>Transposed feed item data</caption>
+<caption>Transposed feed item data t(json_data$feed_items)</caption>
 <colgroup>
 <col width="18%" />
 <col width="25%" />
@@ -4116,15 +4105,34 @@ field.</p>
 </div>
 <div id="fertilizer" class="section level4">
 <h4>Fertilizer</h4>
-<p>The fertilizer level of the json list is a data.table that contains
-information about the production management and context of feed
-production.</p>
-<pre class="r"><code>json_data$fertilizer</code></pre>
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["fertilizer_code"],"name":[1],"type":["chr"],"align":["left"]},{"label":["fertilizer_desc"],"name":[2],"type":["chr"],"align":["left"]},{"label":["fraction"],"name":[3],"type":["int"],"align":["right"]},{"label":["percentage_n"],"name":[4],"type":["int"],"align":["right"]}],"data":[{"1":"4","2":"Ammonium nitrate","3":"0","4":"12","_rn_":"1"},{"1":"6","2":"N solutions","3":"0","4":"10","_rn_":"2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
+<p>The <code>json_data$fertilizer</code> level of the json list is a
+data.table that contains information about the production management and
+context of feed production.</p>
+<table>
+<caption>Fertilizer data input table (json_data$fertilizer)</caption>
+<thead>
+<tr class="header">
+<th align="left">fertilizer_code</th>
+<th align="left">fertilizer_desc</th>
+<th align="right">fraction</th>
+<th align="right">percentage_n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">4</td>
+<td align="left">Ammonium nitrate</td>
+<td align="right">0</td>
+<td align="right">12</td>
+</tr>
+<tr class="even">
+<td align="left">6</td>
+<td align="left">N solutions</td>
+<td align="right">0</td>
+<td align="right">10</td>
+</tr>
+</tbody>
+</table>
 <p>The values in <code>fertilizer_code</code> field do not appear
 directly correspond to any fields in the feed basket or feed item
 tables. However columns with similar names do appear in the field item
@@ -4141,14 +4149,28 @@ fi_cols[fi_cols %in% fertilizers]</code></pre>
 </div>
 <div id="seasons" class="section level4">
 <h4>Seasons</h4>
-<p>The seasons level is simple table that records the length of each
-season (adding up to 365 days max).</p>
-<pre class="r"><code>json_data$seasons</code></pre>
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["season_length"],"name":[1],"type":["int"],"align":["right"]},{"label":["season_name"],"name":[2],"type":["chr"],"align":["left"]}],"data":[{"1":"200","2":"Wet season","_rn_":"1"},{"1":"165","2":"Dry season","_rn_":"2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
+<p>The <code>json_data$season</code> level of the input data is 2-column
+table that records the length of each season (adding up to 365 days
+max).</p>
+<table>
+<caption>Feed items data input table (json_data$season)</caption>
+<thead>
+<tr class="header">
+<th align="right">season_length</th>
+<th align="left">season_name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">200</td>
+<td align="left">Wet season</td>
+</tr>
+<tr class="even">
+<td align="right">165</td>
+<td align="left">Dry season</td>
+</tr>
+</tbody>
+</table>
 <p>The <code>season_name</code> field is the key field that links to the
 feed basket.</p>
 <pre class="r"><code>json_data$feed_basket$season_name</code></pre>
@@ -4156,20 +4178,35 @@ feed basket.</p>
 </div>
 <div id="feed-basket" class="section level4">
 <h4>Feed basket</h4>
-<p>The feed basket data contains 2 levels called feeds and season_name.
-These levels appear to be the same length: feeds = 2, season_name =
-2.</p>
+<p>The <code>json_data$feed_basket</code> level of the input data
+contains a futher 2 list levels called feeds and season_name. These
+sub-levels appear to be the same length: feeds = 2, season_name = 2.</p>
 <div id="seasons-1" class="section level5">
 <h5>Seasons</h5>
-<p>The season object is simple, being a vector containing the names of
-the seasons:</p>
-<pre class="r"><code>json_data$feed_basket$season_name</code></pre>
-<pre><code>## [1] &quot;Wet season&quot; &quot;Dry season&quot;</code></pre>
+<p>The <code>json_data$feed_basket$season</code> object is simple, being
+a vector containing the names of the seasons:</p>
+<table>
+<caption>Feed basket/season data input table (json_data<span class="math inline">\(feed_basket\)</span>season)</caption>
+<thead>
+<tr class="header">
+<th align="left">x</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Wet season</td>
+</tr>
+<tr class="even">
+<td align="left">Dry season</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="feed-basket-1" class="section level5">
 <h5>Feed Basket</h5>
-<p>The feed basket object is the most structurally complex element of
-the input json data containing several levels of nesting.</p>
+<p>The <code>json_data$feed_basket$feed</code> object is the most
+structurally complex element of the input json data containing several
+levels of nesting.</p>
 <pre class="r"><code>str(json_data$feed_basket$feeds)</code></pre>
 <pre><code>## List of 2
 ##  $ :&#39;data.frame&#39;:    3 obs. of  3 variables:
@@ -4205,36 +4242,120 @@ fields that describe feed items found in the
 <code>feed_item_code</code> and <code>feed_type_code.</code> The feeds
 are then allocated to the herd elements described in the
 <code>json_data$livestock table</code>.</p>
-<pre class="r"><code>json_data$feed_basket$feeds[[1]]</code></pre>
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["feed_item_code"],"name":[1],"type":["chr"],"align":["left"]},{"label":["feed_type_code"],"name":[2],"type":["chr"],"align":["left"]},{"label":["livestock"],"name":[3],"type":["list"],"align":["right"]}],"data":[{"1":"65","2":"2","3":"<df[,2] [3 × 2]>","_rn_":"1"},{"1":"99","2":"45","3":"<df[,2] [3 × 2]>","_rn_":"2"},{"1":"18","2":"9","3":"<df[,2] [3 × 2]>","_rn_":"3"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
+<table>
+<caption>Feed basket/feed data input table tablejson_data<span class="math inline">\(feed_basket\)</span>feeds[[1]]</caption>
+<thead>
+<tr class="header">
+<th align="left">feed_item_code</th>
+<th align="left">feed_type_code</th>
+<th align="left">livestock</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">65</td>
+<td align="left">2</td>
+<td align="left">40, 17, 40, 2 , 1 , 5</td>
+</tr>
+<tr class="even">
+<td align="left">99</td>
+<td align="left">45</td>
+<td align="left">25, 43, 20, 2 , 1 , 5</td>
+</tr>
+<tr class="odd">
+<td align="left">18</td>
+<td align="left">9</td>
+<td align="left">35, 40, 40, 2 , 1 , 5</td>
+</tr>
+</tbody>
+</table>
 <p>The livestock field in the feed basket table contains a list with 3
 elements, indicating a one-to-many relationship between the diet item
 and elements of the livestock herd. Each feed item represented by a row
 in the feed basket table is allocated to different herd elements, with
 the <code>livetype_code</code> field serving as the key field linking
 the two tables.</p>
-<pre class="r"><code>json_data$feed_basket$feeds[[1]]$livestock</code></pre>
-<pre><code>## [[1]]
-##   allocation livetype_code
-## 1         40             2
-## 2         17             1
-## 3         40             5
-## 
-## [[2]]
-##   allocation livetype_code
-## 1         25             2
-## 2         43             1
-## 3         20             5
-## 
-## [[3]]
-##   allocation livetype_code
-## 1         35             2
-## 2         40             1
-## 3         40             5</code></pre>
+<table class="kable_wrapper">
+<caption>
+Feed basket/feed/livestock data input table tablejson_data<span class="math inline">\(feed_basket\)</span>feeds[[1]]$livestock
+</caption>
+<tbody>
+<tr>
+<td>
+<table>
+<thead>
+<tr class="header">
+<th align="right">allocation</th>
+<th align="left">livetype_code</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">40</td>
+<td align="left">2</td>
+</tr>
+<tr class="even">
+<td align="right">17</td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="right">40</td>
+<td align="left">5</td>
+</tr>
+</tbody>
+</table>
+</td>
+<td>
+<table>
+<thead>
+<tr class="header">
+<th align="right">allocation</th>
+<th align="left">livetype_code</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">25</td>
+<td align="left">2</td>
+</tr>
+<tr class="even">
+<td align="right">43</td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="right">20</td>
+<td align="left">5</td>
+</tr>
+</tbody>
+</table>
+</td>
+<td>
+<table>
+<thead>
+<tr class="header">
+<th align="right">allocation</th>
+<th align="left">livetype_code</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">35</td>
+<td align="left">2</td>
+</tr>
+<tr class="even">
+<td align="right">40</td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="right">40</td>
+<td align="left">5</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
 <p>The first element of the livestock list contains no further
 nesting:</p>
 <pre class="r"><code>str(json_data$feed_basket$feeds[[1]]$livestock[[1]])</code></pre>
@@ -4336,21 +4457,263 @@ list:</p>
 ## [1] 1</code></pre>
 <div id="livestock_parameters" class="section level5">
 <h5>Livestock_parameters</h5>
-<pre class="r"><code>ghg_para$livestock_parameters</code></pre>
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["livestock_category_name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Urinary_energy_frac"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["ash_content"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["IPCC Category - methane emissions enteric fermentation - Tier 1"],"name":[4],"type":["chr"],"align":["left"]},{"label":["IPCC Category - methane emissions enteric fermentation - Tier 2"],"name":[5],"type":["chr"],"align":["left"]},{"label":["IPCC Category - methane emissions manure - Tier 1"],"name":[6],"type":["chr"],"align":["left"]},{"label":["IPCC-Category - Default N-excretion rates Tier 1"],"name":[7],"type":["chr"],"align":["left"]}],"data":[{"1":"Cows (local)","2":"0.04","3":"0.08","4":"Other mature female","5":"Dairy cattle","6":"Dairy cows","7":"Dairy cattle","_rn_":"1"},{"1":"Cows (improved)","2":"0.04","3":"0.08","4":"Dairy cattle","5":"Dairy cattle","6":"Dairy cows","7":"Dairy cattle","_rn_":"2"},{"1":"Cows (high productive)","2":"0.04","3":"0.08","4":"Dairy cattle","5":"Dairy cattle","6":"Dairy cows","7":"Dairy cattle","_rn_":"3"},{"1":"Adult cattle - male","2":"0.04","3":"0.08","4":"Other draft bull","5":"Other Cattle and Buffaloes that are primarily fed low quality crop residues and byproducts","6":"Other cattle","7":"Other cattle","_rn_":"4"},{"1":"Steers/heifers","2":"0.04","3":"0.08","4":"Other Mature female-grazing","5":"Other Cattle and Buffaloes that are primarily fed low quality crop residues and byproducts","6":"Other cattle","7":"Other cattle","_rn_":"5"},{"1":"Steers/heifers (improved)","2":"0.04","3":"0.08","4":"Other Mature female-grazing","5":"Other Cattle and Buffaloes that are primarily fed low quality crop residues and byproducts","6":"Other cattle","7":"Other cattle","_rn_":"6"},{"1":"Calves","2":"0.04","3":"0.08","4":"Other young","5":"Other Cattle and Buffaloes that are primarily fed low quality crop residues and byproducts","6":"Other cattle","7":"Other cattle","_rn_":"7"},{"1":"Calves (improved)","2":"0.04","3":"0.08","4":"Other young","5":"Other Cattle and Buffaloes that are primarily fed low quality crop residues and byproducts","6":"Other cattle","7":"Other cattle","_rn_":"8"},{"1":"Buffalo (dairy)","2":"0.04","3":"0.08","4":"Other draft bull","5":"Other Cattle or Buffalo - grazing","6":"Buffalo","7":"Other cattle","_rn_":"9"},{"1":"Buffalo steers/heifers","2":"0.04","3":"0.08","4":"Other young","5":"Other Cattle or Buffalo - grazing","6":"Buffalo","7":"Other cattle","_rn_":"10"},{"1":"Buffalo calves","2":"0.04","3":"0.08","4":"Other young","5":"Other Cattle or Buffalo � grazing","6":"Buffalo","7":"Other cattle","_rn_":"11"},{"1":"Sheep/Goats - Ewes/Does","2":"0.04","3":"0.08","4":"Goats","5":"Sheep","6":"Sheep","7":"Sheep","_rn_":"12"},{"1":"Sheep/Goats - Breeding Rams/Bucks","2":"0.04","3":"0.08","4":"Goats","5":"Sheep","6":"Sheep","7":"Sheep","_rn_":"13"},{"1":"Sheep/Goats - Fattening Rams/Bucks","2":"0.04","3":"0.08","4":"Goats","5":"Sheep","6":"Sheep","7":"sheep","_rn_":"14"},{"1":"Sheep/Goats - Lambs/Kids","2":"0.04","3":"0.08","4":"Goats","5":"lambs (less 1 yr old)","6":"Sheep","7":"sheep","_rn_":"15"},{"1":"Pigs - lactating/pregnant sows","2":"0.02","3":"0.08","4":"Pigs","5":"N/A","6":"Swine","7":"pigs","_rn_":"16"},{"1":"Pigs - dry sows/boars","2":"0.02","3":"0.08","4":"Pigs","5":"N/A","6":"Swine","7":"pigs","_rn_":"17"},{"1":"Pigs - growers","2":"0.02","3":"0.08","4":"Pigs","5":"N/A","6":"Swine","7":"pigs","_rn_":"18"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
+<p>Note there is an invalid character in this table:</p>
+<pre class="r"><code>ghg_para$livestock_parameters$`IPCC Category - methane emissions enteric fermentation - Tier 2`[11]&lt;-&quot;Other Cattle or Buffalo - grazing&quot;</code></pre>
+<pre class="r"><code>kable(ghg_para$livestock_parameters,caption=&quot;ghg_para$livestock_parameters&quot;)</code></pre>
+<table>
+<caption>ghg_para$livestock_parameters</caption>
+<colgroup>
+<col width="10%" />
+<col width="6%" />
+<col width="3%" />
+<col width="19%" />
+<col width="28%" />
+<col width="15%" />
+<col width="15%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">livestock_category_name</th>
+<th align="right">Urinary_energy_frac</th>
+<th align="right">ash_content</th>
+<th align="left">IPCC Category - methane emissions enteric fermentation
+- Tier 1</th>
+<th align="left">IPCC Category - methane emissions enteric fermentation
+- Tier 2</th>
+<th align="left">IPCC Category - methane emissions manure - Tier 1</th>
+<th align="left">IPCC-Category - Default N-excretion rates Tier 1</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Cows (local)</td>
+<td align="right">0.04</td>
+<td align="right">0.08</td>
+<td align="left">Other mature female</td>
+<td align="left">Dairy cattle</td>
+<td align="left">Dairy cows</td>
+<td align="left">Dairy cattle</td>
+</tr>
+<tr class="even">
+<td align="left">Cows (improved)</td>
+<td align="right">0.04</td>
+<td align="right">0.08</td>
+<td align="left">Dairy cattle</td>
+<td align="left">Dairy cattle</td>
+<td align="left">Dairy cows</td>
+<td align="left">Dairy cattle</td>
+</tr>
+<tr class="odd">
+<td align="left">Cows (high productive)</td>
+<td align="right">0.04</td>
+<td align="right">0.08</td>
+<td align="left">Dairy cattle</td>
+<td align="left">Dairy cattle</td>
+<td align="left">Dairy cows</td>
+<td align="left">Dairy cattle</td>
+</tr>
+<tr class="even">
+<td align="left">Adult cattle - male</td>
+<td align="right">0.04</td>
+<td align="right">0.08</td>
+<td align="left">Other draft bull</td>
+<td align="left">Other Cattle and Buffaloes that are primarily fed low
+quality crop residues and byproducts</td>
+<td align="left">Other cattle</td>
+<td align="left">Other cattle</td>
+</tr>
+<tr class="odd">
+<td align="left">Steers/heifers</td>
+<td align="right">0.04</td>
+<td align="right">0.08</td>
+<td align="left">Other Mature female-grazing</td>
+<td align="left">Other Cattle and Buffaloes that are primarily fed low
+quality crop residues and byproducts</td>
+<td align="left">Other cattle</td>
+<td align="left">Other cattle</td>
+</tr>
+<tr class="even">
+<td align="left">Steers/heifers (improved)</td>
+<td align="right">0.04</td>
+<td align="right">0.08</td>
+<td align="left">Other Mature female-grazing</td>
+<td align="left">Other Cattle and Buffaloes that are primarily fed low
+quality crop residues and byproducts</td>
+<td align="left">Other cattle</td>
+<td align="left">Other cattle</td>
+</tr>
+<tr class="odd">
+<td align="left">Calves</td>
+<td align="right">0.04</td>
+<td align="right">0.08</td>
+<td align="left">Other young</td>
+<td align="left">Other Cattle and Buffaloes that are primarily fed low
+quality crop residues and byproducts</td>
+<td align="left">Other cattle</td>
+<td align="left">Other cattle</td>
+</tr>
+<tr class="even">
+<td align="left">Calves (improved)</td>
+<td align="right">0.04</td>
+<td align="right">0.08</td>
+<td align="left">Other young</td>
+<td align="left">Other Cattle and Buffaloes that are primarily fed low
+quality crop residues and byproducts</td>
+<td align="left">Other cattle</td>
+<td align="left">Other cattle</td>
+</tr>
+<tr class="odd">
+<td align="left">Buffalo (dairy)</td>
+<td align="right">0.04</td>
+<td align="right">0.08</td>
+<td align="left">Other draft bull</td>
+<td align="left">Other Cattle or Buffalo - grazing</td>
+<td align="left">Buffalo</td>
+<td align="left">Other cattle</td>
+</tr>
+<tr class="even">
+<td align="left">Buffalo steers/heifers</td>
+<td align="right">0.04</td>
+<td align="right">0.08</td>
+<td align="left">Other young</td>
+<td align="left">Other Cattle or Buffalo - grazing</td>
+<td align="left">Buffalo</td>
+<td align="left">Other cattle</td>
+</tr>
+<tr class="odd">
+<td align="left">Buffalo calves</td>
+<td align="right">0.04</td>
+<td align="right">0.08</td>
+<td align="left">Other young</td>
+<td align="left">Other Cattle or Buffalo - grazing</td>
+<td align="left">Buffalo</td>
+<td align="left">Other cattle</td>
+</tr>
+<tr class="even">
+<td align="left">Sheep/Goats - Ewes/Does</td>
+<td align="right">0.04</td>
+<td align="right">0.08</td>
+<td align="left">Goats</td>
+<td align="left">Sheep</td>
+<td align="left">Sheep</td>
+<td align="left">Sheep</td>
+</tr>
+<tr class="odd">
+<td align="left">Sheep/Goats - Breeding Rams/Bucks</td>
+<td align="right">0.04</td>
+<td align="right">0.08</td>
+<td align="left">Goats</td>
+<td align="left">Sheep</td>
+<td align="left">Sheep</td>
+<td align="left">Sheep</td>
+</tr>
+<tr class="even">
+<td align="left">Sheep/Goats - Fattening Rams/Bucks</td>
+<td align="right">0.04</td>
+<td align="right">0.08</td>
+<td align="left">Goats</td>
+<td align="left">Sheep</td>
+<td align="left">Sheep</td>
+<td align="left">sheep</td>
+</tr>
+<tr class="odd">
+<td align="left">Sheep/Goats - Lambs/Kids</td>
+<td align="right">0.04</td>
+<td align="right">0.08</td>
+<td align="left">Goats</td>
+<td align="left">lambs (less 1 yr old)</td>
+<td align="left">Sheep</td>
+<td align="left">sheep</td>
+</tr>
+<tr class="even">
+<td align="left">Pigs - lactating/pregnant sows</td>
+<td align="right">0.02</td>
+<td align="right">0.08</td>
+<td align="left">Pigs</td>
+<td align="left">N/A</td>
+<td align="left">Swine</td>
+<td align="left">pigs</td>
+</tr>
+<tr class="odd">
+<td align="left">Pigs - dry sows/boars</td>
+<td align="right">0.02</td>
+<td align="right">0.08</td>
+<td align="left">Pigs</td>
+<td align="left">N/A</td>
+<td align="left">Swine</td>
+<td align="left">pigs</td>
+</tr>
+<tr class="even">
+<td align="left">Pigs - growers</td>
+<td align="right">0.02</td>
+<td align="right">0.08</td>
+<td align="left">Pigs</td>
+<td align="left">N/A</td>
+<td align="left">Swine</td>
+<td align="left">pigs</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="fertilizer-table" class="section level5">
 <h5>Fertilizer table</h5>
-<pre class="r"><code>ghg_para$fertilizer_table</code></pre>
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["fertilizer_type"],"name":[1],"type":["chr"],"align":["left"]},{"label":["percent_N"],"name":[2],"type":["int"],"align":["right"]},{"label":["emission_factor_kg_CO2eq_per_kg N"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["kg_N_per_1_kg_of_fertilzer"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["emissions_factor_kg_CO2_eq_per_kg_fertilizer"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"DAP","2":"18","3":"2.80","4":"0.18","5":"0.5040","_rn_":"1"},{"1":"CAN","2":"27","3":"8.66","4":"0.27","5":"2.3382","_rn_":"2"},{"1":"Urea","2":"NA","3":"NA","4":"NA","5":"0.7850","_rn_":"3"},{"1":"NPK","2":"NA","3":"NA","4":"NA","5":"1.2100","_rn_":"4"},{"1":"Lime-application","2":"NA","3":"NA","4":"NA","5":"NA","_rn_":"5"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
+<pre class="r"><code>kable(ghg_para$fertilizer_table,caption=&quot;ghg_para$fertilizer_table&quot;)</code></pre>
+<table>
+<caption>ghg_para$fertilizer_table</caption>
+<colgroup>
+<col width="12%" />
+<col width="7%" />
+<col width="25%" />
+<col width="20%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">fertilizer_type</th>
+<th align="right">percent_N</th>
+<th align="right">emission_factor_kg_CO2eq_per_kg N</th>
+<th align="right">kg_N_per_1_kg_of_fertilzer</th>
+<th align="right">emissions_factor_kg_CO2_eq_per_kg_fertilizer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">DAP</td>
+<td align="right">18</td>
+<td align="right">2.80</td>
+<td align="right">0.18</td>
+<td align="right">0.5040</td>
+</tr>
+<tr class="even">
+<td align="left">CAN</td>
+<td align="right">27</td>
+<td align="right">8.66</td>
+<td align="right">0.27</td>
+<td align="right">2.3382</td>
+</tr>
+<tr class="odd">
+<td align="left">Urea</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">0.7850</td>
+</tr>
+<tr class="even">
+<td align="left">NPK</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">1.2100</td>
+</tr>
+<tr class="odd">
+<td align="left">Lime-application</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="ipcc-tables" class="section level5">
 <h5>IPCC Tables</h5>
