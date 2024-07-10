@@ -1,16 +1,16 @@
 ---
-title: "Exploration of CLEANED QT json file"
+title: "Exploration of CLEANED input files"
 author: "Peter Steward"
 date: "2024-07-01"
 output:
+  pdf_document:
+    toc: true
+    toc_depth: 6
   html_document:
     toc: true
     toc_float: true
     toc_depth: 6
     df_print: paged
-  pdf_document:
-    toc: true
-    toc_depth: 6
 ---
 
 ```{r setup,echo=F}
@@ -28,15 +28,17 @@ if (!tinytex::is_tinytex()) {
 }
 
 # Use p_load to install if not present and load the packages
-p_load(jsonlite,data.table,rmarkdown,knitr)
+p_load(jsonlite,data.table,rmarkdown,knitr,RSQLite)
 ```
 
 ## Cleaned Data
 ### Input data structure
 
-The aim of this markdown document is to summarize the structure of the .json object provided from the QT UI.
+The aim of this markdown document is to summarize the structure of the .json object that is required as an input for the R cleaned packages.
+It also explores any additional datasets that are used as inputs to create this input object, these include `cleaned/data/ghg_para.R`, `cleaned/data/stock_change_para.rda` and `qlands/cleaned-desktop/cleaned.sqlite`.
 
-#### Load the json file into R
+#### Load input json file into R
+Load the `qt_example.json` example input file stored in `cleaned/data`.
 ```{r load data,echo=T}
 # Read in example json file #####
 json_data <- fromJSON("qt_example.json")
@@ -161,7 +163,7 @@ The first element of the livestock list contains no further nesting:
 str(json_data$feed_basket$feeds[[1]]$livestock[[1]])
 ```
 
-### R-project datasets
+### Explore `cleaned/data .rda` files
 ```{r list rda files}
 rda_files<-list.files(".rda")
 ```
@@ -303,4 +305,88 @@ The mufindi object (`cleaned/data/mufindi.rda`) appears to be an input dataset s
 ```{r mufindi 1}
 load("mufindi.rda")
 str(mufindi)
+```
+
+### Explore `cleaned.sqlite` file
+This sqlite database object is found in the [qlands/cleaned-desktop github](https://github.com/qlands/cleaned-desktop/blob/feature/add-comparison/cleaned.sqlite) it contains several tables of look-up values.
+
+#### Load input json file into R
+```{r connect sqlite}
+conn <- dbConnect(RSQLite::SQLite(), "cleaned.sqlite")
+tables <- dbListTables(conn)
+print(tables)
+```
+```{r load sqlite,warning=FALSE}
+sq_tables<-lapply(tables,FUN=function(TAB){
+  query<-paste0("SELECT * FROM ",TAB)
+  data <- dbGetQuery(conn,query)
+  data
+})
+names(sq_tables)<-tables
+```
+
+##### Climate
+```{r sqlite climate,echo=F}
+kable(sq_tables$lkp_climate)
+```
+##### Climate2
+```{r sqlite climate 2,echo=F}
+kable(sq_tables$lkp_climate2)
+```
+##### Region
+```{r sqlite region,echo=F}
+kable(sq_tables$lkp_region)
+```
+##### Cropland system
+```{r sqlite cropland,echo=F}
+kable(sq_tables$lkp_croplandsystem)
+```
+##### Feeds
+###### Item
+```{r sqlite feed item,echo=F}
+sq_tables$lkp_feeditem
+```
+###### Type
+```{r sqlite feed type,echo=F}
+sq_tables$lkp_feedtype
+```
+##### Grass input level
+```{r sqlite grass input,echo=F}
+kable(sq_tables$lkp_grassinputlevel)
+```
+##### Grassland management
+```{r sqlite grass management}
+kable(sq_tables$lkp_grasslandman)
+```
+##### Landcover
+```{r sqlite land cover,echo=F}
+kable(sq_tables$lkp_landcover)
+```
+##### Livestock type
+```{r sqlite livestock type,echo=F}
+sq_tables$lkp_livetype
+```
+##### Manure management
+```{r sqlite manure management,echo=F}
+kable(sq_tables$lkp_manureman)
+```
+##### Organic matter
+```{r sqlite organic matter,echo=F}
+kable(sq_tables$lkp_organicmatter)
+```
+##### Organic fertilizer
+```{r sqlite organic fertilizer,echo=F}
+kable(sq_tables$lkp_orgfertilizer)
+```
+##### Slope
+```{r sqlite slope,echo=F}
+kable(sq_tables$lkp_slope)
+```
+##### Soil
+```{r sqlite soil,echo=F}
+kable(sq_tables$lkp_soil)
+```
+##### Tillage regime
+```{r sqlite tillage,echo=F}
+kable(sq_tables$lkp_tillageregime)
 ```
