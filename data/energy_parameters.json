@@ -1,0 +1,39 @@
+{
+   "Table 10.4": [
+      {
+         "animal_category": "Cattle_Buffalo",
+         "maintenance_cfi": 0.322,
+         "comments": "All non-lactating cows, steers, heifers and calves"
+      },
+      {
+         "animal_category": "Cattle_Buffalo_lactating_cows",
+         "maintenance_cfi": 0.386,
+         "comments": "Maintenance energy requirements are 20% higher during lactation"
+      },
+      {
+         "animal_category": "Cattle_Buffalo_bulls",
+         "maintenance_cfi": 0.37,
+         "comments": "Maintenance energy requirements are 15% higher for intact males than non lactating females"
+      },
+      {
+         "animal_category": "Sheep_lamb_to _1_year",
+         "maintenance_cfi": 0.236,
+         "comments": "This value can be increased by 15%  for intact males"
+      },
+      {
+         "animal_category": "Sheep_older_than_1_year",
+         "maintenance_cfi": 0.217,
+         "comments": "This value can be increased by 15% for intact males."
+      },
+      {
+         "animal_category": "Goats",
+         "maintenance_cfi": 0.315,
+         "comments": "NA"
+      },
+      {
+         "animal_category": "Pigs",
+         "maintenance_cfi": 0.44,
+         "comments": "NA"
+      }
+   ]
+}

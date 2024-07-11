@@ -3,14 +3,14 @@ title: "Exploration of CLEANED input files"
 author: "Peter Steward"
 date: "2024-07-01"
 output:
-  pdf_document:
-    toc: true
-    toc_depth: 6
   html_document:
     toc: true
     toc_float: true
     toc_depth: 6
     df_print: paged
+  pdf_document:
+    toc: true
+    toc_depth: 6
 ---
 
 ```{r setup,echo=F}
@@ -28,7 +28,7 @@ if (!tinytex::is_tinytex()) {
 }
 
 # Use p_load to install if not present and load the packages
-p_load(jsonlite,data.table,rmarkdown,knitr,RSQLite)
+pacman::p_load(jsonlite,data.table,rmarkdown,knitr,RSQLite)
 ```
 
 ## Cleaned Data
@@ -163,7 +163,7 @@ The first element of the livestock list contains no further nesting:
 str(json_data$feed_basket$feeds[[1]]$livestock[[1]])
 ```
 
-### Explore `cleaned/data .rda` files
+### cleaned `cleaned/data .rda` files
 ```{r list rda files}
 rda_files<-list.files(".rda")
 ```
@@ -307,10 +307,10 @@ load("mufindi.rda")
 str(mufindi)
 ```
 
-### Explore `cleaned.sqlite` file
+### cleaned-desktop `cleaned.sqlite` file
 This sqlite database object is found in the [qlands/cleaned-desktop github](https://github.com/qlands/cleaned-desktop/blob/feature/add-comparison/cleaned.sqlite) it contains several tables of look-up values.
 
-#### Load input json file into R
+#### Load sqlite file into R
 ```{r connect sqlite}
 conn <- dbConnect(RSQLite::SQLite(), "cleaned.sqlite")
 tables <- dbListTables(conn)
@@ -389,4 +389,14 @@ kable(sq_tables$lkp_soil)
 ##### Tillage regime
 ```{r sqlite tillage,echo=F}
 kable(sq_tables$lkp_tillageregime)
+```
+
+### cleaned-desktop `energy_parameters.json` file
+The energy_parameters.json object is found in the [qlands/cleaned-desktop github](https://github.com/qlands/cleaned-desktop/blob/feature/add-comparison/R/energy_parameters.jsone) it contains a single table **Table 10.4** that does not seem to appear in the `cleaned/data/ghg_para.rda` object.
+
+#### Table 10.4
+```{r load energy parameters}
+json_data2 <- fromJSON("energy_parameters.json")
+names(json_data2)
+kable(json_data2$`Table 10.4`)
 ```

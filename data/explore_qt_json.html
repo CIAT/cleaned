@@ -4372,8 +4372,8 @@ nesting:</p>
 </div>
 </div>
 </div>
-<div id="explore-cleaneddata-.rda-files" class="section level3">
-<h3>Explore cleaned/data .rda files</h3>
+<div id="cleaned-cleaneddata-.rda-files" class="section level3">
+<h3>cleaned <code>cleaned/data .rda</code> files</h3>
 <pre class="r"><code>rda_files&lt;-list.files(&quot;.rda&quot;)</code></pre>
 <div id="ghg-parameters" class="section level4">
 <h4>GHG parameters</h4>
@@ -5870,12 +5870,12 @@ str(mufindi)</code></pre>
 ##  $ waste_production_milk        : int 0</code></pre>
 </div>
 </div>
-<div id="explore-cleaned.sqlite-file" class="section level3">
-<h3>Explore <code>cleaned.sqlite</code> file</h3>
+<div id="cleaned-desktop-cleaned.sqlite-file" class="section level3">
+<h3>cleaned-desktop <code>cleaned.sqlite</code> file</h3>
 <p>This sqlite database object is found in the <a href="https://github.com/qlands/cleaned-desktop/blob/feature/add-comparison/cleaned.sqlite">qlands/cleaned-desktop
 github</a> it contains several tables of look-up values.</p>
-<div id="load-input-json-file-into-r-1" class="section level4">
-<h4>Load input json file into R</h4>
+<div id="load-sqlite-file-into-r" class="section level4">
+<h4>Load sqlite file into R</h4>
 <pre class="r"><code>conn &lt;- dbConnect(RSQLite::SQLite(), &quot;cleaned.sqlite&quot;)
 tables &lt;- dbListTables(conn)
 print(tables)</code></pre>
@@ -6723,6 +6723,75 @@ moist/wet</td>
 </tbody>
 </table>
 </div>
+</div>
+</div>
+<div id="cleaned-desktop-energy_parameters.json-file" class="section level3">
+<h3>cleaned-desktop <code>energy_parameters.json</code> file</h3>
+<p>The energy_parameters.json object is found in the <a href="https://github.com/qlands/cleaned-desktop/blob/feature/add-comparison/R/energy_parameters.jsone">qlands/cleaned-desktop
+github</a> it contains a single table <strong>Table 10.4</strong> that
+does not seem to appear in the <code>cleaned/data/ghg_para.rda</code>
+object.</p>
+<div id="table-10.4" class="section level4">
+<h4>Table 10.4</h4>
+<pre class="r"><code>json_data2 &lt;- fromJSON(&quot;energy_parameters.json&quot;)
+names(json_data2)</code></pre>
+<pre><code>## [1] &quot;Table 10.4&quot;</code></pre>
+<pre class="r"><code>kable(json_data2$`Table 10.4`)</code></pre>
+<table>
+<colgroup>
+<col width="21%" />
+<col width="11%" />
+<col width="66%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">animal_category</th>
+<th align="right">maintenance_cfi</th>
+<th align="left">comments</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Cattle_Buffalo</td>
+<td align="right">0.322</td>
+<td align="left">All non-lactating cows, steers, heifers and calves</td>
+</tr>
+<tr class="even">
+<td align="left">Cattle_Buffalo_lactating_cows</td>
+<td align="right">0.386</td>
+<td align="left">Maintenance energy requirements are 20% higher during
+lactation</td>
+</tr>
+<tr class="odd">
+<td align="left">Cattle_Buffalo_bulls</td>
+<td align="right">0.370</td>
+<td align="left">Maintenance energy requirements are 15% higher for
+intact males than non lactating females</td>
+</tr>
+<tr class="even">
+<td align="left">Sheep_lamb_to _1_year</td>
+<td align="right">0.236</td>
+<td align="left">This value can be increased by 15% for intact
+males</td>
+</tr>
+<tr class="odd">
+<td align="left">Sheep_older_than_1_year</td>
+<td align="right">0.217</td>
+<td align="left">This value can be increased by 15% for intact
+males.</td>
+</tr>
+<tr class="even">
+<td align="left">Goats</td>
+<td align="right">0.315</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Pigs</td>
+<td align="right">0.440</td>
+<td align="left">NA</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
