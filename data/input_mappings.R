@@ -96,3 +96,23 @@ field_connections[,focal_userselected:= logical(), # Is the field user-selected 
                               ][,connected_keyfield:= character()] # The key field in the connected table (focal_free==F & focal_userselected==F)
 # 4) Save results
 fwrite(field_connections,file.path(mappings_dir,"input_mappings.csv"))
+
+# Define the meta file for the field_connections table
+field_connections_meta <- data.table(
+  field_name = c("focal_file", "focal_path", "focal_example_value", "focal_class", "focal_userselected",
+                 "focal_free","connected_file", "connected_path", "focal_keyfield", "connected_keyfield"),
+  field_type = c("character", "character", "character", "character", "logical","logical",
+                 "character", "character", "character", "character"),
+  description = c("The filename of the object containing the focal field",
+                  "The path to the focal field within the focal object",
+                  "Example value(s) from the focal field",
+                  "The class of data in the focal field",
+                  "Is the field user-selected in the UI (TRUE/FALSE)?",
+                  "Is the field free-text (TRUE/FALSE)? (i.e. it is entered by the user and there is no lookup field)",
+                  "The filename of the connected object  (focal_free==F)",
+                  "The path to the field in the connected object (focal_free==F)",
+                  "The key field in the focal table  (focal_free==F & focal_userselected==F)",
+                  "The key field in the connected table (focal_free==F & focal_userselected==F)")
+)
+
+fwrite(field_connections_meta,file.path(mappings_dir,"input_mappings_metadata.csv"))

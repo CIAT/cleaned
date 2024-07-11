@@ -1,0 +1,11 @@
+field_name,field_type,description
+focal_file,character,The filename of the object containing the focal field
+focal_path,character,The path to the focal field within the focal object
+focal_example_value,character,Example value(s) from the focal field
+focal_class,character,The class of data in the focal field
+focal_userselected,logical,Is the field user-selected in the UI (TRUE/FALSE)?
+focal_free,logical,Is the field free-text (TRUE/FALSE)? (i.e. it is entered by the user and there is no lookup field)
+connected_file,character,The filename of the connected object  (focal_free==F)
+connected_path,character,The path to the field in the connected object (focal_free==F)
+focal_keyfield,character,The key field in the focal table  (focal_free==F & focal_userselected==F)
+connected_keyfield,character,The key field in the connected table (focal_free==F & focal_userselected==F)
