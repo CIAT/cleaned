@@ -135,7 +135,7 @@ The `json_data$feed_basket` level of the input data contains a futher `r length(
 `r paste(names(json_data$feed_basket),collapse=" and ")`. These sub-levels appear to be the same length: `r paste0(names(json_data$feed_basket)," = ", sapply(json_data$feed_basket,length))`.
 
 ##### Seasons 
-The `json_data$feed_basket$season` object is simple, being a vector containing the names of the seasons:
+The `json_data$feed_basket$season_name` object is simple, being a vector containing the names of the seasons:
 ```{r feed basket seasons,echo=F}
 kable(json_data$feed_basket$season_name,caption="Feed basket/season data input table  (json_data$feed_basket$season)")
 ```
@@ -146,12 +146,14 @@ The `json_data$feed_basket$feed` object is the most structurally complex element
 str(json_data$feed_basket$feeds)
 ```
 
+###### Feeds
 Each feed basket table (e.g., `json_data$feed_basket$feeds[[1]]`) is constructed using key fields that describe feed items found in the `json_data$feed_items table`, specifically `feed_item_code` and `feed_type_code.` The feeds are then allocated to the herd elements described in the `json_data$livestock table`.
 
 ```{r feed basket feeds 0 ,echo=F}
 kable(json_data$feed_basket$feeds[[1]],caption="Feed basket/feed data input table tablejson_data$feed_basket$feeds[[1]]")
 ```
 
+###### Livestock
 The livestock field in the feed basket table contains a list with `r length(json_data$feed_basket$feeds[[1]]$livestock)` elements, indicating a one-to-many relationship between the diet item and elements of the livestock herd. Each feed item represented by a row in the feed basket table is allocated to different herd elements, with the `livetype_code` field serving as the key field linking the two tables.
 
 ```{r feed basket feeds 2 ,echo=F}

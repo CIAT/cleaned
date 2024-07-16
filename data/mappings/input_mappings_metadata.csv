@@ -3,9 +3,19 @@ focal_file,character,The filename of the object containing the focal field
 focal_path,character,The path to the focal field within the focal object
 focal_example_value,character,Example value(s) from the focal field
 focal_class,character,The class of data in the focal field
-focal_userselected,logical,Is the field user-selected in the UI (TRUE/FALSE)?
-focal_free,logical,Is the field free-text (TRUE/FALSE)? (i.e. it is entered by the user and there is no lookup field)
-connected_file,character,The filename of the connected object  (focal_free==F)
-connected_path,character,The path to the field in the connected object (focal_free==F)
-focal_keyfield,character,The key field in the focal table  (focal_free==F & focal_userselected==F)
-connected_keyfield,character,The key field in the connected table (focal_free==F & focal_userselected==F)
+focal_type,character,"Enter one these values:
+  1) standard_parameter - values that cannot be changed by users, for example parameters in IPCC tables. Sometimes referred to has hard_coded values by the team.
+  2) user_parameter - descriptors of a study area - these filed might be prefilled, but can be changed by users (normally only needs to be done once for a new study area).
+  3) user_input - user input, to be changed for each livestock enterprise type and scenario."
+focal_userselected,logical,Is the field user selected or entered in the UI (TRUE/FALSE)? FALSE means that the field is auto-populated.
+focal_free,logical,Is the field free-text (TRUE/FALSE)? (i.e. it is entered or selected by the user and there is no lookup field)
+connected_file,character,The filename of the connected object  (use when focal_free field is FALSE)
+connected_path,character,The path to the field in the connected object (use when focal_free field is FALSE)
+focal_keyfield,character,"For a field that is autopopulated, what is the path of the key field in the **focal** object that is used to subset the connected table?
+  Use when focal_free field is FALSE AND focal_userselected is FALSE.
+  Example = the soil_k_value (focal_path) in the input_json comes from the sqlite Soil/k_value field (connected_path), the user selected input_json	soil_description field (e.g. Lixisol) is used to connect the sqlite Soil/k_value.
+  This means we enter the value soil_description in the focal_keyfield column and the value Soil/soil_desc in the connected_keyfield column."
+connected_keyfield,character,"For a field that is autopopulated, what is the path of the key field in the **connected** table that links to the focal object?
+  Use when focal_free field is FALSE AND focal_userselected is FALSE.
+  Example = the soil_k_value (focal_path) in the input_json comes from the sqlite Soil/k_value field (connected_path), the user selected input_json	soil_description field (e.g. Lixisol) is used to connect the sqlite Soil/k_value.
+  This means we enter the value soil_description in the focal_keyfield column and the value Soil/soil_desc in the connected_keyfield column"

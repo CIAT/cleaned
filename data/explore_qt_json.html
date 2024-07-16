@@ -4190,8 +4190,8 @@ contains a futher 2 list levels called feeds and season_name. These
 sub-levels appear to be the same length: feeds = 2, season_name = 2.</p>
 <div id="seasons-1" class="section level5">
 <h5>Seasons</h5>
-<p>The <code>json_data$feed_basket$season</code> object is simple, being
-a vector containing the names of the seasons:</p>
+<p>The <code>json_data$feed_basket$season_name</code> object is simple,
+being a vector containing the names of the seasons:</p>
 <table>
 <caption>Feed basket/season data input table (json_data<span class="math inline">\(feed_basket\)</span>season)</caption>
 <thead>
@@ -4242,6 +4242,8 @@ levels of nesting.</p>
 ##   .. ..$ :&#39;data.frame&#39;:  3 obs. of  2 variables:
 ##   .. .. ..$ allocation   : int [1:3] 35 40 40
 ##   .. .. ..$ livetype_code: chr [1:3] &quot;2&quot; &quot;1&quot; &quot;5&quot;</code></pre>
+<div id="feeds" class="section level6">
+<h6>Feeds</h6>
 <p>Each feed basket table (e.g.,
 <code>json_data$feed_basket$feeds[[1]]</code>) is constructed using key
 fields that describe feed items found in the
@@ -4276,6 +4278,9 @@ are then allocated to the herd elements described in the
 </tr>
 </tbody>
 </table>
+</div>
+<div id="livestock-1" class="section level6">
+<h6>Livestock</h6>
 <p>The livestock field in the feed basket table contains a list with 3
 elements, indicating a one-to-many relationship between the diet item
 and elements of the livestock herd. Each feed item represented by a row
@@ -4369,6 +4374,7 @@ nesting:</p>
 <pre><code>## &#39;data.frame&#39;:    3 obs. of  2 variables:
 ##  $ allocation   : int  40 17 40
 ##  $ livetype_code: chr  &quot;2&quot; &quot;1&quot; &quot;5&quot;</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -6052,7 +6058,7 @@ tropical, moist/wet</td>
 </tbody>
 </table>
 </div>
-<div id="feeds" class="section level5">
+<div id="feeds-1" class="section level5">
 <h5>Feeds</h5>
 <div id="item" class="section level6">
 <h6>Item</h6>
