@@ -52,9 +52,10 @@
 #'
 #' @export
 #'
+
 combineOutputs <- function(para, feed_basket_quality, energy_required, land_required,
                            soil_erosion, water_required, nitrogen_balance, livestock_productivity,
-                           biomass,soil_carbon, ghg_emission, filePath){
+                           biomass,soil_carbon, ghg_emission, filePath, primary_excel){
   if (exists("para")) {
     para = para
   }else {para = "ERROR: Data is not provided"}
@@ -106,6 +107,11 @@ combineOutputs <- function(para, feed_basket_quality, energy_required, land_requ
     # Extract the file name
     fileName <- sub("\\.\\w+$", "", basename(filePath))
   }else {filePath = "ERROR: File path is not provided"}
+  if (exists("primary_excel")) {
+    primary_excel = primary_excel
+    # Load primary_excel workbook
+    primary_excel_wb <- loadWorkbook(primary_excel)
+  }else {filePath = "ERROR: primary excel file is not provided"}
 
 
   feed_basket_quality <- lapply(feed_basket_quality, function(x) {x <- x[,-1]})
@@ -123,24 +129,12 @@ combineOutputs <- function(para, feed_basket_quality, energy_required, land_requ
   #   geom_text(aes(label = round(area_feed_total, 2)), vjust = -0.5, size = 1, angle = 45) +
   #   theme_bw()+
   #   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-  land_required %>%
+  land_required_output <- land_required %>%
     group_by(feed, season_name) %>%
     summarise(area_feed_total = sum(area_feed, na.rm = TRUE)) %>%
     group_by(feed) %>%
     mutate(cumulative_area = cumsum(area_feed_total),
-           label_position = cumulative_area - 0.7 * area_feed_total) %>%
-    ggplot(aes(x = feed, y = area_feed_total, fill = season_name)) +
-    geom_bar(stat = "identity", width = 0.6) +
-    geom_text(aes(label = round(area_feed_total, 2), y = label_position),
-              size = 1, angle = 45, vjust = -0.) +
-    labs(x = "Feed Item", y = "Area (Ha)", fill = "Seasons", title = "Land Requirement and Feed Basket") +
-    theme_bw() +
-    theme(axis.text.x = element_text(size = 5, angle = 45, hjust = 1),
-          axis.text.y = element_text(size = 5)) +
-    scale_fill_discrete(guide = guide_legend(title = "Seasons"))
-
-  ggsave(paste0(directoryPath, "/", fileName, "_land_required.png"), width = 150, height = 100, units = "mm")
-
+           label_position = cumulative_area - 0.7 * area_feed_total)
 
   # Expanded table land requirement
   ex_land_required <- land_required %>%
@@ -281,7 +275,7 @@ combineOutputs <- function(para, feed_basket_quality, energy_required, land_requ
     production_kg_per_year = c("",cattle_milk_kg,cattle_meat_kg,"",other_milk_kg,other_meat_kg,"",total_milk_kg,total_meat_kg),
     production_energy_kcal_per_year = c("",cattle_milk_energy,cattle_meat_energy,"",other_milk_energy,other_meat_energy,"",total_milk_energy,total_meat_energy),
     protein_kg_per_year = c("",cattle_milk_protein,cattle_meat_protein,"",other_milk_protein,other_meat_protein,"",total_milk_protein,total_meat_protein)
-    ) %>% mutate(ame_days = as.numeric(production_energy_kcal_per_year)/2500)
+  ) %>% mutate(ame_days = as.numeric(production_energy_kcal_per_year)/2500)
 
   # Produced manure
   cattle_number <- sum(livestock_productivity$number_cattle, na.rm = T)
@@ -316,18 +310,9 @@ combineOutputs <- function(para, feed_basket_quality, energy_required, land_requ
   ## Soil impact
   ###############################################################################################
   # Plotting N balance
-  nitrogen_balance %>%
+  nitrogen_balance_output <- nitrogen_balance %>%
     group_by(feed) %>%
-    summarise(nbalance_kg_n_total = sum(nbalance_kg_n_total, na.rm = T)) %>%
-    ggplot2::ggplot(aes(x=feed, y=nbalance_kg_n_total))+
-    geom_bar(stat = "identity", width = 0.6)+
-    labs(x = "Feed Item", y = "Kg N", title = "Total Nitrogen Balance by Feed Item") +
-    geom_text(aes(label = round(nbalance_kg_n_total, 2)), vjust = -0.5, size = 1, angle = 0) +
-    theme_bw()+
-    theme(axis.text.x = element_text(size = 5, angle = 45, hjust = 1),
-          axis.text.y = element_text(size = 5))
-
-  ggsave(paste0(directoryPath, "/", fileName, "_nbalance.png"), width = 150, height = 100, units = "mm")
+    summarise(nbalance_kg_n_total = sum(nbalance_kg_n_total, na.rm = T))
 
   ## OVERALL SOIL IMPACTS
   nitrogen_balance <- nitrogen_balance
@@ -338,7 +323,7 @@ combineOutputs <- function(para, feed_basket_quality, energy_required, land_requ
            conc_ip_soil_loss = ifelse(stringr::str_detect(feed_item, "IP"), as.numeric(soil_loss_plot), 0),
            farm_soil_loss = (as.numeric(soil_loss_plot) - rough_of_soil_loss - conc_of_soil_loss - conc_ip_soil_loss))
 
-    overal_soil_impact <- data.frame(
+  overal_soil_impact <- data.frame(
     sources = c("total", "on-farm", "rough of", "conc of", "conc ip"),
     balance_N_kg_N_year = c(sum(nitrogen_balance$nbalance_feed_only_kg_n, na.rm = T), sum(nitrogen_balance$farm_kg_n, na.rm = T),
                             sum(nitrogen_balance$rough_of_kg_n, na.rm = T), sum(nitrogen_balance$conc_of_kg_n, na.rm = T), sum(nitrogen_balance$conc_ip_kg_n, na.rm = T)),
@@ -351,16 +336,16 @@ combineOutputs <- function(para, feed_basket_quality, energy_required, land_requ
     erosion_t_soil_year = c(sum(as.numeric(soil_erosion$soil_loss_plot, na.rm = T)), sum(soil_erosion$rough_of_soil_loss, na.rm = T), sum(soil_erosion$conc_of_soil_loss, na.rm = T),
                             sum(soil_erosion$conc_ip_soil_loss, na.rm = T), sum(soil_erosion$farm_soil_loss, na.rm = T))
   )%>%
-      mutate(percent_area_mining = ifelse(!is.finite(percent_area_mining),0,percent_area_mining),
-             percent_area_leaching = ifelse(!is.finite(percent_area_leaching),0,percent_area_leaching),
-             erosion_t_soil_ha = erosion_t_soil_year/c(sum(nitrogen_balance$area_total, na.rm = T), sum(nitrogen_balance$farm_area, na.rm = T), sum(nitrogen_balance$rough_of_area, na.rm = T),
-                                                       sum(nitrogen_balance$conc_of_area, na.rm = T), sum(nitrogen_balance$conc_ip_area, na.rm = T)))
+    mutate(percent_area_mining = ifelse(!is.finite(percent_area_mining),0,percent_area_mining),
+           percent_area_leaching = ifelse(!is.finite(percent_area_leaching),0,percent_area_leaching),
+           erosion_t_soil_ha = erosion_t_soil_year/c(sum(nitrogen_balance$area_total, na.rm = T), sum(nitrogen_balance$farm_area, na.rm = T), sum(nitrogen_balance$rough_of_area, na.rm = T),
+                                                     sum(nitrogen_balance$conc_of_area, na.rm = T), sum(nitrogen_balance$conc_ip_area, na.rm = T)))
 
   # Feed items specific N balance
   nitrogen_balance <- nitrogen_balance %>%
-      select(c(feed,nin,nout,nbalance_kg_n_total,nbalance_kg_n_ha_total,nbalance_feed_only_kg_n,nbalance_feed_only_kg_n_ha)) %>%
-      mutate(nbalance_food_only_kg_n = nbalance_kg_n_total-nbalance_feed_only_kg_n,
-             nbalance_food_only_kg_n_ha = nbalance_kg_n_ha_total-nbalance_feed_only_kg_n_ha)
+    select(c(feed,nin,nout,nbalance_kg_n_total,nbalance_kg_n_ha_total,nbalance_feed_only_kg_n,nbalance_feed_only_kg_n_ha)) %>%
+    mutate(nbalance_food_only_kg_n = nbalance_kg_n_total-nbalance_feed_only_kg_n,
+           nbalance_food_only_kg_n_ha = nbalance_kg_n_ha_total-nbalance_feed_only_kg_n_ha)
 
   soil_impacts <- list(overal_soil_impact = overal_soil_impact,
                        nitrogen_balance = nitrogen_balance)
@@ -370,16 +355,7 @@ combineOutputs <- function(para, feed_basket_quality, energy_required, land_requ
   ###############################################################################################
   water_use_per_feed_item <- water_required[["water_use_per_feed_item"]]
 
-  ggplot(water_use_per_feed_item, aes(x = "", y = feed_water_use, fill = feed)) +
-    geom_bar(stat = "identity", width = 1) +
-    coord_polar("y", start = 0) +
-    labs(fill = "Feed Item", title = "Water Use per Feed Crop") +
-    theme_bw()+
-    geom_text(aes(label = scales::percent(feed_water_use / sum(feed_water_use))),
-              position = position_stack(vjust = 0.5),
-              size = 1)
-
-  ggsave(paste0(directoryPath, "/", fileName, "_water_use_per_feed.png"), width = 150, height = 100, units = "mm")
+  water_use_per_feed_item_output <- water_use_per_feed_item
 
   ###############################################################################################
   ## GHG Impacts
@@ -458,7 +434,7 @@ combineOutputs <- function(para, feed_basket_quality, energy_required, land_requ
 
   # Concentrates off-farm
   conc_of_Soil_direct_N2O <- sum(ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]][ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]]$anthropogenic_N_input == "conc_of_n_synthetic_fertilizer_managed_soil","annual_N20N_direct_emission_from_managed_soil"],
-                                  ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]][ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]]$anthropogenic_N_input == "conc_of_n_from_crop_residue_managed_soil","annual_N20N_direct_emission_from_managed_soil"],na.rm = T)
+                                 ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]][ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]]$anthropogenic_N_input == "conc_of_n_from_crop_residue_managed_soil","annual_N20N_direct_emission_from_managed_soil"],na.rm = T)
   conc_of_Soil_direct_N2O_tot_kg_co2_e <- conc_of_Soil_direct_N2O*N2O
   conc_of_Soil_direct_N2O_per_ha_kg_co2_e <- ifelse(area_required_concentrates_off_farm_ha<0.001,0,conc_of_Soil_direct_N2O_tot_kg_co2_e/area_required_concentrates_off_farm_ha)
   conc_of_Soil_direct_N2O_kg_co2_e_per_kg_fpcm <- conc_of_Soil_direct_N2O_tot_kg_co2_e/total_milk_produced_kg_fpcm_per_year
@@ -597,18 +573,18 @@ combineOutputs <- function(para, feed_basket_quality, energy_required, land_requ
                              "", conc_ip_Soil_direct_N2O_kg_co2_e_per_kg_fpcm,
                              conc_ip_soil_indirect_N2O_kg_co2_e_per_kg_fpcm,
                              conc_ip_fertilizer_emission_kg_co2_e_per_kg_fpcm)
-    )
+  )
 
   # Global warming potential (CO2eq)
   soil_on_farm <- (as.numeric(ghg_balance[ghg_balance$GHG_balance == "Soil-Direct N2O", "kg_co2_e_per_ha"][1]) +
-    as.numeric(ghg_balance[ghg_balance$GHG_balance == "Soil-Indirect N2O", "kg_co2_e_per_ha"][1]))/1000
+                     as.numeric(ghg_balance[ghg_balance$GHG_balance == "Soil-Indirect N2O", "kg_co2_e_per_ha"][1]))/1000
 
   soil_off_farm <- (sum(as.numeric(ghg_balance[ghg_balance$GHG_balance == "Soil-Direct N2O", "kg_co2_e_per_ha"][-1])) +
-    sum(as.numeric(ghg_balance[ghg_balance$GHG_balance == "Soil-Indirect N2O", "kg_co2_e_per_ha"][-1])))/1000
+                      sum(as.numeric(ghg_balance[ghg_balance$GHG_balance == "Soil-Indirect N2O", "kg_co2_e_per_ha"][-1])))/1000
 
   livestock_manure <- (as.numeric(ghg_balance[ghg_balance$GHG_balance == "Manure-Methane", "kg_co2_e_per_ha"]) +
-    as.numeric(ghg_balance[ghg_balance$GHG_balance == "Manure-Direct N2O", "kg_co2_e_per_ha"]) +
-    as.numeric(ghg_balance[ghg_balance$GHG_balance == "Manure-Indirect N2O", "kg_co2_e_per_ha"]))/1000
+                         as.numeric(ghg_balance[ghg_balance$GHG_balance == "Manure-Direct N2O", "kg_co2_e_per_ha"]) +
+                         as.numeric(ghg_balance[ghg_balance$GHG_balance == "Manure-Indirect N2O", "kg_co2_e_per_ha"]))/1000
 
   livestock_enteric_fermentation <- as.numeric(ghg_balance[ghg_balance$GHG_balance == "Enteric fermentation-Methane", "kg_co2_e_per_ha"])/1000
 
@@ -624,12 +600,12 @@ combineOutputs <- function(para, feed_basket_quality, energy_required, land_requ
   fertilizer_off_farm_rough <- as.numeric(ghg_balance[ghg_balance$GHG_balance == "Production fertilizer", "kg_co2_e_per_ha"][2])/1000
 
   soil_off_farm_conc <- (sum(as.numeric(ghg_balance[ghg_balance$GHG_balance == "Soil-Direct N2O", "kg_co2_e_per_ha"][3])) +
-                            sum(as.numeric(ghg_balance[ghg_balance$GHG_balance == "Soil-Indirect N2O", "kg_co2_e_per_ha"][3])))/1000
+                           sum(as.numeric(ghg_balance[ghg_balance$GHG_balance == "Soil-Indirect N2O", "kg_co2_e_per_ha"][3])))/1000
 
   fertilizer_off_farm_conc <- as.numeric(ghg_balance[ghg_balance$GHG_balance == "Production fertilizer", "kg_co2_e_per_ha"][3])/1000
 
   soil_ip_farm_conc <- (sum(as.numeric(ghg_balance[ghg_balance$GHG_balance == "Soil-Direct N2O", "kg_co2_e_per_ha"][4])) +
-                            sum(as.numeric(ghg_balance[ghg_balance$GHG_balance == "Soil-Indirect N2O", "kg_co2_e_per_ha"][4])))/1000
+                          sum(as.numeric(ghg_balance[ghg_balance$GHG_balance == "Soil-Indirect N2O", "kg_co2_e_per_ha"][4])))/1000
 
   fertilizer_ip_farm_conc <- as.numeric(ghg_balance[ghg_balance$GHG_balance == "Production fertilizer", "kg_co2_e_per_ha"][4])/1000
 
@@ -647,19 +623,10 @@ combineOutputs <- function(para, feed_basket_quality, energy_required, land_requ
                                     on_farm_table,
                                     off_farm_table)
   ghg_emission <- list(ghg_balance = ghg_balance,
-                        global_warming_potential = global_warming_potential)
+                       global_warming_potential = global_warming_potential)
 
   # Plotting GHG emission
-  on_farm_table %>%
-    ggplot2::ggplot(aes(x=sources_and_sinks, y=t_CO2e_per_ha))+
-    geom_bar(stat = "identity", width = 0.6)+
-    labs(x = "", y = "t CO2e/ha", title = "GHG emissions") +
-    geom_text(aes(label = round(t_CO2e_per_ha, 2)), vjust = -0.5, size = 1, angle = 0) +
-    theme_bw()+
-    theme(axis.text.x = element_text(size = 5, angle = 45, hjust = 1),
-          axis.text.y = element_text(size = 5))
-
-  ggsave(paste0(directoryPath, "/", fileName, "_ghg_emission.png"), width = 150, height = 100, units = "mm")
+  on_farm_table_output <- on_farm_table
 
   ###############################################################################################
   ## Waste
@@ -678,40 +645,58 @@ combineOutputs <- function(para, feed_basket_quality, energy_required, land_requ
                       biomass = biomass,
                       soil_carbon = soil_carbon,
                       product_waste = product_waste)
+  
+  # Add worksheet to the primary_excel workbook
+  addWorksheet(primary_excel_wb, "Land Required")
+  writeData(primary_excel_wb, sheet = "Land Required", x = output_list$land_required$land_required)
+  addWorksheet(primary_excel_wb, "DM Required")
+  writeData(primary_excel_wb, sheet = "DM Required", x = output_list$land_required$dm_required)
+  addWorksheet(primary_excel_wb, "Land and DM Required")
+  writeData(primary_excel_wb, sheet = "Land and DM Required", x = output_list$land_required$land_and_dm_required)
+  addWorksheet(primary_excel_wb, "Overall Soil Impact")
+  writeData(primary_excel_wb, sheet = "Overall Soil Impact", x = output_list$soil_impacts$overal_soil_impact)
+  addWorksheet(primary_excel_wb, "Nitrogen Balance")
+  writeData(primary_excel_wb, sheet = "Nitrogen Balance", x = output_list$soil_impacts$nitrogen_balance)
+  addWorksheet(primary_excel_wb, "Water Use Per Feed Item")
+  writeData(primary_excel_wb, sheet = "Water Use Per Feed Item", x = output_list$water_required$water_use_per_feed_item)
+  addWorksheet(primary_excel_wb, "Water Use For Production")
+  writeData(primary_excel_wb, sheet = "Water Use For Production", x = output_list$water_required$water_use_for_production)
+  addWorksheet(primary_excel_wb, "Consumable Livestock Product")
+  writeData(primary_excel_wb, sheet = "Consumable Livestock Product", x = output_list$livestock_productivity$consumable_livestock_product)
+  addWorksheet(primary_excel_wb, "Manure Produced")
+  writeData(primary_excel_wb, sheet = "Manure Produced", x = output_list$livestock_productivity$manure_produced)
+  addWorksheet(primary_excel_wb, "GHG Balance")
+  writeData(primary_excel_wb, sheet = "GHG Balance", x = output_list$ghg_emission$ghg_balance)
+  addWorksheet(primary_excel_wb, "Global Warming Potential")
+  writeData(primary_excel_wb, sheet = "Global Warming Potential", x = output_list$ghg_emission$global_warming_potential)
+  addWorksheet(primary_excel_wb, "Biomass")
+  writeData(primary_excel_wb, sheet = "Biomass", x = output_list$biomass)
+  addWorksheet(primary_excel_wb, "Soil Carbon")
+  writeData(primary_excel_wb, sheet = "Soil Carbon", x = output_list$soil_carbon)
+  addWorksheet(primary_excel_wb, "Product Waste")
+  writeData(primary_excel_wb, sheet = "Product Waste", x = output_list$product_waste)
 
-  # Flatten the nested structure
-  df_land_required <- output_list$land_required$land_required
-  df_dm_required <- output_list$land_required$dm_required
-  df_land_and_dm_required <- output_list$land_required$land_and_dm_required
-  df_overall_soil_impact <- output_list$soil_impacts$overal_soil_impact
-  df_nitrogen_balance <- output_list$soil_impacts$nitrogen_balance
-  df_water_use_per_feed_item <- output_list$water_required$water_use_per_feed_item
-  df_water_use_for_production <- output_list$water_required$water_use_for_production
-  df_consumable_livestock_product <- output_list$livestock_productivity$consumable_livestock_product
-  df_manure_produced <- output_list$livestock_productivity$manure_produced
-  df_ghg_balance <- output_list$ghg_emission$ghg_balance
-  df_global_warming_potential <- output_list$ghg_emission$global_warming_potential
-  df_biomass <- output_list$biomass
-  df_soil_carbon <- output_list$soil_carbon
-  df_product_waste <- output_list$product_waste
+  # Change the order of the worksheets
+  worksheetOrder(primary_excel_wb) <- c("1", "8", "9", "10", "11", "12", "13",
+                                        "14", "15", "16", "17", "18", "19", "20",
+                                        "21", "2", "3", "4", "5", "6", "7")
 
   # Save to Excel with multiple sheets
-  excel_output_path <- paste0(directoryPath, "/", fileName, ".xlsx") # Change this to your desired output path
-  write.xlsx(list("Land Required" = df_land_required,
-                  "DM Required" = df_dm_required,
-                  "Land and DM Required" = df_land_and_dm_required,
-                  "Overall Soil Impact" = df_overall_soil_impact,
-                  "Nitrogen Balance" = df_nitrogen_balance,
-                  "Water Use Per Feed Item" = df_water_use_per_feed_item,
-                  "Water Use For Production" = df_water_use_for_production,
-                  "Consumable Livestock Product" = df_consumable_livestock_product,
-                  "Manure Produced" = df_manure_produced,
-                  "GHG Balance" = df_ghg_balance,
-                  "Global Warming Potential" = df_global_warming_potential,
-                  "Biomass" = df_biomass,
-                  "Soil Carbon" = df_soil_carbon,
-                  "Product Waste" = df_product_waste),
-             excel_output_path)
+  excel_output_path <- paste0(directoryPath, "/", fileName, ".xlsx") # Create path for excel
+  saveWorkbook(primary_excel_wb, excel_output_path, overwrite = TRUE)
+
+  # Save json
+
+
+  return(
+    list(
+      json_output = jsonlite::toJSON(output_list, pretty = TRUE),
+      on_farm_table = on_farm_table_output,
+      nitrogen_balance = nitrogen_balance_output,
+      land_required = land_required_output,
+      water_use_per_feed_item = water_use_per_feed_item_output
+    )
+  )
 
   jsonlite::toJSON(output_list, pretty = TRUE)
 
