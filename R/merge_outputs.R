@@ -645,7 +645,7 @@ combineOutputs <- function(para, feed_basket_quality, energy_required, land_requ
                       biomass = biomass,
                       soil_carbon = soil_carbon,
                       product_waste = product_waste)
-
+  
   # Add worksheet to the primary_excel workbook
   addWorksheet(primary_excel_wb, "Land Required")
   writeData(primary_excel_wb, sheet = "Land Required", x = output_list$land_required$land_required)
@@ -697,5 +697,7 @@ combineOutputs <- function(para, feed_basket_quality, energy_required, land_requ
       water_use_per_feed_item = water_use_per_feed_item_output
     )
   )
+
+  jsonlite::toJSON(output_list, pretty = TRUE)
 
 } #end of output function
