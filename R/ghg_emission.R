@@ -97,7 +97,7 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
   #Computing methane enteric emission factor
 
   ef <- ym1%>%
-    mutate(enteric_methane_emissions = (ge_intake*(ym/100)*no_days)/55.65) #equation 10.21
+    mutate(enteric_methane_emissions = ((ge_intake/no_days)*(ym/100)*no_days)/55.65) #equation 10.21
 
   ############################################################################################################################
   #Computing methane emission from manure management T2
