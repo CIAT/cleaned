@@ -285,19 +285,7 @@ compare_scenario <- function (baseRun, outFile, oDir2)
                                     total_carbon_balance_per_meat, total_carbon_balance_per_protein)
   }
   results <- scenarioList %>% dplyr::bind_rows()
-<<<<<<< HEAD
-
-  # Save results in excel
-  excel_output_path <- paste0(oDir2, "/scenario_comparison.xlsx")
-  write.xlsx(results, excel_output_path, overwrite = TRUE)
-
-  # Generate plots
-
-  for(i in 2:ncol(results)){
-
-=======
   for (i in 2:ncol(results)) {
->>>>>>> cleaned_v0.6.0
     datos <- results %>% select(1, all_of(i))
     tt <- colnames(datos[2])
     if (tt == "total_milk_produced_kg_fpcm_per_year") {
@@ -489,4 +477,3 @@ compare_scenario <- function (baseRun, outFile, oDir2)
   }
   return(output_list)
 }
-
