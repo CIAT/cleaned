@@ -1,0 +1,404 @@
+---
+title: "Exploration of CLEANED input files"
+author: "Peter Steward"
+date: "2024-07-01"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 6
+    df_print: paged
+  pdf_document:
+    toc: true
+    toc_depth: 6
+---
+
+```{r setup,echo=F}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Load packages #####
+if (!require("pacman")) {
+  install.packages("pacman")
+  require(pacman)
+}
+
+if (!tinytex::is_tinytex()) {
+  p_load(tinytex)
+  tinytex::install_tinytex()
+}
+
+# Use p_load to install if not present and load the packages
+pacman::p_load(jsonlite,data.table,rmarkdown,knitr,RSQLite)
+```
+
+## Cleaned Data
+### Input data structure
+
+The aim of this markdown document is to summarize the structure of the .json object that is required as an input for the R cleaned packages.
+It also explores any additional datasets that are used as inputs to create this input object, these include `cleaned/data/ghg_para.R`, `cleaned/data/stock_change_para.rda` and `qlands/cleaned-desktop/cleaned.sqlite`.
+
+#### Load input json file into R
+Load the `qt_example.json` example input file stored in `cleaned/data`.
+```{r load data,echo=T}
+# Read in example json file #####
+json_data <- fromJSON("qt_example.json")
+
+# Summarize level 1 of the list
+json_names<-data.table(field_name=names(json_data),
+                          class=sapply(json_data,base::class),
+                          length=sapply(json_data,length))
+
+kable(json_names, caption = "Summary of Level 1 of the JSON Object")
+```
+
+#### Simple fields
+```{r simple fields,echo=T}
+simple_fields<-json_names[class!="data.frame" & length==1,field_name]
+simple_fields<-json_data[json_names[class!="data.frame" & length==1,field_name]]
+simple_fields<-data.table(field=names(simple_fields),
+                          value=unlist(simple_fields),
+                          class=json_names[class!="data.frame" & length==1,class])
+```
+
+```{r simple feilds 2,echo=F}
+kable(simple_fields, caption = "Summary of simple fields containing a single value")
+```
+
+#### Livestock
+The `json_data$livestock` of the json list is a data.table that contains information about livestock"]] herd structure and management, manure management and productivity.
+
+```{r livestock 0 ,echo=F}
+livestock<-t(json_data$livestock) # Transpose
+colnames(livestock)<-paste0("livetype_code_",json_data$livestock$livetype_code)
+kable(livestock,caption="Transposed livestock herd data t(json_data$livestock)")
+```
+
+The `livestock` are linked to the `feed_basket$feeds` tables by the `livetype_code` keyfield.
+```{r livestock 1 ,echo=T}
+json_data$livestock[,c("livetype_code","livetype_desc")] # Codes in the feed_items table
+lapply(json_data$feed_basket$feeds,"[[","livestock") # Codes in the feed_basket tables
+```
+
+#### Feed items
+The `json_data$feed_items` level of the json list is a data.table that contains information about the production management and context of feed production.   
+
+```{r feed items 0 ,echo=F}
+feed_items<-t(json_data$feed_items) # Transpose
+colnames(feed_items)<-paste0("feed_item_code_",json_data$feed_items$feed_item_code)
+kable(feed_items,caption="Transposed feed item data t(json_data$feed_items)")
+```
+
+The `feed_items` are linked to the `feed_basket$feeds` tables by the `feed_item_code` field.
+```{r feed items 1 ,echo=T}
+json_data$feed_items[,c("feed_item_code","feed_item_name")] # Codes in the feed_items table
+lapply(json_data$feed_basket$feeds,"[[","feed_item_code") # Codes in the feed_basket tables
+```
+
+Other keyfields include `feed_type_code` and `land_cover`:
+```{r feed items 2 ,echo=T}
+json_data$feed_items[,c("feed_type_code","feed_type_name","land_cover","land_cover_desc")]
+```
+
+#### Fertilizer
+The `json_data$fertilizer` level of the json list is a data.table that contains information about the production management and context of feed production.   
+
+```{r fertilizer 1,echo=F}
+kable(json_data$fertilizer,caption="Fertilizer data input table  (json_data$fertilizer)")
+```
+
+The values in `fertilizer_code` field do not appear directly correspond to any fields in the feed basket or feed item tables. However columns with similar names do appear in the field item tables
+
+```{r fertilizer 2,echo=T}
+fertilizers<-json_data$fertilizer$fertilizer_desc
+fi_cols<-colnames(json_data$feed_items)
+
+# Reformat fertilizer names to match column names in the feed_items table
+(fertilizers<-gsub(" ","_",tolower(json_data$fertilizer$fertilizer_desc)))
+
+# Find matching columns
+fi_cols[fi_cols %in% fertilizers]
+```
+
+#### Seasons
+The `json_data$season` level of the input data is 2-column table that records the length of each season (adding up to 365 days max).
+```{r seasons 1,echo=F}
+kable(json_data$seasons,caption="Feed items data input table (json_data$season)")
+```
+
+The `season_name` field is the key field that links to the feed basket.
+```{r seasons 2 ,echo=T}
+json_data$feed_basket$season_name
+```
+
+#### Feed basket
+The `json_data$feed_basket` level of the input data contains a futher `r length(json_data$feed_basket)` list levels called 
+`r paste(names(json_data$feed_basket),collapse=" and ")`. These sub-levels appear to be the same length: `r paste0(names(json_data$feed_basket)," = ", sapply(json_data$feed_basket,length))`.
+
+##### Seasons 
+The `json_data$feed_basket$season_name` object is simple, being a vector containing the names of the seasons:
+```{r feed basket seasons,echo=F}
+kable(json_data$feed_basket$season_name,caption="Feed basket/season data input table  (json_data$feed_basket$season)")
+```
+
+##### Feed Basket 
+The `json_data$feed_basket$feed` object is the most structurally complex element of the input json data containing several levels of nesting.
+```{r feed basket feeds 1 ,echo=T}
+str(json_data$feed_basket$feeds)
+```
+
+###### Feeds
+Each feed basket table (e.g., `json_data$feed_basket$feeds[[1]]`) is constructed using key fields that describe feed items found in the `json_data$feed_items table`, specifically `feed_item_code` and `feed_type_code.` The feeds are then allocated to the herd elements described in the `json_data$livestock table`.
+
+```{r feed basket feeds 0 ,echo=F}
+kable(json_data$feed_basket$feeds[[1]],caption="Feed basket/feed data input table tablejson_data$feed_basket$feeds[[1]]")
+```
+
+###### Livestock
+The livestock field in the feed basket table contains a list with `r length(json_data$feed_basket$feeds[[1]]$livestock)` elements, indicating a one-to-many relationship between the diet item and elements of the livestock herd. Each feed item represented by a row in the feed basket table is allocated to different herd elements, with the `livetype_code` field serving as the key field linking the two tables.
+
+```{r feed basket feeds 2 ,echo=F}
+kable(json_data$feed_basket$feeds[[1]]$livestock,caption="Feed basket/feed/livestock data input table tablejson_data$feed_basket$feeds[[1]]$livestock")
+```
+
+The first element of the livestock list contains no further nesting:
+```{r feed basket feeds 3 ,echo=T}
+str(json_data$feed_basket$feeds[[1]]$livestock[[1]])
+```
+
+### cleaned `cleaned/data .rda` files
+```{r list rda files}
+rda_files<-list.files(".rda")
+```
+
+#### GHG parameters
+The ghg para object (`cleaned/data/ghg_para.rda`) is a list of tables that appear to refer to IPCC equations, livestock parameters and fertilizers.
+```{r ghg_para 1}
+load("ghg_para.rda")
+
+# Summarize level 1 of the list
+ghg_names<-data.table(field_name=names(ghg_para),
+                          dim=sapply(ghg_para,dim))
+
+kable(ghg_names,caption="Tables within ghg_names list")
+```
+The exception is `ghg_para$table_5.11` which is a list:
+```{r ghg_para 2}
+ghg_para$table_5.11
+```
+
+##### Livestock_parameters
+Note there is an invalid character in this table:
+```{r ghg_para 3a}
+ghg_para$livestock_parameters$`IPCC Category - methane emissions enteric fermentation - Tier 2`[11]<-"Other Cattle or Buffalo - grazing"
+```
+
+
+```{r ghg_para 3}
+kable(ghg_para$livestock_parameters,caption="ghg_para$livestock_parameters")
+```
+
+##### Fertilizer table
+```{r ghg_para 4}
+kable(ghg_para$fertilizer_table,caption="ghg_para$fertilizer_table")
+```
+
+##### IPCC Tables
+
+###### Table_10.12
+```{r ghg_para Table_10.12}
+kable(ghg_para$Table_10.12)
+```
+
+###### table_10.17
+```{r ghg_para table_10.17}
+kable(ghg_para$table_10.17)
+```
+
+###### table_10.19
+```{r ghg_para table_10.19}
+kable(ghg_para$table_10.19)
+```
+
+###### table_10.21
+```{r ghg_para table_10.21}
+kable(ghg_para$table_10.21)
+```
+
+###### table_10.22
+```{r ghg_para table_10.22}
+kable(ghg_para$table_10.22)
+```
+
+###### table_10A_9
+```{r ghg_para table_10A_9}
+kable(ghg_para$Table_10.12)
+```
+
+###### table_11.1_&_table_11.3
+```{r ghg_para table_11.1_&_table_11.3}
+kable(ghg_para$`table_11.1_&_table_11.3`)
+```
+
+###### table_2.5
+```{r ghg_para table_2.5}
+kable(ghg_para$table_2.5)
+```
+
+###### table_5.12
+```{r ghg_para table_5.12}
+kable(ghg_para$table_5.12)
+```
+
+###### table_5.13
+```{r ghg_para table_5.13}
+kable(ghg_para$table_5.13)
+```
+
+###### table_5.14
+```{r ghg_para table_5.14}
+kable(ghg_para$table_5.14)
+```
+
+#### Stock change
+The stock change object (`cleaned/data/stock_change_para.rda`) is a series of nested lists that describe: 1) landuse, management, and input factor_variables for grassland; and 2) landuse, tillage, and input input factor_variables for cropland.
+
+```{r stock change 1}
+load("stock_change_para.rda")
+str(stock_change_para)
+```
+
+##### Grass factor variables
+**Grassland: landuse**
+```{r stock change grass 1}
+x<-unlist(stock_change_para$grassland$landuse[[1]]$factor_variables)
+kable(data.frame(variable=names(x),value=as.numeric(x)))
+```
+**Grassland: management**
+```{r stock change grass 2}
+x<-unlist(stock_change_para$grassland$management[[1]]$factor_variables)
+kable(data.frame(variable=names(x),value=as.numeric(x)))
+
+```
+**Grassland: input**
+```{r stock change grass 3}
+x<-unlist(stock_change_para$grassland$input[[1]]$factor_variables)
+kable(data.frame(variable=names(x),value=as.numeric(x)))
+```
+
+##### Cropland factor variables
+**Cropland: landuse**
+```{r stock change cropland 1}
+x<-unlist(stock_change_para$cropland$landuse[[1]]$factor_variables)
+kable(data.frame(variable=names(x),value=as.numeric(x)))
+```
+**Cropland: tillage**
+```{r stock change cropland 2}
+x<-unlist(stock_change_para$cropland$tillage[[1]]$factor_variables)
+kable(data.frame(variable=names(x),value=as.numeric(x)))
+```
+**Cropland: input**
+```{r stock change cropland 3}
+x<-unlist(stock_change_para$cropland$input[[1]]$factor_variables)
+kable(data.frame(variable=names(x),value=as.numeric(x)))
+```
+
+#### mufindi
+The mufindi object (`cleaned/data/mufindi.rda`) appears to be an input dataset similar to the `qt_example.json` file.
+```{r mufindi 1}
+load("mufindi.rda")
+str(mufindi)
+```
+
+### cleaned-desktop `cleaned.sqlite` file
+This sqlite database object is found in the [qlands/cleaned-desktop github](https://github.com/qlands/cleaned-desktop/blob/feature/add-comparison/cleaned.sqlite) it contains several tables of look-up values.
+
+#### Load sqlite file into R
+```{r connect sqlite}
+conn <- dbConnect(RSQLite::SQLite(), "cleaned.sqlite")
+tables <- dbListTables(conn)
+print(tables)
+```
+```{r load sqlite,warning=FALSE}
+sq_tables<-lapply(tables,FUN=function(TAB){
+  query<-paste0("SELECT * FROM ",TAB)
+  data <- dbGetQuery(conn,query)
+  data
+})
+names(sq_tables)<-tables
+```
+
+##### Climate
+```{r sqlite climate,echo=F}
+kable(sq_tables$lkp_climate)
+```
+##### Climate2
+```{r sqlite climate 2,echo=F}
+kable(sq_tables$lkp_climate2)
+```
+##### Region
+```{r sqlite region,echo=F}
+kable(sq_tables$lkp_region)
+```
+##### Cropland system
+```{r sqlite cropland,echo=F}
+kable(sq_tables$lkp_croplandsystem)
+```
+##### Feeds
+###### Item
+```{r sqlite feed item,echo=F}
+sq_tables$lkp_feeditem
+```
+###### Type
+```{r sqlite feed type,echo=F}
+sq_tables$lkp_feedtype
+```
+##### Grass input level
+```{r sqlite grass input,echo=F}
+kable(sq_tables$lkp_grassinputlevel)
+```
+##### Grassland management
+```{r sqlite grass management}
+kable(sq_tables$lkp_grasslandman)
+```
+##### Landcover
+```{r sqlite land cover,echo=F}
+kable(sq_tables$lkp_landcover)
+```
+##### Livestock type
+```{r sqlite livestock type,echo=F}
+sq_tables$lkp_livetype
+```
+##### Manure management
+```{r sqlite manure management,echo=F}
+kable(sq_tables$lkp_manureman)
+```
+##### Organic matter
+```{r sqlite organic matter,echo=F}
+kable(sq_tables$lkp_organicmatter)
+```
+##### Organic fertilizer
+```{r sqlite organic fertilizer,echo=F}
+kable(sq_tables$lkp_orgfertilizer)
+```
+##### Slope
+```{r sqlite slope,echo=F}
+kable(sq_tables$lkp_slope)
+```
+##### Soil
+```{r sqlite soil,echo=F}
+kable(sq_tables$lkp_soil)
+```
+##### Tillage regime
+```{r sqlite tillage,echo=F}
+kable(sq_tables$lkp_tillageregime)
+```
+
+### cleaned-desktop `energy_parameters.json` file
+The energy_parameters.json object is found in the [qlands/cleaned-desktop github](https://github.com/qlands/cleaned-desktop/blob/feature/add-comparison/R/energy_parameters.jsone) it contains a single table **Table 10.4** that does not seem to appear in the `cleaned/data/ghg_para.rda` object.
+
+#### Table 10.4
+```{r load energy parameters}
+json_data2 <- fromJSON("energy_parameters.json")
+names(json_data2)
+kable(json_data2$`Table 10.4`)
+```
