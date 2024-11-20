@@ -65,7 +65,7 @@ combineOutputs <- function(para, feed_basket_quality, energy_required, land_requ
 
   if (exists("energy_required")) {
     energy_required = energy_required
-  }else {energy_required = "ERROR: Energy requirement was not computed"}
+  }else{energy_required = "ERROR: Energy requirement was not computed"}
 
   if (exists("land_required")) {
     land_required = land_required[["land_requirements_all"]]
