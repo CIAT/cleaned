@@ -35,7 +35,8 @@ Imports:
     utils,
     rlang,
     stringr,
-    ggplot2
+    ggplot2,
+    openxlsx
 Suggests:
     knitr,
     rmarkdown,
