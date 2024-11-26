@@ -412,7 +412,12 @@ combineOutputs <- function(para, feed_basket_quality, energy_required, land_requ
   rice_production_methane_per_ha_kg_co2_e <- ifelse(area_required_on_farm_ha<0.001,0,rice_production_methane_tot_kg_co2_e/area_required_on_farm_ha)
   rice_production_methane_kg_co2_e_per_kg_fpcm <- rice_production_methane_tot_kg_co2_e/total_milk_produced_kg_fpcm_per_year
 
-  on_farm_fertilizer_emission <- sum(ghg_emissions[["fetilizer_ghg"]][["fertlizer_emission_by_crop"]]$farm_fertiliser_emission)
+  # quick fix for the case with no fertilizer
+  if (ghg_emissions[["fetilizer_ghg"]] == 0) {
+    on_farm_fertilizer_emission <- 0
+  } else {
+    on_farm_fertilizer_emission <- sum(ghg_emissions[["fetilizer_ghg"]][["fertlizer_emission_by_crop"]]$farm_fertiliser_emission)
+  }
   on_farm_fertilizer_emission_per_ha_kg_co2_e <- ifelse(area_required_on_farm_ha<0.001,0,on_farm_fertilizer_emission/area_required_on_farm_ha)
   on_farm_fertilizer_emission_kg_co2_e_per_kg_fpcm <- on_farm_fertilizer_emission/total_milk_produced_kg_fpcm_per_year
 
@@ -428,7 +433,12 @@ combineOutputs <- function(para, feed_basket_quality, energy_required, land_requ
   rough_of_soil_indirect_N2O_per_ha_kg_co2_e <- ifelse(area_required_roughages_off_farm_ha<0.001,0,rough_of_soil_indirect_N2O_tot_kg_co2_e/area_required_roughages_off_farm_ha)
   rough_of_soil_indirect_N2O_kg_co2_e_per_kg_fpcm <- rough_of_soil_indirect_N2O_tot_kg_co2_e/total_milk_produced_kg_fpcm_per_year
 
-  rough_of_fertilizer_emission <- sum(ghg_emissions[["fetilizer_ghg"]][["fertlizer_emission_by_crop"]]$rough_of_fertiliser_emission)
+  # fix for the case with no fertilizer
+  if (ghg_emissions[["fetilizer_ghg"]] == 0) {
+    rough_of_fertilizer_emission <- 0
+  } else {
+    rough_of_fertilizer_emission <- sum(ghg_emissions[["fetilizer_ghg"]][["fertlizer_emission_by_crop"]]$rough_of_fertiliser_emission)
+  }
   rough_of_fertilizer_emission_per_ha_kg_co2_e <- ifelse(area_required_roughages_off_farm_ha<0.001,0,rough_of_fertilizer_emission/area_required_roughages_off_farm_ha)
   rough_of_fertilizer_emission_kg_co2_e_per_kg_fpcm <- rough_of_fertilizer_emission/total_milk_produced_kg_fpcm_per_year
 
@@ -444,7 +454,12 @@ combineOutputs <- function(para, feed_basket_quality, energy_required, land_requ
   conc_of_soil_indirect_N2O_per_ha_kg_co2_e <- ifelse(area_required_concentrates_off_farm_ha<0.001,0,conc_of_soil_indirect_N2O_tot_kg_co2_e/area_required_concentrates_off_farm_ha)
   conc_of_soil_indirect_N2O_kg_co2_e_per_kg_fpcm <- conc_of_soil_indirect_N2O_tot_kg_co2_e/total_milk_produced_kg_fpcm_per_year
 
-  conc_of_fertilizer_emission <- sum(ghg_emissions[["fetilizer_ghg"]][["fertlizer_emission_by_crop"]]$conc_of_fertiliser_emission)
+  if (ghg_emissions[["fetilizer_ghg"]] == 0) {
+    conc_of_fertilizer_emission <- 0
+  } else {
+    conc_of_fertilizer_emission <- sum(ghg_emissions[["fetilizer_ghg"]][["fertlizer_emission_by_crop"]]$conc_of_fertiliser_emission)
+  }
+
   conc_of_fertilizer_emission_per_ha_kg_co2_e <- ifelse(area_required_concentrates_off_farm_ha<0.001,0,conc_of_fertilizer_emission/area_required_concentrates_off_farm_ha)
   conc_of_fertilizer_emission_kg_co2_e_per_kg_fpcm <- conc_of_fertilizer_emission/total_milk_produced_kg_fpcm_per_year
 
@@ -460,7 +475,12 @@ combineOutputs <- function(para, feed_basket_quality, energy_required, land_requ
   conc_ip_soil_indirect_N2O_per_ha_kg_co2_e <- ifelse(area_required_imported_concentrates_ha<0.001,0,conc_ip_soil_indirect_N2O_tot_kg_co2_e/area_required_imported_concentrates_ha)
   conc_ip_soil_indirect_N2O_kg_co2_e_per_kg_fpcm <- conc_ip_soil_indirect_N2O_tot_kg_co2_e/total_milk_produced_kg_fpcm_per_year
 
-  conc_ip_fertilizer_emission <- sum(ghg_emissions[["fetilizer_ghg"]][["fertlizer_emission_by_crop"]]$conc_ip_fertiliser_emission)
+  if (ghg_emissions[["fetilizer_ghg"]] == 0) {
+    conc_ip_fertilizer_emission <- 0
+  } else {
+    conc_ip_fertilizer_emission <- sum(ghg_emissions[["fetilizer_ghg"]][["fertlizer_emission_by_crop"]]$conc_ip_fertiliser_emission)
+  }
+
   conc_ip_fertilizer_emission_per_ha_kg_co2_e <- ifelse(area_required_imported_concentrates_ha<0.001,0,conc_ip_fertilizer_emission/area_required_imported_concentrates_ha)
   conc_ip_fertilizer_emission_kg_co2_e_per_kg_fpcm <- conc_ip_fertilizer_emission/total_milk_produced_kg_fpcm_per_year
 
