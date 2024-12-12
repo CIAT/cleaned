@@ -39,7 +39,6 @@ feed_quality <- function(para) {
 
     livestock_type_selected <- livestock_df[livestock_df$livetype_code == livestock, ]
 
-
     for (season in 1:nrow(seasons)) {
 
       feed_production <- unnest(para[["feed_items"]], cols = c(feed_type_name))
@@ -77,7 +76,7 @@ feed_quality <- function(para) {
                                                                                seasons$season_name[season])
 
         feed_item_selected <- feeding_seasons %>%
-          dplyr::filter(feed_item_code == feed_selected[["feed_item_code"]])
+          dplyr::filter(feed_item_code %in% feed_selected[["feed_item_code"]])
 
         livestock_selected <- feed_item_selected[["livestock"]] %>%
           as.data.frame() %>%
