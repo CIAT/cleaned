@@ -3,14 +3,25 @@ pacman::p_load(readxl,cleaned,jsonlite,tidyr,dplyr,miceadds,data.table)
 # 1) Load Data ####
   ## 1.1) V37 data #####
   file<-"data/v37/Kenya NPA data.xlsx"
+  save_file<-file.path(dirname(file),"Kenya NPA emissions.xlsx")
   # data <- readxl::read_excel(file,sheet=1)
 
   herd <- data.table(readxl::read_excel(file,sheet="milk-bodyweight"))
   herd[,livetype_code:=as.character(livetype_code)]
+  setnames(herd,"livetype_desc","livetype_desc_v37")
 
   v37_feed_items<-data.table(readxl::read_excel(file,sheet="Feed_items"))
   v37_feed_items$intercrop<-as.numeric(0)
   v37_feed_type<-unique(data.table(readxl::read_excel(file,sheet="feed_type")))[order(feed_type_code)]
+
+  # Deal with duplicate entry for item 5 Brachiaria
+  x<-v37_feed_type[feed_type_code==5][, feed_type_name := "Brachiaria"]
+  by_cols<-colnames(x)[1:5]
+  num_cols<-colnames(x)[!colnames(x) %in% by_cols]
+
+  x <- x[, lapply(.SD, mean), by = by_cols, .SDcols = num_cols]
+
+  v37_feed_type<-rbind(v37_feed_type[feed_type_code!=5],x)
 
   # V37 - Merge feed_items & feed type
   v37_feed_items_merge<-merge(v37_feed_items,v37_feed_type,by="feed_type_code",all.x=T)
@@ -28,10 +39,11 @@ pacman::p_load(readxl,cleaned,jsonlite,tidyr,dplyr,miceadds,data.table)
                         value.name = "allocation")
 
   # Check proportions sum to 1
-  v37_feed_basket<-v37_feed_basket[allocation!=0][order(Ids,livetype_code)][,total:=sum(allocation),by=.(Ids,livetype_code)]
+  v37_feed_basket<-v37_feed_basket[allocation!=0][order(Ids,livetype_code)
+                                                  ][,total:=sum(allocation),by=.(Ids,livetype_code,livetype_desc)]
   unique(v37_feed_basket[total==2,.(Ids,livetype_code,total)])
 
-  v37_feed_basket<-v37_feed_basket[,.(Ids,livetype_code,feed_item_code,allocation)
+  v37_feed_basket<-v37_feed_basket[,.(Ids,livetype_code,livetype_desc,feed_item_code,allocation)
                                    ][,allocation:=allocation*100
                                      ][,feed_item_code:=as.numeric(as.character(feed_item_code))]
 
@@ -153,7 +165,7 @@ pacman::p_load(readxl,cleaned,jsonlite,tidyr,dplyr,miceadds,data.table)
 
     # Enforce numeric class
     num_cols<-c("slope_p_factor","slope_length")
-    feed_items[, (num_cols) := lapply(.SD, as.numeric), .SDcols = num_cols]
+    v37_feed_items_merge[, (num_cols) := lapply(.SD, as.numeric), .SDcols = num_cols]
 
   ## 2.3) Seasons #####
   season_dat<-data.frame(season_length=180,season_name="season_x")
@@ -171,10 +183,10 @@ farm_paras<-lapply(1:length(farms),FUN=function(i){
   livestock[1,1:ncol(livestock)]<-NA
 
   # Subset v37 data to selected farm
-  livestock_37<-herd[Ids==farm]
+  livestock_37<-herd[Ids==farm & !grepl("calve",livetype_desc_v37,ignore.case = T)]
 
   # Loop through herds on the farm
-  livestock<-rbindlist(lapply(1:nrow(livestock_37),FUN=function(j){
+  paras<-lapply(1:nrow(livestock_37),FUN=function(j){
     cat("\r", farm, "i =", i, "/", length(farms), "herd (j) =", j, "/", nrow(livestock_37))
 
     # Subset herds
@@ -189,13 +201,14 @@ farm_paras<-lapply(1:length(farms),FUN=function(i){
 
     cols_m<-colnames(mergedat)
     cols_m<-cols_m[cols_m != "livetype_code"]
-    cols_l<-colnames(livestock)[!colnames(livestock) %in% cols_m]
+    cols_l<-c(colnames(livestock)[!colnames(livestock) %in% cols_m])
     livestock<-livestock[,cols_l,with=F]
 
     livestock<-merge(livestock,mergedat,by="livetype_code",all.x = T)
 
     # Insert farm specific V37 herd data
     cols_m<-colnames(herd_1)
+    livestock$livetype_desc_v37<-herd_1$livetype_desc_v37
     livestock$herd_composition<-herd_1$number
     livestock$body_weight<-herd_1$body_weight
     livestock$annual_milk<-herd_1$annual_milk
@@ -228,8 +241,6 @@ farm_paras<-lapply(1:length(farms),FUN=function(i){
 
     livestock<-livestock[,!ipcc_new,with = F]
     setnames(livestock,ipcc_old,ipcc_new)
-    livestock
-  }))
 
   # Enforce codes to be character
   livestock[,livetype_code:=as.character(livetype_code)]
@@ -240,9 +251,13 @@ farm_paras<-lapply(1:length(farms),FUN=function(i){
     ### 3.3.1) Seasons #####
      # Created in section 2.3
     ### 3.3.2) Feeds #####
-      feeds<-v37_feed_basket[Ids==farm]
+      feeds<-v37_feed_basket[Ids==farm & tolower(livetype_desc)==tolower(livestock$livetype_desc_v37)]
+      if(nrow(feeds)==0){
+        stop("Feed table is blank, livetype_desc in feed basket not matching herd.")
+      }
+
       # Average across duplicate rows
-      feeds<-feeds[,.(allocation=mean(allocation)),by=.(Ids,feed_type_code,feed_item_code,livetype_code)]
+      #feeds<-feeds[,.(allocation=mean(allocation)),by=.(Ids,feed_type_code,feed_item_code,livetype_code)]
 
       feeds<-feeds[,.(livestock=list(data.table(livetype_code=livetype_code,allocation=allocation))),by=.(feed_item_code,feed_type_code)]
       feeds<-data.frame(feeds)
@@ -264,55 +279,139 @@ farm_paras<-lapply(1:length(farms),FUN=function(i){
                                      feed_basket=feed_basket))
   input_object$farm_name<-farm
   return(input_object)
+  })
+  names(paras)<-paste0("herd-",1:nrow(livestock_37))
 
+  return(paras)
 })
+
 names(farm_paras)<-paste0("f",farms)
+
 
 # 4) Pass to cleaned functions ####
 i<-1
-para<-farm_paras[[i]]
+ghg_emissions<-lapply(1:length(farm_paras),FUN=function(i){
 
-## 4.1) feed basket quality #####
-feed_basket_quality <- feed_quality(para)
+  farm_para<-farm_paras[[i]]
 
-## 4.2) energy #####
-# Table 10.4 is in list form this throws an error, convert to data.frame
-energy_required <- energy_requirement(para,feed_basket_quality,energy_parameters = energy_parameters)
+  result<-lapply(1:length(farm_para),FUN=function(j){
 
-## 4.3) land #####
-para$feed_items$intercrop<-as.numeric(para$feed_items$intercrop)
-land_required <- land_requirement(feed_basket_quality, energy_required, para)
+    cat("\r","farm",names(farm_paras)[i],i,"/",length(farm_paras),"herd",j,"      ")
 
-## 4.4) soil erosion #####
-para$feed_items$slope_p_factor<-as.numeric(para$feed_items$slope_p_factor)
-soil_erosion <- soil_health(para, land_required)
+    para<-farm_para[[j]]
 
-## 4.5) n balance #####
-para$feed_items$ammonia<-as.numeric(para$feed_items$ammonia)
-para$feed_items$ammonium_nitrate<-as.numeric(para$feed_items$ammonium_nitrate)
-para$feed_items$ammonium_sulfate<-as.numeric(para$feed_items$ammonium_sulfate)
-para$feed_items$dap<-as.numeric(para$feed_items$dap)
-para$feed_items$n_solutions<-as.numeric(para$feed_items$n_solutions)
-para$feed_items$npk<-as.numeric(para$feed_items$npk)
-para$feed_items$urea<-as.numeric(para$feed_items$urea)
+    ## 4.1) feed basket quality #####
+    feed_basket_quality <- feed_quality(para)
 
-nitrogen_balance <- n_balance(para, land_required, soil_erosion)
+    ## 4.2) energy #####
+    # Table 10.4 is in list form this throws an error, convert to data.frame
+    energy_required <- energy_requirement(para,feed_basket_quality,energy_parameters = energy_parameters)
 
-## 4.6) livestock productivity #####
-livestock_productivity <- land_productivity(para,energy_required)
+    ## 4.3) land #####
+    para$feed_items$intercrop<-as.numeric(para$feed_items$intercrop)
+    land_required <- land_requirement(feed_basket_quality, energy_required, para)
 
-## 4.7) biomass #####
-num_cols<-c("trees_ha_dbh25","trees_ha_dbh2550","trees_ha_dbh50","increase_dbh25","increase_dbh2550","increase_dbh50",
-            "time_horizon","average_dbh2550","average_dbh25","average_dbh50")
-para$feed_items<-para$feed_items[, (num_cols) := lapply(.SD, as.numeric), .SDcols = num_cols]
+    ## 4.4) soil erosion #####
+    para$feed_items$slope_p_factor<-as.numeric(para$feed_items$slope_p_factor)
+    soil_erosion <- soil_health(para, land_required)
 
-biomass <- biomass_calculation(para, land_required)
+    ## 4.5) n balance #####
+    para$feed_items$ammonia<-as.numeric(para$feed_items$ammonia)
+    para$feed_items$ammonium_nitrate<-as.numeric(para$feed_items$ammonium_nitrate)
+    para$feed_items$ammonium_sulfate<-as.numeric(para$feed_items$ammonium_sulfate)
+    para$feed_items$dap<-as.numeric(para$feed_items$dap)
+    para$feed_items$n_solutions<-as.numeric(para$feed_items$n_solutions)
+    para$feed_items$npk<-as.numeric(para$feed_items$npk)
+    para$feed_items$urea<-as.numeric(para$feed_items$urea)
 
-## 4.8) ghg_emissions #####
-char_cols<-c("manureman_non_roofed_enclosure")
-para$livestock<-para$livestock[, (char_cols) := lapply(.SD, as.character), .SDcols = char_cols]
+    nitrogen_balance <- n_balance(para, land_required, soil_erosion)
 
+    ## 4.6) livestock productivity #####
+    livestock_productivity <- land_productivity(para,energy_required)
 
-results<-ghg_emission(para,energy_required,ghg_ipcc_data,land_required,nitrogen_balance)
-str(results)
+    ## 4.7) biomass #####
+    num_cols<-c("trees_ha_dbh25","trees_ha_dbh2550","trees_ha_dbh50","increase_dbh25","increase_dbh2550","increase_dbh50",
+                "time_horizon","average_dbh2550","average_dbh25","average_dbh50")
+    para$feed_items<-para$feed_items[, (num_cols) := lapply(.SD, as.numeric), .SDcols = num_cols]
 
+    biomass <- biomass_calculation(para, land_required)
+
+    ## 4.8) ghg_emissions #####
+    char_cols<-c("manureman_non_roofed_enclosure")
+    para$livestock<-para$livestock[, (char_cols) := lapply(.SD, as.character), .SDcols = char_cols]
+
+    results<-ghg_emission(para,energy_required,ghg_ipcc_data,land_required,nitrogen_balance)
+
+    # Unpack soil into 3 tables not a list
+    results$soil_annual_N20N_soil_direct_emission<-results$ghg_soil$annual_N20N_soil_direct_emission
+    results$soil_annual_N20N_soil_indirect_emission<-results$ghg_soil$annual_N20N_soil_indirect_emission
+    results$soil_N20N_off_farm<-results$ghg_soil$N20N_off_farm
+    results$ghg_soil<-NULL
+    results
+  })
+  names(result)<-names(farm_para)
+  return(result)
+})
+
+names(ghg_emissions)<-names(farm_paras)
+
+## 4.9) Add farm and herd name to tables
+ghg_emissions_merge<-lapply(1:length(ghg_emissions),FUN=function(i){
+  farm_name<-names(ghg_emissions)[i]
+  ghg_farm<-ghg_emissions[[i]]
+
+  ghg_farm_updated<-lapply(1:length(ghg_farm),FUN=function(j){
+    cat("\r","i",i,"j",j,"      ")
+    herd_name<-names(ghg_farm)[j]
+    ghg_herd<-ghg_farm[[j]]
+    ghg_herd_updated<-lapply(1:length(ghg_herd),FUN=function(k){
+      data<-ghg_herd[[k]]
+      data$farm<-farm_name
+      data$herd<-herd_name
+      return(data)
+    })
+    names(ghg_herd_updated)<-names(ghg_herd)
+    return(ghg_herd_updated)
+  })
+
+  tab_names<-names(ghg_farm_updated[[1]])
+  ghg_farm_merged<-lapply(tab_names,FUN=function(tab_name){
+    x<-lapply(ghg_farm_updated,"[[",tab_name)
+    x<-rbindlist(x)
+    x
+  })
+
+  names(ghg_farm_merged)<-tab_names
+  return(ghg_farm_merged)
+})
+names(ghg_emissions_merge)<-names(ghg_emissions)
+
+## 4.10) Combine tables #####
+tab_names<-names(ghg_emissions_merge[[1]])
+
+ghg_emissions_merge_all<-lapply(tab_names,FUN=function(tab_name){
+  x<-lapply(ghg_emissions_merge,"[[",tab_name)
+  x<-rbindlist(x)
+  x
+})
+names(ghg_emissions_merge_all)<-tab_names
+
+n<-nchar(names(ghg_emissions_merge_all))
+names(ghg_emissions_merge_all)[n>31]
+names(ghg_emissions_merge_all)[n>31]<-c("annual_N20N_soil_direct","annual_N20N_soil_indirect")
+
+library(openxlsx)
+
+# Create a new Excel workbook
+wb <- createWorkbook()
+
+# Loop through the list and add each data.frame as a sheet
+for (sheet_name in names(ghg_emissions_merge_all)) {
+  addWorksheet(wb, sheet_name)
+  writeData(wb, sheet = sheet_name, x = ghg_emissions_merge_all[[sheet_name]])
+}
+
+# Save the workbook to a file
+saveWorkbook(wb, file = save_file, overwrite = TRUE)
+
+print("Excel file saved as 'output.xlsx'")
