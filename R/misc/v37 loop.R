@@ -1,4 +1,11 @@
-pacman::p_load(readxl,cleaned,jsonlite,tidyr,dplyr,miceadds,data.table)
+
+# Load packages and function
+pacman::p_load(readxl,cleaned,jsonlite,tidyr,dplyr,miceadds,data.table,openxlsx)
+
+source("R/ghg_emission_v2.R")
+source("R/nitrogen_balance.R")
+source("R/energy_requirement.R")
+source("R/feed_quality.R")
 
 # 1) Load Data ####
   ## 1.1) V37 data #####
@@ -41,6 +48,7 @@ pacman::p_load(readxl,cleaned,jsonlite,tidyr,dplyr,miceadds,data.table)
   # Check proportions sum to 1
   v37_feed_basket<-v37_feed_basket[allocation!=0][order(Ids,livetype_code)
                                                   ][,total:=sum(allocation),by=.(Ids,livetype_code,livetype_desc)]
+
   unique(v37_feed_basket[total==2,.(Ids,livetype_code,total)])
 
   v37_feed_basket<-v37_feed_basket[,.(Ids,livetype_code,livetype_desc,feed_item_code,allocation)
@@ -105,22 +113,22 @@ pacman::p_load(readxl,cleaned,jsonlite,tidyr,dplyr,miceadds,data.table)
   mm_des2<-lkp_manureman[manureman_code==mm_code,manureman_desc]
 
   livestock_fixed<-data.frame(
-  manureman_stable=mm_des,
-  manureman_onfarm_grazing=mm_des2,
-  manureman_non_roofed_enclosure=0,
-  manureman_offfarm_grazing=mm_des2,
-  annual_growth=0,
-  annual_wool=0,
-  manure_in_stable=1,
-  manure_in_non_roofed_enclosure=0,
-  manure_in_field=0,
-  manure_onfarm_fraction=0,
-  manure_sales_fraction=0,
-  body_weight_weaning=0,
-  body_weight_year_one=0,
-  adult_weight=600,
-  work_hour=0,
-  piglets_relying_on_milk=0
+    manureman_stable=mm_des,
+    manureman_onfarm_grazing=mm_des2,
+    manureman_non_roofed_enclosure=0,
+    manureman_offfarm_grazing=mm_des2,
+    annual_growth=0,
+    annual_wool=0,
+    manure_in_stable=1,
+    manure_in_non_roofed_enclosure=0,
+    manure_in_field=0,
+    manure_onfarm_fraction=0,
+    manure_sales_fraction=0,
+    body_weight_weaning=0,
+    body_weight_year_one=0,
+    adult_weight=600,
+    work_hour=0,
+    piglets_relying_on_milk=0
   )
 
   ## 2.2) Feed_Items #####
@@ -173,6 +181,7 @@ pacman::p_load(readxl,cleaned,jsonlite,tidyr,dplyr,miceadds,data.table)
 # 3) Loop through farms ####
 # unique farm ids
 farms<-na.omit(unique(herd$Ids))
+farms<-farms[2]
 
 farm_paras<-lapply(1:length(farms),FUN=function(i){
   farm<-farms[i]
@@ -289,14 +298,15 @@ names(farm_paras)<-paste0("f",farms)
 
 
 # 4) Pass to cleaned functions ####
-i<-1
+messages<-F
+
 ghg_emissions<-lapply(1:length(farm_paras),FUN=function(i){
 
   farm_para<-farm_paras[[i]]
 
   result<-lapply(1:length(farm_para),FUN=function(j){
 
-    cat("\r","farm",names(farm_paras)[i],i,"/",length(farm_paras),"herd",j,"      ")
+    cat("farm",names(farm_paras)[i],i,"/",length(farm_paras),"herd",j,"      \r")
 
     para<-farm_para[[j]]
 
@@ -324,7 +334,7 @@ ghg_emissions<-lapply(1:length(farm_paras),FUN=function(i){
     para$feed_items$npk<-as.numeric(para$feed_items$npk)
     para$feed_items$urea<-as.numeric(para$feed_items$urea)
 
-    nitrogen_balance <- n_balance(para, land_required, soil_erosion)
+    nitrogen_balance <- n_balance(para, land_required, soil_erosion,energy_required)
 
     ## 4.6) livestock productivity #####
     livestock_productivity <- land_productivity(para,energy_required)
@@ -340,7 +350,11 @@ ghg_emissions<-lapply(1:length(farm_paras),FUN=function(i){
     char_cols<-c("manureman_non_roofed_enclosure")
     para$livestock<-para$livestock[, (char_cols) := lapply(.SD, as.character), .SDcols = char_cols]
 
-    results<-ghg_emission(para,energy_required,ghg_ipcc_data,land_required,nitrogen_balance)
+    if(messages==F){
+      results<-suppressMessages(ghg_emission(para,energy_required,ghg_ipcc_data,land_required,nitrogen_balance,feed_basket_quality,ym_prod=F))
+    }else{
+      results<-ghg_emission(para,energy_required,ghg_ipcc_data,land_required,nitrogen_balance,feed_basket_quality,ym_prod=F)
+    }
 
     # Unpack soil into 3 tables not a list
     results$soil_annual_N20N_soil_direct_emission<-results$ghg_soil$annual_N20N_soil_direct_emission
@@ -400,7 +414,7 @@ n<-nchar(names(ghg_emissions_merge_all))
 names(ghg_emissions_merge_all)[n>31]
 names(ghg_emissions_merge_all)[n>31]<-c("annual_N20N_soil_direct","annual_N20N_soil_indirect")
 
-library(openxlsx)
+ghg_emissions_merge_all$ef[farm=="f596171010",.(farm,livetype_desc_v37,ipcc_ef_category_t1,ipcc_ef_category_t2,de,de_intake,ge_intake,dmi_tot,ym,enteric_methane_emissions)]
 
 # Create a new Excel workbook
 wb <- createWorkbook()
