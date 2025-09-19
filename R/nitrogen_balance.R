@@ -24,7 +24,7 @@
 #'
 #' @export
 
-n_balance <- function(para, land_required, soil_erosion){
+n_balance <- function(para, land_required, soil_erosion,energy_required){
 
   feed_types <- unique(land_required[["land_requirements_all"]]$feed)
 
@@ -74,34 +74,46 @@ n_balance <- function(para, land_required, soil_erosion){
     manure_fraction <- as.numeric(feed_selected$fraction_as_fertilizer)
 
     # Computing fertilizer rate
-    ammonia_n_frac <- ifelse(feed_selected$ammonia==0,0,
-                             as.numeric(para[["fertilizer"]][which(para[["fertilizer"]]$fertilizer_desc == "Ammonia"),]$fraction))
-    ammonia_n_frac <- ifelse(!is.finite(ammonia_n_frac),0,ammonia_n_frac)
+    if(
+      length(para[["fertilizer"]]) == 0
+    ) {
+      ammonia_n_frac <- 0
+      ammonium_nitrate_n_frac <- 0
+      ammonium_sulfate_n_frac <- 0
+      dap_n_frac <- 0
+      n_solutions_n_frac <- 0
+      npk_n_frac <- 0
+      urea_n_frac <- 0
+      fertilizer_rate <- 0
+    } else {
+      ammonia_n_frac <- ifelse(feed_selected$ammonia==0,0,
+                               as.numeric(para[["fertilizer"]][which(para[["fertilizer"]]$fertilizer_desc == "Ammonia"),]$fraction))
+      ammonia_n_frac <- ifelse(!is.finite(ammonia_n_frac),0,ammonia_n_frac)
 
-    ammonium_nitrate_n_frac <- ifelse(feed_selected$ammonium_nitrate==0,0,
-                             as.numeric(para[["fertilizer"]][which(para[["fertilizer"]]$fertilizer_desc == "Ammonium nitrate"),]$fraction))
-    ammonium_nitrate_n_frac <- ifelse(!is.finite(ammonium_nitrate_n_frac),0,ammonium_nitrate_n_frac)
+      ammonium_nitrate_n_frac <- ifelse(feed_selected$ammonium_nitrate==0,0,
+                                        as.numeric(para[["fertilizer"]][which(para[["fertilizer"]]$fertilizer_desc == "Ammonium nitrate"),]$fraction))
+      ammonium_nitrate_n_frac <- ifelse(!is.finite(ammonium_nitrate_n_frac),0,ammonium_nitrate_n_frac)
 
-    ammonium_sulfate_n_frac <- ifelse(feed_selected$ammonium_sulfate==0,0,
-                                      as.numeric(para[["fertilizer"]][which(para[["fertilizer"]]$fertilizer_desc == "Ammonium sulfate"),]$fraction))
-    ammonium_sulfate_n_frac <- ifelse(!is.finite(ammonium_sulfate_n_frac),0,ammonium_sulfate_n_frac)
+      ammonium_sulfate_n_frac <- ifelse(feed_selected$ammonium_sulfate==0,0,
+                                        as.numeric(para[["fertilizer"]][which(para[["fertilizer"]]$fertilizer_desc == "Ammonium sulfate"),]$fraction))
+      ammonium_sulfate_n_frac <- ifelse(!is.finite(ammonium_sulfate_n_frac),0,ammonium_sulfate_n_frac)
 
-    dap_n_frac <- ifelse(feed_selected$dap==0,0,
-                         as.numeric(para[["fertilizer"]][which(para[["fertilizer"]]$fertilizer_desc == "DAP"),]$fraction))
-    dap_n_frac <- ifelse(!is.finite(dap_n_frac),0,dap_n_frac)
+      dap_n_frac <- ifelse(feed_selected$dap==0,0,
+                           as.numeric(para[["fertilizer"]][which(para[["fertilizer"]]$fertilizer_desc == "DAP"),]$fraction))
+      dap_n_frac <- ifelse(!is.finite(dap_n_frac),0,dap_n_frac)
 
-    n_solutions_n_frac <- ifelse(feed_selected$n_solutions==0,0,
-                         as.numeric(para[["fertilizer"]][which(para[["fertilizer"]]$fertilizer_desc == "N solutions"),]$fraction))
-    n_solutions_n_frac <- ifelse(!is.finite(n_solutions_n_frac),0,n_solutions_n_frac)
+      n_solutions_n_frac <- ifelse(feed_selected$n_solutions==0,0,
+                                   as.numeric(para[["fertilizer"]][which(para[["fertilizer"]]$fertilizer_desc == "N solutions"),]$fraction))
+      n_solutions_n_frac <- ifelse(!is.finite(n_solutions_n_frac),0,n_solutions_n_frac)
 
-    npk_n_frac <- ifelse(feed_selected$npk==0,0,
-                         as.numeric(para[["fertilizer"]][which(para[["fertilizer"]]$fertilizer_desc == "NPK"),]$fraction))
-    npk_n_frac <- ifelse(!is.finite(npk_n_frac),0,npk_n_frac)
+      npk_n_frac <- ifelse(feed_selected$npk==0,0,
+                           as.numeric(para[["fertilizer"]][which(para[["fertilizer"]]$fertilizer_desc == "NPK"),]$fraction))
+      npk_n_frac <- ifelse(!is.finite(npk_n_frac),0,npk_n_frac)
 
-    urea_n_frac <- ifelse(feed_selected$urea==0,0,
-                         as.numeric(para[["fertilizer"]][which(para[["fertilizer"]]$fertilizer_desc == "Urea"),]$fraction))
-    urea_n_frac <- ifelse(!is.finite(urea_n_frac),0,urea_n_frac)
-
+      urea_n_frac <- ifelse(feed_selected$urea==0,0,
+                            as.numeric(para[["fertilizer"]][which(para[["fertilizer"]]$fertilizer_desc == "Urea"),]$fraction))
+      urea_n_frac <- ifelse(!is.finite(urea_n_frac),0,urea_n_frac)
+    }
 
     fertilizer_rate <- (feed_selected$ammonia*ammonia_n_frac)+(feed_selected$ammonium_nitrate*ammonium_nitrate_n_frac)+(feed_selected$ammonium_sulfate*ammonium_sulfate_n_frac)+
       (feed_selected$dap*dap_n_frac)+(feed_selected$n_solutions*n_solutions_n_frac)+(feed_selected$npk*npk_n_frac)+(feed_selected$urea*urea_n_frac)
