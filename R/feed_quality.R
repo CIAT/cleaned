@@ -39,7 +39,6 @@ feed_quality <- function(para) {
 
     livestock_type_selected <- livestock_df[livestock_df$livetype_code == livestock, ]
 
-
     for (season in 1:nrow(seasons)) {
 
       feed_production <- unnest(para[["feed_items"]], cols = c(feed_type_name))
@@ -49,9 +48,7 @@ feed_quality <- function(para) {
       feed_allocation <- list()
 
       for (i in 1:length(feed_types)) {
-
-        feed_selected <- feed_production %>% dplyr::filter(feed_type_name %in%
-                                                      feed_production$feed_type_name[i])
+        feed_selected <- feed_production %>% dplyr::filter(feed_type_name %in% feed_types[i])
 
         #feed_item <- as.data.frame(feed_selected[["feed_items"]])
 
@@ -74,7 +71,7 @@ feed_quality <- function(para) {
 
         feeding_seasons <- unnest(para[["feed_basket"]],
                                   cols = c(feeds)) %>% dplyr::filter(season_name %in%
-                                                                               seasons$season_name[season])
+                                                                       seasons$season_name[season])
 
         feed_item_selected <- feeding_seasons %>%
           dplyr::filter(feed_item_code %in% feed_selected[["feed_item_code"]])
@@ -135,7 +132,7 @@ feed_quality <- function(para) {
       feed_allocation_all[is.na(feed_allocation_all)] <- 0
 
       # Bind and add into the season list
-      season_allocation[[season]] <- cbind(season_name = rep(feed_item_selected$season_name, times = nrow(feed_allocation_all)),
+      season_allocation[[season]] <- cbind(season_name = rep(feed_item_selected$season_name[1],times = nrow(feed_allocation_all)),
                                            livestock_category_code = rep(livestock_selected$livetype_code, times = nrow(feed_allocation_all)),
                                            livestock_category_name = rep(livestock_type_selected$livetype_desc, times = nrow(feed_allocation_all)),
                                            feed_allocation_all)
@@ -154,5 +151,7 @@ feed_quality <- function(para) {
 
   # Bind by rows
   livestock_feed_allocation <- livestock_allocation %>% bind_rows()
+
+  return(livestock_feed_allocation)
 
 }
