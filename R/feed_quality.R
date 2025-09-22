@@ -77,7 +77,7 @@ feed_quality <- function(para) {
                                                                                seasons$season_name[season])
 
         feed_item_selected <- feeding_seasons %>%
-          dplyr::filter(feed_item_code == feed_selected[["feed_item_code"]])
+          dplyr::filter(feed_item_code %in% feed_selected[["feed_item_code"]])
 
         livestock_selected <- feed_item_selected[["livestock"]] %>%
           as.data.frame() %>%
