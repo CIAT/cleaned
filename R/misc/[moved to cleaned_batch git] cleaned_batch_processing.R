@@ -42,6 +42,8 @@
 #     ingestion from common survey tools (e.g., KoboToolbox) later.
 #   - Designed for Kenya (country="Kenya"), but country-specific lookups can be
 #     adapted.
+#   - Run from within the cleaned R project, you will need to include the v37 data
+#     in the R/data folder of the project.
 #
 # Funding & Credits:
 #   - Script development funded under CGIAR Sustainable Animal and Aquatic
@@ -65,33 +67,55 @@
 #   - Expected CLEANED input object structure (JSON/list, key tables)   [oai_citation:1‡explore_qt_json.pdf](file-service://file-KqxuYyfNo7bSVyZrk2Q3b2)
 # =============================================================================
 
-# 0) Load packages and helper functions ####
+# 0) Load packages and source functions ####
 # Pacman streamlines conditional package loading.
 pacman::p_load(
   readxl, cleaned, jsonlite, tidyr, dplyr, miceadds, data.table, openxlsx, s3fs
 )
 
+# Source CLEANED functions from development branch of github
+base <- "https://raw.githubusercontent.com/CIAT/cleaned/refs/heads/cleaned_dev_ps/R/"
 
-# Source CLEANED function wrappers (in case local project versions overriding package).
-#   ghg_emission_v2.R   : GHGe aggregation (enteric, manure, soil split unpacking later)
-#   nitrogen_balance.R  : N balance model wrapper
-#   energy_requirement.R: ME requirements by herd/physiological stage
-#   feed_quality.R      : Diet ME/CP consolidation from feed basket
-source("R/ghg_emission_v2.R")
-source("R/nitrogen_balance.R")
-source("R/energy_requirement.R")
-source("R/feed_quality.R")
-source("R/land_productivity.R")
+# Order roughly by common dependencies (core first)
+files <- c(
+  "data.R",
+  "global.R",
+  "feed_quality.R",
+  "energy_requirement.R",
+  "land_requirement.R",
+  "soil_health.R",
+  "nitrogen_balance.R",
+  "land_productivity.R",
+  "biomass_calculation.R",
+  "water_requirement.R",
+  "season_length.R",
+  "soc.R",
+  "ghg_emission.R",
+  "ghg_emission_v2.R",
+  "compare_scenario.R",
+  "differences.R",
+  "merge_outputs.R",
+  "plotting.R"
+)
 
+for (f in files) {
+  u <- paste0(base, f)
+  message("Sourcing: ", f, " …")
+  tryCatch(
+    source(u, local = TRUE, encoding = "UTF-8"),
+    error = function(e) stop("Failed to source ", f, ": ", conditionMessage(e), call. = FALSE)
+  )
+}
 
   ## 0.1) Configure input files ####
 
   # We operate on multiple Venture37 Excel workbooks. Name them for scenario tags.
+  # Set the location of the folder that contains the v37 input data
   input_files <- file.path("data/v37", c("Kenya NPA data.xlsx", "NPA_Kenya_April2025.xlsx"))
   names(input_files) <- c("baseline", "apr_2025")
 
   # Toggle verbose progress (TRUE prints farm/herd progress lines)
-  messages <- TRUE
+  messages <- F
 
 # Master lapply over input files ####
   # For each workbook: ingest -> harmonize -> build CLEANED input objects per herd
@@ -103,7 +127,6 @@ ef<-lapply(1:length(input_files),function(ii){
     ## 1.1) V37 data ####
     file<-input_files[ii]
     save_file<-gsub(".xlsx"," emissions.xlsx",file)
-    # data <- readxl::read_excel(file,sheet=1)
 
       ### 1.1.1) Herd ####
       herd <- data.table(readxl::read_excel(file,sheet="milk-bodyweight"))
@@ -289,8 +312,6 @@ ef<-lapply(1:length(input_files),function(ii){
                  CP_max=max(CP,na.rm=T)),
                by=.(ilri_feedname,ilri_feedcode)][order(N,decreasing = T)]
     }
-
-
 
      ### 1.5.1) Map ILRI feeds to feed_items ####
     v37_fdb_codes<-unique(v37_feed_items_merge[!is.na(ilri_fdb_code),.(country,ilri_fdb_code)])
@@ -661,7 +682,7 @@ ef<-lapply(1:length(input_files),function(ii){
   })
   names(ghg_emissions_merge)<-names(ghg_emissions)
 
-  ## 4.1) Combine tables #####
+    ## 4.1) Combine tables #####
   tab_names<-names(ghg_emissions_merge[[1]])
 
   ghg_emissions_merge_all<-lapply(tab_names,FUN=function(tab_name){
@@ -701,7 +722,7 @@ ef<-lapply(1:length(input_files),function(ii){
     writeData(wb, sheet = sheet_name, x = ghg_emissions_merge_all[[sheet_name]])
   }
 
-  # Save the workbook to a file
+  ## 4.2) Save and return results ####
   saveWorkbook(wb, file = save_file, overwrite = TRUE)
   jsonlite::write_json(ghg_emissions_merge_all,gsub(".xlsx",".json",save_file),simplifyVector=T)
 
@@ -711,3 +732,5 @@ ef<-lapply(1:length(input_files),function(ii){
   result_farm$input_file<-basename(input_files[ii])
   return(list(result,result_farm))
 })
+
+names(ef)<-names(input_files)
