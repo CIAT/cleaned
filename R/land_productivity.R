@@ -62,7 +62,7 @@ land_productivity <- function(para, energy_required){
              energy_kcal_year_meat = meat_production_animal*as.numeric(energy_meatcontent),
              protein_kg_year_meat = meat_production_animal*as.numeric(protein_meatcontent)/100,
              milk_production_animal = as.numeric(annual_milk),
-             total_milk = as.numeric(annual_milk)*(0.337+(0.116*as.numeric(fat_content)+(0.06*as.numeric(protein_milkcontent)))),
+             total_milk = as.numeric(annual_milk)*number*(0.337+(0.116*as.numeric(fat_content)+(0.06*as.numeric(protein_milkcontent)))),
              energy_kcal_year_milk = total_milk*as.numeric(energy_milkcontent),
              protein_kg_year_milk = total_milk*as.numeric(protein_milkcontent)/100) %>%
       select(-c(3:50))
