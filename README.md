@@ -1,4 +1,4 @@
-# Inclusive and Comprehensive Livestock Environmental Assessment for Improved Nutrition, a Secured Environment, and Sustainable Development along Livestock Value Chains (CLEANED)
+# Inclusive and Comprehensive Livestock Environmental Assessment for Improved Nutrition, a Secured Environment, and Sustainable Development along Livestock Value Chains (I-CLEANED)
 
 The goal of I-CLEANED is to assess changes from transforming livestock value chains by prioritizing profitable, environmentally sustainable and inclusive livestock interventions.
 
