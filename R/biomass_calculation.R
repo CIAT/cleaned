@@ -48,7 +48,7 @@ biomass_calculation <- function(para, land_required){
     summarise(area_feed = sum(area_feed))
 
   # add feed category
-  feed_production <- unnest(para[["feed_items"]], cols = c(feed_type_name))
+  feed_production <- unnest(para[["feed_items"]], cols = c(crop_name))
 
   # Changes in dplyr caused an error running the section below
   # feed_production <- na_if(feed_production, "NA") %>%

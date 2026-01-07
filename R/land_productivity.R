@@ -9,7 +9,7 @@
 #' Average annual growth per animal (kilogram), \code{body_weight}: Average Body weight (kilogram),
 #' \code{birth_interval}: Birth interval (years), \code{carcass_fraction}: Carcass fraction, \code{energy_meatcontent}:
 #' Energy content meat, \code{protein_meatcontent}: Protein content meat (percent), \code{annual_milk}:
-#' Average annual milk (kilogram), \code{fat_content}: Fat content milk (percent), \code{protein_milkcontent}:
+#' Average annual milk (kilogram), \code{fat_milkcontent}: Fat content milk (percent), \code{protein_milkcontent}:
 #' Protein content milk (percent).
 #'
 #' @param energy_required A list computed using the `energy_required` function
@@ -62,7 +62,7 @@ land_productivity <- function(para, energy_required){
              energy_kcal_year_meat = meat_production_animal*as.numeric(energy_meatcontent),
              protein_kg_year_meat = meat_production_animal*as.numeric(protein_meatcontent)/100,
              milk_production_animal = as.numeric(annual_milk),
-             total_milk = as.numeric(annual_milk)*(0.337+(0.116*as.numeric(fat_content)+(0.06*as.numeric(protein_milkcontent)))),
+             total_milk = as.numeric(annual_milk)*number*(0.337+(0.116*as.numeric(fat_milkcontent)+(0.06*as.numeric(protein_milkcontent)))),
              energy_kcal_year_milk = total_milk*as.numeric(energy_milkcontent),
              protein_kg_year_milk = total_milk*as.numeric(protein_milkcontent)/100) %>%
       select(-c(3:50))
@@ -70,6 +70,6 @@ land_productivity <- function(para, energy_required){
   }
 
   livestock_production_all <- livestock_production %>% bind_rows() %>%
-    left_join(energy_required[["annual_results"]][,c("livestock_category_name","manure_exported")], by = c("livetype_name" = "livestock_category_name"))
+    left_join(energy_required[["annual_results"]][,c("livestock_category_name","annual_manure_produced", "manure_exported", )], by = c("livetype_name" = "livestock_category_name"))
 
 }

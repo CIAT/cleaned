@@ -84,9 +84,9 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
   }
 
   ym1 <- left_join(livestock,de1, by = c("livetype_code"="livestock_category_code"))%>%
-    mutate(ym = ifelse(ipcc_ef_category_t2 == "Dairy cows"& annual_milk > 8500 & de >= 0.7,table_10.12$Ym[1],
-                       ifelse(ipcc_ef_category_t2 == "Dairy cows"& annual_milk %gle% c(5000,8500) & de %gel% c(0.63,0.7),table_10.12$Ym[2],
-                              ifelse(ipcc_ef_category_t2 == "Dairy cows"& annual_milk <= 5000 & de <= 0.62,table_10.12$Ym[3],
+    mutate(ym = ifelse(ipcc_ef_category_t2 == "Dairy cows"& annual_milk > 8500 | annual_milk == 0) & de >= 0.7,table_10.12$Ym[1],
+                       ifelse(ipcc_ef_category_t2 == "Dairy cows"& annual_milk %gle% c(5000,8500) | annual_milk == 0) & de %gel% c(0.63,0.7),table_10.12$Ym[2],
+                              ifelse(ipcc_ef_category_t2 == "Dairy cows"& annual_milk <= 5000 |  annual_milk == 0) & de < 0.63,table_10.12$Ym[3],
                                      ifelse(ipcc_ef_category_t2 == "Non-dairy" & de <= 0.62,table_10.12$Ym[4],
                                             ifelse(ipcc_ef_category_t2 == "Non-dairy" & de < 0.72 & de > 0.62,table_10.12$Ym[5],
                                                    ifelse(ipcc_ef_category_t2 == "Non-dairy" & de >= 0.72 & de < 0.75,table_10.12$Ym[6],
@@ -114,9 +114,9 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
   region <- para[["region"]]
 
   productivity1 <-  ym1%>%
-    mutate(productivity=ifelse(ipcc_meth_man_category == "Dairy cows"& annual_milk > 8500 & de >= 0.7,"High  productivity systems",
-                        ifelse(ipcc_meth_man_category == "Dairy cows"& annual_milk %gle% c(5000,8500) & de %gel% c(0.63,0.7),"High  productivity systems",
-                               ifelse(ipcc_meth_man_category == "Dairy cows"& annual_milk <= 5000 & de <= 0.62,"Low  productivity systems",
+    mutate(productivity=ifelse(ipcc_meth_man_category == "Dairy cows"& annual_milk > 8500 |annual_milk==0) & de >= 0.7,"High  productivity systems",
+                        ifelse(ipcc_meth_man_category == "Dairy cows"& annual_milk %gle% c(5000,8500) |annual_milk==0) & de %gel% c(0.63,0.7),"High  productivity systems",
+                               ifelse(ipcc_meth_man_category == "Dairy cows"& annual_milk <= 5000 |annual_milk==0) & de < 0.63,"Low  productivity systems",
                                       ifelse(ipcc_meth_man_category == "Other cattle" & de <= 0.62,"Low  productivity systems",
                                              ifelse(ipcc_meth_man_category == "Other cattle" & de < 0.72 & de > 0.62,"Low  productivity systems",
                                                     ifelse(ipcc_meth_man_category == "Other cattle" & de >= 0.72 & de < 0.75,"High  productivity systems",
@@ -143,9 +143,9 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
               by=c("ipcc_meth_man_t2" = "Category_of_animal","productivity"="Productivity_systems"))
 
   #mcf
-  climate_zone <- para[["climate_zone_2"]]
+  climate_zone <- para[["climate"]]
 
-  table_10.17 <- ghg_ipcc_data[["Table 10.17"]][ghg_ipcc_data[["Table 10.17"]]$climate_zone_2==climate_zone,]
+  table_10.17 <- ghg_ipcc_data[["Table 10.17"]][ghg_ipcc_data[["Table 10.17"]]$climate==climate_zone,]
 
   mcf <- max_meth_bo%>%
     left_join(table_10.17[,c(1,5)], by = c("manureman_non_roofed_enclosure"="Manure_management_systems"))%>%
@@ -525,7 +525,7 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
   ################################################################################################################################################################################################################################
   #GHG Rice
   #filter rice feed
-  rice <- dplyr::filter(crop_parameters,grepl('Rice', feed_type_name))
+  rice <- dplyr::filter(crop_parameters,grepl('Rice', crop_name))
 
   if(nrow(rice)>0) {
 

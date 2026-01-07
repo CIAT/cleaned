@@ -29,7 +29,7 @@ soil_health <- function(para, land_required) {
 
   erodibility_k <- as.numeric(para[["soil_k_value"]])
 
-  # feed_production <- unnest(para[["feed_items"]], cols = c(feed_type_name))
+  # feed_production <- unnest(para[["feed_items"]], cols = c(crop_name))
 
   feed_production <- para[["feed_items"]]
 
