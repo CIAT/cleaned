@@ -92,7 +92,7 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
                                                    ifelse(ipcc_ef_category_t2 == "Non-dairy" & de >= 0.72 & de < 0.75,table_10.12$Ym[6],
                                                           ifelse(ipcc_ef_category_t2 == "Non-dairy" & de >= 0.75,table_10.12$Ym[7],
                                                                  ifelse(ipcc_ef_category_t2 == "Sheep",table_10.13$Ym[1],
-                                                                        ifelse(ipcc_ef_category_t2 == "Goats",table_10.13$Ym[2],0))))))))))
+                                                                        ifelse(ipcc_ef_category_t2 == "Goats",table_10.13$Ym[2],0)))))))))
 
   #Computing methane enteric emission factor
 
