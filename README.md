@@ -16,6 +16,7 @@ Full commit history:
 - Meat production estimation logic was updated to improve numerical consistency of output estimates.
 
 **🔄 Variable Harmonization**
+
 Variable names were standardized across functions to align with the JSON output structure:
 
 - *'cp_pregnancy → cp_lys_pregnancy'*
