@@ -70,6 +70,6 @@ land_productivity <- function(para, energy_required){
   }
 
   livestock_production_all <- livestock_production %>% bind_rows() %>%
-    left_join(energy_required[["annual_results"]][,c("livestock_category_name","annual_manure_produced", "manure_exported", )], by = c("livetype_name" = "livestock_category_name"))
+    left_join(energy_required[["annual_results"]][,c("livestock_category_name","manure_exported", )], by = c("livetype_name" = "livestock_category_name"))
 
 }
