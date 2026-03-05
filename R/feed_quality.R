@@ -71,7 +71,7 @@ feed_quality <- function(para) {
 
         feeding_seasons <- unnest(para[["feed_basket"]],
                                   cols = c(feeds)) %>% dplyr::filter(season_name %in%
-                                                                               seasons$season_name[season])
+                                                                       seasons$season_name[season])
 
         feed_item_selected <- feeding_seasons %>%
           dplyr::filter(feed_item_code %in% feed_selected[["feed_item_code"]])

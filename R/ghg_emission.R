@@ -33,7 +33,7 @@
 #'
 #' @export
 
-ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, nitrogen_balance){
+ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, nitrogen_balance,feed_basket_quality,ym_prod=F){
 
   livestock <- para[["livestock"]]
 
@@ -83,6 +83,7 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
     e1 >= min(e2) & e1 < max(e2)
   }
 
+   if(ym_prod==T){
   ym1 <- left_join(livestock,de1, by = c("livetype_code"="livestock_category_code"))%>%
     mutate(ym = ifelse(ipcc_ef_category_t2 == "Dairy cows"& (annual_milk > 8500 | annual_milk == 0) & de >= 0.7,table_10.12$Ym[1],
                        ifelse(ipcc_ef_category_t2 == "Dairy cows"& (annual_milk %gle% c(5000,8500) | annual_milk == 0) & de %gel% c(0.63,0.7),table_10.12$Ym[2],
@@ -93,6 +94,19 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
                                                           ifelse(ipcc_ef_category_t2 == "Non-dairy" & de >= 0.75,table_10.12$Ym[7],
                                                                  ifelse(ipcc_ef_category_t2 == "Sheep",table_10.13$Ym[1],
                                                                         ifelse(ipcc_ef_category_t2 == "Goats",table_10.13$Ym[2],0))))))))))
+
+ }else{
+    ym1 <- left_join(livestock,de1, by = c("livetype_code"="livestock_category_code"))%>%
+      mutate(ym = ifelse(ipcc_ef_category_t2 == "Dairy cows" & de >= 0.7,table_10.12$Ym[1],
+                         ifelse(ipcc_ef_category_t2 == "Dairy cows" & de %gel% c(0.63,0.7),table_10.12$Ym[2],
+                                ifelse(ipcc_ef_category_t2 == "Dairy cows" & de < 0.63,table_10.12$Ym[3],
+                                       ifelse(ipcc_ef_category_t2 == "Non-dairy" & de <= 0.62,table_10.12$Ym[4],
+                                              ifelse(ipcc_ef_category_t2 == "Non-dairy" & de < 0.72 & de > 0.62,table_10.12$Ym[5],
+                                                     ifelse(ipcc_ef_category_t2 == "Non-dairy" & de >= 0.72 & de < 0.75,table_10.12$Ym[6],
+                                                            ifelse(ipcc_ef_category_t2 == "Non-dairy" & de >= 0.75,table_10.12$Ym[7],
+                                                                   ifelse(ipcc_ef_category_t2 == "Sheep",table_10.13$Ym[1],
+                                                                          ifelse(ipcc_ef_category_t2 == "Goats",table_10.13$Ym[2],0))))))))))
+  }
 
   #Computing methane enteric emission factor
 
