@@ -157,7 +157,7 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
               by=c("ipcc_meth_man_t2" = "Category_of_animal","productivity"="Productivity_systems"))
 
   #mcf
-  climate_zone <- para[["climate"]]
+  climate_zone <- para[["climate_zone_2"]]
 
   table_10.17 <- ghg_ipcc_data[["Table 10.17"]][ghg_ipcc_data[["Table 10.17"]]$climate==climate_zone,]
 
