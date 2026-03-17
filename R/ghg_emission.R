@@ -140,8 +140,20 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
                                                                                 ifelse(ipcc_meth_man_category == "Goats"& de < 0.72,"Low  productivity systems",
                                                                                        ifelse(ipcc_meth_man_category == "Goats"& de >= 0.72,"High  productivity systems",
                                                                                               ifelse(ipcc_meth_man_category == "Swine"& de < 0.72,"Low  productivity systems",
-                                                                                                     ifelse(ipcc_meth_man_category == "Swine"& de >= 0.72,"High  productivity systems",NA))))))))))))))
+                                                                                                     ifelse(ipcc_meth_man_category == "Swine"& de >= 0.72,"High  productivity systems",NA))))))))))))))%>%
+  mutate(
+    productivity = case_when(
+      (is.na(productivity) | trimws(productivity) == "") &
+        ipcc_meth_man_category == "Dairy cows" &
+        !is.na(annual_milk) & annual_milk > 5000 ~ "High  productivity systems",
 
+      (is.na(productivity) | trimws(productivity) == "") &
+        ipcc_meth_man_category == "Dairy cows" &
+        !is.na(annual_milk) & annual_milk <= 5000 ~ "Low  productivity systems",
+
+      TRUE ~ productivity
+    )
+  )
 
   dairy_cattle <- c("Cattle - Cows (local)","Cattle - Cows (improved)","Cattle - Cows (high productive)")
   non_dairy_cattle <- c("Cattle - Adult male","Cattle - Steers/heifers","Cattle - Steers/heifers (improved)","Cattle - Calves","Cattle - Calves (improved)")
