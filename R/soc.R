@@ -36,30 +36,39 @@ soil_organic_carbon <- function(para, stock_change_para, land_required, biomass)
   
   co2_conversion_factor <- 44 / 12
   
-  lookup_soc_factor <- function(tbl, key, label) {
-    key <- trimws(as.character(key))
-    
-    if (!key %in% names(tbl)) {
-      stop(
-        paste0(
-          "SOC lookup failed for ", label, ". Key not found: ", key,
-          ". Available keys: ", paste(names(tbl), collapse = ", ")
-        ),
-        call. = FALSE
-      )
-    }
-    
-    val <- tbl[[key]]
-    
-    if (length(val) == 0 || all(is.na(val))) {
-      stop(
-        paste0("SOC lookup returned empty/NA value for ", label, ": ", key),
-        call. = FALSE
-      )
-    }
-    
-    as.numeric(val[1])
+lookup_soc_factor <- function(tbl, key, label) {
+  key <- trimws(as.character(key))
+  tbl_names <- names(tbl)
+  
+  # exact match first
+  hit <- match(key, tbl_names)
+  
+  # fallback: case-insensitive match
+  if (is.na(hit)) {
+    hit <- match(tolower(key), tolower(tbl_names))
   }
+  
+  if (is.na(hit)) {
+    stop(
+      paste0(
+        "SOC lookup failed for ", label, ". Key not found: ", key,
+        ". Available keys: ", paste(tbl_names, collapse = ", ")
+      ),
+      call. = FALSE
+    )
+  }
+  
+  val <- tbl[[hit]]
+  
+  if (length(val) == 0 || all(is.na(val))) {
+    stop(
+      paste0("SOC lookup returned empty/NA value for ", label, ": ", key),
+      call. = FALSE
+    )
+  }
+  
+  as.numeric(val[1])
+}
   
   soil_amount <- 1000000 * (para[["soil_depth"]] / 100) * para[["soil_bulk"]]
   field_soc <- soil_amount * para[["soil_c"]] * 0.001
