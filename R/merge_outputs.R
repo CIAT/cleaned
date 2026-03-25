@@ -97,7 +97,7 @@ combineOutputs <- function(para, feed_basket_quality, energy_required, land_requ
   }else {soil_carbon = "ERROR: Soil carbon was not computed"}
 
   if (exists("ghg_emission")) {
-    ghg_emissions = ghg_emissions
+    ghg_emissions = ghg_emission
   }else {ghg_emissions = "ERROR: Greenhouse gas emissions were not computed"}
 
   if (exists("filePath")) {
