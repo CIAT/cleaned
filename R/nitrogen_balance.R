@@ -24,7 +24,7 @@
 #'
 #' @export
 
-n_balance <- function(para, land_required, soil_erosion){
+n_balance <- function(para, land_required, energy_required, soil_erosion){
 
   feed_types <- unique(land_required[["land_requirements_all"]]$feed)
 
