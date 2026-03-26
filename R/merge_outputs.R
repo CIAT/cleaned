@@ -352,25 +352,112 @@ combineOutputs <- function(
   )
 
   # ---------------------------------------------------------------------------
-  # ghg summary
-  # ---------------------------------------------------------------------------
-  ghg_balance <- data.frame(
-    enteric_methane_emissions = scalar_sum(ghg_ef, "enteric_methane_emissions"),
-    manure_methane_emissions = scalar_sum(ghg_ef, "manure_methane_emissions"),
-    direct_n2o_emissions = scalar_sum(ghg_ef, "direct_n2o_emissions"),
-    indirect_n2o_emissions = scalar_sum(ghg_ef, "indirect_n2o_emissions"),
-    total_ghg = scalar_sum(ghg_ef, "total_ghg"),
-    stringsAsFactors = FALSE
-  )
+# ghg summary
+# ---------------------------------------------------------------------------
 
-  global_warming_potential <- data.frame(
-    gwp_enteric_methane = scalar_sum(ghg_eft, "gwp_enteric_methane"),
-    gwp_manure_methane = scalar_sum(ghg_eft, "gwp_manure_methane"),
-    gwp_direct_n2o = scalar_sum(ghg_eft, "gwp_direct_n2o"),
-    gwp_indirect_n2o = scalar_sum(ghg_eft, "gwp_indirect_n2o"),
-    gwp_total = scalar_sum(ghg_eft, "gwp_total"),
-    stringsAsFactors = FALSE
-  )
+# helper to find the first existing numeric column from a list of candidates
+scalar_sum_any <- function(df, candidates, default = NA_real_) {
+  if (is.null(df) || !is.data.frame(df) || nrow(df) == 0) return(default)
+  hit <- candidates[candidates %in% names(df)]
+  if (!length(hit)) return(default)
+  scalar_sum(df, hit[1], default = default)
+}
+
+# enteric / manure CH4
+enteric_methane_emissions <- scalar_sum_any(
+  ghg_ef,
+  c("enteric_methane_emissions", "enteric_methane_emission", "enteric_CH4")
+)
+
+manure_methane_emissions <- scalar_sum_any(
+  ghg_ef,
+  c("manure_methane_emissions", "manure_methane_emission", "manure_CH4")
+)
+
+# direct / indirect N2O are usually in separate objects, not in ghg_ef
+direct_n2o_emissions <- scalar_sum_any(
+  ghg_direct_n2o,
+  c("direct_n2o_emissions", "direct_n2o_emission", "direct_N2O_emission", "emission", "value")
+)
+
+indirect_n2o_emissions <- scalar_sum_any(
+  ghg_indirect_n2o,
+  c("indirect_n2o_emissions", "indirect_n2o_emission", "indirect_N2O_emission", "emission", "value")
+)
+
+total_ghg <- sum(
+  c(enteric_methane_emissions,
+    manure_methane_emissions,
+    direct_n2o_emissions,
+    indirect_n2o_emissions),
+  na.rm = TRUE
+)
+
+if (!is.finite(total_ghg)) total_ghg <- NA_real_
+
+ghg_balance <- data.frame(
+  enteric_methane_emissions = enteric_methane_emissions,
+  manure_methane_emissions = manure_methane_emissions,
+  direct_n2o_emissions = direct_n2o_emissions,
+  indirect_n2o_emissions = indirect_n2o_emissions,
+  total_ghg = total_ghg,
+  stringsAsFactors = FALSE
+)
+
+# GWP summary:
+# use explicit GWP columns if present; otherwise derive from totals using AR6-style factors
+gwp_enteric_methane <- scalar_sum_any(
+  ghg_eft,
+  c("gwp_enteric_methane", "gwp_enteric_CH4", "enteric_methane_gwp", "enteric_gwp")
+)
+
+gwp_manure_methane <- scalar_sum_any(
+  ghg_eft,
+  c("gwp_manure_methane", "gwp_manure_CH4", "manure_methane_gwp", "manure_gwp")
+)
+
+gwp_direct_n2o <- scalar_sum_any(
+  ghg_eft,
+  c("gwp_direct_n2o", "gwp_direct_N2O", "direct_n2o_gwp", "direct_gwp")
+)
+
+gwp_indirect_n2o <- scalar_sum_any(
+  ghg_eft,
+  c("gwp_indirect_n2o", "gwp_indirect_N2O", "indirect_n2o_gwp", "indirect_gwp")
+)
+
+# fallback derivation if eft does not already contain those summaries
+if (is.na(gwp_enteric_methane) && !is.na(enteric_methane_emissions)) {
+  gwp_enteric_methane <- enteric_methane_emissions * 27.2
+}
+if (is.na(gwp_manure_methane) && !is.na(manure_methane_emissions)) {
+  gwp_manure_methane <- manure_methane_emissions * 27.2
+}
+if (is.na(gwp_direct_n2o) && !is.na(direct_n2o_emissions)) {
+  gwp_direct_n2o <- direct_n2o_emissions * 273
+}
+if (is.na(gwp_indirect_n2o) && !is.na(indirect_n2o_emissions)) {
+  gwp_indirect_n2o <- indirect_n2o_emissions * 273
+}
+
+gwp_total <- sum(
+  c(gwp_enteric_methane,
+    gwp_manure_methane,
+    gwp_direct_n2o,
+    gwp_indirect_n2o),
+  na.rm = TRUE
+)
+
+if (!is.finite(gwp_total)) gwp_total <- NA_real_
+
+global_warming_potential <- data.frame(
+  gwp_enteric_methane = gwp_enteric_methane,
+  gwp_manure_methane = gwp_manure_methane,
+  gwp_direct_n2o = gwp_direct_n2o,
+  gwp_indirect_n2o = gwp_indirect_n2o,
+  gwp_total = gwp_total,
+  stringsAsFactors = FALSE
+)
 
   product_waste <- data.frame(
     manure_exported = scalar_sum(energy_annual, "manure_exported"),

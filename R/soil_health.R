@@ -63,12 +63,12 @@ soil_health <- function(para, land_required) {
 
     feed_selected <- feed_production[feed_production$feed_item_name == i, ]
 
-    slope_desc <- feed_selected$slope_desc
-    slope_length <- as.numeric(feed_selected$slope_length)
+    slope_desc <- as.character(feed_selected$slope_desc)[1]
+    slope_length <- suppressWarnings(as.numeric(feed_selected$slope_length)[1])
 
     ls <- slope_steepness_length_conversion(slope_desc, slope_length)
-    c_factor <- as.numeric(feed_selected$landcover_c_factor)
-    p_factor <- as.numeric(feed_selected$slope_p_factor)
+    c_factor <- suppressWarnings(as.numeric(feed_selected$landcover_c_factor)[1])
+    p_factor <- suppressWarnings(as.numeric(feed_selected$slope_p_factor)[1])
 
     soil_loss_ha_year <- erosivity_r * erodibility_k * ls * c_factor * p_factor
 
@@ -76,7 +76,7 @@ soil_health <- function(para, land_required) {
       as.data.frame() %>%
       dplyr::filter(feed == i)
 
-    area_feed <- sum(as.numeric(land_required_feed_selected$area_feed), na.rm = TRUE)
+    area_feed <- sum(suppressWarnings(as.numeric(land_required_feed_selected$area_feed)), na.rm = TRUE)
 
     soil_loss_plot <- soil_loss_ha_year * area_feed
 
@@ -84,8 +84,8 @@ soil_health <- function(para, land_required) {
       feed_item = i,
       feed_type = i,
       soil_type = soil_type,
-      erosivity_r = erosivity_r,
-      erodibility_k = erodibility_k,
+      erosivity_r = as.numeric(erosivity_r),
+      erodibility_k = as.numeric(erodibility_k),
       ls = as.numeric(ls),
       c_factor = as.numeric(c_factor),
       p_factor = as.numeric(p_factor),
