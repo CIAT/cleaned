@@ -592,7 +592,7 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
                         land_used = land_used,
                         ghg_soil = ghg_soil,
                         ghg_burn = ghg_burn,
-                        fetilizer_ghg = fetilizer_ghg,
+                        ghg_fertilizer = fetilizer_ghg,
                         ghg_rice = ghg_rice)
 
 
