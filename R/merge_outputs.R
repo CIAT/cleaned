@@ -266,44 +266,50 @@ combineOutputs <- function(
     add_sheet_safe(wb, "GHG Rice", ghg_emission$ghg_rice)
   }
 
-  # ---------------------------------------------------------------------------
-  # 4) Dynamic worksheet order
-  # ---------------------------------------------------------------------------
-  desired_order <- c(
-    "Land Required",
-    "DM Required",
-    "Land and DM Required",
-    "Overall Soil Impact",
-    "Nitrogen Balance",
-    "Water Use Per Feed Item",
-    "Water Use For Production",
-    "Consumable Livestock Product",
-    "Manure Produced",
-    "GHG Balance",
-    "Global Warming Potential",
-    "Biomass",
-    "Soil Carbon",
-    "Product Waste",
-    "Feed Basket Quality",
-    "Energy Required Annual",
-    "Energy Required Seasonal",
-    "Land Required Feed Fractions",
-    "Livestock Productivity",
-    "GHG EF",
-    "GHG EFT",
-    "GHG N Excretion",
-    "GHG Direct N2O",
-    "GHG Indirect N2O",
-    "GHG Land Used",
-    "GHG Burn",
-    "GHG Rice"
-  )
+ # ---------------------------------------------------------------------------
+# 4) Dynamic worksheet order (SAFE VERSION)
+# ---------------------------------------------------------------------------
+desired_order <- c(
+  "Land Required",
+  "DM Required",
+  "Land and DM Required",
+  "Overall Soil Impact",
+  "Nitrogen Balance",
+  "Water Use Per Feed Item",
+  "Water Use For Production",
+  "Consumable Livestock Product",
+  "Manure Produced",
+  "GHG Balance",
+  "Global Warming Potential",
+  "Biomass",
+  "Soil Carbon",
+  "Product Waste",
+  "Feed Basket Quality",
+  "Energy Required Annual",
+  "Energy Required Seasonal",
+  "Land Required Feed Fractions",
+  "Livestock Productivity",
+  "GHG EF",
+  "GHG EFT",
+  "GHG N Excretion",
+  "GHG Direct N2O",
+  "GHG Indirect N2O",
+  "GHG Land Used",
+  "GHG Burn",
+  "GHG Rice"
+)
 
-  existing_sheets <- names(wb)
-  desired_order <- desired_order[desired_order %in% existing_sheets]
-  remaining <- existing_sheets[!existing_sheets %in% desired_order]
+existing_sheets <- names(wb)
+desired_order <- desired_order[desired_order %in% existing_sheets]
+remaining <- existing_sheets[!existing_sheets %in% desired_order]
+final_order <- c(desired_order, remaining)
 
-  openxlsx::worksheetOrder(wb) <- c(desired_order, remaining)
+order_idx <- match(final_order, existing_sheets)
+order_idx <- order_idx[!is.na(order_idx)]
+
+if (length(order_idx) == length(existing_sheets)) {
+  openxlsx::worksheetOrder(wb) <- order_idx
+}
 
   # ---------------------------------------------------------------------------
   # 5) Save workbook
