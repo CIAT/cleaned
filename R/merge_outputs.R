@@ -76,7 +76,10 @@ combineOutputs <- function(
     if (is.data.frame(x)) return(x)
     if (data.table::is.data.table(x)) return(as.data.frame(x))
     if (is.matrix(x)) return(as.data.frame(x))
-    if (is.list(x) && !is.data.frame(x)) return(as.data.frame(x))
+    if (is.list(x) && !is.data.frame(x)) {
+      out <- tryCatch(as.data.frame(x), error = function(e) data.frame())
+      return(out)
+    }
     data.frame(value = x, stringsAsFactors = FALSE)
   }
 
@@ -86,22 +89,28 @@ combineOutputs <- function(
     x
   }
 
-  scalar_sum <- function(df, col) {
-    if (is.null(df) || !is.data.frame(df) || !col %in% names(df)) return(NA_real_)
-    sum(clean_num(df[[col]]), na.rm = TRUE)
+  scalar_sum <- function(df, col, default = NA_real_) {
+    if (is.null(df) || !is.data.frame(df) || nrow(df) == 0 || !col %in% names(df)) return(default)
+    x <- clean_num(df[[col]])
+    s <- sum(x, na.rm = TRUE)
+    if (is.nan(s) || !is.finite(s)) return(default)
+    s
   }
 
   scalar_first <- function(x, default = NA_real_) {
     if (is.null(x) || length(x) == 0) return(default)
-    x <- x[1]
-    if (is.list(x)) return(default)
-    out <- suppressWarnings(as.numeric(x))
-    if (length(out) == 0 || !is.finite(out)) return(default)
-    out
+    if (is.list(x) && !is.data.frame(x)) return(default)
+    x <- clean_num(x)
+    x <- x[!is.na(x)]
+    if (length(x) == 0) return(default)
+    x[1]
   }
 
-  safe_div <- function(a, b) {
-    ifelse(is.na(b) | b == 0, NA_real_, a / b)
+  safe_div <- function(a, b, default = NA_real_) {
+    a <- scalar_first(a, default = default)
+    b <- scalar_first(b, default = default)
+    if (is.na(a) || is.na(b) || b == 0) return(default)
+    a / b
   }
 
   pick_df_with_cols <- function(x, cols) {
@@ -161,7 +170,7 @@ combineOutputs <- function(
     data.frame()
   }
 
-  # soil erosion: keep both detail and overall summary if available
+  # soil erosion
   soil_erosion_detail <- pick_df_with_cols(
     soil_erosion,
     c("feed_type", "ls", "soil_loss_ha_year", "soil_loss_plot")
@@ -190,19 +199,8 @@ combineOutputs <- function(
   ghg_land_used <- if (is.list(ghg_emission) && "land_used" %in% names(ghg_emission)) to_df(ghg_emission[["land_used"]]) else data.frame()
   ghg_burn <- if (is.list(ghg_emission) && "ghg_burn" %in% names(ghg_emission)) to_df(ghg_emission[["ghg_burn"]]) else data.frame()
   ghg_rice <- if (is.list(ghg_emission) && "ghg_rice" %in% names(ghg_emission)) to_df(ghg_emission[["ghg_rice"]]) else data.frame()
-
-  # these were missing in your scenario outputs
-  ghg_soil <- if (is.list(ghg_emission) && "ghg_soil" %in% names(ghg_emission)) {
-    to_df(ghg_emission[["ghg_soil"]])
-  } else {
-    data.frame()
-  }
-
-  ghg_fertilizer <- if (is.list(ghg_emission) && "ghg_fertilizer" %in% names(ghg_emission)) {
-    to_df(ghg_emission[["ghg_fertilizer"]])
-  } else {
-    data.frame()
-  }
+  ghg_soil <- if (is.list(ghg_emission) && "ghg_soil" %in% names(ghg_emission)) to_df(ghg_emission[["ghg_soil"]]) else data.frame()
+  ghg_fertilizer <- if (is.list(ghg_emission) && "ghg_fertilizer" %in% names(ghg_emission)) to_df(ghg_emission[["ghg_fertilizer"]]) else data.frame()
 
   # ---------------------------------------------------------------------------
   # land required summaries
@@ -211,7 +209,10 @@ combineOutputs <- function(
 
     seasonal_land_required <- land_required_all %>%
       dplyr::group_by(feed, season_name) %>%
-      dplyr::summarise(area_feed_total = sum(clean_num(area_feed), na.rm = TRUE), .groups = "drop") %>%
+      dplyr::summarise(
+        area_feed_total = sum(clean_num(area_feed), na.rm = TRUE),
+        .groups = "drop"
+      ) %>%
       tidyr::pivot_wider(names_from = season_name, values_from = area_feed_total)
 
     ex_land_required <- land_required_all %>%
@@ -229,7 +230,10 @@ combineOutputs <- function(
 
     seasonal_dm_required <- land_required_all %>%
       dplyr::group_by(feed, season_name) %>%
-      dplyr::summarise(feed_item_dm_total = sum(clean_num(feed_item_dm), na.rm = TRUE), .groups = "drop") %>%
+      dplyr::summarise(
+        feed_item_dm_total = sum(clean_num(feed_item_dm), na.rm = TRUE),
+        .groups = "drop"
+      ) %>%
       tidyr::pivot_wider(names_from = season_name, values_from = feed_item_dm_total)
 
     ex_dm_required <- land_required_all %>%
@@ -248,9 +252,8 @@ combineOutputs <- function(
     land_required_out <- dplyr::left_join(seasonal_land_required, ex_land_required, by = "feed")
     dm_required_out <- dplyr::left_join(seasonal_dm_required, ex_dm_required, by = "feed")
 
-    total_area_used_for_feed_production_ha <- sum(clean_num(land_required_out$total_area), na.rm = TRUE)
-    total_dm_used_for_feed_production_kg <- sum(clean_num(dm_required_out$total_dm), na.rm = TRUE)
-
+    total_area_used_for_feed_production_ha <- scalar_first(sum(clean_num(land_required_out$total_area), na.rm = TRUE))
+    total_dm_used_for_feed_production_kg <- scalar_first(sum(clean_num(dm_required_out$total_dm), na.rm = TRUE))
     total_milk <- scalar_sum(livestock_productivity, "total_milk")
 
     land_and_dm_required <- data.frame(
@@ -270,19 +273,19 @@ combineOutputs <- function(
         "dm_required_imported_concentrates_kg"
       ),
       Value = c(
-        total_area_used_for_feed_production_ha,
-        safe_div(total_area_used_for_feed_production_ha, total_milk),
-        sum(clean_num(land_required_out$farm), na.rm = TRUE),
-        sum(clean_num(land_required_out$rough_of), na.rm = TRUE),
-        sum(clean_num(land_required_out$conc_of), na.rm = TRUE),
-        sum(clean_num(land_required_out$conc_ip), na.rm = TRUE),
-        NA,
-        total_dm_used_for_feed_production_kg,
-        safe_div(total_dm_used_for_feed_production_kg, total_milk),
-        sum(clean_num(dm_required_out$farm_dm), na.rm = TRUE),
-        sum(clean_num(dm_required_out$rough_of_dm), na.rm = TRUE),
-        sum(clean_num(dm_required_out$conc_of_dm), na.rm = TRUE),
-        sum(clean_num(dm_required_out$conc_ip_dm), na.rm = TRUE)
+        scalar_first(total_area_used_for_feed_production_ha),
+        scalar_first(safe_div(total_area_used_for_feed_production_ha, total_milk)),
+        scalar_first(sum(clean_num(land_required_out$farm), na.rm = TRUE)),
+        scalar_first(sum(clean_num(land_required_out$rough_of), na.rm = TRUE)),
+        scalar_first(sum(clean_num(land_required_out$conc_of), na.rm = TRUE)),
+        scalar_first(sum(clean_num(land_required_out$conc_ip), na.rm = TRUE)),
+        NA_real_,
+        scalar_first(total_dm_used_for_feed_production_kg),
+        scalar_first(safe_div(total_dm_used_for_feed_production_kg, total_milk)),
+        scalar_first(sum(clean_num(dm_required_out$farm_dm), na.rm = TRUE)),
+        scalar_first(sum(clean_num(dm_required_out$rough_of_dm), na.rm = TRUE)),
+        scalar_first(sum(clean_num(dm_required_out$conc_of_dm), na.rm = TRUE)),
+        scalar_first(sum(clean_num(dm_required_out$conc_ip_dm), na.rm = TRUE))
       ),
       stringsAsFactors = FALSE
     )
@@ -290,7 +293,25 @@ combineOutputs <- function(
   } else {
     land_required_out <- data.frame()
     dm_required_out <- data.frame()
-    land_and_dm_required <- data.frame()
+    land_and_dm_required <- data.frame(
+      Names = c(
+        "total_area_used_for_feed_production_ha",
+        "area_required_per_milk_unit",
+        "area_required_on_farm_ha",
+        "area_required_roughages_off_farm_ha",
+        "area_required_concentrates_off_farm_ha",
+        "area_required_imported_concentrates_ha",
+        NA,
+        "total_dm_used_for_feed_production_kg",
+        "dm_required_per_milk_unit",
+        "dm_required_on_farm_kg",
+        "dm_required_roughages_off_farm_kg",
+        "dm_required_concentrates_off_farm_kg",
+        "dm_required_imported_concentrates_kg"
+      ),
+      Value = rep(NA_real_, 13),
+      stringsAsFactors = FALSE
+    )
   }
 
   # ---------------------------------------------------------------------------
@@ -376,7 +397,6 @@ combineOutputs <- function(
   add_sheet_safe(wb, "Biomass", biomass)
   add_sheet_safe(wb, "Soil Carbon", soil_carbon)
   add_sheet_safe(wb, "Product Waste", product_waste)
-
   add_sheet_safe(wb, "Feed Basket Quality", to_df(feed_basket_quality))
   add_sheet_safe(wb, "Energy Required Annual", energy_annual)
   add_sheet_safe(wb, "Energy Required Seasonal", energy_seasonal)
