@@ -370,7 +370,7 @@ enteric_methane_emissions <- scalar_sum_any(
 )
 
 manure_methane_emissions <- scalar_sum_any(
-  ghg_ef,
+  ghg_eft,
   c("manure_methane_emissions", "manure_methane_emission", "manure_CH4")
 )
 
