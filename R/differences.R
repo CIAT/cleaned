@@ -234,20 +234,22 @@ calculate_differences <- function(outFile, ...) {
     erosion_kgsoil_per_kg_protein <- safe_div(erosion_t_soil_year, total_protein_produced_kg_per_year) * 1000
 
     # -------------------------------------------------------------------------
-    # GHG emission
-    # -------------------------------------------------------------------------
-    if (nrow(global_warming_potential) > 0 && "gwp_total" %in% names(global_warming_potential)) {
-      ghg_emission_t_co2_eq_per_year <- scalar_num(global_warming_potential$gwp_total)
-    } else if (nrow(ghg_balance) > 0 && "total_ghg" %in% names(ghg_balance)) {
-      ghg_emission_t_co2_eq_per_year <- scalar_num(ghg_balance$total_ghg)
-    } else {
-      ghg_emission_t_co2_eq_per_year <- safe_sum_vec(old_ghg_balance$value)
-    }
+# GHG emission
+# -------------------------------------------------------------------------
+if (nrow(global_warming_potential) > 0 && "gwp_total" %in% names(global_warming_potential)) {
+  ghg_emission_t_co2_eq_per_year <- scalar_num(global_warming_potential$gwp_total)
+} else if (nrow(ghg_balance) > 0 && "total_ghg" %in% names(ghg_balance)) {
+  ghg_emission_t_co2_eq_per_year <- scalar_num(ghg_balance$total_ghg)
+} else if (nrow(old_ghg_balance) > 0 && "kg_co2_e_tot" %in% names(old_ghg_balance)) {
+  ghg_emission_t_co2_eq_per_year <- safe_sum_vec(old_ghg_balance$kg_co2_e_tot) / 1000
+} else {
+  ghg_emission_t_co2_eq_per_year <- NA_real_
+}
 
-    ghg_emission_t_co2_eq_per_ha_per_year <- safe_div(ghg_emission_t_co2_eq_per_year, total_land_requirement_ha)
-    ghg_emission_t_co2_eq_per_kg_fpcm <- safe_div(ghg_emission_t_co2_eq_per_year, total_milk_produced_kg_fpcm_per_year) * 1000
-    ghg_emission_t_co2_eq_per_kg_meat <- safe_div(ghg_emission_t_co2_eq_per_year, total_meat_produced_kg_per_year) * 1000
-    ghg_emission_t_co2_eq_per_kg_protein <- safe_div(ghg_emission_t_co2_eq_per_year, total_protein_produced_kg_per_year) * 1000
+ghg_emission_t_co2_eq_per_ha_per_year <- safe_div(ghg_emission_t_co2_eq_per_year, total_land_requirement_ha)
+ghg_emission_t_co2_eq_per_kg_fpcm <- safe_div(ghg_emission_t_co2_eq_per_year, total_milk_produced_kg_fpcm_per_year) * 1000
+ghg_emission_t_co2_eq_per_kg_meat <- safe_div(ghg_emission_t_co2_eq_per_year, total_meat_produced_kg_per_year) * 1000
+ghg_emission_t_co2_eq_per_kg_protein <- safe_div(ghg_emission_t_co2_eq_per_year, total_protein_produced_kg_per_year) * 1000
 
     # -------------------------------------------------------------------------
     # Water impacts
