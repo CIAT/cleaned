@@ -206,7 +206,26 @@ ghg_fertilizer_raw <- if (is.list(ghg_emission) && "fetilizer_ghg" %in% names(gh
 
 # flattened versions only for export sheets
 ghg_soil <- to_df(ghg_soil_raw)
-ghg_fertilizer <- to_df(ghg_fertilizer_raw)
+# ---------------------------------------------------------------------------
+# FIX: properly unpack fertilizer outputs 
+# ---------------------------------------------------------------------------
+ghg_fertilizer_applied <- if (
+  is.list(ghg_fertilizer_raw) &&
+  "fertilizer_applied" %in% names(ghg_fertilizer_raw)
+) {
+  to_df(ghg_fertilizer_raw[["fertilizer_applied"]])
+} else {
+  data.frame()
+}
+
+ghg_fertilizer_by_crop <- if (
+  is.list(ghg_fertilizer_raw) &&
+  "fertlizer_emission_by_crop" %in% names(ghg_fertilizer_raw)
+) {
+  to_df(ghg_fertilizer_raw[["fertlizer_emission_by_crop"]])
+} else {
+  data.frame()
+}
 
   # ---------------------------------------------------------------------------
   # land required summaries
@@ -798,7 +817,8 @@ ghg_fertilizer <- to_df(ghg_fertilizer_raw)
   add_sheet_safe(wb, "GHG Burn", ghg_burn)
   add_sheet_safe(wb, "GHG Rice", ghg_rice)
   add_sheet_safe(wb, "GHG Soil", ghg_soil)
-  add_sheet_safe(wb, "GHG Fertilizer", ghg_fertilizer)
+  add_sheet_safe(wb, "GHG Fertilizer Applied", ghg_fertilizer_applied)
+  add_sheet_safe(wb, "GHG Fertilizer By Crop", ghg_fertilizer_by_crop)
 
   desired_order <- c(
     "Land Required",
@@ -830,7 +850,8 @@ ghg_fertilizer <- to_df(ghg_fertilizer_raw)
     "GHG Burn",
     "GHG Rice",
     "GHG Soil",
-    "GHG Fertilizer"
+    "GHG Fertilizer Applied",
+    "GHG Fertilizer By Crop"
   )
 
   existing_sheets <- names(wb)
@@ -880,6 +901,7 @@ ghg_fertilizer <- to_df(ghg_fertilizer_raw)
     ghg_burn = ghg_burn,
     ghg_rice = ghg_rice,
     ghg_soil = ghg_soil,
-    ghg_fertilizer = ghg_fertilizer
+    ghg_fertilizer_applied = ghg_fertilizer_applied,
+    ghg_fertilizer_by_crop = ghg_fertilizer_by_crop
   )
 }
