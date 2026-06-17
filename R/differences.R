@@ -61,12 +61,15 @@ calculate_differences <- function(outFile, ...) {
     x
   }
 
-  safe_div <- function(num, den, default = NA_real_) {
-    num <- scalar_num(num, default = NA_real_)
-    den <- scalar_num(den, default = NA_real_)
-    if (is.na(num) || is.na(den) || den == 0) return(default)
-    num / den
-  }
+safe_div <- function(num, den, default = 0) {
+  num <- scalar_num(num, default = NA_real_)
+  den <- scalar_num(den, default = NA_real_)
+
+  if (is.na(num) || is.na(den)) return(NA_real_)
+  if (den == 0) return(default)
+
+  num / den
+}
 
   safe_sum_vec <- function(x, default = NA_real_) {
     if (is.null(x) || length(x) == 0) return(default)

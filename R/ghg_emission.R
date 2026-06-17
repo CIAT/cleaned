@@ -83,30 +83,44 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
     e1 >= min(e2) & e1 < max(e2)
   }
 
-   if(ym_prod==T){
-  ym1 <- left_join(livestock,de1, by = c("livetype_code"="livestock_category_code"))%>%
-    mutate(ym = ifelse(ipcc_ef_category_t2 == "Dairy cows"& (annual_milk > 8500 | annual_milk == 0) & de >= 0.7,table_10.12$Ym[1],
-                       ifelse(ipcc_ef_category_t2 == "Dairy cows"& (annual_milk %gle% c(5000,8500) | annual_milk == 0) & de %gel% c(0.63,0.7),table_10.12$Ym[2],
-                              ifelse(ipcc_ef_category_t2 == "Dairy cows"& (annual_milk <= 5000 |  annual_milk == 0) & de < 0.63,table_10.12$Ym[3],
-                                     ifelse(ipcc_ef_category_t2 == "Non-dairy" & de <= 0.62,table_10.12$Ym[4],
-                                            ifelse(ipcc_ef_category_t2 == "Non-dairy" & de < 0.72 & de > 0.62,table_10.12$Ym[5],
-                                                   ifelse(ipcc_ef_category_t2 == "Non-dairy" & de >= 0.72 & de < 0.75,table_10.12$Ym[6],
-                                                          ifelse(ipcc_ef_category_t2 == "Non-dairy" & de >= 0.75,table_10.12$Ym[7],
-                                                                 ifelse(ipcc_ef_category_t2 == "Sheep",table_10.13$Ym[1],
-                                                                        ifelse(ipcc_ef_category_t2 == "Goats",table_10.13$Ym[2],0))))))))))
+if(ym_prod == TRUE){
 
- }else{
-    ym1 <- left_join(livestock,de1, by = c("livetype_code"="livestock_category_code"))%>%
-      mutate(ym = ifelse(ipcc_ef_category_t2 == "Dairy cows" & de >= 0.7,table_10.12$Ym[1],
-                         ifelse(ipcc_ef_category_t2 == "Dairy cows" & de %gel% c(0.63,0.7),table_10.12$Ym[2],
-                                ifelse(ipcc_ef_category_t2 == "Dairy cows" & de < 0.63,table_10.12$Ym[3],
-                                       ifelse(ipcc_ef_category_t2 == "Non-dairy" & de <= 0.62,table_10.12$Ym[4],
-                                              ifelse(ipcc_ef_category_t2 == "Non-dairy" & de < 0.72 & de > 0.62,table_10.12$Ym[5],
-                                                     ifelse(ipcc_ef_category_t2 == "Non-dairy" & de >= 0.72 & de < 0.75,table_10.12$Ym[6],
-                                                            ifelse(ipcc_ef_category_t2 == "Non-dairy" & de >= 0.75,table_10.12$Ym[7],
-                                                                   ifelse(ipcc_ef_category_t2 == "Sheep",table_10.13$Ym[1],
-                                                                          ifelse(ipcc_ef_category_t2 == "Goats",table_10.13$Ym[2],0))))))))))
-  }
+  ym1 <- left_join(livestock, de1, by = c("livetype_code" = "livestock_category_code")) %>%
+    mutate(ym = ifelse(ipcc_ef_category_t2 == "Dairy cows" & annual_milk > 8500 & de >= 0.7, table_10.12$Ym[1],
+                       ifelse(ipcc_ef_category_t2 == "Dairy cows" & annual_milk %gle% c(5000,8500) & de %gel% c(0.63,0.7), table_10.12$Ym[2],
+                              ifelse(ipcc_ef_category_t2 == "Dairy cows" & annual_milk > 0 & annual_milk <= 5000 & de < 0.63, table_10.12$Ym[3],
+
+                                     # fallback to milk when milk and DE do not match
+                                     ifelse(ipcc_ef_category_t2 == "Dairy cows" & annual_milk > 8500, table_10.12$Ym[1],
+                                            ifelse(ipcc_ef_category_t2 == "Dairy cows" & annual_milk %gle% c(5000,8500), table_10.12$Ym[2],
+                                                   ifelse(ipcc_ef_category_t2 == "Dairy cows" & annual_milk > 0 & annual_milk <= 5000, table_10.12$Ym[3],
+
+                                                          # fallback to DE when milk is zero
+                                                          ifelse(ipcc_ef_category_t2 == "Dairy cows" & de >= 0.7, table_10.12$Ym[1],
+                                                                 ifelse(ipcc_ef_category_t2 == "Dairy cows" & de %gel% c(0.63,0.7), table_10.12$Ym[2],
+                                                                        ifelse(ipcc_ef_category_t2 == "Dairy cows" & de < 0.63, table_10.12$Ym[3],
+
+                                                                               ifelse(ipcc_ef_category_t2 == "Non-dairy" & de <= 0.62, table_10.12$Ym[4],
+                                                                                      ifelse(ipcc_ef_category_t2 == "Non-dairy" & de < 0.72 & de > 0.62, table_10.12$Ym[5],
+                                                                                             ifelse(ipcc_ef_category_t2 == "Non-dairy" & de >= 0.72 & de < 0.75, table_10.12$Ym[6],
+                                                                                                    ifelse(ipcc_ef_category_t2 == "Non-dairy" & de >= 0.75, table_10.12$Ym[7],
+                                                                                                           ifelse(ipcc_ef_category_t2 == "Sheep", table_10.13$Ym[1],
+                                                                                                                  ifelse(ipcc_ef_category_t2 == "Goats", table_10.13$Ym[2], 0)))))))))))))))
+
+}else{
+
+  ym1 <- left_join(livestock, de1, by = c("livetype_code" = "livestock_category_code")) %>%
+    mutate(ym = ifelse(ipcc_ef_category_t2 == "Dairy cows" & de >= 0.7, table_10.12$Ym[1],
+                       ifelse(ipcc_ef_category_t2 == "Dairy cows" & de %gel% c(0.63,0.7), table_10.12$Ym[2],
+                              ifelse(ipcc_ef_category_t2 == "Dairy cows" & de < 0.63, table_10.12$Ym[3],
+                                     ifelse(ipcc_ef_category_t2 == "Non-dairy" & de <= 0.62, table_10.12$Ym[4],
+                                            ifelse(ipcc_ef_category_t2 == "Non-dairy" & de < 0.72 & de > 0.62, table_10.12$Ym[5],
+                                                   ifelse(ipcc_ef_category_t2 == "Non-dairy" & de >= 0.72 & de < 0.75, table_10.12$Ym[6],
+                                                          ifelse(ipcc_ef_category_t2 == "Non-dairy" & de >= 0.75, table_10.12$Ym[7],
+                                                                 ifelse(ipcc_ef_category_t2 == "Sheep", table_10.13$Ym[1],
+                                                                        ifelse(ipcc_ef_category_t2 == "Goats", table_10.13$Ym[2], 0))))))))))
+
+}
 
   #Computing methane enteric emission factor
 
@@ -127,33 +141,26 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
 
   region <- para[["region"]]
 
-  productivity1 <-  ym1%>%
-    mutate(productivity=ifelse(ipcc_meth_man_category == "Dairy cows"& (annual_milk > 8500 |annual_milk==0) & de >= 0.7,"High  productivity systems",
-                        ifelse(ipcc_meth_man_category == "Dairy cows"& (annual_milk %gle% c(5000,8500) |annual_milk==0) & de %gel% c(0.63,0.7),"High  productivity systems",
-                               ifelse(ipcc_meth_man_category == "Dairy cows"& (annual_milk <= 5000 |annual_milk==0) & de < 0.63,"Low  productivity systems",
-                                      ifelse(ipcc_meth_man_category == "Other cattle" & de <= 0.62,"Low  productivity systems",
-                                             ifelse(ipcc_meth_man_category == "Other cattle" & de < 0.72 & de > 0.62,"Low  productivity systems",
-                                                    ifelse(ipcc_meth_man_category == "Other cattle" & de >= 0.72 & de < 0.75,"High  productivity systems",
-                                                           ifelse(ipcc_meth_man_category == "Other cattle" & de >= 0.75,"High  productivity systems",
-                                                                  ifelse(ipcc_meth_man_category == "Sheep"& de < 0.72,"Low  productivity systems",
-                                                                         ifelse(ipcc_meth_man_category == "Sheep"& de >= 0.72,"High  productivity systems",
-                                                                                ifelse(ipcc_meth_man_category == "Goats"& de < 0.72,"Low  productivity systems",
-                                                                                       ifelse(ipcc_meth_man_category == "Goats"& de >= 0.72,"High  productivity systems",
-                                                                                              ifelse(ipcc_meth_man_category == "Swine"& de < 0.72,"Low  productivity systems",
-                                                                                                     ifelse(ipcc_meth_man_category == "Swine"& de >= 0.72,"High  productivity systems",NA))))))))))))))%>%
-  mutate(
-    productivity = case_when(
-      (is.na(productivity) | trimws(productivity) == "") &
-        ipcc_meth_man_category == "Dairy cows" &
-        !is.na(annual_milk) & annual_milk > 5000 ~ "High  productivity systems",
-
-      (is.na(productivity) | trimws(productivity) == "") &
-        ipcc_meth_man_category == "Dairy cows" &
-        !is.na(annual_milk) & annual_milk <= 5000 ~ "Low  productivity systems",
-
-      TRUE ~ productivity
-    )
-  )
+productivity1 <- ym1%>%
+  mutate(productivity=ifelse(ipcc_meth_man_category == "Dairy cows"& annual_milk > 8500 & de >= 0.7,"High  productivity systems",
+                      ifelse(ipcc_meth_man_category == "Dairy cows"& annual_milk %gle% c(5000,8500) & de %gel% c(0.63,0.7),"High  productivity systems",
+                             ifelse(ipcc_meth_man_category == "Dairy cows"& annual_milk > 0 & annual_milk <= 5000 & de < 0.63,"Low  productivity systems",
+                                    ifelse(ipcc_meth_man_category == "Dairy cows"& annual_milk > 8500,"High  productivity systems",
+                                           ifelse(ipcc_meth_man_category == "Dairy cows"& annual_milk %gle% c(5000,8500),"High  productivity systems",
+                                                  ifelse(ipcc_meth_man_category == "Dairy cows"& annual_milk > 0 & annual_milk <= 5000,"Low  productivity systems",
+                                                         ifelse(ipcc_meth_man_category == "Dairy cows"& de >= 0.7,"High  productivity systems",
+                                                                ifelse(ipcc_meth_man_category == "Dairy cows"& de %gel% c(0.63,0.7),"High  productivity systems",
+                                                                       ifelse(ipcc_meth_man_category == "Dairy cows"& de < 0.63,"Low  productivity systems",
+                                                                              ifelse(ipcc_meth_man_category == "Other cattle" & de <= 0.62,"Low  productivity systems",
+                                                                                     ifelse(ipcc_meth_man_category == "Other cattle" & de < 0.72 & de > 0.62,"Low  productivity systems",
+                                                                                            ifelse(ipcc_meth_man_category == "Other cattle" & de >= 0.72 & de < 0.75,"High  productivity systems",
+                                                                                                   ifelse(ipcc_meth_man_category == "Other cattle" & de >= 0.75,"High  productivity systems",
+                                                                                                          ifelse(ipcc_meth_man_category == "Sheep"& de < 0.72,"Low  productivity systems",
+                                                                                                                 ifelse(ipcc_meth_man_category == "Sheep"& de >= 0.72,"High  productivity systems",
+                                                                                                                        ifelse(ipcc_meth_man_category == "Goats"& de < 0.72,"Low  productivity systems",
+                                                                                                                               ifelse(ipcc_meth_man_category == "Goats"& de >= 0.72,"High  productivity systems",
+                                                                                                                                      ifelse(ipcc_meth_man_category == "Swine"& de < 0.72,"Low  productivity systems",
+                                                                                                                                             ifelse(ipcc_meth_man_category == "Swine"& de >= 0.72,"High  productivity systems",NA))))))))))))))))))))
 
   dairy_cattle <- c("Cattle - Cows (local)","Cattle - Cows (improved)","Cattle - Cows (high productive)")
   non_dairy_cattle <- c("Cattle - Adult male","Cattle - Steers/heifers","Cattle - Steers/heifers (improved)","Cattle - Calves","Cattle - Calves (improved)")
