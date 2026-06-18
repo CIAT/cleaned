@@ -239,22 +239,31 @@ safe_div <- function(num, den, default = 0) {
     # -------------------------------------------------------------------------
     # GHG emission
     # -------------------------------------------------------------------------
-    if (nrow(global_warming_potential) > 0 && "gwp_total" %in% names(global_warming_potential)) {
-      # newer compact structure
-      ghg_emission_t_co2_eq_per_year <- scalar_num(global_warming_potential$gwp_total)
-
-    } else if (nrow(ghg_balance) > 0 && "total_ghg" %in% names(ghg_balance)) {
-      # newer compact structure fallback
-      ghg_emission_t_co2_eq_per_year <- scalar_num(ghg_balance$total_ghg)
-
-    } else if (nrow(ghg_balance) > 0 && "kg_co2_e_tot" %in% names(ghg_balance)) {
-      # current old-style combineOutputs structure:
+  
+    if (nrow(ghg_balance) > 0 && "kg_co2_e_tot" %in% names(ghg_balance)) {
+      # current combineOutputs structure:
       # kg_co2_e_tot is in kg CO2e, so convert to tonnes CO2e
       ghg_emission_t_co2_eq_per_year <- safe_sum_vec(ghg_balance$kg_co2_e_tot, default = NA_real_) / 1000
 
+    } else if (nrow(ghg_balance) > 0 && "value" %in% names(ghg_balance)) {
+      # backward-compatible app structure
+      ghg_emission_t_co2_eq_per_year <- safe_sum_vec(ghg_balance$value, default = NA_real_)
+
     } else if (nrow(old_ghg_balance) > 0 && "kg_co2_e_tot" %in% names(old_ghg_balance)) {
-      # backward-compatible old nested structure
+      # backward-compatible old nested combineOutputs structure
       ghg_emission_t_co2_eq_per_year <- safe_sum_vec(old_ghg_balance$kg_co2_e_tot, default = NA_real_) / 1000
+
+    } else if (nrow(old_ghg_balance) > 0 && "value" %in% names(old_ghg_balance)) {
+      # backward-compatible old nested app structure
+      ghg_emission_t_co2_eq_per_year <- safe_sum_vec(old_ghg_balance$value, default = NA_real_)
+
+    } else if (nrow(global_warming_potential) > 0 && "gwp_total" %in% names(global_warming_potential)) {
+      # future compact structure
+      ghg_emission_t_co2_eq_per_year <- scalar_num(global_warming_potential$gwp_total)
+
+    } else if (nrow(ghg_balance) > 0 && "total_ghg" %in% names(ghg_balance)) {
+      # future compact structure fallback
+      ghg_emission_t_co2_eq_per_year <- scalar_num(ghg_balance$total_ghg)
 
     } else {
       ghg_emission_t_co2_eq_per_year <- NA_real_
