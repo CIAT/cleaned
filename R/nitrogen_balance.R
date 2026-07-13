@@ -24,7 +24,17 @@
 #'
 #' @export
 
-n_balance <- function(para, land_required, energy_required, soil_erosion) {
+n_balance <- function(para, land_required, energy_required = NULL, soil_erosion = NULL) {
+
+  if (is.null(soil_erosion) && !is.null(energy_required) &&
+      !(is.list(energy_required) && "annual_results" %in% names(energy_required))) {
+    soil_erosion <- energy_required
+    energy_required <- NULL
+  }
+
+  if (is.null(energy_required)) {
+    energy_required <- get("energy_required", envir = parent.frame(), inherits = TRUE)
+  }
 
   feed_types <- unique(land_required[["land_requirements_all"]]$feed)
 

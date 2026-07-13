@@ -33,7 +33,7 @@
 #'
 #' @export
 
-ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, nitrogen_balance,feed_basket_quality,ym_prod=F){
+ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, nitrogen_balance, feed_basket_quality = NULL, ym_prod=F){
 
   livestock <- para[["livestock"]]
 
@@ -42,6 +42,10 @@ ghg_emission <- function(para, energy_required, ghg_ipcc_data, land_required, ni
   no_days <- 365
 
   annual_energy <- energy_required[["annual_results"]]
+
+  if (is.null(feed_basket_quality)) {
+    feed_basket_quality <- get("feed_basket_quality", envir = parent.frame(), inherits = TRUE)
+  }
 
 
   ##########################################################################################################################
@@ -105,7 +109,7 @@ if(ym_prod == TRUE){
                                                                                              ifelse(ipcc_ef_category_t2 == "Non-dairy" & de >= 0.72 & de < 0.75, table_10.12$Ym[6],
                                                                                                     ifelse(ipcc_ef_category_t2 == "Non-dairy" & de >= 0.75, table_10.12$Ym[7],
                                                                                                            ifelse(ipcc_ef_category_t2 == "Sheep", table_10.13$Ym[1],
-                                                                                                                  ifelse(ipcc_ef_category_t2 == "Goats", table_10.13$Ym[2], 0)))))))))))))))
+                                                                                                                  ifelse(ipcc_ef_category_t2 == "Goats", table_10.13$Ym[2], 0))))))))))))))))
 
 }else{
 

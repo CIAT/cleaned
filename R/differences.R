@@ -433,6 +433,11 @@ safe_div <- function(num, den, default = 0) {
 
   write(jsonlite::toJSON(results, pretty = TRUE), output_path)
 
-  excel_output_path <- paste0(dirname(output_path), "/runs_comparison.xlsx")
-  openxlsx::write.xlsx(results, excel_output_path, overwrite = TRUE)
+  excel_output_path <- file.path(dirname(output_path), "runs_comparison.xlsx")
+  wb <- openxlsx::createWorkbook()
+  openxlsx::addWorksheet(wb, "all_results")
+  openxlsx::writeData(wb, sheet = "all_results", x = results)
+  openxlsx::saveWorkbook(wb, excel_output_path, overwrite = TRUE)
+
+  invisible(results)
 }
