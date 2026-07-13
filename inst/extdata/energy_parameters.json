@@ -16,7 +16,7 @@
          "comments": "Maintenance energy requirements are 15% higher for intact males than non lactating females"
       },
       {
-         "animal_category": "Sheep_lamb_to _1_year",
+         "animal_category": "Sheep_lamb_to_1_year",
          "maintenance_cfi": 0.236,
          "comments": "This value can be increased by 15%  for intact males"
       },
