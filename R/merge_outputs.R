@@ -212,22 +212,6 @@ combineOutputs <- function(
   }
 
   nitrogen_balance <- to_df(nitrogen_balance)
-  nitrogen_balance_detail <- nitrogen_balance
-
-  nitrogen_balance_output <- if (
-    nrow(nitrogen_balance) > 0 &&
-      all(c("feed", "nbalance_kg_n_total") %in% names(nitrogen_balance))
-  ) {
-    nitrogen_balance %>%
-      dplyr::group_by(feed) %>%
-      dplyr::summarise(
-        nbalance_kg_n_total = sum(clean_num(nbalance_kg_n_total), na.rm = TRUE),
-        .groups = "drop"
-      )
-  } else {
-    nitrogen_balance
-  }
-
   livestock_productivity <- to_df(livestock_productivity)
   biomass <- to_df(biomass)
   soil_carbon <- to_df(soil_carbon)
@@ -1053,32 +1037,6 @@ ghg_fertilizer_by_crop <- if (
     stringsAsFactors = FALSE
   )
 
-  legacy_land_required <- list(
-    land_required = land_required_out,
-    dm_required = dm_required_out,
-    land_and_dm_required = land_and_dm_required
-  )
-
-  legacy_soil_impacts <- list(
-    overal_soil_impact = overall_soil_impact,
-    nitrogen_balance = legacy_nitrogen_balance
-  )
-
-  legacy_water_required <- list(
-    water_use_per_feed_item = water_use_per_feed_item,
-    water_use_for_production = water_use_for_production
-  )
-
-  legacy_livestock_productivity <- list(
-    consumable_livestock_product = consumable_livestock_product,
-    manure_produced = manure_produced
-  )
-
-  legacy_ghg_emission <- list(
-    ghg_balance = ghg_balance,
-    global_warming_potential = global_warming_potential
-  )
-
   # ---------------------------------------------------------------------------
   # workbook
   # ---------------------------------------------------------------------------
@@ -1222,7 +1180,7 @@ ghg_fertilizer_by_crop <- if (
     land_dmi_required = land_and_dm_required,
     overall_soil_impact = overall_soil_impact,
     soil_erosion_detail = soil_erosion_detail,
-    nitrogen_balance_detail = nitrogen_balance_detail,
+    nitrogen_balance = nitrogen_balance,
     water_use_per_feed_item = water_use_per_feed_item,
     water_use_for_production = water_use_for_production,
     consumable_livestock_product = consumable_livestock_product,
@@ -1248,30 +1206,5 @@ ghg_fertilizer_by_crop <- if (
     ghg_soil = ghg_soil,
     ghg_fertilizer_applied = ghg_fertilizer_applied,
     ghg_fertilizer_by_crop = ghg_fertilizer_by_crop
-  )
-
-  legacy_output <- list(
-    land_required = legacy_land_required,
-    soil_impacts = legacy_soil_impacts,
-    water_required = legacy_water_required,
-    livestock_productivity = legacy_livestock_productivity,
-    ghg_emission = legacy_ghg_emission,
-    biomass = biomass,
-    soil_carbon = soil_carbon,
-    product_waste = product_waste
-  )
-
-  c(
-    list(
-      json_output = jsonlite::toJSON(
-        if (app_output_mode) legacy_output else c(legacy_output, batch_output),
-        pretty = TRUE
-      ),
-      on_farm_table = on_farm_table,
-      nitrogen_balance = nitrogen_balance_output,
-      land_required = land_required_output,
-      water_use_per_feed_item = water_use_per_feed_item
-    ),
-    batch_output
   )
 }
