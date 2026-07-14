@@ -1,31 +1,41 @@
-# Inclusive and Comprehensive Livestock Environmental Assessment for Improved Nutrition, a Secured Environment, and Sustainable Development along Livestock Value Chains (I-CLEANED)
+# CLEANED Package Development Work (2025)
 
-The goal of I-CLEANED is to assess changes from transforming livestock value chains by prioritizing profitable, environmentally sustainable and inclusive livestock interventions.
+This fork documents the development work conducted for the CLEANED package in 2025. All changes made during the year are captured in the commit history.
 
-## Installation
+Full commit history:
 
-The development version can be installed via:
+[view the 2025 development commits](https://github.com/CIAT/cleaned/compare/staging...M-Emmanuel:cleaned-staging-v2:feature/correct-functions)
 
-``` r
-library("devtools")
-devtools::install_github("ciat/cleaned")
-```
+**✅ Rationale and Summary of Changes**
 
-## Usage
+**🛠 Logic & Bug Fixes**
 
-This is a basic example which shows you how to calculate feed basket quality
+- Nitrogen fixation logic was corrected to ensure consistent identification of legume categories across different user input formats, to prevent misclassification and ensure reproducible results.
+- Livestock category and productivity logic was updated to select the appropriate methane emission factor and improve the accuracy of greenhouse gas emission estimates.
+- Fertilizer rate calculation was corrected by using percentage_n instead of fraction, to ensure consistency between input definitions and applied calculations.
+- Meat production estimation logic was updated to improve numerical consistency of output estimates.
 
-``` r
-library(cleaned)
-data(mufindi)
-feed_basket_quality <- feed_quality(mufindi)
-```
+**🔄 Variable Harmonization**
 
-## More information
+Variable names were standardized across functions to align with the JSON output structure:
 
-  - Please [report any issues or bugs](https://github.com/ciat/cleaned/issues).
+- *'cp_pregnancy → cp_lys_pregnancy'*
+- *'cp_growth → cp_lys_growth'*
+- *'fat_content → fat_milkcontent'*
+- *'n_content → n_manure_content'*
 
-  - License: MIT.
+These changes were implemented to ensure consistency between internal calculations and exported model outputs.
 
-  - Get citation information for *cleaned* in R by typing `citation(package = "cleaned")`.
+**🧹 Codebase Cleanup**
 
+Redundant or unused variables were removed:
+
+- *'n_fixation, cp_lactation, de, grazing_displacement_energy, egg_energycontent, milk_production, live_weight_gain, climate_2'*
+
+This cleanup was performed to reduce ambiguity, minimize maintenance overhead, and avoid unintended variable reuse.
+
+**➕ New & Updated Outputs**
+
+- Crude protein requirement calculations for lactating small ruminants were added, to improve representation of nutrient requirements in small ruminant systems.
+- *'animal_manure_produced'* was included in annual outputs.
+  

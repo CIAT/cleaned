@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+title: "CIAT/Cleaned_batch-2: CLEANED Development Changes (2025)"
+message: "If you use this software, please cite it as below."
+type: software
+
+authors:
+  - family-names: Mwema
+    given-names: Emmanuel
+    affiliation: "Alliance Bioversity International - CIAT"
+
+  - family-names: Steward
+    given-names: Pete
+    affiliation: "Alliance Bioversity International - CIAT"
+
+  - family-names: "Van der Hoek"
+    given-names: Rein
+    affiliation: "Alliance Bioversity International - CIAT"
+
+  - family-names: Notenbaert
+    given-names: An
+    affiliation: "Alliance Bioversity International - CIAT"
+
+repository-code: https://github.com/M-Emmanuel/cleaned-staging-v2
+version: "2025.1"
+date-released: 2026-01-27
