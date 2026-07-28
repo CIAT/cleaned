@@ -41,14 +41,14 @@ feed_quality <- function(para) {
 
     for (season in 1:nrow(seasons)) {
 
-      feed_production <- unnest(para[["feed_items"]], cols = c(feed_type_name))
+      feed_production <- unnest(para[["feed_items"]], cols = c(crop_name))
 
-      feed_types <- unique(feed_production$feed_type_name)
+      feed_types <- unique(feed_production$crop_name)
 
       feed_allocation <- list()
 
       for (i in 1:length(feed_types)) {
-        feed_selected <- feed_production %>% dplyr::filter(feed_type_name %in% feed_types[i])
+        feed_selected <- feed_production %>% dplyr::filter(crop_name %in% feed_types[i])
 
         #feed_item <- as.data.frame(feed_selected[["feed_items"]])
 
@@ -71,7 +71,7 @@ feed_quality <- function(para) {
 
         feeding_seasons <- unnest(para[["feed_basket"]],
                                   cols = c(feeds)) %>% dplyr::filter(season_name %in%
-                                                                               seasons$season_name[season])
+                                                                       seasons$season_name[season])
 
         feed_item_selected <- feeding_seasons %>%
           dplyr::filter(feed_item_code %in% feed_selected[["feed_item_code"]])
