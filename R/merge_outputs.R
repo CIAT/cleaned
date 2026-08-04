@@ -52,89 +52,270 @@
 #'
 #' @export
 #'
+combineOutputs <- function(
+    para,
+    feed_basket_quality,
+    energy_required,
+    land_required,
+    soil_erosion,
+    water_required,
+    nitrogen_balance,
+    livestock_productivity,
+    biomass,
+    soil_carbon,
+    ghg_emission,
+    filePath,
+    primary_excel = NULL
+) {
 
-combineOutputs <- function(para, feed_basket_quality, energy_required, land_required,
-                           soil_erosion, water_required, nitrogen_balance, livestock_productivity,
-                           biomass,soil_carbon, ghg_emission, filePath, primary_excel){
-  if (exists("para")) {
-    para = para
-  }else {para = "ERROR: Data is not provided"}
+  # ---------------------------------------------------------------------------
+  # helpers
+  # ---------------------------------------------------------------------------
+  to_df <- function(x) {
+    if (is.null(x)) return(data.frame())
+    if (is.data.frame(x)) return(x)
+    if (data.table::is.data.table(x)) return(as.data.frame(x))
+    if (is.matrix(x)) return(as.data.frame(x))
+    if (is.list(x) && !is.data.frame(x)) {
+      out <- tryCatch(as.data.frame(x), error = function(e) data.frame())
+      return(out)
+    }
+    data.frame(value = x, stringsAsFactors = FALSE)
+  }
 
-  if (exists("feed_basket_quality")) {
-    feed_basket_quality = split(feed_basket_quality, f=feed_basket_quality$season_name)
-  }else {feed_basket_quality = "ERROR: Feed quality was not computed"}
+  clean_num <- function(x) {
+    x <- suppressWarnings(as.numeric(x))
+    x[!is.finite(x)] <- NA_real_
+    x
+  }
 
-  if (exists("energy_required")) {
-    energy_required = energy_required
-  }else {energy_required = "ERROR: Energy requirement was not computed"}
+  sum_col <- function(df, col, default = 0) {
+    if (is.null(df) || !is.data.frame(df) || !col %in% names(df)) return(default)
+    x <- clean_num(df[[col]])
+    s <- sum(x, na.rm = TRUE)
+    if (!is.finite(s)) return(default)
+    s
+  }
 
-  if (exists("land_required")) {
-    land_required = land_required[["land_requirements_all"]]
-  }else {land_required = "ERROR: Land requirement was not computed"}
+  param_first <- function(col, default = NA_real_) {
+    if (is.null(para) || !col %in% names(para) || length(para[[col]]) == 0) return(default)
+    x <- para[[col]][1]
+    if (is.null(x) || length(x) == 0) return(default)
+    x
+  }
 
-  if (exists("soil_erosion")) {
-    soil_erosion = soil_erosion
-  }else {soil_erosion = "ERROR: Soil erosion was not computed"}
+  scalar_sum <- function(df, col, default = NA_real_) {
+    if (is.null(df) || !is.data.frame(df) || nrow(df) == 0 || !col %in% names(df)) return(default)
+    x <- clean_num(df[[col]])
+    s <- sum(x, na.rm = TRUE)
+    if (is.nan(s) || !is.finite(s)) return(default)
+    s
+  }
 
-  if (exists("water_required")) {
-    water_required = water_required
-  }else {water_required = "ERROR: Water requirement was not computed"}
+  scalar_first <- function(x, default = NA_real_) {
+    if (is.null(x) || length(x) == 0) return(default)
+    if (is.list(x) && !is.data.frame(x)) return(default)
+    x <- clean_num(x)
+    x <- x[!is.na(x)]
+    if (length(x) == 0) return(default)
+    x[1]
+  }
 
-  if (exists("nitrogen_balance")) {
-    nitrogen_balance = nitrogen_balance
-  }else {nitrogen_balance = "ERROR: Nitrogen balance was not computed"}
+  safe_div <- function(a, b, default = NA_real_) {
+    a <- scalar_first(a, default = default)
+    b <- scalar_first(b, default = default)
+    if (is.na(a) || is.na(b) || b == 0) return(default)
+    a / b
+  }
 
-  if (exists("livestock_productivity")) {
-    livestock_productivity = livestock_productivity
-  }else {livestock_productivity = "ERROR: Livestock productivity was not computed"}
+  safe_div0 <- function(a, b) {
+    out <- safe_div(a, b, default = 0)
+    if (!is.finite(out) || is.na(out)) 0 else out
+  }
 
-  if (exists("biomass")) {
-    biomass = biomass
-  }else {biomass = "ERROR: Biomass was not computed"}
+  pick_df_with_cols <- function(x, cols) {
+    if (is.data.frame(x) && all(cols %in% names(x))) return(as.data.frame(x))
+    if (is.list(x)) {
+      for (nm in names(x)) {
+        y <- x[[nm]]
+        if (is.data.frame(y) && all(cols %in% names(y))) return(as.data.frame(y))
+      }
+    }
+    data.frame()
+  }
 
-  if (exists("soil_carbon")) {
-    soil_carbon = soil_carbon
-  }else {soil_carbon = "ERROR: Soil carbon was not computed"}
+  add_sheet_safe <- function(wb, sheet_name, x) {
+    x <- to_df(x)
+    if (sheet_name %in% names(wb)) openxlsx::removeWorksheet(wb, sheet_name)
+    openxlsx::addWorksheet(wb, sheet_name)
+    openxlsx::writeData(wb, sheet = sheet_name, x = x)
+  }
 
-  if (exists("ghg_emission")) {
-    ghg_emissions = ghg_emissions
-  }else {ghg_emissions = "ERROR: Greenhouse gas emissions were not computed"}
+  app_output_mode <- !is.null(primary_excel) &&
+    length(primary_excel) > 0 &&
+    !is.na(primary_excel[1]) &&
+    nzchar(primary_excel[1])
 
-  if (exists("filePath")) {
-    filePath = filePath
-    # Extract the directory path
-    directoryPath <- dirname(filePath)
-    # Extract the file name
-    fileName <- sub("\\.\\w+$", "", basename(filePath))
-  }else {filePath = "ERROR: File path is not provided"}
-  if (exists("primary_excel")) {
-    primary_excel = primary_excel
-    # Load primary_excel workbook
-    primary_excel_wb <- loadWorkbook(primary_excel)
-  }else {filePath = "ERROR: primary excel file is not provided"}
+  # ---------------------------------------------------------------------------
+  # unpack core objects safely
+  # ---------------------------------------------------------------------------
+  land_required_all <- if (is.list(land_required) && "land_requirements_all" %in% names(land_required)) {
+    to_df(land_required[["land_requirements_all"]])
+  } else {
+    to_df(land_required)
+  }
 
+  land_required_feed_frac <- if (is.list(land_required) && "feed_items_frac" %in% names(land_required)) {
+    to_df(land_required[["feed_items_frac"]])
+  } else {
+    data.frame()
+  }
 
-  feed_basket_quality <- lapply(feed_basket_quality, function(x) {x <- x[,-1]})
-  ###############################################################################################
-  ## Land required
-  ###############################################################################################
+  energy_annual <- if (is.list(energy_required) && "annual_results" %in% names(energy_required)) {
+    to_df(energy_required[["annual_results"]])
+  } else {
+    data.frame()
+  }
 
-  # Plotting land requirement
-  # land_required %>%
-  #   group_by(feed, season_name) %>%
-  #   summarise(area_feed_total = sum(area_feed, na.rm = T)) %>%
-  #   ggplot2::ggplot(aes(x=feed, y=area_feed_total, fill=season_name))+
-  #   geom_bar(stat = "identity", width = 0.6)+
-  #   labs(x = "Feed Item", y = "Area (Ha)", fill = "Seasons", title = "Land Requirement and Feed Basket") +
-  #   geom_text(aes(label = round(area_feed_total, 2)), vjust = -0.5, size = 1, angle = 45) +
-  #   theme_bw()+
-  #   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-  land_required_output <- land_required %>%
-    group_by(feed, season_name) %>%
-    summarise(area_feed_total = sum(area_feed, na.rm = TRUE)) %>%
-    group_by(feed) %>%
-    mutate(cumulative_area = cumsum(area_feed_total),
-           label_position = cumulative_area - 0.7 * area_feed_total)
+  energy_seasonal <- if (is.list(energy_required) && "seasonal_results" %in% names(energy_required)) {
+    to_df(energy_required[["seasonal_results"]])
+  } else {
+    data.frame()
+  }
+
+  water_use_per_feed_item <- if (is.list(water_required) && "water_use_per_feed_item" %in% names(water_required)) {
+    to_df(water_required[["water_use_per_feed_item"]])
+  } else {
+    data.frame()
+  }
+
+  water_use_per_feed_item <- to_df(water_use_per_feed_item)
+  if (nrow(water_use_per_feed_item) == 0 || !all(c("feed", "feed_water_use") %in% names(water_use_per_feed_item))) {
+    water_use_per_feed_item <- data.frame(
+      feed = character(),
+      feed_water_use = numeric(),
+      stringsAsFactors = FALSE
+    )
+  } else {
+    water_use_per_feed_item$feed <- as.character(water_use_per_feed_item$feed)
+    water_use_per_feed_item$feed_water_use <- clean_num(water_use_per_feed_item$feed_water_use)
+  }
+
+  water_use_for_production <- if (is.list(water_required) && "water_use_for_production" %in% names(water_required)) {
+    to_df(water_required[["water_use_for_production"]])
+  } else {
+    data.frame()
+  }
+
+  # soil erosion
+  soil_erosion_detail <- pick_df_with_cols(
+    soil_erosion,
+    c("feed_type", "ls", "soil_loss_ha_year", "soil_loss_plot")
+  )
+
+  overall_soil_impact <- if (is.data.frame(soil_erosion)) {
+    to_df(soil_erosion)
+  } else if (is.list(soil_erosion) && "overall_soil_impact" %in% names(soil_erosion)) {
+    to_df(soil_erosion[["overall_soil_impact"]])
+  } else if (nrow(soil_erosion_detail) > 0) {
+    soil_erosion_detail
+  } else {
+    data.frame()
+  }
+
+  nitrogen_balance <- to_df(nitrogen_balance)
+  nitrogen_balance_detail <- nitrogen_balance
+
+  nitrogen_balance_output <- if (
+    nrow(nitrogen_balance) > 0 &&
+      all(c("feed", "nbalance_kg_n_total") %in% names(nitrogen_balance))
+  ) {
+    nitrogen_balance %>%
+      dplyr::group_by(feed) %>%
+      dplyr::summarise(
+        nbalance_kg_n_total = sum(clean_num(nbalance_kg_n_total), na.rm = TRUE),
+        .groups = "drop"
+      )
+  } else {
+    nitrogen_balance
+  }
+
+  nitrogen_balance_output <- to_df(nitrogen_balance_output)
+  if (nrow(nitrogen_balance_output) == 0 || !all(c("feed", "nbalance_kg_n_total") %in% names(nitrogen_balance_output))) {
+    nitrogen_balance_output <- data.frame(
+      feed = character(),
+      nbalance_kg_n_total = numeric(),
+      stringsAsFactors = FALSE
+    )
+  } else {
+    nitrogen_balance_output$feed <- as.character(nitrogen_balance_output$feed)
+    nitrogen_balance_output$nbalance_kg_n_total <- clean_num(nitrogen_balance_output$nbalance_kg_n_total)
+  }
+
+  livestock_productivity <- to_df(livestock_productivity)
+  biomass <- to_df(biomass)
+  soil_carbon <- to_df(soil_carbon)
+
+  ghg_ef <- if (is.list(ghg_emission) && "ef" %in% names(ghg_emission)) to_df(ghg_emission[["ef"]]) else data.frame()
+ghg_eft <- if (is.list(ghg_emission) && "eft" %in% names(ghg_emission)) to_df(ghg_emission[["eft"]]) else data.frame()
+ghg_n_excretion <- if (is.list(ghg_emission) && "n_excretion" %in% names(ghg_emission)) to_df(ghg_emission[["n_excretion"]]) else data.frame()
+ghg_direct_n2o <- if (is.list(ghg_emission) && "direct_N2O" %in% names(ghg_emission)) to_df(ghg_emission[["direct_N2O"]]) else data.frame()
+ghg_indirect_n2o <- if (is.list(ghg_emission) && "indirect_N2O" %in% names(ghg_emission)) to_df(ghg_emission[["indirect_N2O"]]) else data.frame()
+ghg_land_used <- if (is.list(ghg_emission) && "land_used" %in% names(ghg_emission)) to_df(ghg_emission[["land_used"]]) else data.frame()
+ghg_burn <- if (is.list(ghg_emission) && "ghg_burn" %in% names(ghg_emission)) to_df(ghg_emission[["ghg_burn"]]) else data.frame()
+ghg_rice <- if (is.list(ghg_emission) && "ghg_rice" %in% names(ghg_emission)) to_df(ghg_emission[["ghg_rice"]]) else data.frame()
+
+# keep raw nested objects for old-style formulas
+ghg_soil_raw <- if (is.list(ghg_emission) && "ghg_soil" %in% names(ghg_emission)) ghg_emission[["ghg_soil"]] else NULL
+ghg_fertilizer_raw <- if (is.list(ghg_emission) && "fetilizer_ghg" %in% names(ghg_emission)) ghg_emission[["fetilizer_ghg"]] else NULL
+
+# flattened versions only for export sheets
+ghg_soil <- to_df(ghg_soil_raw)
+# ---------------------------------------------------------------------------
+# FIX: properly unpack fertilizer outputs 
+# ---------------------------------------------------------------------------
+ghg_fertilizer_applied <- if (
+  is.list(ghg_fertilizer_raw) &&
+  "fertilizer_applied" %in% names(ghg_fertilizer_raw)
+) {
+  to_df(ghg_fertilizer_raw[["fertilizer_applied"]])
+} else {
+  data.frame()
+}
+
+ghg_fertilizer_by_crop <- if (
+  is.list(ghg_fertilizer_raw) &&
+  "fertlizer_emission_by_crop" %in% names(ghg_fertilizer_raw)
+) {
+  to_df(ghg_fertilizer_raw[["fertlizer_emission_by_crop"]])
+} else {
+  data.frame()
+}
+
+  # ---------------------------------------------------------------------------
+  # land required summaries
+  # ---------------------------------------------------------------------------
+  if (nrow(land_required_all) > 0 && all(c("feed", "season_name") %in% names(land_required_all))) {
+
+    land_required_output <- land_required_all %>%
+      dplyr::group_by(feed, season_name) %>%
+      dplyr::summarise(
+        area_feed_total = sum(clean_num(area_feed), na.rm = TRUE),
+        .groups = "drop_last"
+      ) %>%
+      dplyr::mutate(
+        cumulative_area = cumsum(area_feed_total),
+        label_position = cumulative_area - 0.7 * area_feed_total
+      ) %>%
+      dplyr::ungroup()
+
+    seasonal_land_required <- land_required_all %>%
+      dplyr::group_by(feed, season_name) %>%
+      dplyr::summarise(
+        area_feed_total = sum(clean_num(area_feed), na.rm = TRUE),
+        .groups = "drop"
+      ) %>%
+      tidyr::pivot_wider(names_from = season_name, values_from = area_feed_total)
 
   # Expanded table land requirement
   ex_land_required <- land_required %>%
@@ -174,74 +355,122 @@ combineOutputs <- function(para, feed_basket_quality, energy_required, land_requ
   land_required <- left_join(seasonal_land_required, ex_land_required, by = "feed")
   dm_required <- left_join(seasonal_dm_required, ex_dm_required, by = "feed")
 
-  total_area_used_for_feed_production_ha <- sum(land_required$total_area, na.rm = T)
-  area_required_per_milk_unit <- total_area_used_for_feed_production_ha/sum(as.data.frame.numeric(livestock_productivity$total_milk),na.rm = T)
-  area_required_on_farm_ha <- sum(land_required$farm, na.rm = T)
-  area_required_roughages_off_farm_ha <- sum(land_required$rough_of, na.rm = T)
-  area_required_concentrates_off_farm_ha <- sum(land_required$conc_of, na.rm = T)
-  area_required_imported_concentrates_ha <- sum(land_required$conc_ip, na.rm = T)
+    total_area_used_for_feed_production_ha <- scalar_first(sum(clean_num(land_required_out$total_area), na.rm = TRUE))
+    total_dm_used_for_feed_production_kg <- scalar_first(sum(clean_num(dm_required_out$total_dm), na.rm = TRUE))
+    total_milk <- scalar_sum(livestock_productivity, "total_milk")
 
-  total_dm_used_for_feed_production_kg <- sum(dm_required$total_dm, na.rm = T)
-  dm_required_per_milk_unit <- total_dm_used_for_feed_production_kg/sum(as.data.frame.numeric(livestock_productivity$total_milk),na.rm = T)
-  dm_required_on_farm_kg <- sum(dm_required$farm_dm, na.rm = T)
-  dm_required_roughages_off_farm_kg <- sum(dm_required$rough_of_dm, na.rm = T)
-  dm_required_concentrates_off_farm_kg <- sum(dm_required$conc_of_dm, na.rm = T)
-  dm_required_imported_concentrates_kg <- sum(dm_required$conc_ip_dm, na.rm = T)
+    land_and_dm_required <- data.frame(
+      Names = c(
+        "total_area_used_for_feed_production_ha",
+        "area_required_per_milk_unit",
+        "area_required_on_farm_ha",
+        "area_required_roughages_off_farm_ha",
+        "area_required_concentrates_off_farm_ha",
+        "area_required_imported_concentrates_ha",
+        NA,
+        "total_dm_used_for_feed_production_kg",
+        "dm_required_per_milk_unit",
+        "dm_required_on_farm_kg",
+        "dm_required_roughages_off_farm_kg",
+        "dm_required_concentrates_off_farm_kg",
+        "dm_required_imported_concentrates_kg"
+      ),
+      Value = c(
+        scalar_first(total_area_used_for_feed_production_ha),
+        scalar_first(safe_div(total_area_used_for_feed_production_ha, total_milk)),
+        scalar_first(sum(clean_num(land_required_out$farm), na.rm = TRUE)),
+        scalar_first(sum(clean_num(land_required_out$rough_of), na.rm = TRUE)),
+        scalar_first(sum(clean_num(land_required_out$conc_of), na.rm = TRUE)),
+        scalar_first(sum(clean_num(land_required_out$conc_ip), na.rm = TRUE)),
+        NA_real_,
+        scalar_first(total_dm_used_for_feed_production_kg),
+        scalar_first(safe_div(total_dm_used_for_feed_production_kg, total_milk)),
+        scalar_first(sum(clean_num(dm_required_out$farm_dm), na.rm = TRUE)),
+        scalar_first(sum(clean_num(dm_required_out$rough_of_dm), na.rm = TRUE)),
+        scalar_first(sum(clean_num(dm_required_out$conc_of_dm), na.rm = TRUE)),
+        scalar_first(sum(clean_num(dm_required_out$conc_ip_dm), na.rm = TRUE))
+      ),
+      stringsAsFactors = FALSE
+    )
 
-  land_and_dm_required <- rbind(total_area_used_for_feed_production_ha,
-                                area_required_per_milk_unit,
-                                area_required_on_farm_ha,
-                                area_required_roughages_off_farm_ha,
-                                area_required_concentrates_off_farm_ha,
-                                area_required_imported_concentrates_ha,
-                                NA,
-                                total_dm_used_for_feed_production_kg,
-                                dm_required_per_milk_unit,
-                                dm_required_on_farm_kg,
-                                dm_required_roughages_off_farm_kg,
-                                dm_required_concentrates_off_farm_kg,
-                                dm_required_imported_concentrates_kg)
+  } else {
+    land_required_output <- data.frame()
+    land_required_out <- data.frame()
+    dm_required_out <- data.frame()
+    land_and_dm_required <- data.frame(
+      Names = c(
+        "total_area_used_for_feed_production_ha",
+        "area_required_per_milk_unit",
+        "area_required_on_farm_ha",
+        "area_required_roughages_off_farm_ha",
+        "area_required_concentrates_off_farm_ha",
+        "area_required_imported_concentrates_ha",
+        NA,
+        "total_dm_used_for_feed_production_kg",
+        "dm_required_per_milk_unit",
+        "dm_required_on_farm_kg",
+        "dm_required_roughages_off_farm_kg",
+        "dm_required_concentrates_off_farm_kg",
+        "dm_required_imported_concentrates_kg"
+      ),
+      Value = rep(NA_real_, 13),
+      stringsAsFactors = FALSE
+    )
+  }
 
-  Items <- rownames(land_and_dm_required)
-  rownames(land_and_dm_required) <- NULL
-  land_and_dm_required <- as.data.frame(cbind(Items,land_and_dm_required))
-  names(land_and_dm_required) <- c("Names","Value")
+  # ---------------------------------------------------------------------------
+  # productivity summary
+  # ---------------------------------------------------------------------------
+  if (nrow(livestock_productivity) > 0) {
+    if (!"livetype_name" %in% names(livestock_productivity) && "livestock_category_name" %in% names(livestock_productivity)) {
+      livestock_productivity$livetype_name <- livestock_productivity$livestock_category_name
+    }
 
-  land_required <- list(land_required = land_required,
-                        dm_required = dm_required,
-                        land_and_dm_required = land_and_dm_required)
-  ###############################################################################################
-  ## Productivity
-  ###############################################################################################
-  # Consumable produce
-  livestock_productivity <- livestock_productivity %>%
-    mutate(total_cattle_milk_kg = ifelse(stringr::str_detect(livetype_name, "Cattle"), as.numeric(total_milk), 0),
-           total_cattle_meat_kg = ifelse(stringr::str_detect(livetype_name, "Cattle"), as.numeric(meat_production_animal), 0),
-           total_other_milk_kg = ifelse(!stringr::str_detect(livetype_name, "Cattle"), as.numeric(total_milk), 0),
-           total_other_meat_kg = ifelse(!stringr::str_detect(livetype_name, "Cattle"), as.numeric(meat_production_animal), 0),
-           total_cattle_milk_energy = ifelse(stringr::str_detect(livetype_name, "Cattle"), as.numeric(energy_kcal_year_milk), 0),
-           total_cattle_meat_energy = ifelse(stringr::str_detect(livetype_name, "Cattle"), as.numeric(energy_kcal_year_meat), 0),
-           total_other_milk_energy = ifelse(!stringr::str_detect(livetype_name, "Cattle"), as.numeric(energy_kcal_year_milk), 0),
-           total_other_meat_energy = ifelse(!stringr::str_detect(livetype_name, "Cattle"), as.numeric(energy_kcal_year_meat), 0),
-           total_cattle_milk_protein = ifelse(stringr::str_detect(livetype_name, "Cattle"), as.numeric(protein_kg_year_milk), 0),
-           total_cattle_meat_protein = ifelse(stringr::str_detect(livetype_name, "Cattle"), as.numeric(protein_kg_year_meat), 0),
-           total_other_milk_protein = ifelse(!stringr::str_detect(livetype_name, "Cattle"), as.numeric(protein_kg_year_milk), 0),
-           total_other_meat_protein = ifelse(!stringr::str_detect(livetype_name, "Cattle"), as.numeric(protein_kg_year_meat), 0),
-           total_cattle_tlu = ifelse(stringr::str_detect(livetype_name, "Cattle"), as.numeric(tlu), 0),
-           total_buffalo_tlu = ifelse(stringr::str_detect(livetype_name, "Buffalo"), as.numeric(tlu), 0),
-           total_sheep_tlu = ifelse(stringr::str_detect(livetype_name, "Sheep"), as.numeric(tlu), 0),
-           total_goat_tlu = ifelse(stringr::str_detect(livetype_name, "Goat"), as.numeric(tlu), 0),
-           total_pig_tlu = ifelse(stringr::str_detect(livetype_name, "Pig"), as.numeric(tlu), 0),
-           sold_cattle_manure = ifelse(stringr::str_detect(livetype_name, "Cattle"), as.numeric(manure_exported), 0),
-           sold_buffalo_manure = ifelse(stringr::str_detect(livetype_name, "Buffalo"), as.numeric(manure_exported), 0),
-           sold_sheep_manure = ifelse(stringr::str_detect(livetype_name, "Sheep"), as.numeric(manure_exported), 0),
-           sold_goat_manure = ifelse(stringr::str_detect(livetype_name, "Goat"), as.numeric(manure_exported), 0),
-           sold_pig_manure = ifelse(stringr::str_detect(livetype_name, "Pig"), as.numeric(manure_exported), 0),
-           number_cattle = ifelse(stringr::str_detect(livetype_name, "Cattle"), as.numeric(number), 0),
-           number_buffalo = ifelse(stringr::str_detect(livetype_name, "Buffalo"), as.numeric(number), 0),
-           number_sheep = ifelse(stringr::str_detect(livetype_name, "Sheep"), as.numeric(number), 0),
-           number_goat = ifelse(stringr::str_detect(livetype_name, "Goat"), as.numeric(number), 0),
-           number_pig = ifelse(stringr::str_detect(livetype_name, "Pig"), as.numeric(number), 0))
+    if (!"total_milk" %in% names(livestock_productivity) && "milk_production_animal" %in% names(livestock_productivity)) {
+      livestock_productivity$total_milk <- livestock_productivity$milk_production_animal
+    }
+
+    if (!"tlu" %in% names(livestock_productivity) && "herd_tlu" %in% names(livestock_productivity)) {
+      livestock_productivity$tlu <- livestock_productivity$herd_tlu
+    }
+  }
+
+  livestock_names <- if ("livetype_name" %in% names(livestock_productivity)) {
+    as.character(livestock_productivity$livetype_name)
+  } else {
+    rep("", nrow(livestock_productivity))
+  }
+
+  sum_livestock_where <- function(col, idx) {
+    if (!col %in% names(livestock_productivity) || !length(idx)) return(0)
+    sum(clean_num(livestock_productivity[[col]])[idx], na.rm = TRUE)
+  }
+
+  energy_livestock_names <- if ("livestock_category_name" %in% names(energy_annual)) {
+    as.character(energy_annual$livestock_category_name)
+  } else if ("livetype_name" %in% names(energy_annual)) {
+    as.character(energy_annual$livetype_name)
+  } else {
+    rep("", nrow(energy_annual))
+  }
+
+  sum_energy_where <- function(col, idx) {
+    if (!col %in% names(energy_annual) || !length(idx)) return(0)
+    sum(clean_num(energy_annual[[col]])[idx], na.rm = TRUE)
+  }
+
+  is_cattle <- grepl("Cattle", livestock_names, ignore.case = TRUE)
+  is_buffalo <- grepl("Buffalo", livestock_names, ignore.case = TRUE)
+  is_sheep <- grepl("Sheep", livestock_names, ignore.case = TRUE)
+  is_goat <- grepl("Goat", livestock_names, ignore.case = TRUE)
+  is_pig <- grepl("Pig|Swine", livestock_names, ignore.case = TRUE)
+  is_other <- !is_cattle
+
+  is_energy_cattle <- grepl("Cattle", energy_livestock_names, ignore.case = TRUE)
+  is_energy_buffalo <- grepl("Buffalo", energy_livestock_names, ignore.case = TRUE)
+  is_energy_sheep <- grepl("Sheep", energy_livestock_names, ignore.case = TRUE)
+  is_energy_goat <- grepl("Goat", energy_livestock_names, ignore.case = TRUE)
+  is_energy_pig <- grepl("Pig|Swine", energy_livestock_names, ignore.case = TRUE)
 
   cattle_milk_kg <- sum(livestock_productivity$total_cattle_milk_kg, na.rm = T)
   cattle_meat_kg <- sum(livestock_productivity$total_cattle_meat_kg, na.rm = T)
@@ -632,6 +861,7 @@ combineOutputs <- function(para, feed_basket_quality, energy_required, land_requ
     sources_and_sinks = c("Soil","Off-farm Soil", "Liv. Manure", "Liv.enteric fermentation", "Burning", "Rice", "Fertilizer"),
     t_CO2e_per_ha = c(soil_on_farm, soil_off_farm, livestock_manure, livestock_enteric_fermentation, burning_emission, rice, fertilizer_on_farm)
   )
+  on_farm_table$t_CO2e_per_ha <- clean_num(on_farm_table$t_CO2e_per_ha)
 
   off_farm_table <- data.frame(
     sources_and_sinks = c("Roughages off-farm", "Soil off-farm", "Fertilizer off-farm", "Concentrates off-farm", "Soil off-farm", "Fertilizer off-farm", "Imported concentrates", "Soil off-farm", "Fertilizer off-farm"),
@@ -651,72 +881,190 @@ combineOutputs <- function(para, feed_basket_quality, energy_required, land_requ
   ## Waste
   ###############################################################################################
   product_waste <- data.frame(
-    waste = c("waste - prod","waste - distribution", "waste - processing", "waste - consume"),
-    milk = c(para$waste_production_milk, para$waste_distribution_milk, para$waste_processing_milk, para$waste_consume_milk),
-    meat = c(para$waste_production_meat, para$waste_distribution_meat, para$waste_processing_meat, para$waste_consume_meat)
+    waste = c("waste - prod", "waste - distribution", "waste - processing", "waste - consume"),
+    milk = c(
+      param_first("waste_production_milk"),
+      param_first("waste_distribution_milk"),
+      param_first("waste_processing_milk"),
+      param_first("waste_consume_milk")
+    ),
+    meat = c(
+      param_first("waste_production_meat"),
+      param_first("waste_distribution_meat"),
+      param_first("waste_processing_meat"),
+      param_first("waste_consume_meat")
+    ),
+    stringsAsFactors = FALSE
   )
 
-  output_list <- list(land_required = land_required,
-                      soil_impacts = soil_impacts,
-                      water_required = water_required,
-                      livestock_productivity = livestock_productivity,
-                      ghg_emission = ghg_emission,
-                      biomass = biomass,
-                      soil_carbon = soil_carbon,
-                      product_waste = product_waste)
+  # ---------------------------------------------------------------------------
+  # workbook
+  # ---------------------------------------------------------------------------
+  wb <- if (app_output_mode && file.exists(primary_excel[1])) {
+    openxlsx::loadWorkbook(primary_excel[1])
+  } else {
+    openxlsx::createWorkbook()
+  }
 
-  # Add worksheet to the primary_excel workbook
-  addWorksheet(primary_excel_wb, "Land Required")
-  writeData(primary_excel_wb, sheet = "Land Required", x = output_list$land_required$land_required)
-  addWorksheet(primary_excel_wb, "DM Required")
-  writeData(primary_excel_wb, sheet = "DM Required", x = output_list$land_required$dm_required)
-  addWorksheet(primary_excel_wb, "Land and DM Required")
-  writeData(primary_excel_wb, sheet = "Land and DM Required", x = output_list$land_required$land_and_dm_required)
-  addWorksheet(primary_excel_wb, "Overall Soil Impact")
-  writeData(primary_excel_wb, sheet = "Overall Soil Impact", x = output_list$soil_impacts$overal_soil_impact)
-  addWorksheet(primary_excel_wb, "Nitrogen Balance")
-  writeData(primary_excel_wb, sheet = "Nitrogen Balance", x = output_list$soil_impacts$nitrogen_balance)
-  addWorksheet(primary_excel_wb, "Water Use Per Feed Item")
-  writeData(primary_excel_wb, sheet = "Water Use Per Feed Item", x = output_list$water_required$water_use_per_feed_item)
-  addWorksheet(primary_excel_wb, "Water Use For Production")
-  writeData(primary_excel_wb, sheet = "Water Use For Production", x = output_list$water_required$water_use_for_production)
-  addWorksheet(primary_excel_wb, "Consumable Livestock Product")
-  writeData(primary_excel_wb, sheet = "Consumable Livestock Product", x = output_list$livestock_productivity$consumable_livestock_product)
-  addWorksheet(primary_excel_wb, "Manure Produced")
-  writeData(primary_excel_wb, sheet = "Manure Produced", x = output_list$livestock_productivity$manure_produced)
-  addWorksheet(primary_excel_wb, "GHG Balance")
-  writeData(primary_excel_wb, sheet = "GHG Balance", x = output_list$ghg_emission$ghg_balance)
-  addWorksheet(primary_excel_wb, "Global Warming Potential")
-  writeData(primary_excel_wb, sheet = "Global Warming Potential", x = output_list$ghg_emission$global_warming_potential)
-  addWorksheet(primary_excel_wb, "Biomass")
-  writeData(primary_excel_wb, sheet = "Biomass", x = output_list$biomass)
-  addWorksheet(primary_excel_wb, "Soil Carbon")
-  writeData(primary_excel_wb, sheet = "Soil Carbon", x = output_list$soil_carbon)
-  addWorksheet(primary_excel_wb, "Product Waste")
-  writeData(primary_excel_wb, sheet = "Product Waste", x = output_list$product_waste)
+  if (app_output_mode) {
+    add_sheet_safe(wb, "Land Required", land_required_out)
+    add_sheet_safe(wb, "DM Required", dm_required_out)
+    add_sheet_safe(wb, "Land and DM Required", land_and_dm_required)
+    add_sheet_safe(wb, "Overall Soil Impact", overall_soil_impact)
+    add_sheet_safe(wb, "Nitrogen Balance", legacy_nitrogen_balance)
+    add_sheet_safe(wb, "Water Use Per Feed Item", water_use_per_feed_item)
+    add_sheet_safe(wb, "Water Use For Production", water_use_for_production)
+    add_sheet_safe(wb, "Consumable Livestock Product", consumable_livestock_product)
+    add_sheet_safe(wb, "Manure Produced", manure_produced)
+    add_sheet_safe(wb, "GHG Balance", ghg_balance)
+    add_sheet_safe(wb, "Global Warming Potential", global_warming_potential)
+    add_sheet_safe(wb, "Biomass", biomass)
+    add_sheet_safe(wb, "Soil Carbon", soil_carbon)
+    add_sheet_safe(wb, "Product Waste", product_waste)
 
-  # Change the order of the worksheets
-  worksheetOrder(primary_excel_wb) <- c("1", "8", "9", "10", "11", "12", "13",
-                                        "14", "15", "16", "17", "18", "19", "20",
-                                        "21", "2", "3", "4", "5", "6", "7")
-
-  # Save to Excel with multiple sheets
-  excel_output_path <- paste0(directoryPath, "/", fileName, ".xlsx") # Create path for excel
-  saveWorkbook(primary_excel_wb, excel_output_path, overwrite = TRUE)
-
-  # Save json
-
-
-  return(
-    list(
-      json_output = jsonlite::toJSON(output_list, pretty = TRUE),
-      on_farm_table = on_farm_table_output,
-      nitrogen_balance = nitrogen_balance_output,
-      land_required = land_required_output,
-      water_use_per_feed_item = water_use_per_feed_item_output
+    desired_order <- c(
+      "README",
+      "Land Required",
+      "DM Required",
+      "Land and DM Required",
+      "Overall Soil Impact",
+      "Nitrogen Balance",
+      "Water Use Per Feed Item",
+      "Water Use For Production",
+      "Consumable Livestock Product",
+      "Manure Produced",
+      "GHG Balance",
+      "Global Warming Potential",
+      "Biomass",
+      "Soil Carbon",
+      "Product Waste",
+      "Cattle Benchmark ",
+      "Sheep Benchmark",
+      "Goat Benchmark",
+      "Camel Benchmark",
+      "buffalo Benchmark",
+      "pig Benchmark"
     )
+  } else {
+    add_sheet_safe(wb, "Land Required", land_required_out)
+    add_sheet_safe(wb, "DM Required", dm_required_out)
+    add_sheet_safe(wb, "Land and DM Required", land_and_dm_required)
+    add_sheet_safe(wb, "Overall Soil Impact", overall_soil_impact)
+    add_sheet_safe(wb, "Soil Erosion Detail", soil_erosion_detail)
+    add_sheet_safe(wb, "Nitrogen Balance", nitrogen_balance_detail)
+    add_sheet_safe(wb, "Water Use Per Feed Item", water_use_per_feed_item)
+    add_sheet_safe(wb, "Water Use For Production", water_use_for_production)
+    add_sheet_safe(wb, "Consumable Livestock Product", consumable_livestock_product)
+    add_sheet_safe(wb, "Manure Produced", manure_produced)
+    add_sheet_safe(wb, "GHG Balance", ghg_balance)
+    add_sheet_safe(wb, "Global Warming Potential", global_warming_potential)
+    add_sheet_safe(wb, "Biomass", biomass)
+    add_sheet_safe(wb, "Soil Carbon", soil_carbon)
+    add_sheet_safe(wb, "Product Waste", product_waste)
+    add_sheet_safe(wb, "Feed Basket Quality", to_df(feed_basket_quality))
+    add_sheet_safe(wb, "Energy Required Annual", energy_annual)
+    add_sheet_safe(wb, "Energy Required Seasonal", energy_seasonal)
+    add_sheet_safe(wb, "Land Required Feed Fractions", land_required_feed_frac)
+    add_sheet_safe(wb, "Livestock Productivity", livestock_productivity)
+    add_sheet_safe(wb, "GHG EF", ghg_ef)
+    add_sheet_safe(wb, "GHG EFT", ghg_eft)
+    add_sheet_safe(wb, "GHG N Excretion", ghg_n_excretion)
+    add_sheet_safe(wb, "GHG Direct N2O", ghg_direct_n2o)
+    add_sheet_safe(wb, "GHG Indirect N2O", ghg_indirect_n2o)
+    add_sheet_safe(wb, "GHG Land Used", ghg_land_used)
+    add_sheet_safe(wb, "GHG Burn", ghg_burn)
+    add_sheet_safe(wb, "GHG Rice", ghg_rice)
+    add_sheet_safe(wb, "GHG Soil", ghg_soil)
+    add_sheet_safe(wb, "GHG Fertilizer Applied", ghg_fertilizer_applied)
+    add_sheet_safe(wb, "GHG Fertilizer By Crop", ghg_fertilizer_by_crop)
+
+    desired_order <- c(
+      "Land Required",
+      "DM Required",
+      "Land and DM Required",
+      "Overall Soil Impact",
+      "Soil Erosion Detail",
+      "Nitrogen Balance",
+      "Water Use Per Feed Item",
+      "Water Use For Production",
+      "Consumable Livestock Product",
+      "Manure Produced",
+      "GHG Balance",
+      "Global Warming Potential",
+      "Biomass",
+      "Soil Carbon",
+      "Product Waste",
+      "Feed Basket Quality",
+      "Energy Required Annual",
+      "Energy Required Seasonal",
+      "Land Required Feed Fractions",
+      "Livestock Productivity",
+      "GHG EF",
+      "GHG EFT",
+      "GHG N Excretion",
+      "GHG Direct N2O",
+      "GHG Indirect N2O",
+      "GHG Land Used",
+      "GHG Burn",
+      "GHG Rice",
+      "GHG Soil",
+      "GHG Fertilizer Applied",
+      "GHG Fertilizer By Crop"
+    )
+  }
+
+  existing_sheets <- names(wb)
+  desired_order <- desired_order[desired_order %in% existing_sheets]
+  remaining <- existing_sheets[!existing_sheets %in% desired_order]
+  final_order <- c(desired_order, remaining)
+  order_idx <- match(final_order, existing_sheets)
+  order_idx <- order_idx[!is.na(order_idx)]
+
+  if (length(order_idx) == length(existing_sheets)) {
+    openxlsx::worksheetOrder(wb) <- order_idx
+  }
+
+  out_file <- if (grepl("\\.xlsx$", filePath, ignore.case = TRUE)) {
+    sub("\\.xlsx$", " emissions.xlsx", filePath, ignore.case = TRUE)
+  } else {
+    paste0(filePath, ".xlsx")
+  }
+  openxlsx::saveWorkbook(wb, out_file, overwrite = TRUE)
+
+  # ---------------------------------------------------------------------------
+  # return everything needed for scenario aggregation
+  # ---------------------------------------------------------------------------
+  batch_output <- list(
+    land_required_summary = land_required_out,
+    dmi_required = dm_required_out,
+    land_dmi_required = land_and_dm_required,
+    overall_soil_impact = overall_soil_impact,
+    soil_erosion_detail = soil_erosion_detail,
+    nitrogen_balance = nitrogen_balance,
+    water_use_per_feed_item = water_use_per_feed_item,
+    water_use_for_production = water_use_for_production,
+    consumable_livestock_product = consumable_livestock_product,
+    manure_produced = manure_produced,
+    ghg_balance = ghg_balance,
+    global_warming_potential = global_warming_potential,
+    biomass = biomass,
+    soil_carbon = soil_carbon,
+    product_waste = product_waste,
+    feed_basket_quality = to_df(feed_basket_quality),
+    energy_required_annual = energy_annual,
+    energy_required_seasonal = energy_seasonal,
+    land_required_feed_fractions = land_required_feed_frac,
+    livestock_productivity = livestock_productivity,
+    ghg_ef = ghg_ef,
+    ghg_eft = ghg_eft,
+    ghg_n_excretion = ghg_n_excretion,
+    ghg_direct_N2O = ghg_direct_n2o,
+    ghg_indirect_N2O = ghg_indirect_n2o,
+    ghg_land_used = ghg_land_used,
+    ghg_burn = ghg_burn,
+    ghg_rice = ghg_rice,
+    ghg_soil = ghg_soil,
+    ghg_fertilizer_applied = ghg_fertilizer_applied,
+    ghg_fertilizer_by_crop = ghg_fertilizer_by_crop
   )
-
-  jsonlite::toJSON(output_list, pretty = TRUE)
-
-} #end of output function
+}
