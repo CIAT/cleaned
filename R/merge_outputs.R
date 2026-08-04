@@ -189,6 +189,18 @@ combineOutputs <- function(
     data.frame()
   }
 
+  water_use_per_feed_item <- to_df(water_use_per_feed_item)
+  if (nrow(water_use_per_feed_item) == 0 || !all(c("feed", "feed_water_use") %in% names(water_use_per_feed_item))) {
+    water_use_per_feed_item <- data.frame(
+      feed = character(),
+      feed_water_use = numeric(),
+      stringsAsFactors = FALSE
+    )
+  } else {
+    water_use_per_feed_item$feed <- as.character(water_use_per_feed_item$feed)
+    water_use_per_feed_item$feed_water_use <- clean_num(water_use_per_feed_item$feed_water_use)
+  }
+
   water_use_for_production <- if (is.list(water_required) && "water_use_for_production" %in% names(water_required)) {
     to_df(water_required[["water_use_for_production"]])
   } else {
@@ -212,6 +224,34 @@ combineOutputs <- function(
   }
 
   nitrogen_balance <- to_df(nitrogen_balance)
+  nitrogen_balance_detail <- nitrogen_balance
+
+  nitrogen_balance_output <- if (
+    nrow(nitrogen_balance) > 0 &&
+      all(c("feed", "nbalance_kg_n_total") %in% names(nitrogen_balance))
+  ) {
+    nitrogen_balance %>%
+      dplyr::group_by(feed) %>%
+      dplyr::summarise(
+        nbalance_kg_n_total = sum(clean_num(nbalance_kg_n_total), na.rm = TRUE),
+        .groups = "drop"
+      )
+  } else {
+    nitrogen_balance
+  }
+
+  nitrogen_balance_output <- to_df(nitrogen_balance_output)
+  if (nrow(nitrogen_balance_output) == 0 || !all(c("feed", "nbalance_kg_n_total") %in% names(nitrogen_balance_output))) {
+    nitrogen_balance_output <- data.frame(
+      feed = character(),
+      nbalance_kg_n_total = numeric(),
+      stringsAsFactors = FALSE
+    )
+  } else {
+    nitrogen_balance_output$feed <- as.character(nitrogen_balance_output$feed)
+    nitrogen_balance_output$nbalance_kg_n_total <- clean_num(nitrogen_balance_output$nbalance_kg_n_total)
+  }
+
   livestock_productivity <- to_df(livestock_productivity)
   biomass <- to_df(biomass)
   soil_carbon <- to_df(soil_carbon)
@@ -375,6 +415,34 @@ ghg_fertilizer_by_crop <- if (
       Value = rep(NA_real_, 13),
       stringsAsFactors = FALSE
     )
+  }
+
+  land_required_output <- to_df(land_required_output)
+  if (nrow(land_required_output) == 0 || !all(c("feed", "season_name", "area_feed_total") %in% names(land_required_output))) {
+    land_required_output <- data.frame(
+      feed = character(),
+      season_name = character(),
+      area_feed_total = numeric(),
+      cumulative_area = numeric(),
+      label_position = numeric(),
+      stringsAsFactors = FALSE
+    )
+  } else {
+    land_required_output$feed <- as.character(land_required_output$feed)
+    land_required_output$season_name <- as.character(land_required_output$season_name)
+    land_required_output$area_feed_total <- clean_num(land_required_output$area_feed_total)
+
+    if (!"cumulative_area" %in% names(land_required_output)) {
+      land_required_output$cumulative_area <- cumsum(replace(land_required_output$area_feed_total, is.na(land_required_output$area_feed_total), 0))
+    } else {
+      land_required_output$cumulative_area <- clean_num(land_required_output$cumulative_area)
+    }
+
+    if (!"label_position" %in% names(land_required_output)) {
+      land_required_output$label_position <- land_required_output$cumulative_area - 0.7 * land_required_output$area_feed_total
+    } else {
+      land_required_output$label_position <- clean_num(land_required_output$label_position)
+    }
   }
 
   # ---------------------------------------------------------------------------
@@ -1003,6 +1071,7 @@ ghg_fertilizer_by_crop <- if (
     t_CO2e_per_ha = c(soil_on_farm, soil_off_farm, livestock_manure, livestock_enteric_fermentation, burning_emission, rice, fertilizer_on_farm),
     stringsAsFactors = FALSE
   )
+  on_farm_table$t_CO2e_per_ha <- clean_num(on_farm_table$t_CO2e_per_ha)
 
   off_farm_table <- data.frame(
     sources_and_sinks = c("Roughages off-farm", "Soil off-farm", "Fertilizer off-farm",
@@ -1035,6 +1104,32 @@ ghg_fertilizer_by_crop <- if (
       param_first("waste_consume_meat")
     ),
     stringsAsFactors = FALSE
+  )
+
+  legacy_land_required <- list(
+    land_required = land_required_out,
+    dm_required = dm_required_out,
+    land_and_dm_required = land_and_dm_required
+  )
+
+  legacy_soil_impacts <- list(
+    overal_soil_impact = overall_soil_impact,
+    nitrogen_balance = legacy_nitrogen_balance
+  )
+
+  legacy_water_required <- list(
+    water_use_per_feed_item = water_use_per_feed_item,
+    water_use_for_production = water_use_for_production
+  )
+
+  legacy_livestock_productivity <- list(
+    consumable_livestock_product = consumable_livestock_product,
+    manure_produced = manure_produced
+  )
+
+  legacy_ghg_emission <- list(
+    ghg_balance = ghg_balance,
+    global_warming_potential = global_warming_potential
   )
 
   # ---------------------------------------------------------------------------
@@ -1180,7 +1275,7 @@ ghg_fertilizer_by_crop <- if (
     land_dmi_required = land_and_dm_required,
     overall_soil_impact = overall_soil_impact,
     soil_erosion_detail = soil_erosion_detail,
-    nitrogen_balance = nitrogen_balance,
+    nitrogen_balance_detail = nitrogen_balance_detail,
     water_use_per_feed_item = water_use_per_feed_item,
     water_use_for_production = water_use_for_production,
     consumable_livestock_product = consumable_livestock_product,
@@ -1207,4 +1302,28 @@ ghg_fertilizer_by_crop <- if (
     ghg_fertilizer_applied = ghg_fertilizer_applied,
     ghg_fertilizer_by_crop = ghg_fertilizer_by_crop
   )
+
+  legacy_output <- list(
+    land_required = legacy_land_required,
+    soil_impacts = legacy_soil_impacts,
+    water_required = legacy_water_required,
+    livestock_productivity = legacy_livestock_productivity,
+    ghg_emission = legacy_ghg_emission,
+    biomass = biomass,
+    soil_carbon = soil_carbon,
+    product_waste = product_waste
+  )
+
+  app_output <- list(
+    json_output = jsonlite::toJSON(
+      if (app_output_mode) legacy_output else c(legacy_output, batch_output),
+      pretty = TRUE
+    ),
+    on_farm_table = on_farm_table,
+    nitrogen_balance = nitrogen_balance_output,
+    land_required = land_required_output,
+    water_use_per_feed_item = water_use_per_feed_item
+  )
+
+  c(app_output, batch_output[setdiff(names(batch_output), names(app_output))])
 }

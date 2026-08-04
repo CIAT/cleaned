@@ -121,6 +121,16 @@ safe_div <- function(num, den, default = 0) {
     scalar_num(df[[value_col]][idx[1]], default = default)
   }
 
+  get_last_row_value <- function(df, filter_col, filter_value, value_col, default = NA_real_) {
+    if (!is.data.frame(df) || nrow(df) == 0 ||
+        !filter_col %in% names(df) || !value_col %in% names(df)) {
+      return(default)
+    }
+    idx <- which(as.character(df[[filter_col]]) == filter_value)
+    if (length(idx) == 0) return(default)
+    scalar_num(df[[value_col]][idx[length(idx)]], default = default)
+  }
+
   scenarioList <- list()
 
   for (i in seq_along(outputList)) {
@@ -139,6 +149,7 @@ safe_div <- function(num, den, default = 0) {
     global_warming_potential <- get_section(output, "global_warming_potential")
     water_use_for_production <- get_section(output, "water_use_for_production")
     nitrogen_balance <- get_section(output, "nitrogen_balance")
+    nitrogen_balance_detail <- get_section(output, "nitrogen_balance_detail")
     soil_erosion_detail <- get_section(output, "soil_erosion_detail")
     soil_carbon <- get_section(output, "soil_carbon")
     biomass <- get_section(output, "biomass")
@@ -162,14 +173,23 @@ safe_div <- function(num, den, default = 0) {
       total_milk_produced_energy_kcal_per_year <- scalar_num(consumable_livestock_product$total_energy_milk)
       total_meat_produced_energy_kcal_per_year <- scalar_num(consumable_livestock_product$total_energy_meat)
       total_tlu <- scalar_num(consumable_livestock_product$total_tlu)
-    } else {
-      total_milk_produced_kg_fpcm_per_year <- get_row_value(old_consumable_livestock_product, "produced_item", "Milk (FPCM)", "production_kg_per_year")
-      total_meat_produced_kg_per_year <- get_row_value(old_consumable_livestock_product, "produced_item", "Meat", "production_kg_per_year")
+    } else if (nrow(consumable_livestock_product) > 0 && "produced_item" %in% names(consumable_livestock_product)) {
+      total_milk_produced_kg_fpcm_per_year <- get_last_row_value(consumable_livestock_product, "produced_item", "Milk (FPCM)", "production_kg_per_year")
+      total_meat_produced_kg_per_year <- get_last_row_value(consumable_livestock_product, "produced_item", "Meat", "production_kg_per_year")
       total_protein_produced_kg_per_year <-
-        get_row_value(old_consumable_livestock_product, "produced_item", "Milk (FPCM)", "protein_kg_per_year", default = 0) +
-        get_row_value(old_consumable_livestock_product, "produced_item", "Meat", "protein_kg_per_year", default = 0)
-      total_milk_produced_energy_kcal_per_year <- get_row_value(old_consumable_livestock_product, "produced_item", "Milk (FPCM)", "production_energy_kcal_per_year")
-      total_meat_produced_energy_kcal_per_year <- get_row_value(old_consumable_livestock_product, "produced_item", "Meat", "production_energy_kcal_per_year")
+        get_last_row_value(consumable_livestock_product, "produced_item", "Milk (FPCM)", "protein_kg_per_year", default = 0) +
+        get_last_row_value(consumable_livestock_product, "produced_item", "Meat", "protein_kg_per_year", default = 0)
+      total_milk_produced_energy_kcal_per_year <- get_last_row_value(consumable_livestock_product, "produced_item", "Milk (FPCM)", "production_energy_kcal_per_year")
+      total_meat_produced_energy_kcal_per_year <- get_last_row_value(consumable_livestock_product, "produced_item", "Meat", "production_energy_kcal_per_year")
+      total_tlu <- safe_sum_vec(manure_produced$tlu)
+    } else {
+      total_milk_produced_kg_fpcm_per_year <- get_last_row_value(old_consumable_livestock_product, "produced_item", "Milk (FPCM)", "production_kg_per_year")
+      total_meat_produced_kg_per_year <- get_last_row_value(old_consumable_livestock_product, "produced_item", "Meat", "production_kg_per_year")
+      total_protein_produced_kg_per_year <-
+        get_last_row_value(old_consumable_livestock_product, "produced_item", "Milk (FPCM)", "protein_kg_per_year", default = 0) +
+        get_last_row_value(old_consumable_livestock_product, "produced_item", "Meat", "protein_kg_per_year", default = 0)
+      total_milk_produced_energy_kcal_per_year <- get_last_row_value(old_consumable_livestock_product, "produced_item", "Milk (FPCM)", "production_energy_kcal_per_year")
+      total_meat_produced_energy_kcal_per_year <- get_last_row_value(old_consumable_livestock_product, "produced_item", "Meat", "production_energy_kcal_per_year")
       total_tlu <- safe_sum_vec(old_manure_produced$tlu)
     }
 
@@ -199,18 +219,27 @@ safe_div <- function(num, den, default = 0) {
     # -------------------------------------------------------------------------
     # N balance
     # -------------------------------------------------------------------------
+    if (nrow(nitrogen_balance_detail) > 0) {
+      nitrogen_balance <- nitrogen_balance_detail
+    }
+
     if (nrow(nitrogen_balance) > 0 && "nbalance_kg_n_total" %in% names(nitrogen_balance)) {
       total_n_balance_kg_n_per_year <- safe_sum_vec(nitrogen_balance$nbalance_kg_n_total)
-      percent_area_mining <- safe_div(
-        safe_sum_vec(nitrogen_balance$area_mining, default = 0),
-        safe_sum_vec(nitrogen_balance$area_total, default = 0),
-        default = 0
-      ) * 100
-      percent_area_leaching <- safe_div(
-        safe_sum_vec(nitrogen_balance$area_leaching, default = 0),
-        safe_sum_vec(nitrogen_balance$area_total, default = 0),
-        default = 0
-      ) * 100
+      if (all(c("area_mining", "area_leaching", "area_total") %in% names(nitrogen_balance))) {
+        percent_area_mining <- safe_div(
+          safe_sum_vec(nitrogen_balance$area_mining, default = 0),
+          safe_sum_vec(nitrogen_balance$area_total, default = 0),
+          default = 0
+        ) * 100
+        percent_area_leaching <- safe_div(
+          safe_sum_vec(nitrogen_balance$area_leaching, default = 0),
+          safe_sum_vec(nitrogen_balance$area_total, default = 0),
+          default = 0
+        ) * 100
+      } else {
+        percent_area_mining <- get_row_value(old_overall_soil_impact, "sources", "total", "percent_area_mining")
+        percent_area_leaching <- get_row_value(old_overall_soil_impact, "sources", "total", "percent_area_leaching")
+      }
     } else {
       total_n_balance_kg_n_per_year <- get_row_value(old_overall_soil_impact, "sources", "total", "balance_N_kg_N_year")
       percent_area_mining <- get_row_value(old_overall_soil_impact, "sources", "total", "percent_area_mining")
