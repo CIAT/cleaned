@@ -130,6 +130,95 @@ safe_div <- function(num, den, default = 0) {
     if (length(idx) == 0) return(default)
     scalar_num(df[[value_col]][idx[length(idx)]], default = default)
   }
+  }
+
+  # ---------------------------------------------------------------------------
+  # Helpers
+  # ---------------------------------------------------------------------------
+  scalar_num <- function(x, default = NA_real_) {
+    if (is.null(x) || length(x) == 0) return(default)
+    if (is.data.frame(x) || is.list(x)) return(default)
+    x <- suppressWarnings(as.numeric(x[1]))
+    if (length(x) == 0 || !is.finite(x)) return(default)
+    x
+  }
+
+  scalar_chr <- function(x, default = NA_character_) {
+    if (is.null(x) || length(x) == 0) return(default)
+    x <- as.character(x[1])
+    if (length(x) == 0 || is.na(x) || x == "") return(default)
+    x
+  }
+
+safe_div <- function(num, den, default = 0) {
+  num <- scalar_num(num, default = NA_real_)
+  den <- scalar_num(den, default = NA_real_)
+
+  if (is.na(num) || is.na(den)) return(NA_real_)
+  if (den == 0) return(default)
+
+  num / den
+}
+
+  safe_sum_vec <- function(x, default = NA_real_) {
+    if (is.null(x) || length(x) == 0) return(default)
+    x <- suppressWarnings(as.numeric(x))
+    x[!is.finite(x)] <- NA_real_
+    s <- sum(x, na.rm = TRUE)
+    if (is.nan(s) || !is.finite(s)) return(default)
+    s
+  }
+
+  get_section <- function(output, nm) {
+    if (is.null(output) || !is.list(output) || !nm %in% names(output) || is.null(output[[nm]])) {
+      return(data.frame())
+    }
+    x <- output[[nm]]
+    if (is.data.frame(x)) return(x)
+    tryCatch(as.data.frame(x), error = function(e) data.frame())
+  }
+
+  get_nested_section <- function(output, nm1, nm2) {
+    if (is.null(output) || !is.list(output) || !nm1 %in% names(output) || is.null(output[[nm1]])) {
+      return(data.frame())
+    }
+    sec <- output[[nm1]]
+    if (!is.list(sec) || !nm2 %in% names(sec) || is.null(sec[[nm2]])) {
+      return(data.frame())
+    }
+    x <- sec[[nm2]]
+    if (is.data.frame(x)) return(x)
+    tryCatch(as.data.frame(x), error = function(e) data.frame())
+  }
+
+  get_named_value <- function(df, name_col = "Names", value_col = "Value", target, default = NA_real_) {
+    if (!is.data.frame(df) || nrow(df) == 0 || !name_col %in% names(df) || !value_col %in% names(df)) {
+      return(default)
+    }
+    idx <- which(as.character(df[[name_col]]) == target)
+    if (length(idx) == 0) return(default)
+    scalar_num(df[[value_col]][idx[1]], default = default)
+  }
+
+  get_row_value <- function(df, filter_col, filter_value, value_col, default = NA_real_) {
+    if (!is.data.frame(df) || nrow(df) == 0 ||
+        !filter_col %in% names(df) || !value_col %in% names(df)) {
+      return(default)
+    }
+    idx <- which(as.character(df[[filter_col]]) == filter_value)
+    if (length(idx) == 0) return(default)
+    scalar_num(df[[value_col]][idx[1]], default = default)
+  }
+
+  get_last_row_value <- function(df, filter_col, filter_value, value_col, default = NA_real_) {
+    if (!is.data.frame(df) || nrow(df) == 0 ||
+        !filter_col %in% names(df) || !value_col %in% names(df)) {
+      return(default)
+    }
+    idx <- which(as.character(df[[filter_col]]) == filter_value)
+    if (length(idx) == 0) return(default)
+    scalar_num(df[[value_col]][idx[length(idx)]], default = default)
+  }
 
   scenarioList <- list()
 
