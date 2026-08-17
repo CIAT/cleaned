@@ -1,0 +1,306 @@
+---
+title: "Input Contract"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Input Contract}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+# Purpose
+
+This document describes the input structure expected by the `cleaned` model functions. It is intended for developers maintaining the package, app developers connecting iCLEANED to the package, and data engineers building batch-processing or API connectors.
+
+The main input is a nested scenario object, usually named `para`. It can be read from JSON with `jsonlite::fromJSON()` or built by the iCLEANED app.
+
+# Top-Level Input Sections
+
+| Section | Type | Required for | Notes |
+|---|---|---|---|
+| `livestock` | Data frame | Feed, energy, productivity, GHG, water | Livestock categories, herd structure, animal performance, nutrient requirements, manure management, and IPCC category fields. |
+| `seasons` | Data frame | Feed, energy, land | Must include `season_name` and `season_length`. Season lengths are used to split annual requirements. |
+| `feed_items` | Data frame, sometimes nested by `crop_name` | Feed, land, soil, nitrogen, water, biomass, GHG | Contains feed nutrient composition and agronomic/spatial parameters. Current functions often call `tidyr::unnest(..., cols = c(crop_name))`, so app/batch builders must preserve that structure where required. |
+| `feed_basket` | Data frame/list nested by `feeds` | Feed quality | Describes which feeds are used in each season and their allocation to livestock categories. |
+| `fertilizer` | Data frame/list | Nitrogen, GHG | May be empty. If present, fertilizer labels and nitrogen fractions must match expected names. |
+| Scalar farm, climate, soil, land-use, manure, and waste fields | Named values | Multiple modules | These include rainfall, evapotranspiration, soil properties, SOC settings, purchased organic inputs, and waste rates. |
+
+# Scalar Fields
+
+These fields are read directly by one or more modules.
+
+| Field | Used by | Expected meaning |
+|---|---|---|
+| `farm_code`, `farm_name` | Outputs and metadata | Scenario or farm identifiers. |
+| `annual_prec` | Soil health, nitrogen, water | Annual precipitation. |
+| `rain_length` | Soil health | Length of rainy period used to estimate rainfall erosivity. |
+| `et` | Water | Reference evapotranspiration used with crop coefficients. |
+| `region` | GHG | Region used for IPCC/manure parameter lookup. |
+| `climate_zone`, `climate_zone_2` | GHG | Climate-zone labels used by IPCC parameter tables. |
+| `soil_description` | Soil health, nitrogen | Soil class/description label. |
+| `soil_k_value` | Soil health | Soil erodibility factor. |
+| `soil_n` | Nitrogen | Soil nitrogen concentration or soil N parameter on the package basis. |
+| `soil_c` | Nitrogen, SOC | Soil carbon parameter on the package basis. |
+| `soil_clay` | Nitrogen | Soil clay percentage used in nitrogen loss equations. |
+| `soil_bulk` | Nitrogen, SOC | Soil bulk density. |
+| `soil_depth` | SOC | Soil depth used to estimate soil carbon stock. |
+| `cropland_system` | SOC | Cropland land-use category; must match stock-change parameter labels. |
+| `cropland_tillage` | SOC | Cropland tillage category; must match stock-change parameter labels. |
+| `cropland_orgmatter` | SOC | Cropland organic matter/input category. |
+| `grassland_management` | SOC | Grassland management category. |
+| `grassland_implevel` | SOC | Grassland input/improvement level. |
+| `purchased_manure`, `purchased_compost`, `purchased_organic_n`, `purchased_bedding` | Nitrogen, GHG | Purchased organic nitrogen/input terms. |
+| `waste_production_milk`, `waste_distribution_milk`, `waste_processing_milk`, `waste_consume_milk` | Outputs | Milk loss/waste rates used in output aggregation. |
+| `waste_production_meat`, `waste_distribution_meat`, `waste_processing_meat`, `waste_consume_meat` | Outputs | Meat loss/waste rates used in output aggregation. |
+
+Older example objects may contain legacy aliases such as `txt_annual_prec` or the misspelled `ferlitizer`. App and batch builders should map these into the current names before running the model.
+
+# Livestock Section
+
+`para$livestock` is expected to be a data frame with one row per livestock category. The exact set of fields varies by livestock type, but the following groups are used by the model.
+
+## Identity and category fields
+
+| Field | Used by | Notes |
+|---|---|---|
+| `livetype_code` | Feed allocation, energy, land, GHG | Stable livestock category code. |
+| `livetype_desc` | Energy, productivity, outputs | Human-readable livestock category name. |
+| `ipcc_ef_category_t1` | GHG | Tier 1 enteric fermentation category. |
+| `ipcc_ef_category_t2` | GHG | Tier 2 enteric fermentation/productivity category. |
+| `ipcc_meth_man_category` | GHG/manure and productivity grouping | Methane manure-management category. |
+| `ipcc_n_exc_category` | GHG | Nitrogen excretion category. |
+
+## Herd and production fields
+
+| Field | Expected basis |
+|---|---|
+| `herd_composition` | Number of animals in the category. |
+| `body_weight`, `adult_weight`, `body_weight_weaning`, `body_weight_year_one` | Weight parameters used by energy equations. |
+| `annual_growth`, `lw_gain` | Growth/live-weight-gain terms. |
+| `annual_milk` | Annual milk per animal. Dry animals may have `annual_milk = 0`; downstream productivity and Ym logic must handle this intentionally. |
+| `annual_wool` | Wool production for sheep where applicable. |
+| `birth_interval`, `lactation_length`, `litter_size`, `piglets_relying_on_milk` | Reproduction and lactation terms. |
+| `carcass_fraction` | Fraction of live-weight gain converted to carcass/meat output. |
+| `milk_product`, `meat_product` | Product indicators used by app/database workflows. |
+
+## Nutrient and energy fields
+
+| Field | Notes |
+|---|---|
+| `fat_milkcontent`, `protein_milkcontent` | Milk composition, percent. |
+| `energy_milkcontent`, `energy_meatcontent`, `protein_meatcontent` | Product energy/protein content. |
+| `me_maintenance`, `me_growth`, `me_lactation`, `me_lactmilk`, `me_pregnancy`, `me_grazing` | ME-related fields used by the current schema. |
+| `cp_maintenance`, `cp_lys_growth`, `cp_lactation`, `cp_lactmilk`, `cp_lys_pregnancy`, `cp_grazing` | CP/lysine-related fields used by energy/protein requirement equations. |
+| `n_content` or `n_manure_content` | Manure nitrogen content. The codebase has been moving toward `n_manure_content`; keep mappings explicit. |
+
+## Time allocation and manure fields
+
+| Field | Notes |
+|---|---|
+| `time_in_stable`, `time_in_onfarm_grazing`, `time_in_offfarm_grazing`, `time_in_non_roofed_enclosure` | Fractions or proportions of time spent in each management location. |
+| `manure_in_field`, `manure_in_stable`, `manure_in_non_roofed_enclosure` | Manure allocation or recovery factors. |
+| `manure_onfarm_fraction`, `manure_sales_fraction` | Fractions used to split manure retained on farm and exported/sold. |
+| `manureman_stable`, `manureman_yard`, `manureman_onfarm_grazing`, `manureman_offfarm_grazing`, `manureman_non_roofed_enclosure` | Manure-management system labels used by GHG lookups. |
+| `distance_to_pasture`, `grazing_displacement`, `work_hour`, `water_requirement` | Activity, work, grazing, and water terms used in selected modules. |
+
+# Feed Items Section
+
+`para$feed_items` is central to the model. It links feed nutrient quality with land, water, soil, nitrogen, fertilizer, residue, and biomass parameters.
+
+## Feed identity and classification
+
+| Field | Notes |
+|---|---|
+| `feed_item_code` | Stable feed item code. |
+| `feed_item_name` | Feed item label used to join with feed basket and land requirements. |
+| `feed_type_code`, `feed_type_name` | Feed type classification. |
+| `crop_name` | Current functions often unnest by this column. It must exist when running modules that call `unnest(..., cols = c(crop_name))`. |
+| `category` | Used to identify grasses, tree crops, tree legumes, and legumes for nitrogen fixation. |
+| `source_type` | Expected values include `Main` and `Residue`; used in land requirement equations. |
+
+## Minimum feed nutrient profile
+
+For external feed data connectors such as Feedipedia, SSA feeds databases, USDA profiles, or other feed composition services, the minimum nutrient values required by `feed_quality()` are:
+
+| Field | Expected package format | Conversion guidance |
+|---|---|---|
+| `dm_content` | Percent of fresh matter | Convert fractions to percent by multiplying by 100. Convert g/kg fresh matter to percent by dividing by 10. |
+| `me_content` | Metabolizable energy on the package feed database basis, normally per kg dry matter | Convert external ME units to the same basis before inserting. Do not mix MJ/kg DM, kcal/kg DM, and Mcal/kg DM without conversion. |
+| `cp_content` | Percent of dry matter | Convert g/kg DM to percent by dividing by 10. |
+
+The code computes:
+
+```r
+me_content_fresh <- dm_content * me_content / 100
+cp_content_fresh <- dm_content * cp_content / 100
+de_fraction <- me_content * 0.066
+```
+
+This means `dm_content`, `me_content`, and `cp_content` must be unit-compatible before model execution.
+
+## Land and production fields
+
+| Field | Used by |
+|---|---|
+| `dry_yield`, `fresh_yield` | Land requirement and yield calculations. |
+| `main_product_removal`, `residue_removal` | Land requirement, nitrogen removal, and residue allocation. |
+| `residue_dry_yield`, `residue_fresh_yield`, `residue_dm_content` | Residue feed and land requirement calculations. |
+| `water_content`, `harvest_index` | Crop/residue calculations and upstream data preparation. |
+| `intercrop`, `intercrop_fraction` | Land requirement adjustment. |
+| `cut_carry_fraction` | Feed management metadata. |
+
+## Nitrogen and fertilizer fields
+
+| Field | Used by |
+|---|---|
+| `main_n`, `residue_n`, `n_content`, `n_fertilizer` | Nitrogen balance and GHG soil/fertilizer calculations. |
+| `fraction_as_fertilizer`, `fraction_as_manure` | Manure and fertilizer allocation. |
+| `ammonia`, `ammonium_nitrate`, `ammonium_sulfate`, `dap`, `n_solutions`, `npk`, `urea` | Fertilizer application amounts. |
+| `residue_burnt` | Burning emissions. |
+
+## Water fields
+
+| Field | Used by |
+|---|---|
+| `kc_initial`, `kc_midseason`, `kc_late` | Crop coefficient average for water use. |
+| `wfp_green`, `wfp_blue`, `wfp_grey` | Water footprint metadata where available. |
+| `water_regime`, `ecosystem_type`, `organic_amendment` | Rice methane emissions where rice is in the feed basket. |
+
+## Soil erosion and land-cover fields
+
+| Field | Used by |
+|---|---|
+| `slope_desc`, `slope_length` | Slope length/steepness conversion in `soil_health()`. |
+| `landcover_c_factor`, `slope_p_factor` | RUSLE-style erosion calculation. |
+| `land_cover`, `land_cover_desc` | Land-cover metadata and app display. |
+
+## Biomass and tree fields
+
+| Field | Used by |
+|---|---|
+| `trees_ha_dbh25`, `trees_ha_dbh2550`, `trees_ha_dbh50` | Tree density by diameter class. |
+| `increase_dbh25`, `increase_dbh2550`, `increase_dbh50` | Annual diameter increments. |
+| `average_dbh25`, `average_dbh2550`, `average_dbh50` | Starting tree diameter classes. |
+| `time_horizon` | Biomass calculation period. |
+| `trees_ha`, `trees_growth`, `trees_removal`, `trees_dhb` | Legacy or supplementary tree fields. |
+
+# Feed Basket Section
+
+`para$feed_basket` links seasons, feeds, and livestock allocations.
+
+Expected structure:
+
+- A `season_name` column matching `para$seasons$season_name`.
+- A nested `feeds` column that can be unnested.
+- Each feed entry should contain `feed_item_code`.
+- Each feed entry should contain nested livestock allocation data with:
+  - `livetype_code`
+  - `allocation`
+
+`allocation` is interpreted as a percentage and divided by 100 in `feed_quality()`.
+
+# Fertilizer Section
+
+`para$fertilizer` may be empty. If present, the current nitrogen and GHG logic expects fertilizer descriptions that match these labels:
+
+- `Ammonia`
+- `Ammonium nitrate`
+- `Ammonium sulfate`
+- `DAP`
+- `N solutions`
+- `NPK`
+- `Urea`
+
+Expected fields include:
+
+| Field | Notes |
+|---|---|
+| `fertilizer_code` | Stable fertilizer code. |
+| `fertilizer_desc` | Label used for lookup in code. |
+| `percentage_n` | Nitrogen content as percent. |
+| `fraction` | Legacy or supplementary fraction field. |
+
+# External Parameter Objects
+
+The model also requires parameter lists.
+
+| Object | Source | Used by |
+|---|---|---|
+| `energy_parameters` | `inst/extdata/energy_parameters.json` or app database | `energy_requirement()` |
+| `ghg_ipcc_data` | `inst/extdata/ghg_parameters.json` or app database | `ghg_emission()` |
+| `stock_change_para` | `inst/extdata/stock_change_parameters.json` or app database | `soil_organic_carbon()` |
+
+The GHG parameter object includes IPCC-style tables such as:
+
+- `Table 10.12`
+- `Table 10.13`
+- `Table_m`
+- `Table 10.16`
+- `Table 10.17`
+- `Table 10.21`
+- `Table 10.22`
+- `table_11.1_&_table_11.3`
+- `table_2.5`
+- `table_5.11`
+- `table_5.12`
+- `table_5.13`
+- `table_5.14`
+- `fertilizer_table`
+
+# Controlled Vocabularies
+
+Many fields are selected from app dropdowns or parameter-table labels. Values must match the expected labels exactly, or joins and lookups may return empty results.
+
+Important controlled vocabulary groups include:
+
+- Livestock category names and codes.
+- IPCC enteric fermentation and manure categories.
+- IPCC nitrogen excretion categories.
+- Climate zones and regions.
+- Fertilizer descriptions.
+- Soil description and soil/land-use categories.
+- Cropland system, tillage, and organic matter categories.
+- Grassland management and input/improvement level categories.
+- Slope descriptions such as `Flat (0-5%)`, `Hilly (5-20%)`, `Steep (20-30%)`, and `Extremely steep (30%+)`.
+- Feed source tags such as `OFR`, `OFC`, and `IP` embedded in feed names to identify off-farm roughages, off-farm concentrates, and imported concentrates.
+
+# Guidance for API Connectors
+
+External API connectors should not pass raw external data directly into the model. They should transform values into the iCLEANED schema first.
+
+Minimum requirements for feed composition connectors:
+
+- Resolve the feed item selected by the user.
+- Return `dm_content`, `me_content`, and `cp_content`.
+- Convert units to the package basis.
+- Preserve the app's feed item code/name where possible.
+- Keep all non-feed fields already selected by the app unless the connector is explicitly responsible for them.
+
+Spatial/climate connectors should map external data into existing scalar fields and dropdown-compatible categories:
+
+- Climate zone and IPCC climate zone.
+- Annual precipitation and rain length.
+- Reference evapotranspiration.
+- Soil texture/description, soil C, soil N, soil clay, bulk density, depth, and erodibility.
+- Elevation and slope can support app-side derivation of `slope_desc` and `slope_length`.
+- Crop-yield, harvest-index, residue, and crop coefficient data must be converted to the same units used by `feed_items`.
+
+# Validation Checklist
+
+Before running the model, validate that:
+
+- `livestock`, `seasons`, `feed_items`, and `feed_basket` exist and are non-empty.
+- `feed_items` has `crop_name` where modules require unnesting.
+- `feed_basket$season_name` values match `seasons$season_name`.
+- `feed_basket` allocations have matching `livetype_code` values in `livestock`.
+- Feed nutrient values are numeric and unit-compatible.
+- Fertilizer descriptions match the expected labels if fertilizer data are present.
+- Soil, climate, and land-use category labels match parameter tables.
+- Required external parameter objects are loaded from the same version of the parameter database as the app.

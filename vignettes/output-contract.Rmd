@@ -1,0 +1,502 @@
+---
+title: "Output Contract"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Output Contract}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+# Purpose
+
+This document describes the outputs produced by the `cleaned` package and how they are used by app and batch workflows.
+
+The package has three output layers:
+
+1. **Module outputs** returned by individual calculation functions.
+2. **Combined scenario outputs** returned and written by `combineOutputs()`.
+3. **Comparison outputs** written by `calculate_differences()`.
+
+# Module Outputs
+
+## `feed_quality()`
+
+Returns a data frame with one block per livestock category and season. Important columns include:
+
+- `season_name`
+- `livestock_category_code`
+- `livestock_category_name`
+- `feed_variables`
+- One column per feed item
+
+`feed_variables` includes values such as:
+
+- `cp_content_fresh`
+- `de_fraction`
+- `dm_content`
+- `me_content_fresh`
+- `fraction_as_fed`
+- `fraction_dry_matter`
+
+## `energy_requirement()`
+
+Returns a list:
+
+```r
+list(
+  annual_results = ...,
+  seasonal_results = ...
+)
+```
+
+`annual_results` includes livestock-level annual requirements, limiting nutrient summaries, intake estimates, digestible/gross energy, and manure outputs.
+
+Common fields:
+
+- `livestock_category_code`
+- `livestock_category_name`
+- `energy_required_annually`
+- `protein_required_annually`
+- `dmi_energy_total`
+- `dmi_cp_total`
+- `limiting_total`
+- `surplus_total`
+- `me_intake`
+- `dmi_tot`
+- `de_intake`
+- `ge_intake`
+- `annual_manure_produced`
+- `daily_manure_produced`
+- `manure_onfarm_grazing`
+- `n_content_manure_grazing`
+- `manure_collected`
+- `n_content_manure_collected`
+- `n_content_manure_total`
+- `manure_exported`
+
+`seasonal_results` includes season-specific demand and limiting nutrient values:
+
+- `season_name`
+- `livestock_category_code`
+- `livestock_category_name`
+- `energy_required_by_season`
+- `protein_required_by_season`
+- `fresh_intake_required_e`
+- `dmi_required_e`
+- `fresh_intake_required_cp`
+- `dmi_required_cp`
+- `dmi_s`
+- `limiting`
+- `surplus_season`
+- `me_intake_s`
+
+## `land_requirement()`
+
+Returns a list:
+
+```r
+list(
+  land_requirements_all = ...,
+  feed_items_frac = ...
+)
+```
+
+`land_requirements_all` includes feed demand, crop yield, land, feed source, and dry matter fields:
+
+- `feed`
+- `feed_item_dm`
+- `crop_yield`
+- `crop_removal`
+- `cr_yield`
+- `crop_residue_removal`
+- `area_total`
+- `area_non_feed`
+- `area_feed`
+- `rough_of`
+- `conc_of`
+- `conc_ip`
+- `farm`
+- `grasses`
+- `tree_legume`
+- `rough_of_dm`
+- `conc_of_dm`
+- `conc_ip_dm`
+- `farm_dm`
+- `grasses_dm`
+- `tree_legume_dm`
+
+`feed_items_frac` preserves selected feed item parameters used later by nitrogen, water, soil, biomass, and GHG modules.
+
+## `soil_health()`
+
+Returns a data frame by feed item:
+
+- `feed_item`
+- `feed_type`
+- `soil_type`
+- `erosivity_r`
+- `erodibility_k`
+- `ls`
+- `c_factor`
+- `p_factor`
+- `soil_loss_ha_year`
+- `soil_loss_plot`
+
+## `n_balance()`
+
+Returns a data frame by feed item with nitrogen inputs, outputs, balances, and source splits.
+
+Important summary fields:
+
+- `feed`
+- `area_total`
+- `fertilizer_rate`
+- `animal_manure_grazing`
+- `animal_manure_collected`
+- `organic_n_imported`
+- `organic_n_kg_total`
+- `organic_n_kg_per_ha`
+- `nin`
+- `nout`
+- `nue`
+- `nbalance_kg_n_total`
+- `nbalance_kg_n_ha_total`
+- `nbalance_feed_only_kg_n`
+- `nbalance_feed_only_kg_n_ha`
+- `area_mining`
+- `area_leaching`
+- `farm_area`
+- `rough_of_area`
+- `conc_of_area`
+- `conc_ip_area`
+
+The output also carries detailed intermediate fields used by `combineOutputs()` and `calculate_differences()`.
+
+## `water_requirement()`
+
+Returns a list:
+
+```r
+list(
+  water_use_per_feed_item = ...,
+  water_use_for_production = ...
+)
+```
+
+`water_use_per_feed_item` includes:
+
+- `feed`
+- `area_feed`
+- `kc_average`
+- `kc_frac`
+- `water_use`
+- `feed_water_use`
+- `non_feed_water_use`
+- `kc_water_use_of_roughages`
+- `kc_water_use_of_concentrates`
+- `kc_water_use_ip_concentrates`
+- `kc_water_use_on_farm`
+- `kc_water_use_m3_per_ha`
+
+`water_use_for_production` is a two-column table:
+
+- `Names`
+- `Value`
+
+Expected names include:
+
+- `ET`
+- `fraction_of_precipitation_used_for_feed_production`
+- `total_water_use`
+- `water_use_fpcm`
+- `water_use_meat`
+- `water_use_protein`
+
+## `land_productivity()`
+
+Returns livestock productivity by livestock type:
+
+- `livetype_name`
+- `number`
+- `tlu`
+- `parturition_interval`
+- `total_lwg`
+- `meat_production_animal`
+- `total_milk`
+- `energy_kcal_year_meat`
+- `energy_kcal_year_milk`
+- `protein_kg_year_meat`
+- `protein_kg_year_milk`
+- `manure_exported`
+
+## `biomass_calculation()`
+
+Returns a data frame of tree biomass and carbon change fields, including:
+
+- `feed_item_name`
+- `area_ha`
+- tree counts by diameter class
+- biomass by diameter class
+- `biomass_increase_total`
+- `c_increase`
+- `co2_increase`
+- `c_increase_soc`
+- `co2_increase_soc`
+- `total_c_increase`
+- `total_co2_increase`
+
+## `soil_organic_carbon()`
+
+Returns a soil carbon data frame including:
+
+- `soil_amount`
+- `field_soc`
+- cropland, grassland, off-farm grassland, organic soil, and tree carbon stock changes
+- `total_change_co2_soils`
+
+## `ghg_emission()`
+
+Returns a list of GHG component tables:
+
+- `ef`
+- `eft`
+- `n_excretion`
+- `direct_N2O`
+- `indirect_N2O`
+- `land_used`
+- `ghg_burn`
+- `ghg_soil`
+- `fetilizer_ghg`
+- `ghg_rice`
+
+`ghg_soil` is itself a list with direct and indirect soil N2O tables.
+
+`fetilizer_ghg` is a list with fertilizer application and fertilizer emission by crop. The spelling is currently part of the package contract and should not be changed without a compatibility layer.
+
+# `combineOutputs()`
+
+`combineOutputs()` is the main compatibility layer. It accepts all module outputs and returns a combined list while also writing an Excel workbook.
+
+## App-facing return values
+
+The following values are always returned because the app uses them directly:
+
+| Name | Type | Purpose |
+|---|---|---|
+| `json_output` | JSON string | Scenario output serialized for storage or comparison. |
+| `on_farm_table` | Data frame | Plot-ready GHG source/sink table. |
+| `nitrogen_balance` | Data frame | Plot-ready nitrogen balance table. |
+| `land_required` | Data frame | Plot-ready land requirement table. |
+| `water_use_per_feed_item` | Data frame | Plot-ready water use table. |
+
+The app plotting code expects these fields to exist and to have numeric columns where plots call `round()` or build `ggplot2`/`ggiraph` geoms.
+
+## Batch-facing return values
+
+The returned list also includes detailed outputs, including:
+
+- `land_required_summary`
+- `dmi_required`
+- `land_dmi_required`
+- `overall_soil_impact`
+- `soil_erosion_detail`
+- `nitrogen_balance_detail`
+- `water_use_for_production`
+- `consumable_livestock_product`
+- `manure_produced`
+- `ghg_balance`
+- `global_warming_potential`
+- `biomass`
+- `soil_carbon`
+- `product_waste`
+- `feed_basket_quality`
+- `energy_required_annual`
+- `energy_required_seasonal`
+- `land_required_feed_fractions`
+- `livestock_productivity`
+- `ghg_ef`
+- `ghg_eft`
+- `ghg_n_excretion`
+- `ghg_direct_N2O`
+- `ghg_indirect_N2O`
+- `ghg_land_used`
+- `ghg_burn`
+- `ghg_rice`
+- `ghg_soil`
+- `ghg_fertilizer_applied`
+- `ghg_fertilizer_by_crop`
+
+These are intended for batch processing, diagnostics, and downstream analysis.
+
+## Legacy nested outputs
+
+For backward compatibility, `combineOutputs()` also constructs legacy nested sections:
+
+- `land_required`
+- `soil_impacts`
+- `water_required`
+- `livestock_productivity`
+- `ghg_emission`
+- `biomass`
+- `soil_carbon`
+- `product_waste`
+
+This is important because older app and batch outputs may still be read by `calculate_differences()`.
+
+## App output mode
+
+If `primary_excel` is supplied, `combineOutputs()` treats the run as app output mode:
+
+- It loads the existing workbook at `primary_excel`.
+- It writes curated app sheets.
+- It serializes the legacy output structure in `json_output`.
+
+Expected app workbook sheets include:
+
+- `Land Required`
+- `DM Required`
+- `Land and DM Required`
+- `Overall Soil Impact`
+- `Nitrogen Balance`
+- `Water Use Per Feed Item`
+- `Water Use For Production`
+- `Consumable Livestock Product`
+- `Manure Produced`
+- `GHG Balance`
+- `Global Warming Potential`
+- `Biomass`
+- `Soil Carbon`
+- `Product Waste`
+
+## Batch output mode
+
+If `primary_excel` is not supplied, `combineOutputs()` treats the run as batch mode:
+
+- It creates a new workbook.
+- It writes both curated summary sheets and detailed diagnostic sheets.
+- It serializes both legacy nested outputs and flat batch outputs in `json_output`.
+
+Additional batch workbook sheets include:
+
+- `Soil Erosion Detail`
+- `Feed Basket Quality`
+- `Energy Required Annual`
+- `Energy Required Seasonal`
+- `Land Required Feed Fractions`
+- `Livestock Productivity`
+- `GHG EF`
+- `GHG EFT`
+- `GHG N Excretion`
+- `GHG Direct N2O`
+- `GHG Indirect N2O`
+- `GHG Land Used`
+- `GHG Burn`
+- `GHG Rice`
+- `GHG Soil`
+- `GHG Fertilizer Applied`
+- `GHG Fertilizer By Crop`
+
+# GHG Units
+
+`ghg_balance$kg_co2_e_tot` is in kg CO2e. `calculate_differences()` converts it to tonnes CO2e by dividing by 1000.
+
+`global_warming_potential` is used primarily for GHG source/sink display and includes `t_CO2e_per_ha` values.
+
+Future compact outputs such as `gwp_total` or `total_ghg` are treated as fallback-compatible fields by `calculate_differences()`, but the current `combineOutputs()` structure primarily produces `kg_co2_e_tot`.
+
+# `calculate_differences()`
+
+`calculate_differences(outFile, ...)` reads one or more scenario output JSON files and writes:
+
+- `outFile`: a JSON file with one row per scenario.
+- `runs_comparison.xlsx`: an Excel workbook with one sheet named `all_results`.
+
+The returned object is invisible but contains the same data frame written to disk.
+
+## Comparison indicators
+
+The comparison output includes:
+
+### Production
+
+- `total_milk_produced_kg_fpcm_per_year`
+- `total_meat_produced_kg_per_year`
+- `total_protein_produced_kg_per_year`
+- `total_tlu`
+- `total_milk_produced_energy_kcal_per_year`
+- `total_meat_produced_energy_kcal_per_year`
+- `total_milk_produced_ame_days_per_year`
+- `total_meat_produced_ame_days_per_year`
+
+### Land
+
+- `total_land_requirement_ha`
+- `total_land_requirement_ha_per_kg_fpcm`
+- `total_land_requirement_ha_per_kg_meat`
+- `total_land_requirement_ha_per_kg_protein`
+- `total_land_requirement_ha_per_tlu`
+
+### Nitrogen
+
+- `total_n_balance_kg_n_per_year`
+- `percent_area_mining`
+- `percent_area_leaching`
+- `n_balance_kg_n_per_ha_per_year`
+- `n_balance_kg_n_per_kg_fpcm`
+- `n_balance_kg_n_per_kg_meat`
+- `n_balance_kg_n_per_kg_protein`
+
+### Soil erosion
+
+- `erosion_t_soil_year`
+- `erosion_t_soil_per_ha_per_year`
+- `erosion_kgsoil_per_kg_fpcm`
+- `erosion_kgsoil_per_kg_meat`
+- `erosion_kgsoil_per_kg_protein`
+
+### GHG emissions
+
+- `ghg_emission_t_co2_eq_per_year`
+- `ghg_emission_t_co2_eq_per_ha_per_year`
+- `ghg_emission_kg_co2_eq_per_kg_fpcm`
+- `ghg_emission_kg_co2_eq_per_kg_meat`
+- `ghg_emission_kg_co2_eq_per_kg_protein`
+
+### Water
+
+- `percent_precipitation_used_for_feed_production`
+- `total_water_use_m3`
+- `total_water_use_m3_per_ha`
+- `total_water_use_m3_per_kg_fpcm`
+- `total_water_use_m3_per_kg_meat`
+- `total_water_use_m3_per_kg_protein`
+
+### Carbon stock change and carbon balance
+
+- `carbon_stock_change_t_co2eq_per_year`
+- `carbon_stock_change_t_co2eq_per_ha_per_year`
+- `carbon_stock_change_t_co2eq_per_fpcm`
+- `carbon_stock_change_t_co2eq_per_meat`
+- `carbon_stock_change_t_co2eq_per_protein`
+- `total_carbon_balance_per_fpcm`
+- `total_carbon_balance_per_meat`
+- `total_carbon_balance_per_protein`
+
+# Defensive Output Rules
+
+The output and comparison layers are intentionally defensive:
+
+- Missing sections are converted to empty data frames where possible.
+- Non-numeric values are coerced safely before aggregation.
+- Invalid divisions are converted to a default value where appropriate.
+- App plot-facing tables are created even if upstream sections are empty, so result pages do not fail simply because a scenario lacks a category.
+
+These safeguards improve app and batch compatibility, but they do not replace input validation. Scenario builders should still validate required fields before running the model.

@@ -1,0 +1,50 @@
+url: https://ciat.github.io/cleaned/
+
+template:
+  bootstrap: 5
+
+navbar:
+  structure:
+    left: [intro, reference, articles]
+    right: [search, github]
+
+home:
+  title: iCLEANED environmental assessment package
+  description: >
+    Documentation for running, extending, and integrating the iCLEANED model
+    with batch workflows and the iCLEANED application.
+
+reference:
+  - title: Core model pipeline
+    contents:
+      - feed_quality
+      - energy_requirement
+      - land_requirement
+      - soil_health
+      - n_balance
+      - water_requirement
+      - land_productivity
+      - biomass_calculation
+      - soil_organic_carbon
+      - ghg_emission
+  - title: Outputs and scenario comparison
+    contents:
+      - combineOutputs
+      - calculate_differences
+      - clean_plotting
+      - compare_scenario
+  - title: Utilities and datasets
+    contents:
+      - season_length
+      - mufindi
+      - ghg_para
+      - stock_change_para
+
+articles:
+  - title: User and developer guides
+    navbar: User and developer guides
+    contents:
+      - cleaned-overview
+      - input-contract
+      - output-contract
+      - developer-guide

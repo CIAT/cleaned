@@ -158,20 +158,20 @@ compare_scenario <- function (baseRun, outFile, oDir2)
                                                                  100), 0, ((scenario_df$ghg_emission_t_co2_eq_per_ha_per_year -
                                                                               base_run_df$ghg_emission_t_co2_eq_per_ha_per_year)/base_run_df$ghg_emission_t_co2_eq_per_ha_per_year) *
                                                       100)
-    ghg_emission_t_co2_eq_per_kg_fpcm <- ifelse(!is.finite(((scenario_df$ghg_emission_t_co2_eq_per_kg_fpcm -
-                                                               base_run_df$ghg_emission_t_co2_eq_per_kg_fpcm)/base_run_df$ghg_emission_t_co2_eq_per_kg_fpcm) *
-                                                             100), 0, ((scenario_df$ghg_emission_t_co2_eq_per_kg_fpcm -
-                                                                          base_run_df$ghg_emission_t_co2_eq_per_kg_fpcm)/base_run_df$ghg_emission_t_co2_eq_per_kg_fpcm) *
+    ghg_emission_kg_co2_eq_per_kg_fpcm <- ifelse(!is.finite(((scenario_df$ghg_emission_kg_co2_eq_per_kg_fpcm -
+                                                               base_run_df$ghg_emission_kg_co2_eq_per_kg_fpcm)/base_run_df$ghg_emission_kg_co2_eq_per_kg_fpcm) *
+                                                             100), 0, ((scenario_df$ghg_emission_kg_co2_eq_per_kg_fpcm -
+                                                                          base_run_df$ghg_emission_kg_co2_eq_per_kg_fpcm)/base_run_df$ghg_emission_kg_co2_eq_per_kg_fpcm) *
                                                   100)
-    ghg_emission_t_co2_eq_per_kg_meat <- ifelse(!is.finite(((scenario_df$ghg_emission_t_co2_eq_per_kg_meat -
-                                                               base_run_df$ghg_emission_t_co2_eq_per_kg_meat)/base_run_df$ghg_emission_t_co2_eq_per_kg_meat) *
-                                                             100), 0, ((scenario_df$ghg_emission_t_co2_eq_per_kg_meat -
-                                                                          base_run_df$ghg_emission_t_co2_eq_per_kg_meat)/base_run_df$ghg_emission_t_co2_eq_per_kg_meat) *
+    ghg_emission_kg_co2_eq_per_kg_meat <- ifelse(!is.finite(((scenario_df$ghg_emission_kg_co2_eq_per_kg_meat -
+                                                               base_run_df$ghg_emission_kg_co2_eq_per_kg_meat)/base_run_df$ghg_emission_kg_co2_eq_per_kg_meat) *
+                                                             100), 0, ((scenario_df$ghg_emission_kg_co2_eq_per_kg_meat -
+                                                                          base_run_df$ghg_emission_kg_co2_eq_per_kg_meat)/base_run_df$ghg_emission_kg_co2_eq_per_kg_meat) *
                                                   100)
-    ghg_emission_t_co2_eq_per_kg_protein <- ifelse(!is.finite(((scenario_df$ghg_emission_t_co2_eq_per_kg_protein -
-                                                                  base_run_df$ghg_emission_t_co2_eq_per_kg_protein)/base_run_df$ghg_emission_t_co2_eq_per_kg_protein) *
-                                                                100), 0, ((scenario_df$ghg_emission_t_co2_eq_per_kg_protein -
-                                                                             base_run_df$ghg_emission_t_co2_eq_per_kg_protein)/base_run_df$ghg_emission_t_co2_eq_per_kg_protein) *
+    ghg_emission_kg_co2_eq_per_kg_protein <- ifelse(!is.finite(((scenario_df$ghg_emission_kg_co2_eq_per_kg_protein -
+                                                                  base_run_df$ghg_emission_kg_co2_eq_per_kg_protein)/base_run_df$ghg_emission_kg_co2_eq_per_kg_protein) *
+                                                                100), 0, ((scenario_df$ghg_emission_kg_co2_eq_per_kg_protein -
+                                                                             base_run_df$ghg_emission_kg_co2_eq_per_kg_protein)/base_run_df$ghg_emission_kg_co2_eq_per_kg_protein) *
                                                      100)
     percent_precipitation_used_for_feed_production <- ifelse(!is.finite(((scenario_df$percent_precipitation_used_for_feed_production -
                                                                             base_run_df$percent_precipitation_used_for_feed_production)/base_run_df$percent_precipitation_used_for_feed_production) *
@@ -273,8 +273,8 @@ compare_scenario <- function (baseRun, outFile, oDir2)
                                     erosion_t_soil_per_ha_per_year, erosion_kgsoil_per_kg_fpcm,
                                     erosion_kgsoil_per_kg_meat, erosion_kgsoil_per_kg_protein,
                                     ghg_emission_t_co2_eq_per_year, ghg_emission_t_co2_eq_per_ha_per_year,
-                                    ghg_emission_t_co2_eq_per_kg_fpcm, ghg_emission_t_co2_eq_per_kg_meat,
-                                    ghg_emission_t_co2_eq_per_kg_protein, percent_precipitation_used_for_feed_production,
+                                    ghg_emission_kg_co2_eq_per_kg_fpcm, ghg_emission_kg_co2_eq_per_kg_meat,
+                                    ghg_emission_kg_co2_eq_per_kg_protein, percent_precipitation_used_for_feed_production,
                                     total_water_use_m3, total_water_use_m3_per_ha, total_water_use_m3_per_kg_fpcm,
                                     total_water_use_m3_per_kg_meat, total_water_use_m3_per_kg_protein,
                                     carbon_stock_change_t_co2eq_per_year, carbon_stock_change_t_co2eq_per_ha_per_year,
@@ -380,15 +380,15 @@ compare_scenario <- function (baseRun, outFile, oDir2)
       title = "GHG (t CO2eq/ha/yr)"
       y_title = "% change in GHG (t CO2eq/ha/yr)"
     }
-    else if (tt == "ghg_emission_t_co2_eq_per_kg_fpcm") {
+    else if (tt == "ghg_emission_kg_co2_eq_per_kg_fpcm") {
       title = "GHG (CO2eq/kg FPCM)"
       y_title = "% change in GHG (CO2eq/kg FPCM)"
     }
-    else if (tt == "ghg_emission_t_co2_eq_per_kg_meat") {
+    else if (tt == "ghg_emission_kg_co2_eq_per_kg_meat") {
       title = "GHG (CO2eq/kg meat)"
       y_title = "% change in GHG (CO2eq/kg meat)"
     }
-    else if (tt == "ghg_emission_t_co2_eq_per_kg_protein") {
+    else if (tt == "ghg_emission_kg_co2_eq_per_kg_protein") {
       title = "GHG (CO2eq/kg protein)"
       y_title = "% change in GHG (CO2eq/kg protein)"
     }

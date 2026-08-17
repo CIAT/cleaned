@@ -1,0 +1,237 @@
+---
+title: "Developer Guide"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Developer Guide}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+# Purpose
+
+This guide explains how to develop, test, release, and integrate the `cleaned` package with the iCLEANED app and batch-processing workflows.
+
+# Local Installation
+
+From the package root:
+
+```powershell
+R CMD INSTALL .
+```
+
+Confirm that R is loading the intended package:
+
+```powershell
+Rscript -e "library(cleaned); cat(find.package('cleaned'), '\n'); packageVersion('cleaned')"
+```
+
+The path matters. If testing the app locally, the path should point to the local test library or the branch/version being tested.
+
+# Quick Syntax Checks
+
+Run these before pushing:
+
+```powershell
+Rscript -e "for (f in list.files('R', pattern='\\.R$', full.names=TRUE)) parse(file=f)"
+R CMD INSTALL .
+```
+
+For a fuller check:
+
+```powershell
+R CMD check --no-manual .
+```
+
+If documentation files are changed, also verify vignette syntax:
+
+```powershell
+Rscript -e "for (f in list.files('vignettes', pattern='\\.Rmd$', full.names=TRUE)) rmarkdown::render(f, quiet=TRUE)"
+```
+
+# Package Dependencies
+
+The package imports:
+
+- `jsonlite`
+- `tidyverse`
+- `data.table`
+- `lubridate`
+- `plyr`
+- `tidyr`
+- `dplyr`
+- `tibble`
+- `utils`
+- `rlang`
+- `stringr`
+- `ggplot2`
+- `openxlsx`
+
+Suggested development dependencies:
+
+- `knitr`
+- `rmarkdown`
+- `testthat`
+- `spelling`
+
+The package itself does not import `ggiraph`; that is an app dependency. If the app uses interactive plots with `ggplot2 4.x`, use `ggiraph 0.9.6` or newer.
+
+# Documentation Development
+
+The professional documentation lives in:
+
+- `README.md`: package entry point on GitHub.
+- `vignettes/cleaned-overview.Rmd`: model workflow and module relationships.
+- `vignettes/input-contract.Rmd`: required input structure, units, and API connector guidance.
+- `vignettes/output-contract.Rmd`: module outputs, combined outputs, and comparison outputs.
+- `vignettes/developer-guide.Rmd`: development, testing, app integration, and release notes.
+- `_pkgdown.yml`: documentation site structure.
+- `R/cleaned-package.R`: package-level help page.
+
+Build the pkgdown site with:
+
+```r
+pkgdown::build_site()
+```
+
+The `docs/` directory contains generated pkgdown HTML. Prefer editing README, vignettes, roxygen comments, and `_pkgdown.yml`; then rebuild `docs/`.
+
+# App Integration
+
+The iCLEANED app should run against a known version of `cleaned`.
+
+Check the package used by the app:
+
+```r
+library(cleaned)
+find.package("cleaned")
+packageVersion("cleaned")
+```
+
+The package version is read from `DESCRIPTION`. If the branch changes but the version remains `0.6.0`, R will still report `0.6.0`. This is normal until the version is bumped.
+
+The app expects `combineOutputs()` to return:
+
+- `json_output`
+- `on_farm_table`
+- `nitrogen_balance`
+- `land_required`
+- `water_use_per_feed_item`
+
+These fields must remain stable unless the app code is changed at the same time.
+
+# Batch Integration
+
+Batch processing should call the same core functions as the app and then use `combineOutputs()` without `primary_excel`.
+
+Batch mode returns and serializes detailed tables used by `calculate_differences()`, including:
+
+- land and dry matter summaries
+- soil erosion details
+- nitrogen balance details
+- water-use details
+- livestock productivity and manure summaries
+- GHG component tables
+- biomass and soil carbon outputs
+
+Do not remove or rename batch output fields without updating `calculate_differences()` and any plotting/comparison scripts.
+
+# Compatibility Layer
+
+`combineOutputs()` and `calculate_differences()` intentionally support both old nested structures and newer flat structures.
+
+Important compatibility rules:
+
+- Keep app plot-facing outputs present even when a scenario produces no rows for a category.
+- Keep `ghg_balance$kg_co2_e_tot` as kg CO2e. `calculate_differences()` converts this to tonnes CO2e.
+- Keep `manure_produced$tlu` and livestock category rows available for multi-species scenarios.
+- Keep `nitrogen_balance_detail` for batch comparison, while `nitrogen_balance` can remain plot-ready for app use.
+- Maintain backward compatibility for legacy nested sections such as `livestock_productivity$manure_produced` and `ghg_emission$ghg_balance`.
+
+# Common Local App Issues
+
+## App keeps running but no results display
+
+Check the shell where the app is running. Shiny often shows `error (object)` in the browser while the useful error is printed in the shell.
+
+## `round`: non-numeric argument
+
+This usually means an app plot received `NULL` or a character field where it expected numeric data. Check the app-facing outputs returned by `combineOutputs()`, especially:
+
+- `on_farm_table$t_CO2e_per_ha`
+- `land_required$area_feed_total`
+- `nitrogen_balance$nbalance_kg_n_total`
+- `water_use_per_feed_item$feed_water_use`
+
+## `unused arguments (lineend = ..., linejoin = ...)`
+
+This is usually an app plotting dependency mismatch between `ggplot2` and `ggiraph`. With `ggplot2 4.x`, use `ggiraph 0.9.6` or newer.
+
+## Package reports the old version
+
+R reports the version in `DESCRIPTION`, not the branch name. Bump `Version:` when preparing a release.
+
+# Release Process
+
+For an internal or GitHub release:
+
+1. Update `Version:` in `DESCRIPTION`.
+2. Run syntax checks and `R CMD INSTALL .`.
+3. Run tests and, if possible, `R CMD check --no-manual .`.
+4. Commit with a clear release message.
+5. Push the release branch.
+6. Create a tag, for example:
+
+```powershell
+git tag cleaned_v0.6.1
+git push origin cleaned_v0.6.1
+```
+
+7. Create a GitHub release from the tag.
+8. Update the app's package reference if it installs a specific tag.
+
+# Git Hygiene
+
+Recommended documentation-only commit message:
+
+```text
+Document iCLEANED package workflows and IO contracts
+```
+
+Recommended model compatibility commit message:
+
+```text
+Align iCLEANED outputs for app and batch workflows
+```
+
+Do not push local test artifacts such as:
+
+- `.local_r_lib/`
+- `.local_r_cache/`
+- `.local_icleaned_data/`
+- zip extraction folders used only for local testing
+- generated screenshots unless they are intentionally part of documentation
+
+# Notes for Future Refactoring
+
+The current package still has some legacy naming and compatibility constraints. Before renaming fields, introduce a compatibility layer and update these areas together:
+
+- input builders and app dropdown mappings
+- core module joins and lookups
+- `combineOutputs()`
+- `calculate_differences()`
+- app plotting code
+- batch scripts and comparison plots
+
+The safest pattern is:
+
+1. Accept both old and new names.
+2. Normalize internally to a single canonical name.
+3. Keep output aliases until all app and batch consumers have migrated.

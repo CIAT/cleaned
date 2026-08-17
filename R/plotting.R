@@ -138,15 +138,15 @@ clean_plotting <- function (outFile, oDir)
       title = "GHG (t CO2eq/ha/yr)"
       y_title = "GHG (t CO2eq/ha/yr)"
     }
-    else if (tt == "ghg_emission_t_co2_eq_per_kg_fpcm") {
+    else if (tt == "ghg_emission_kg_co2_eq_per_kg_fpcm") {
       title = "GHG (CO2eq/kg FPCM)"
       y_title = "GHG (CO2eq/kg FPCM)"
     }
-    else if (tt == "ghg_emission_t_co2_eq_per_kg_meat") {
+    else if (tt == "ghg_emission_kg_co2_eq_per_kg_meat") {
       title = "GHG (CO2eq/kg meat)"
       y_title = "GHG (CO2eq/kg meat)"
     }
-    else if (tt == "ghg_emission_t_co2_eq_per_kg_protein") {
+    else if (tt == "ghg_emission_kg_co2_eq_per_kg_protein") {
       title = "GHG (CO2eq/kg protein)"
       y_title = "GHG (CO2eq/kg protein)"
     }
