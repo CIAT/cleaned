@@ -31,49 +31,60 @@
 #'
 #' @export
 
-land_productivity <- function(para, energy_required){
-
+land_productivity <- function(para, energy_required) {
+  
   livestock_df <- para[["livestock"]]
-
-  livestock_category_names <- c(livestock_df$livetype_desc)
-
+  
+  # use unique names only to avoid duplicate looping
+  livestock_category_names <- unique(livestock_df$livetype_desc)
+  
   livestock_production <- list()
-
-  for (livestock in livestock_category_names){
-
-    livestock_selected <- livestock_df[livestock_df$livetype_desc == livestock,]
-
-    # This section was removed
-    # livestock_selected <- na_if(livestock_selected, "NA") %>%
-    #   as.data.frame()
-    #
-
+  
+  for (livestock in livestock_category_names) {
+    
+    livestock_selected <- livestock_df[livestock_df$livetype_desc == livestock, ]
     livestock_selected[is.na(livestock_selected)] <- 0
-
-    # prodution per livestock
+    
     livestock_production[[livestock]] <- livestock_selected %>%
-      mutate(livetype_name = livetype_desc,
-             number = as.numeric(herd_composition),
-             lwg_per_animal = as.numeric(annual_growth),
-             tlu = number*as.numeric(body_weight)/250,
-             parturition_interval = as.numeric(livestock_selected$birth_interval),
-             total_lwg = number*lwg_per_animal,
-             meat_production_animal = total_lwg*as.numeric(carcass_fraction),
-             energy_kcal_year_meat = meat_production_animal*as.numeric(energy_meatcontent),
-             protein_kg_year_meat = meat_production_animal*as.numeric(protein_meatcontent)/100,
-             milk_production_animal = as.numeric(annual_milk),
-             total_milk = as.numeric(annual_milk)*number*(0.337+(0.116*as.numeric(fat_milkcontent)+(0.06*as.numeric(protein_milkcontent)))),
-             energy_kcal_year_milk = total_milk*as.numeric(energy_milkcontent),
-             protein_kg_year_milk = total_milk*as.numeric(protein_milkcontent)/100) %>%
-      select(livetype_name, 
-            number, tlu, parturition_interval,
-            total_lwg, meat_production_animal,
-            total_milk, energy_kcal_year_meat, energy_kcal_year_milk,
-            protein_kg_year_meat, protein_kg_year_milk)
-
+      mutate(
+        livetype_name = livetype_desc,
+        number = as.numeric(herd_composition),
+        lwg_per_animal = as.numeric(annual_growth),
+        tlu = number * as.numeric(body_weight) / 250,
+        parturition_interval = as.numeric(birth_interval),
+        total_lwg = number * lwg_per_animal,
+        meat_production_animal = total_lwg * as.numeric(carcass_fraction),
+        energy_kcal_year_meat = meat_production_animal * as.numeric(energy_meatcontent),
+        protein_kg_year_meat = meat_production_animal * as.numeric(protein_meatcontent) / 100,
+        milk_production_animal = as.numeric(annual_milk),
+        total_milk = as.numeric(annual_milk) * number * (0.337 + (0.116 * as.numeric(fat_milkcontent) + (0.06 * as.numeric(protein_milkcontent)))),
+        energy_kcal_year_milk = total_milk * as.numeric(energy_milkcontent),
+        protein_kg_year_milk = total_milk * as.numeric(protein_milkcontent) / 100
+      ) %>%
+      select(
+        livetype_name,
+        number, tlu, parturition_interval,
+        total_lwg, meat_production_animal,
+        total_milk, energy_kcal_year_meat, energy_kcal_year_milk,
+        protein_kg_year_meat, protein_kg_year_milk
+      )
   }
-
-  livestock_production_all <- livestock_production %>% bind_rows() %>%
-    left_join(energy_required[["annual_results"]][,c("livestock_category_name","manure_exported")], by = c("livetype_name" = "livestock_category_name"))
-
+  
+  livestock_production_all <- livestock_production %>%
+    bind_rows()
+  
+  manure_map <- energy_required[["annual_results"]][, c("livestock_category_name", "manure_exported")] %>%
+    dplyr::group_by(livestock_category_name) %>%
+    dplyr::summarise(
+      manure_exported = sum(as.numeric(manure_exported), na.rm = TRUE),
+      .groups = "drop"
+    )
+  
+  livestock_production_all <- livestock_production_all %>%
+    left_join(
+      manure_map,
+      by = c("livetype_name" = "livestock_category_name")
+    )
+  
+  return(livestock_production_all)
 }

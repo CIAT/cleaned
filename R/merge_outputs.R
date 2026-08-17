@@ -189,18 +189,6 @@ combineOutputs <- function(
     data.frame()
   }
 
-  water_use_per_feed_item <- to_df(water_use_per_feed_item)
-  if (nrow(water_use_per_feed_item) == 0 || !all(c("feed", "feed_water_use") %in% names(water_use_per_feed_item))) {
-    water_use_per_feed_item <- data.frame(
-      feed = character(),
-      feed_water_use = numeric(),
-      stringsAsFactors = FALSE
-    )
-  } else {
-    water_use_per_feed_item$feed <- as.character(water_use_per_feed_item$feed)
-    water_use_per_feed_item$feed_water_use <- clean_num(water_use_per_feed_item$feed_water_use)
-  }
-
   water_use_for_production <- if (is.list(water_required) && "water_use_for_production" %in% names(water_required)) {
     to_df(water_required[["water_use_for_production"]])
   } else {
@@ -224,34 +212,6 @@ combineOutputs <- function(
   }
 
   nitrogen_balance <- to_df(nitrogen_balance)
-  nitrogen_balance_detail <- nitrogen_balance
-
-  nitrogen_balance_output <- if (
-    nrow(nitrogen_balance) > 0 &&
-      all(c("feed", "nbalance_kg_n_total") %in% names(nitrogen_balance))
-  ) {
-    nitrogen_balance %>%
-      dplyr::group_by(feed) %>%
-      dplyr::summarise(
-        nbalance_kg_n_total = sum(clean_num(nbalance_kg_n_total), na.rm = TRUE),
-        .groups = "drop"
-      )
-  } else {
-    nitrogen_balance
-  }
-
-  nitrogen_balance_output <- to_df(nitrogen_balance_output)
-  if (nrow(nitrogen_balance_output) == 0 || !all(c("feed", "nbalance_kg_n_total") %in% names(nitrogen_balance_output))) {
-    nitrogen_balance_output <- data.frame(
-      feed = character(),
-      nbalance_kg_n_total = numeric(),
-      stringsAsFactors = FALSE
-    )
-  } else {
-    nitrogen_balance_output$feed <- as.character(nitrogen_balance_output$feed)
-    nitrogen_balance_output$nbalance_kg_n_total <- clean_num(nitrogen_balance_output$nbalance_kg_n_total)
-  }
-
   livestock_productivity <- to_df(livestock_productivity)
   biomass <- to_df(biomass)
   soil_carbon <- to_df(soil_carbon)
@@ -317,43 +277,42 @@ ghg_fertilizer_by_crop <- if (
       ) %>%
       tidyr::pivot_wider(names_from = season_name, values_from = area_feed_total)
 
-  # Expanded table land requirement
-  ex_land_required <- land_required %>%
-    group_by(feed) %>%
-    summarise(total_area = sum(area_feed, na.rm = T),
-              farm = sum(farm, na.rm = T),
-              rough_of = sum(rough_of, na.rm = T),
-              conc_of = sum(conc_of, na.rm = T),
-              conc_ip = sum(conc_ip, na.rm = T),
-              grasses = sum(grasses, na.rm = T),
-              tree_legume = sum(tree_legume, na.rm = T))
+    ex_land_required <- land_required_all %>%
+      dplyr::group_by(feed) %>%
+      dplyr::summarise(
+        total_area = sum(clean_num(area_feed), na.rm = TRUE),
+        farm = sum(clean_num(farm), na.rm = TRUE),
+        rough_of = sum(clean_num(rough_of), na.rm = TRUE),
+        conc_of = sum(clean_num(conc_of), na.rm = TRUE),
+        conc_ip = sum(clean_num(conc_ip), na.rm = TRUE),
+        grasses = sum(clean_num(grasses), na.rm = TRUE),
+        tree_legume = sum(clean_num(tree_legume), na.rm = TRUE),
+        .groups = "drop"
+      )
 
-  # Seasonal land required
-  seasonal_land_required <- land_required %>%
-    group_by(feed, season_name) %>%
-    summarise(area_feed_total = sum(area_feed, na.rm = T)) %>%
-    pivot_wider(names_from = season_name, values_from = area_feed_total)
+    seasonal_dm_required <- land_required_all %>%
+      dplyr::group_by(feed, season_name) %>%
+      dplyr::summarise(
+        feed_item_dm_total = sum(clean_num(feed_item_dm), na.rm = TRUE),
+        .groups = "drop"
+      ) %>%
+      tidyr::pivot_wider(names_from = season_name, values_from = feed_item_dm_total)
 
-  # Expanded table land requirement
-  ex_dm_required <- land_required %>%
-    group_by(feed) %>%
-    summarise(total_dm = sum(feed_item_dm, na.rm = T),
-              farm_dm = sum(farm_dm, na.rm = T),
-              rough_of_dm = sum(rough_of_dm, na.rm = T),
-              conc_of_dm = sum(conc_of_dm, na.rm = T),
-              conc_ip_dm = sum(conc_ip_dm, na.rm = T),
-              grasses_dm = sum(grasses_dm, na.rm = T),
-              tree_legume_dm = sum(tree_legume_dm, na.rm = T))
+    ex_dm_required <- land_required_all %>%
+      dplyr::group_by(feed) %>%
+      dplyr::summarise(
+        total_dm = sum(clean_num(feed_item_dm), na.rm = TRUE),
+        farm_dm = sum(clean_num(farm_dm), na.rm = TRUE),
+        rough_of_dm = sum(clean_num(rough_of_dm), na.rm = TRUE),
+        conc_of_dm = sum(clean_num(conc_of_dm), na.rm = TRUE),
+        conc_ip_dm = sum(clean_num(conc_ip_dm), na.rm = TRUE),
+        grasses_dm = sum(clean_num(grasses_dm), na.rm = TRUE),
+        tree_legume_dm = sum(clean_num(tree_legume_dm), na.rm = TRUE),
+        .groups = "drop"
+      )
 
-  # Seasonal DM required
-  seasonal_dm_required <- land_required %>%
-    group_by(feed, season_name) %>%
-    summarise(feed_item_dm_total = sum(feed_item_dm, na.rm = T)) %>%
-    pivot_wider(names_from = season_name, values_from = feed_item_dm_total)
-
-  # Join
-  land_required <- left_join(seasonal_land_required, ex_land_required, by = "feed")
-  dm_required <- left_join(seasonal_dm_required, ex_dm_required, by = "feed")
+    land_required_out <- dplyr::left_join(seasonal_land_required, ex_land_required, by = "feed")
+    dm_required_out <- dplyr::left_join(seasonal_dm_required, ex_dm_required, by = "feed")
 
     total_area_used_for_feed_production_ha <- scalar_first(sum(clean_num(land_required_out$total_area), na.rm = TRUE))
     total_dm_used_for_feed_production_kg <- scalar_first(sum(clean_num(dm_required_out$total_dm), na.rm = TRUE))
@@ -472,245 +431,401 @@ ghg_fertilizer_by_crop <- if (
   is_energy_goat <- grepl("Goat", energy_livestock_names, ignore.case = TRUE)
   is_energy_pig <- grepl("Pig|Swine", energy_livestock_names, ignore.case = TRUE)
 
-  cattle_milk_kg <- sum(livestock_productivity$total_cattle_milk_kg, na.rm = T)
-  cattle_meat_kg <- sum(livestock_productivity$total_cattle_meat_kg, na.rm = T)
-
-  other_milk_kg <- sum(livestock_productivity$total_other_milk_kg, na.rm = T)
-  other_meat_kg <- sum(livestock_productivity$total_other_meat_kg, na.rm = T)
-
+  cattle_milk_kg <- sum_livestock_where("total_milk", is_cattle)
+  cattle_meat_kg <- sum_livestock_where("meat_production_animal", is_cattle)
+  other_milk_kg <- sum_livestock_where("total_milk", is_other)
+  other_meat_kg <- sum_livestock_where("meat_production_animal", is_other)
   total_milk_kg <- cattle_milk_kg + other_milk_kg
   total_meat_kg <- cattle_meat_kg + other_meat_kg
 
-  cattle_milk_energy <- sum(livestock_productivity$total_cattle_milk_energy, na.rm = T)
-  cattle_meat_energy <- sum(livestock_productivity$total_cattle_meat_energy, na.rm = T)
-
-  other_milk_energy <- sum(livestock_productivity$total_other_milk_energy, na.rm = T)
-  other_meat_energy <- sum(livestock_productivity$total_other_meat_energy, na.rm = T)
-
+  cattle_milk_energy <- sum_livestock_where("energy_kcal_year_milk", is_cattle)
+  cattle_meat_energy <- sum_livestock_where("energy_kcal_year_meat", is_cattle)
+  other_milk_energy <- sum_livestock_where("energy_kcal_year_milk", is_other)
+  other_meat_energy <- sum_livestock_where("energy_kcal_year_meat", is_other)
   total_milk_energy <- cattle_milk_energy + other_milk_energy
   total_meat_energy <- cattle_meat_energy + other_meat_energy
 
-  cattle_milk_protein <- sum(livestock_productivity$total_cattle_milk_protein, na.rm = T)
-  cattle_meat_protein <- sum(livestock_productivity$total_cattle_meat_protein, na.rm = T)
-
-  other_milk_protein <- sum(livestock_productivity$total_other_milk_protein, na.rm = T)
-  other_meat_protein <- sum(livestock_productivity$total_other_meat_protein, na.rm = T)
-
+  cattle_milk_protein <- sum_livestock_where("protein_kg_year_milk", is_cattle)
+  cattle_meat_protein <- sum_livestock_where("protein_kg_year_meat", is_cattle)
+  other_milk_protein <- sum_livestock_where("protein_kg_year_milk", is_other)
+  other_meat_protein <- sum_livestock_where("protein_kg_year_meat", is_other)
   total_milk_protein <- cattle_milk_protein + other_milk_protein
   total_meat_protein <- cattle_meat_protein + other_meat_protein
 
   consumable_livestock_product <- data.frame(
-    produced_item = c("Cattle","Milk (FPCM)","Meat","Other","Milk (FPCM)","Meat","Total","Milk (FPCM)","Meat"),
-    production_kg_per_year = c("",cattle_milk_kg,cattle_meat_kg,"",other_milk_kg,other_meat_kg,"",total_milk_kg,total_meat_kg),
-    production_energy_kcal_per_year = c("",cattle_milk_energy,cattle_meat_energy,"",other_milk_energy,other_meat_energy,"",total_milk_energy,total_meat_energy),
-    protein_kg_per_year = c("",cattle_milk_protein,cattle_meat_protein,"",other_milk_protein,other_meat_protein,"",total_milk_protein,total_meat_protein)
-  ) %>% mutate(ame_days = as.numeric(production_energy_kcal_per_year)/2500)
-
-  # Produced manure
-  cattle_number <- sum(livestock_productivity$number_cattle, na.rm = T)
-  buffalo_number <- sum(livestock_productivity$number_buffalo, na.rm = T)
-  sheep_number <- sum(livestock_productivity$number_sheep, na.rm = T)
-  goat_number <- sum(livestock_productivity$number_goat, na.rm = T)
-  pig_number <- sum(livestock_productivity$number_pig, na.rm = T)
-
-  cattle_manure <- sum(livestock_productivity$sold_cattle_manure, na.rm = T)
-  buffalo_manure <- sum(livestock_productivity$sold_buffalo_manure, na.rm = T)
-  sheep_manure <- sum(livestock_productivity$sold_sheep_manure, na.rm = T)
-  goat_manure <- sum(livestock_productivity$sold_goat_manure, na.rm = T)
-  pig_manure <- sum(livestock_productivity$sold_pig_manure, na.rm = T)
-
-  cattle_tlu <- sum(livestock_productivity$total_cattle_tlu, na.rm = T)
-  buffalo_tlu <- sum(livestock_productivity$total_buffalo_tlu, na.rm = T)
-  sheep_tlu <- sum(livestock_productivity$total_sheep_tlu, na.rm = T)
-  goat_tlu <- sum(livestock_productivity$total_goat_tlu, na.rm = T)
-  pig_tlu <- sum(livestock_productivity$total_pig_tlu, na.rm = T)
+    produced_item = c("Cattle", "Milk (FPCM)", "Meat", "Other", "Milk (FPCM)", "Meat", "Total", "Milk (FPCM)", "Meat"),
+    production_kg_per_year = c("", cattle_milk_kg, cattle_meat_kg, "", other_milk_kg, other_meat_kg, "", total_milk_kg, total_meat_kg),
+    production_energy_kcal_per_year = c("", cattle_milk_energy, cattle_meat_energy, "", other_milk_energy, other_meat_energy, "", total_milk_energy, total_meat_energy),
+    protein_kg_per_year = c("", cattle_milk_protein, cattle_meat_protein, "", other_milk_protein, other_meat_protein, "", total_milk_protein, total_meat_protein),
+    stringsAsFactors = FALSE
+  ) %>%
+    dplyr::mutate(ame_days = suppressWarnings(as.numeric(production_energy_kcal_per_year)) / 2500)
 
   manure_produced <- data.frame(
-    livestock = c("Cattle","Buffalo","Sheep","Goat","Pig"),
-    livestock_number = c(cattle_number,buffalo_number,sheep_number,goat_number,pig_number),
-    manure_kg_per_year = c(cattle_manure,buffalo_manure,sheep_manure,goat_manure,pig_manure),
-    tlu = c(cattle_tlu,buffalo_tlu,sheep_tlu,goat_tlu,pig_tlu)
+    livestock = c("Cattle", "Buffalo", "Sheep", "Goat", "Pig"),
+    livestock_number = c(
+      sum_livestock_where("number", is_cattle),
+      sum_livestock_where("number", is_buffalo),
+      sum_livestock_where("number", is_sheep),
+      sum_livestock_where("number", is_goat),
+      sum_livestock_where("number", is_pig)
+    ),
+    annual_manure_produced_kg_per_year = c(
+      sum_energy_where("annual_manure_produced", is_energy_cattle),
+      sum_energy_where("annual_manure_produced", is_energy_buffalo),
+      sum_energy_where("annual_manure_produced", is_energy_sheep),
+      sum_energy_where("annual_manure_produced", is_energy_goat),
+      sum_energy_where("annual_manure_produced", is_energy_pig)
+    ),
+    daily_manure_produced_kg_per_day = c(
+      sum_energy_where("daily_manure_produced", is_energy_cattle),
+      sum_energy_where("daily_manure_produced", is_energy_buffalo),
+      sum_energy_where("daily_manure_produced", is_energy_sheep),
+      sum_energy_where("daily_manure_produced", is_energy_goat),
+      sum_energy_where("daily_manure_produced", is_energy_pig)
+    ),
+    manure_onfarm_grazing_kg_per_year = c(
+      sum_energy_where("manure_onfarm_grazing", is_energy_cattle),
+      sum_energy_where("manure_onfarm_grazing", is_energy_buffalo),
+      sum_energy_where("manure_onfarm_grazing", is_energy_sheep),
+      sum_energy_where("manure_onfarm_grazing", is_energy_goat),
+      sum_energy_where("manure_onfarm_grazing", is_energy_pig)
+    ),
+    manure_collected_kg_per_year = c(
+      sum_energy_where("manure_collected", is_energy_cattle),
+      sum_energy_where("manure_collected", is_energy_buffalo),
+      sum_energy_where("manure_collected", is_energy_sheep),
+      sum_energy_where("manure_collected", is_energy_goat),
+      sum_energy_where("manure_collected", is_energy_pig)
+    ),
+    manure_exported_kg_per_year = c(
+      sum_energy_where("manure_exported", is_energy_cattle),
+      sum_energy_where("manure_exported", is_energy_buffalo),
+      sum_energy_where("manure_exported", is_energy_sheep),
+      sum_energy_where("manure_exported", is_energy_goat),
+      sum_energy_where("manure_exported", is_energy_pig)
+    ),
+    tlu = c(
+      sum_livestock_where("tlu", is_cattle),
+      sum_livestock_where("tlu", is_buffalo),
+      sum_livestock_where("tlu", is_sheep),
+      sum_livestock_where("tlu", is_goat),
+      sum_livestock_where("tlu", is_pig)
+    ),
+    stringsAsFactors = FALSE
+  ) %>%
+    dplyr::filter(livestock_number > 0)
+
+  # ---------------------------------------------------------------------------
+  # app-style soil and nitrogen summaries
+  # ---------------------------------------------------------------------------
+  soil_erosion_summary <- to_df(soil_erosion)
+  if (nrow(soil_erosion_summary) > 0) {
+    if (!"feed_item" %in% names(soil_erosion_summary)) {
+      if ("feed" %in% names(soil_erosion_summary)) {
+        soil_erosion_summary$feed_item <- soil_erosion_summary$feed
+      } else if ("feed_type" %in% names(soil_erosion_summary)) {
+        soil_erosion_summary$feed_item <- soil_erosion_summary$feed_type
+      } else {
+        soil_erosion_summary$feed_item <- ""
+      }
+    }
+    if (!"soil_loss_plot" %in% names(soil_erosion_summary)) {
+      soil_erosion_summary$soil_loss_plot <- if ("soil_loss_ha_year" %in% names(soil_erosion_summary)) {
+        soil_erosion_summary$soil_loss_ha_year
+      } else {
+        0
+      }
+    }
+
+    soil_loss_plot <- clean_num(soil_erosion_summary$soil_loss_plot)
+    soil_erosion_summary$rough_of_soil_loss <- ifelse(grepl("OFR", soil_erosion_summary$feed_item), soil_loss_plot, 0)
+    soil_erosion_summary$conc_of_soil_loss <- ifelse(grepl("OFC", soil_erosion_summary$feed_item), soil_loss_plot, 0)
+    soil_erosion_summary$conc_ip_soil_loss <- ifelse(grepl("IP", soil_erosion_summary$feed_item), soil_loss_plot, 0)
+    soil_erosion_summary$farm_soil_loss <- soil_loss_plot -
+      soil_erosion_summary$rough_of_soil_loss -
+      soil_erosion_summary$conc_of_soil_loss -
+      soil_erosion_summary$conc_ip_soil_loss
+  }
+
+  overall_soil_impact <- data.frame(
+    sources = c("total", "on-farm", "rough of", "conc of", "conc ip"),
+    balance_N_kg_N_year = c(
+      sum_col(nitrogen_balance, "nbalance_feed_only_kg_n"),
+      sum_col(nitrogen_balance, "farm_kg_n"),
+      sum_col(nitrogen_balance, "rough_of_kg_n"),
+      sum_col(nitrogen_balance, "conc_of_kg_n"),
+      sum_col(nitrogen_balance, "conc_ip_kg_n")
+    ),
+    balance_N_kg_N_ha = c(
+      sum_col(nitrogen_balance, "nbalance_feed_only_kg_n_ha"),
+      sum_col(nitrogen_balance, "farm_kg_n_ha"),
+      sum_col(nitrogen_balance, "rough_of_kg_n_ha"),
+      sum_col(nitrogen_balance, "conc_of_kg_n_ha"),
+      sum_col(nitrogen_balance, "conc_ip_kg_n_ha")
+    ),
+    percent_area_mining = c(
+      safe_div0(sum_col(nitrogen_balance, "area_mining"), sum_col(nitrogen_balance, "area_total")) * 100,
+      safe_div0(sum_col(nitrogen_balance, "farm_area_mining"), sum_col(nitrogen_balance, "farm_area")) * 100,
+      safe_div0(sum_col(nitrogen_balance, "rough_of_area_mining"), sum_col(nitrogen_balance, "rough_of_area")) * 100,
+      safe_div0(sum_col(nitrogen_balance, "conc_of_nue_area_mining"), sum_col(nitrogen_balance, "conc_of_area")) * 100,
+      safe_div0(sum_col(nitrogen_balance, "conc_ip_nue_area_mining"), sum_col(nitrogen_balance, "conc_ip_area")) * 100
+    ),
+    percent_area_leaching = c(
+      safe_div0(sum_col(nitrogen_balance, "area_leaching"), sum_col(nitrogen_balance, "area_total")) * 100,
+      safe_div0(sum_col(nitrogen_balance, "farm_area_leaching"), sum_col(nitrogen_balance, "farm_area")) * 100,
+      safe_div0(sum_col(nitrogen_balance, "rough_of_area_leaching"), sum_col(nitrogen_balance, "rough_of_area")) * 100,
+      safe_div0(sum_col(nitrogen_balance, "conc_of_nue_area_leaching"), sum_col(nitrogen_balance, "conc_of_area")) * 100,
+      safe_div0(sum_col(nitrogen_balance, "conc_ip_nue_area_leaching"), sum_col(nitrogen_balance, "conc_ip_area")) * 100
+    ),
+    erosion_t_soil_year = c(
+      sum_col(soil_erosion_summary, "soil_loss_plot"),
+      sum_col(soil_erosion_summary, "rough_of_soil_loss"),
+      sum_col(soil_erosion_summary, "conc_of_soil_loss"),
+      sum_col(soil_erosion_summary, "conc_ip_soil_loss"),
+      sum_col(soil_erosion_summary, "farm_soil_loss")
+    ),
+    stringsAsFactors = FALSE
+  ) %>%
+    dplyr::mutate(
+      erosion_t_soil_ha = c(
+        safe_div0(erosion_t_soil_year[1], sum_col(nitrogen_balance, "area_total")),
+        safe_div0(erosion_t_soil_year[2], sum_col(nitrogen_balance, "farm_area")),
+        safe_div0(erosion_t_soil_year[3], sum_col(nitrogen_balance, "rough_of_area")),
+        safe_div0(erosion_t_soil_year[4], sum_col(nitrogen_balance, "conc_of_area")),
+        safe_div0(erosion_t_soil_year[5], sum_col(nitrogen_balance, "conc_ip_area"))
+      )
+    )
+
+  legacy_nitrogen_cols <- c(
+    "feed",
+    "nin",
+    "nout",
+    "nbalance_kg_n_total",
+    "nbalance_kg_n_ha_total",
+    "nbalance_feed_only_kg_n",
+    "nbalance_feed_only_kg_n_ha"
   )
 
-  livestock_productivity <- list(consumable_livestock_product = consumable_livestock_product,
-                                 manure_produced = manure_produced)
+  legacy_nitrogen_balance <- if (all(legacy_nitrogen_cols %in% names(nitrogen_balance))) {
+    nitrogen_balance %>%
+      dplyr::select(dplyr::all_of(legacy_nitrogen_cols)) %>%
+      dplyr::mutate(
+        nbalance_food_only_kg_n = nbalance_kg_n_total - nbalance_feed_only_kg_n,
+        nbalance_food_only_kg_n_ha = nbalance_kg_n_ha_total - nbalance_feed_only_kg_n_ha
+      )
+  } else {
+    nitrogen_balance
+  }
 
-  ###############################################################################################
-  ## Soil impact
-  ###############################################################################################
-  # Plotting N balance
-  nitrogen_balance_output <- nitrogen_balance %>%
-    group_by(feed) %>%
-    summarise(nbalance_kg_n_total = sum(nbalance_kg_n_total, na.rm = T))
+  # ---------------------------------------------------------------------------
+  # ghg summary - OLD STYLE per-hectare source attribution
+  # ---------------------------------------------------------------------------
 
-  ## OVERALL SOIL IMPACTS
-  nitrogen_balance <- nitrogen_balance
+  methane <- 28
+  N2O <- 265
 
-  soil_erosion <- soil_erosion %>%
-    mutate(rough_of_soil_loss = ifelse(stringr::str_detect(feed_item, "OFR"), as.numeric(soil_loss_plot), 0),
-           conc_of_soil_loss = ifelse(stringr::str_detect(feed_item, "OFC"), as.numeric(soil_loss_plot), 0),
-           conc_ip_soil_loss = ifelse(stringr::str_detect(feed_item, "IP"), as.numeric(soil_loss_plot), 0),
-           farm_soil_loss = (as.numeric(soil_loss_plot) - rough_of_soil_loss - conc_of_soil_loss - conc_ip_soil_loss))
+  sum_num <- function(x) {
+    x <- clean_num(x)
+    sum(x, na.rm = TRUE)
+  }
 
-  overal_soil_impact <- data.frame(
-    sources = c("total", "on-farm", "rough of", "conc of", "conc ip"),
-    balance_N_kg_N_year = c(sum(nitrogen_balance$nbalance_feed_only_kg_n, na.rm = T), sum(nitrogen_balance$farm_kg_n, na.rm = T),
-                            sum(nitrogen_balance$rough_of_kg_n, na.rm = T), sum(nitrogen_balance$conc_of_kg_n, na.rm = T), sum(nitrogen_balance$conc_ip_kg_n, na.rm = T)),
-    balance_N_kg_N_ha = c(sum(nitrogen_balance$nbalance_feed_only_kg_n_ha, na.rm = T), sum(nitrogen_balance$farm_kg_n_ha, na.rm = T),
-                          sum(nitrogen_balance$rough_of_kg_n_ha, na.rm = T), sum(nitrogen_balance$conc_of_kg_n_ha, na.rm = T), sum(nitrogen_balance$conc_ip_kg_n_ha, na.rm = T)),
-    percent_area_mining = c(sum(nitrogen_balance$area_mining, na.rm = T)*100/sum(nitrogen_balance$area_total, na.rm = T), sum(nitrogen_balance$farm_area_mining, na.rm = T)*100/sum(nitrogen_balance$farm_area, na.rm = T),
-                            sum(nitrogen_balance$rough_of_area_mining, na.rm = T)*100/sum(nitrogen_balance$rough_of_area, na.rm = T),sum(nitrogen_balance$conc_of_nue_area_mining, na.rm = T)*100/sum(nitrogen_balance$conc_of_area, na.rm = T),sum(nitrogen_balance$conc_ip_nue_area_mining, na.rm = T)*100/sum(nitrogen_balance$conc_ip_area, na.rm = T)),
-    percent_area_leaching = c(sum(nitrogen_balance$area_leaching, na.rm = T)*100/sum(nitrogen_balance$area_total, na.rm = T), sum(nitrogen_balance$farm_area_leaching, na.rm = T)*100/sum(nitrogen_balance$farm_area, na.rm = T),
-                              sum(nitrogen_balance$rough_of_area_leaching, na.rm = T)*100/sum(nitrogen_balance$rough_of_area, na.rm = T),sum(nitrogen_balance$conc_of_nue_area_leaching, na.rm = T)*100/sum(nitrogen_balance$conc_of_area, na.rm = T),sum(nitrogen_balance$conc_ip_nue_area_leaching, na.rm = T)*100/sum(nitrogen_balance$conc_ip_area, na.rm = T)),
-    erosion_t_soil_year = c(sum(as.numeric(soil_erosion$soil_loss_plot, na.rm = T)), sum(soil_erosion$rough_of_soil_loss, na.rm = T), sum(soil_erosion$conc_of_soil_loss, na.rm = T),
-                            sum(soil_erosion$conc_ip_soil_loss, na.rm = T), sum(soil_erosion$farm_soil_loss, na.rm = T))
-  )%>%
-    mutate(percent_area_mining = ifelse(!is.finite(percent_area_mining),0,percent_area_mining),
-           percent_area_leaching = ifelse(!is.finite(percent_area_leaching),0,percent_area_leaching),
-           erosion_t_soil_ha = erosion_t_soil_year/c(sum(nitrogen_balance$area_total, na.rm = T), sum(nitrogen_balance$farm_area, na.rm = T), sum(nitrogen_balance$rough_of_area, na.rm = T),
-                                                     sum(nitrogen_balance$conc_of_area, na.rm = T), sum(nitrogen_balance$conc_ip_area, na.rm = T)))
+  safe_zero_div <- function(a, b) {
+    a <- scalar_first(a, default = NA_real_)
+    b <- scalar_first(b, default = NA_real_)
+    if (is.na(a) || is.na(b) || b < 0.001) return(0)
+    a / b
+  }
 
-  # Feed items specific N balance
-  nitrogen_balance <- nitrogen_balance %>%
-    select(c(feed,nin,nout,nbalance_kg_n_total,nbalance_kg_n_ha_total,nbalance_feed_only_kg_n,nbalance_feed_only_kg_n_ha)) %>%
-    mutate(nbalance_food_only_kg_n = nbalance_kg_n_total-nbalance_feed_only_kg_n,
-           nbalance_food_only_kg_n_ha = nbalance_kg_n_ha_total-nbalance_feed_only_kg_n_ha)
+  # land areas from current land_and_dm_required object
+  get_named_value <- function(df, nm, default = 0) {
+    if (!is.data.frame(df) || nrow(df) == 0) return(default)
+    if (!all(c("Names", "Value") %in% names(df))) return(default)
+    hit <- df$Value[df$Names == nm]
+    if (!length(hit)) return(default)
+    scalar_first(hit, default = default)
+  }
 
-  soil_impacts <- list(overal_soil_impact = overal_soil_impact,
-                       nitrogen_balance = nitrogen_balance)
+  area_required_on_farm_ha <- get_named_value(land_and_dm_required, "area_required_on_farm_ha", 0)
+  area_required_roughages_off_farm_ha <- get_named_value(land_and_dm_required, "area_required_roughages_off_farm_ha", 0)
+  area_required_concentrates_off_farm_ha <- get_named_value(land_and_dm_required, "area_required_concentrates_off_farm_ha", 0)
+  area_required_imported_concentrates_ha <- get_named_value(land_and_dm_required, "area_required_imported_concentrates_ha", 0)
 
-  ###############################################################################################
-  ## Water Impacts
-  ###############################################################################################
-  water_use_per_feed_item <- water_required[["water_use_per_feed_item"]]
+  # milk produced
+  total_milk_produced_kg_fpcm_per_year <- scalar_sum(livestock_productivity, "total_milk", default = NA_real_)
+  if (is.na(total_milk_produced_kg_fpcm_per_year) || total_milk_produced_kg_fpcm_per_year == 0) {
+    total_milk_produced_kg_fpcm_per_year <- scalar_sum(consumable_livestock_product, "total_milk", default = NA_real_)
+  }
 
-  water_use_per_feed_item_output <- water_use_per_feed_item
-
-  ###############################################################################################
-  ## GHG Impacts
-  ###############################################################################################
-
-  # GHG Balance
-  methane	<- 28
-  N2O	<- 265
-  total_milk_produced_kg_fpcm_per_year <- as.numeric(livestock_productivity[["consumable_livestock_product"]][livestock_productivity[["consumable_livestock_product"]]$produced_item == "Milk (FPCM)","production_kg_per_year"][3])
-
+  # -------------------------
   # On-farm
-  enteric_fermentation_methane <- sum(ghg_emissions[["ef"]]$enteric_methane_emissions,na.rm = T)
-  enteric_fermentation_methane_tot_kg_co2_e <- enteric_fermentation_methane*methane
-  enteric_fermentation_methane_per_ha_kg_co2_e <- ifelse(area_required_on_farm_ha<0.001,0,enteric_fermentation_methane_tot_kg_co2_e/area_required_on_farm_ha)
-  enteric_fermentation_methane_kg_co2_e_per_kg_fpcm <- enteric_fermentation_methane_tot_kg_co2_e/total_milk_produced_kg_fpcm_per_year
+  # -------------------------
+  enteric_fermentation_methane <- sum_num(ghg_ef$enteric_methane_emissions)
+  enteric_fermentation_methane_tot_kg_co2_e <- enteric_fermentation_methane * methane
+  enteric_fermentation_methane_per_ha_kg_co2_e <- safe_zero_div(enteric_fermentation_methane_tot_kg_co2_e, area_required_on_farm_ha)
+  enteric_fermentation_methane_kg_co2_e_per_kg_fpcm <- safe_zero_div(enteric_fermentation_methane_tot_kg_co2_e, total_milk_produced_kg_fpcm_per_year)
 
-  manure_methane <- sum(ghg_emissions[["eft"]]$emission_factor,na.rm = T)
-  manure_methane_tot_kg_co2_e <- manure_methane*methane
-  manure_methane_per_ha_kg_co2_e <- ifelse(area_required_on_farm_ha<0.001,0,manure_methane_tot_kg_co2_e/area_required_on_farm_ha)
-  manure_methane_kg_co2_e_per_kg_fpcm <- manure_methane_tot_kg_co2_e/total_milk_produced_kg_fpcm_per_year
+  manure_methane <- if ("emission_factor" %in% names(ghg_eft)) sum_num(ghg_eft$emission_factor) else 0
+  manure_methane_tot_kg_co2_e <- manure_methane * methane
+  manure_methane_per_ha_kg_co2_e <- safe_zero_div(manure_methane_tot_kg_co2_e, area_required_on_farm_ha)
+  manure_methane_kg_co2_e_per_kg_fpcm <- safe_zero_div(manure_methane_tot_kg_co2_e, total_milk_produced_kg_fpcm_per_year)
 
-  manure_direct_N2O <- sum(ghg_emissions[["direct_N2O"]]$direct_N2O_emission,na.rm = T)
-  manure_direct_N2O_tot_kg_co2_e <- manure_direct_N2O*N2O
-  manure_direct_N2O_per_ha_kg_co2_e <- ifelse(area_required_on_farm_ha<0.001,0,manure_direct_N2O_tot_kg_co2_e/area_required_on_farm_ha)
-  manure_direct_N2O_kg_co2_e_per_kg_fpcm <- manure_direct_N2O_tot_kg_co2_e/total_milk_produced_kg_fpcm_per_year
-
-  manure_Indirect_N2O <- sum(ghg_emissions[["indirect_N2O"]]$indirect_N2O_emission,na.rm = T)
-  manure_Indirect_N2O_tot_kg_co2_e <- manure_Indirect_N2O*N2O
-  manure_Indirect_N2O_per_ha_kg_co2_e <- ifelse(area_required_on_farm_ha<0.001,0,manure_Indirect_N2O_tot_kg_co2_e/area_required_on_farm_ha)
-  manure_Indirect_N2O_kg_co2_e_per_kg_fpcm <- manure_Indirect_N2O_tot_kg_co2_e/total_milk_produced_kg_fpcm_per_year
-
-  soil_direct_N2O <- sum(ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]][ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]]$anthropogenic_N_input == "farm_n_synthetic_fertilizer_managed_soil","annual_N20N_direct_emission_from_managed_soil"],
-                         ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]][ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]]$anthropogenic_N_input == "farm_n_from_crop_residue_managed_soil","annual_N20N_direct_emission_from_managed_soil"],
-                         ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]][ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]]$anthropogenic_N_input == "n_synthetic_fertilizer_flooded_rice","annual_N20N_direct_emission_from_managed_soil"],
-                         ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]][ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]]$anthropogenic_N_input == "n_organic_manure_flooded_rice","annual_N20N_direct_emission_from_managed_soil"],
-                         ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]][ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]]$anthropogenic_N_input == "n_from_crop_residue_flooded_rice","annual_N20N_direct_emission_from_managed_soil"],
-                         ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]][ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]]$anthropogenic_N_input == "cattle_pig_poultry_n_pasture_onfarm","annual_N20N_direct_emission_from_managed_soil"],
-                         ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]][ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]]$anthropogenic_N_input == "sheep_and_other_n_pasture_onfarm","annual_N20N_direct_emission_from_managed_soil"],na.rm = T)
-  soil_direct_N2O_tot_kg_co2_e <- soil_direct_N2O*N2O
-  soil_direct_N2O_per_ha_kg_co2_e <- ifelse(area_required_on_farm_ha<0.001,0,soil_direct_N2O_tot_kg_co2_e/area_required_on_farm_ha)
-  soil_direct_N2O_kg_co2_e_per_kg_fpcm <- soil_direct_N2O_tot_kg_co2_e/total_milk_produced_kg_fpcm_per_year
-
-  soil_indirect_N2O <- sum(ghg_emissions[["ghg_soil"]][["annual_N20N_soil_indirect_emission"]][ghg_emissions[["ghg_soil"]][["annual_N20N_soil_indirect_emission"]]$anthropogenic_N_input == "farm_n_synthetic_fertilizer_managed_soil", "annual_N20N_from_atmospheric_deposition"],na.rm = T)
-  soil_indirect_N2O_tot_kg_co2_e <- soil_indirect_N2O*N2O
-  soil_indirect_N2O_per_ha_kg_co2_e <- ifelse(area_required_on_farm_ha<0.001,0,soil_indirect_N2O_tot_kg_co2_e/area_required_on_farm_ha)
-  soil_indirect_N2O_kg_co2_e_per_kg_fpcm <- soil_indirect_N2O_tot_kg_co2_e/total_milk_produced_kg_fpcm_per_year
-
-  burning <- ((ghg_emissions$ghg_burn[ghg_emissions$ghg_burn$ghg_gas=="CO2",5])+(ghg_emissions$ghg_burn[ghg_emissions$ghg_burn$ghg_gas=="CH4",5]*methane)+(ghg_emissions$ghg_burn[ghg_emissions$ghg_burn$ghg_gas=="Nox",5]*N2O))
-  burning_per_ha_kg_co2_e <- ifelse(area_required_on_farm_ha<0.001,0,burning/area_required_on_farm_ha)
-  burning_kg_co2_e_per_kg_fpcm <- burning/total_milk_produced_kg_fpcm_per_year
-
-  rice_production_methane <- sum(ghg_emissions$ghg_rice$annual_methane_emission,na.rm = T)
-  rice_production_methane_tot_kg_co2_e <- rice_production_methane*methane
-  rice_production_methane_per_ha_kg_co2_e <- ifelse(area_required_on_farm_ha<0.001,0,rice_production_methane_tot_kg_co2_e/area_required_on_farm_ha)
-  rice_production_methane_kg_co2_e_per_kg_fpcm <- rice_production_methane_tot_kg_co2_e/total_milk_produced_kg_fpcm_per_year
-  # quick fix for the case with no fertilizer
-  if (!is.list(ghg_emissions[["fetilizer_ghg"]])) {
-    on_farm_fertilizer_emission <- 0
+  manure_direct_N2O <- if ("direct_N2O_emission" %in% names(ghg_direct_n2o)) {
+    sum_num(ghg_direct_n2o$direct_N2O_emission)
+  } else if ("direct_n2o_emission" %in% names(ghg_direct_n2o)) {
+    sum_num(ghg_direct_n2o$direct_n2o_emission)
   } else {
-    on_farm_fertilizer_emission <- sum(ghg_emissions[["fetilizer_ghg"]][["fertlizer_emission_by_crop"]]$farm_fertiliser_emission)
+    0
   }
-  on_farm_fertilizer_emission_per_ha_kg_co2_e <- ifelse(area_required_on_farm_ha<0.001,0,on_farm_fertilizer_emission/area_required_on_farm_ha)
-  on_farm_fertilizer_emission_kg_co2_e_per_kg_fpcm <- on_farm_fertilizer_emission/total_milk_produced_kg_fpcm_per_year
+  manure_direct_N2O_tot_kg_co2_e <- manure_direct_N2O * N2O
+  manure_direct_N2O_per_ha_kg_co2_e <- safe_zero_div(manure_direct_N2O_tot_kg_co2_e, area_required_on_farm_ha)
+  manure_direct_N2O_kg_co2_e_per_kg_fpcm <- safe_zero_div(manure_direct_N2O_tot_kg_co2_e, total_milk_produced_kg_fpcm_per_year)
 
-  # Roughage off farm
-  rough_of_Soil_direct_N2O <- sum(ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]][ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]]$anthropogenic_N_input == "rough_of_n_synthetic_fertilizer_managed_soil","annual_N20N_direct_emission_from_managed_soil"],
-                                  ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]][ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]]$anthropogenic_N_input == "rough_of_n_from_crop_residue_managed_soil","annual_N20N_direct_emission_from_managed_soil"],na.rm = T)
-  rough_of_Soil_direct_N2O_tot_kg_co2_e <- rough_of_Soil_direct_N2O*N2O
-  rough_of_Soil_direct_N2O_per_ha_kg_co2_e <- ifelse(area_required_roughages_off_farm_ha<0.001,0,rough_of_Soil_direct_N2O_tot_kg_co2_e/area_required_roughages_off_farm_ha)
-  rough_of_Soil_direct_N2O_kg_co2_e_per_kg_fpcm <- rough_of_Soil_direct_N2O_tot_kg_co2_e/total_milk_produced_kg_fpcm_per_year
-
-  rough_of_soil_indirect_N2O <- sum(ghg_emissions[["ghg_soil"]][["annual_N20N_soil_indirect_emission"]][ghg_emissions[["ghg_soil"]][["annual_N20N_soil_indirect_emission"]]$anthropogenic_N_input == "rough_of_n_synthetic_fertilizer_managed_soil", "annual_N20N_from_atmospheric_deposition"],na.rm = T)
-  rough_of_soil_indirect_N2O_tot_kg_co2_e <- rough_of_soil_indirect_N2O*N2O
-  rough_of_soil_indirect_N2O_per_ha_kg_co2_e <- ifelse(area_required_roughages_off_farm_ha<0.001,0,rough_of_soil_indirect_N2O_tot_kg_co2_e/area_required_roughages_off_farm_ha)
-  rough_of_soil_indirect_N2O_kg_co2_e_per_kg_fpcm <- rough_of_soil_indirect_N2O_tot_kg_co2_e/total_milk_produced_kg_fpcm_per_year
-
-  # fix for the case with no fertilizer
-  if (!is.list(ghg_emissions[["fetilizer_ghg"]])) {
-    rough_of_fertilizer_emission <- 0
+  manure_Indirect_N2O <- if ("indirect_N2O_emission" %in% names(ghg_indirect_n2o)) {
+    sum_num(ghg_indirect_n2o$indirect_N2O_emission)
+  } else if ("indirect_n2o_emission" %in% names(ghg_indirect_n2o)) {
+    sum_num(ghg_indirect_n2o$indirect_n2o_emission)
   } else {
-    rough_of_fertilizer_emission <- sum(ghg_emissions[["fetilizer_ghg"]][["fertlizer_emission_by_crop"]]$rough_of_fertiliser_emission)
+    0
   }
-  rough_of_fertilizer_emission_per_ha_kg_co2_e <- ifelse(area_required_roughages_off_farm_ha<0.001,0,rough_of_fertilizer_emission/area_required_roughages_off_farm_ha)
-  rough_of_fertilizer_emission_kg_co2_e_per_kg_fpcm <- rough_of_fertilizer_emission/total_milk_produced_kg_fpcm_per_year
+  manure_Indirect_N2O_tot_kg_co2_e <- manure_Indirect_N2O * N2O
+  manure_Indirect_N2O_per_ha_kg_co2_e <- safe_zero_div(manure_Indirect_N2O_tot_kg_co2_e, area_required_on_farm_ha)
+  manure_Indirect_N2O_kg_co2_e_per_kg_fpcm <- safe_zero_div(manure_Indirect_N2O_tot_kg_co2_e, total_milk_produced_kg_fpcm_per_year)
 
+  soil_direct_df <- if (is.list(ghg_soil_raw) && "annual_N20N_soil_direct_emission" %in% names(ghg_soil_raw)) {
+    to_df(ghg_soil_raw[["annual_N20N_soil_direct_emission"]])
+  } else {
+    data.frame()
+  }
+
+  soil_indirect_df <- if (is.list(ghg_soil_raw) && "annual_N20N_soil_indirect_emission" %in% names(ghg_soil_raw)) {
+    to_df(ghg_soil_raw[["annual_N20N_soil_indirect_emission"]])
+  } else {
+    data.frame()
+  }
+
+  soil_direct_pick <- function(keys) {
+    if (!nrow(soil_direct_df)) return(0)
+    if (!all(c("anthropogenic_N_input", "annual_N20N_direct_emission_from_managed_soil") %in% names(soil_direct_df))) return(0)
+    sum_num(soil_direct_df[soil_direct_df$anthropogenic_N_input %in% keys, "annual_N20N_direct_emission_from_managed_soil"])
+  }
+
+  soil_indirect_pick <- function(keys) {
+    if (!nrow(soil_indirect_df)) return(0)
+    if (!all(c("anthropogenic_N_input", "annual_N20N_from_atmospheric_deposition") %in% names(soil_indirect_df))) return(0)
+    sum_num(soil_indirect_df[soil_indirect_df$anthropogenic_N_input %in% keys, "annual_N20N_from_atmospheric_deposition"])
+  }
+
+  soil_direct_N2O <- soil_direct_pick(c(
+    "farm_n_synthetic_fertilizer_managed_soil",
+    "farm_n_from_crop_residue_managed_soil",
+    "n_synthetic_fertilizer_flooded_rice",
+    "n_organic_manure_flooded_rice",
+    "n_from_crop_residue_flooded_rice",
+    "cattle_pig_poultry_n_pasture_onfarm",
+    "sheep_and_other_n_pasture_onfarm"
+  ))
+
+  soil_indirect_N2O <- soil_indirect_pick(c(
+    "farm_n_synthetic_fertilizer_managed_soil"
+  ))
+
+  soil_direct_N2O_tot_kg_co2_e <- soil_direct_N2O * N2O
+  soil_indirect_N2O_tot_kg_co2_e <- soil_indirect_N2O * N2O
+  soil_direct_N2O_per_ha_kg_co2_e <- safe_zero_div(soil_direct_N2O_tot_kg_co2_e, area_required_on_farm_ha)
+  soil_indirect_N2O_per_ha_kg_co2_e <- safe_zero_div(soil_indirect_N2O_tot_kg_co2_e, area_required_on_farm_ha)
+  soil_direct_N2O_kg_co2_e_per_kg_fpcm <- safe_zero_div(soil_direct_N2O_tot_kg_co2_e, total_milk_produced_kg_fpcm_per_year)
+  soil_indirect_N2O_kg_co2_e_per_kg_fpcm <- safe_zero_div(soil_indirect_N2O_tot_kg_co2_e, total_milk_produced_kg_fpcm_per_year)
+
+  burning <- 0
+  if (nrow(ghg_burn) > 0 && ncol(ghg_burn) >= 5 && "ghg_gas" %in% names(ghg_burn)) {
+    burning <- sum_num(ghg_burn[ghg_burn$ghg_gas == "CO2", 5]) +
+      sum_num(ghg_burn[ghg_burn$ghg_gas == "CH4", 5]) * methane +
+      sum_num(ghg_burn[ghg_burn$ghg_gas == "Nox", 5]) * N2O
+  }
+  burning_per_ha_kg_co2_e <- safe_zero_div(burning, area_required_on_farm_ha)
+  burning_kg_co2_e_per_kg_fpcm <- safe_zero_div(burning, total_milk_produced_kg_fpcm_per_year)
+
+  rice_production_methane <- if ("annual_methane_emission" %in% names(ghg_rice)) sum_num(ghg_rice$annual_methane_emission) else 0
+  rice_production_methane_tot_kg_co2_e <- rice_production_methane * methane
+  rice_production_methane_per_ha_kg_co2_e <- safe_zero_div(rice_production_methane_tot_kg_co2_e, area_required_on_farm_ha)
+  rice_production_methane_kg_co2_e_per_kg_fpcm <- safe_zero_div(rice_production_methane_tot_kg_co2_e, total_milk_produced_kg_fpcm_per_year)
+
+  fertilizer_crop_df <- if (is.list(ghg_fertilizer_raw) && "fertlizer_emission_by_crop" %in% names(ghg_fertilizer_raw)) {
+    to_df(ghg_fertilizer_raw[["fertlizer_emission_by_crop"]])
+  } else {
+    data.frame()
+  }
+
+  on_farm_fertilizer_emission <- if ("farm_fertiliser_emission" %in% names(fertilizer_crop_df)) sum_num(fertilizer_crop_df$farm_fertiliser_emission) else 0
+  on_farm_fertilizer_emission_per_ha_kg_co2_e <- safe_zero_div(on_farm_fertilizer_emission, area_required_on_farm_ha)
+  on_farm_fertilizer_emission_kg_co2_e_per_kg_fpcm <- safe_zero_div(on_farm_fertilizer_emission, total_milk_produced_kg_fpcm_per_year)
+
+  # -------------------------
+  # Roughages off-farm
+  # -------------------------
+  rough_of_Soil_direct_N2O <- soil_direct_pick(c(
+    "rough_of_n_synthetic_fertilizer_managed_soil",
+    "rough_of_n_from_crop_residue_managed_soil"
+  ))
+  rough_of_Soil_direct_N2O_tot_kg_co2_e <- rough_of_Soil_direct_N2O * N2O
+  rough_of_Soil_direct_N2O_per_ha_kg_co2_e <- safe_zero_div(rough_of_Soil_direct_N2O_tot_kg_co2_e, area_required_roughages_off_farm_ha)
+  rough_of_Soil_direct_N2O_kg_co2_e_per_kg_fpcm <- safe_zero_div(rough_of_Soil_direct_N2O_tot_kg_co2_e, total_milk_produced_kg_fpcm_per_year)
+
+  rough_of_soil_indirect_N2O <- soil_indirect_pick(c(
+    "rough_of_n_synthetic_fertilizer_managed_soil"
+  ))
+  rough_of_soil_indirect_N2O_tot_kg_co2_e <- rough_of_soil_indirect_N2O * N2O
+  rough_of_soil_indirect_N2O_per_ha_kg_co2_e <- safe_zero_div(rough_of_soil_indirect_N2O_tot_kg_co2_e, area_required_roughages_off_farm_ha)
+  rough_of_soil_indirect_N2O_kg_co2_e_per_kg_fpcm <- safe_zero_div(rough_of_soil_indirect_N2O_tot_kg_co2_e, total_milk_produced_kg_fpcm_per_year)
+
+  rough_of_fertilizer_emission <- if ("rough_of_fertiliser_emission" %in% names(fertilizer_crop_df)) sum_num(fertilizer_crop_df$rough_of_fertiliser_emission) else 0
+  rough_of_fertilizer_emission_per_ha_kg_co2_e <- safe_zero_div(rough_of_fertilizer_emission, area_required_roughages_off_farm_ha)
+  rough_of_fertilizer_emission_kg_co2_e_per_kg_fpcm <- safe_zero_div(rough_of_fertilizer_emission, total_milk_produced_kg_fpcm_per_year)
+
+  # -------------------------
   # Concentrates off-farm
-  conc_of_Soil_direct_N2O <- sum(ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]][ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]]$anthropogenic_N_input == "conc_of_n_synthetic_fertilizer_managed_soil","annual_N20N_direct_emission_from_managed_soil"],
-                                 ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]][ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]]$anthropogenic_N_input == "conc_of_n_from_crop_residue_managed_soil","annual_N20N_direct_emission_from_managed_soil"],na.rm = T)
-  conc_of_Soil_direct_N2O_tot_kg_co2_e <- conc_of_Soil_direct_N2O*N2O
-  conc_of_Soil_direct_N2O_per_ha_kg_co2_e <- ifelse(area_required_concentrates_off_farm_ha<0.001,0,conc_of_Soil_direct_N2O_tot_kg_co2_e/area_required_concentrates_off_farm_ha)
-  conc_of_Soil_direct_N2O_kg_co2_e_per_kg_fpcm <- conc_of_Soil_direct_N2O_tot_kg_co2_e/total_milk_produced_kg_fpcm_per_year
+  # -------------------------
+  conc_of_Soil_direct_N2O <- soil_direct_pick(c(
+    "conc_of_n_synthetic_fertilizer_managed_soil",
+    "conc_of_n_from_crop_residue_managed_soil"
+  ))
+  conc_of_Soil_direct_N2O_tot_kg_co2_e <- conc_of_Soil_direct_N2O * N2O
+  conc_of_Soil_direct_N2O_per_ha_kg_co2_e <- safe_zero_div(conc_of_Soil_direct_N2O_tot_kg_co2_e, area_required_concentrates_off_farm_ha)
+  conc_of_Soil_direct_N2O_kg_co2_e_per_kg_fpcm <- safe_zero_div(conc_of_Soil_direct_N2O_tot_kg_co2_e, total_milk_produced_kg_fpcm_per_year)
 
-  conc_of_soil_indirect_N2O <- sum(ghg_emissions[["ghg_soil"]][["annual_N20N_soil_indirect_emission"]][ghg_emissions[["ghg_soil"]][["annual_N20N_soil_indirect_emission"]]$anthropogenic_N_input == "conc_of_n_synthetic_fertilizer_managed_soil", "annual_N20N_from_atmospheric_deposition"],na.rm = T)
-  conc_of_soil_indirect_N2O_tot_kg_co2_e <- conc_of_soil_indirect_N2O*N2O
-  conc_of_soil_indirect_N2O_per_ha_kg_co2_e <- ifelse(area_required_concentrates_off_farm_ha<0.001,0,conc_of_soil_indirect_N2O_tot_kg_co2_e/area_required_concentrates_off_farm_ha)
-  conc_of_soil_indirect_N2O_kg_co2_e_per_kg_fpcm <- conc_of_soil_indirect_N2O_tot_kg_co2_e/total_milk_produced_kg_fpcm_per_year
+  conc_of_soil_indirect_N2O <- soil_indirect_pick(c(
+    "conc_of_n_synthetic_fertilizer_managed_soil"
+  ))
+  conc_of_soil_indirect_N2O_tot_kg_co2_e <- conc_of_soil_indirect_N2O * N2O
+  conc_of_soil_indirect_N2O_per_ha_kg_co2_e <- safe_zero_div(conc_of_soil_indirect_N2O_tot_kg_co2_e, area_required_concentrates_off_farm_ha)
+  conc_of_soil_indirect_N2O_kg_co2_e_per_kg_fpcm <- safe_zero_div(conc_of_soil_indirect_N2O_tot_kg_co2_e, total_milk_produced_kg_fpcm_per_year)
 
-  if (!is.list(ghg_emissions[["fetilizer_ghg"]])) {
-    conc_of_fertilizer_emission <- 0
-  } else {
-    conc_of_fertilizer_emission <- sum(ghg_emissions[["fetilizer_ghg"]][["fertlizer_emission_by_crop"]]$conc_of_fertiliser_emission)
-  }
+  conc_of_fertilizer_emission <- if ("conc_of_fertiliser_emission" %in% names(fertilizer_crop_df)) sum_num(fertilizer_crop_df$conc_of_fertiliser_emission) else 0
+  conc_of_fertilizer_emission_per_ha_kg_co2_e <- safe_zero_div(conc_of_fertilizer_emission, area_required_concentrates_off_farm_ha)
+  conc_of_fertilizer_emission_kg_co2_e_per_kg_fpcm <- safe_zero_div(conc_of_fertilizer_emission, total_milk_produced_kg_fpcm_per_year)
 
-  conc_of_fertilizer_emission_per_ha_kg_co2_e <- ifelse(area_required_concentrates_off_farm_ha<0.001,0,conc_of_fertilizer_emission/area_required_concentrates_off_farm_ha)
-  conc_of_fertilizer_emission_kg_co2_e_per_kg_fpcm <- conc_of_fertilizer_emission/total_milk_produced_kg_fpcm_per_year
-
+  # -------------------------
   # Imported concentrates
-  conc_ip_Soil_direct_N2O <- sum(ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]][ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]]$anthropogenic_N_input == "conc_ip_n_synthetic_fertilizer_managed_soil","annual_N20N_direct_emission_from_managed_soil"],
-                                 ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]][ghg_emissions[["ghg_soil"]][["annual_N20N_soil_direct_emission"]]$anthropogenic_N_input == "conc_ip_n_from_crop_residue_managed_soil","annual_N20N_direct_emission_from_managed_soil"],na.rm = T)
-  conc_ip_Soil_direct_N2O_tot_kg_co2_e <- conc_ip_Soil_direct_N2O*N2O
-  conc_ip_Soil_direct_N2O_per_ha_kg_co2_e <- ifelse(area_required_imported_concentrates_ha<0.001,0,conc_ip_Soil_direct_N2O_tot_kg_co2_e/area_required_imported_concentrates_ha)
-  conc_ip_Soil_direct_N2O_kg_co2_e_per_kg_fpcm <- conc_ip_Soil_direct_N2O_tot_kg_co2_e/total_milk_produced_kg_fpcm_per_year
+  # -------------------------
+  conc_ip_Soil_direct_N2O <- soil_direct_pick(c(
+    "conc_ip_n_synthetic_fertilizer_managed_soil",
+    "conc_ip_n_from_crop_residue_managed_soil"
+  ))
+  conc_ip_Soil_direct_N2O_tot_kg_co2_e <- conc_ip_Soil_direct_N2O * N2O
+  conc_ip_Soil_direct_N2O_per_ha_kg_co2_e <- safe_zero_div(conc_ip_Soil_direct_N2O_tot_kg_co2_e, area_required_imported_concentrates_ha)
+  conc_ip_Soil_direct_N2O_kg_co2_e_per_kg_fpcm <- safe_zero_div(conc_ip_Soil_direct_N2O_tot_kg_co2_e, total_milk_produced_kg_fpcm_per_year)
 
-  conc_ip_soil_indirect_N2O <- sum(ghg_emissions[["ghg_soil"]][["annual_N20N_soil_indirect_emission"]][ghg_emissions[["ghg_soil"]][["annual_N20N_soil_indirect_emission"]]$anthropogenic_N_input == "conc_ip_n_synthetic_fertilizer_managed_soil", "annual_N20N_from_atmospheric_deposition"],na.rm = T)
-  conc_ip_soil_indirect_N2O_tot_kg_co2_e <- conc_ip_soil_indirect_N2O*N2O
-  conc_ip_soil_indirect_N2O_per_ha_kg_co2_e <- ifelse(area_required_imported_concentrates_ha<0.001,0,conc_ip_soil_indirect_N2O_tot_kg_co2_e/area_required_imported_concentrates_ha)
-  conc_ip_soil_indirect_N2O_kg_co2_e_per_kg_fpcm <- conc_ip_soil_indirect_N2O_tot_kg_co2_e/total_milk_produced_kg_fpcm_per_year
+  conc_ip_soil_indirect_N2O <- soil_indirect_pick(c(
+    "conc_ip_n_synthetic_fertilizer_managed_soil"
+  ))
+  conc_ip_soil_indirect_N2O_tot_kg_co2_e <- conc_ip_soil_indirect_N2O * N2O
+  conc_ip_soil_indirect_N2O_per_ha_kg_co2_e <- safe_zero_div(conc_ip_soil_indirect_N2O_tot_kg_co2_e, area_required_imported_concentrates_ha)
+  conc_ip_soil_indirect_N2O_kg_co2_e_per_kg_fpcm <- safe_zero_div(conc_ip_soil_indirect_N2O_tot_kg_co2_e, total_milk_produced_kg_fpcm_per_year)
 
-  if (!is.list(ghg_emissions[["fetilizer_ghg"]])) {
-    conc_ip_fertilizer_emission <- 0
-  } else {
-    conc_ip_fertilizer_emission <- sum(ghg_emissions[["fetilizer_ghg"]][["fertlizer_emission_by_crop"]]$conc_ip_fertiliser_emission)
-  }
-
-  conc_ip_fertilizer_emission_per_ha_kg_co2_e <- ifelse(area_required_imported_concentrates_ha<0.001,0,conc_ip_fertilizer_emission/area_required_imported_concentrates_ha)
-  conc_ip_fertilizer_emission_kg_co2_e_per_kg_fpcm <- conc_ip_fertilizer_emission/total_milk_produced_kg_fpcm_per_year
+  conc_ip_fertilizer_emission <- if ("conc_ip_fertiliser_emission" %in% names(fertilizer_crop_df)) sum_num(fertilizer_crop_df$conc_ip_fertiliser_emission) else 0
+  conc_ip_fertilizer_emission_per_ha_kg_co2_e <- safe_zero_div(conc_ip_fertilizer_emission, area_required_imported_concentrates_ha)
+  conc_ip_fertilizer_emission_kg_co2_e_per_kg_fpcm <- safe_zero_div(conc_ip_fertilizer_emission, total_milk_produced_kg_fpcm_per_year)
 
   ghg_balance <- data.frame(
     GHG_balance = c("On-farm", "Enteric fermentation-Methane",
@@ -786,7 +901,7 @@ ghg_fertilizer_by_crop <- if (
                         conc_ip_soil_indirect_N2O_per_ha_kg_co2_e,
                         conc_ip_fertilizer_emission_per_ha_kg_co2_e),
     kg_co2_e_tot = c("", enteric_fermentation_methane_tot_kg_co2_e,
-                     manure_methane_per_ha_kg_co2_e,
+                     manure_methane_tot_kg_co2_e,
                      manure_direct_N2O_tot_kg_co2_e,
                      manure_Indirect_N2O_tot_kg_co2_e,
                      soil_direct_N2O_tot_kg_co2_e,
@@ -820,66 +935,92 @@ ghg_fertilizer_by_crop <- if (
                              conc_of_fertilizer_emission_kg_co2_e_per_kg_fpcm,
                              "", conc_ip_Soil_direct_N2O_kg_co2_e_per_kg_fpcm,
                              conc_ip_soil_indirect_N2O_kg_co2_e_per_kg_fpcm,
-                             conc_ip_fertilizer_emission_kg_co2_e_per_kg_fpcm)
+                             conc_ip_fertilizer_emission_kg_co2_e_per_kg_fpcm),
+    stringsAsFactors = FALSE
   )
 
-  # Global warming potential (CO2eq)
-  soil_on_farm <- (as.numeric(ghg_balance[ghg_balance$GHG_balance == "Soil-Direct N2O", "kg_co2_e_per_ha"][1]) +
-                     as.numeric(ghg_balance[ghg_balance$GHG_balance == "Soil-Indirect N2O", "kg_co2_e_per_ha"][1]))/1000
+  soil_on_farm <- (
+    as.numeric(ghg_balance[ghg_balance$GHG_balance == "Soil-Direct N2O", "kg_co2_e_per_ha"][1]) +
+      as.numeric(ghg_balance[ghg_balance$GHG_balance == "Soil-Indirect N2O", "kg_co2_e_per_ha"][1])
+  ) / 1000
 
-  soil_off_farm <- (sum(as.numeric(ghg_balance[ghg_balance$GHG_balance == "Soil-Direct N2O", "kg_co2_e_per_ha"][-1])) +
-                      sum(as.numeric(ghg_balance[ghg_balance$GHG_balance == "Soil-Indirect N2O", "kg_co2_e_per_ha"][-1])))/1000
+  soil_off_farm <- (
+    sum(as.numeric(ghg_balance[ghg_balance$GHG_balance == "Soil-Direct N2O", "kg_co2_e_per_ha"][-1]), na.rm = TRUE) +
+      sum(as.numeric(ghg_balance[ghg_balance$GHG_balance == "Soil-Indirect N2O", "kg_co2_e_per_ha"][-1]), na.rm = TRUE)
+  ) / 1000
 
-  livestock_manure <- (as.numeric(ghg_balance[ghg_balance$GHG_balance == "Manure-Methane", "kg_co2_e_per_ha"]) +
-                         as.numeric(ghg_balance[ghg_balance$GHG_balance == "Manure-Direct N2O", "kg_co2_e_per_ha"]) +
-                         as.numeric(ghg_balance[ghg_balance$GHG_balance == "Manure-Indirect N2O", "kg_co2_e_per_ha"]))/1000
+  livestock_manure <- (
+    as.numeric(ghg_balance[ghg_balance$GHG_balance == "Manure-Methane", "kg_co2_e_per_ha"]) +
+      as.numeric(ghg_balance[ghg_balance$GHG_balance == "Manure-Direct N2O", "kg_co2_e_per_ha"]) +
+      as.numeric(ghg_balance[ghg_balance$GHG_balance == "Manure-Indirect N2O", "kg_co2_e_per_ha"])
+  ) / 1000
 
-  livestock_enteric_fermentation <- as.numeric(ghg_balance[ghg_balance$GHG_balance == "Enteric fermentation-Methane", "kg_co2_e_per_ha"])/1000
+  livestock_enteric_fermentation <- as.numeric(
+    ghg_balance[ghg_balance$GHG_balance == "Enteric fermentation-Methane", "kg_co2_e_per_ha"]
+  ) / 1000
 
-  burning_emission <- as.numeric(ghg_balance[ghg_balance$GHG_balance == "Burning", "kg_co2_e_per_ha"])/1000
+  burning_emission <- as.numeric(
+    ghg_balance[ghg_balance$GHG_balance == "Burning", "kg_co2_e_per_ha"]
+  ) / 1000
 
-  rice <- as.numeric(ghg_balance[ghg_balance$GHG_balance == "Rice production-Methane", "kg_co2_e_per_ha"])/1000
+  rice <- as.numeric(
+    ghg_balance[ghg_balance$GHG_balance == "Rice production-Methane", "kg_co2_e_per_ha"]
+  ) / 1000
 
-  fertilizer_on_farm <- as.numeric(ghg_balance[ghg_balance$GHG_balance == "Production fertilizer", "kg_co2_e_per_ha"][1])/1000
+  fertilizer_on_farm <- as.numeric(
+    ghg_balance[ghg_balance$GHG_balance == "Production fertilizer", "kg_co2_e_per_ha"][1]
+  ) / 1000
 
-  soil_off_farm_rough <- (sum(as.numeric(ghg_balance[ghg_balance$GHG_balance == "Soil-Direct N2O", "kg_co2_e_per_ha"][2])) +
-                            sum(as.numeric(ghg_balance[ghg_balance$GHG_balance == "Soil-Indirect N2O", "kg_co2_e_per_ha"][2])))/1000
+  soil_off_farm_rough <- (
+    as.numeric(ghg_balance[ghg_balance$GHG_balance == "Soil-Direct N2O", "kg_co2_e_per_ha"][2]) +
+      as.numeric(ghg_balance[ghg_balance$GHG_balance == "Soil-Indirect N2O", "kg_co2_e_per_ha"][2])
+  ) / 1000
 
-  fertilizer_off_farm_rough <- as.numeric(ghg_balance[ghg_balance$GHG_balance == "Production fertilizer", "kg_co2_e_per_ha"][2])/1000
+  fertilizer_off_farm_rough <- as.numeric(
+    ghg_balance[ghg_balance$GHG_balance == "Production fertilizer", "kg_co2_e_per_ha"][2]
+  ) / 1000
 
-  soil_off_farm_conc <- (sum(as.numeric(ghg_balance[ghg_balance$GHG_balance == "Soil-Direct N2O", "kg_co2_e_per_ha"][3])) +
-                           sum(as.numeric(ghg_balance[ghg_balance$GHG_balance == "Soil-Indirect N2O", "kg_co2_e_per_ha"][3])))/1000
+  soil_off_farm_conc <- (
+    as.numeric(ghg_balance[ghg_balance$GHG_balance == "Soil-Direct N2O", "kg_co2_e_per_ha"][3]) +
+      as.numeric(ghg_balance[ghg_balance$GHG_balance == "Soil-Indirect N2O", "kg_co2_e_per_ha"][3])
+  ) / 1000
 
-  fertilizer_off_farm_conc <- as.numeric(ghg_balance[ghg_balance$GHG_balance == "Production fertilizer", "kg_co2_e_per_ha"][3])/1000
+  fertilizer_off_farm_conc <- as.numeric(
+    ghg_balance[ghg_balance$GHG_balance == "Production fertilizer", "kg_co2_e_per_ha"][3]
+  ) / 1000
 
-  soil_ip_farm_conc <- (sum(as.numeric(ghg_balance[ghg_balance$GHG_balance == "Soil-Direct N2O", "kg_co2_e_per_ha"][4])) +
-                          sum(as.numeric(ghg_balance[ghg_balance$GHG_balance == "Soil-Indirect N2O", "kg_co2_e_per_ha"][4])))/1000
+  soil_ip_farm_conc <- (
+    as.numeric(ghg_balance[ghg_balance$GHG_balance == "Soil-Direct N2O", "kg_co2_e_per_ha"][4]) +
+      as.numeric(ghg_balance[ghg_balance$GHG_balance == "Soil-Indirect N2O", "kg_co2_e_per_ha"][4])
+  ) / 1000
 
-  fertilizer_ip_farm_conc <- as.numeric(ghg_balance[ghg_balance$GHG_balance == "Production fertilizer", "kg_co2_e_per_ha"][4])/1000
+  fertilizer_ip_farm_conc <- as.numeric(
+    ghg_balance[ghg_balance$GHG_balance == "Production fertilizer", "kg_co2_e_per_ha"][4]
+  ) / 1000
 
   on_farm_table <- data.frame(
-    sources_and_sinks = c("Soil","Off-farm Soil", "Liv. Manure", "Liv.enteric fermentation", "Burning", "Rice", "Fertilizer"),
-    t_CO2e_per_ha = c(soil_on_farm, soil_off_farm, livestock_manure, livestock_enteric_fermentation, burning_emission, rice, fertilizer_on_farm)
+    sources_and_sinks = c("Soil", "Off-farm Soil", "Liv. Manure", "Liv.enteric fermentation", "Burning", "Rice", "Fertilizer"),
+    t_CO2e_per_ha = c(soil_on_farm, soil_off_farm, livestock_manure, livestock_enteric_fermentation, burning_emission, rice, fertilizer_on_farm),
+    stringsAsFactors = FALSE
   )
   on_farm_table$t_CO2e_per_ha <- clean_num(on_farm_table$t_CO2e_per_ha)
 
   off_farm_table <- data.frame(
-    sources_and_sinks = c("Roughages off-farm", "Soil off-farm", "Fertilizer off-farm", "Concentrates off-farm", "Soil off-farm", "Fertilizer off-farm", "Imported concentrates", "Soil off-farm", "Fertilizer off-farm"),
-    t_CO2e_per_ha = c("", soil_off_farm_rough, fertilizer_off_farm_rough, "", soil_off_farm_conc, fertilizer_off_farm_conc, "", soil_ip_farm_conc, fertilizer_ip_farm_conc)
+    sources_and_sinks = c("Roughages off-farm", "Soil off-farm", "Fertilizer off-farm",
+                          "Concentrates off-farm", "Soil off-farm", "Fertilizer off-farm",
+                          "Imported concentrates", "Soil off-farm", "Fertilizer off-farm"),
+    t_CO2e_per_ha = c("", soil_off_farm_rough, fertilizer_off_farm_rough,
+                      "", soil_off_farm_conc, fertilizer_off_farm_conc,
+                      "", soil_ip_farm_conc, fertilizer_ip_farm_conc),
+    stringsAsFactors = FALSE
   )
 
-  global_warming_potential <- rbind(data.frame(sources_and_sinks = c("On-farm"),t_CO2e_per_ha = c("")),
-                                    on_farm_table,
-                                    off_farm_table)
-  ghg_emission <- list(ghg_balance = ghg_balance,
-                       global_warming_potential = global_warming_potential)
+  global_warming_potential <- rbind(
+    data.frame(sources_and_sinks = "On-farm", t_CO2e_per_ha = "", stringsAsFactors = FALSE),
+    on_farm_table,
+    off_farm_table
+  )
 
-  # Plotting GHG emission
-  on_farm_table_output <- on_farm_table
-
-  ###############################################################################################
-  ## Waste
-  ###############################################################################################
   product_waste <- data.frame(
     waste = c("waste - prod", "waste - distribution", "waste - processing", "waste - consume"),
     milk = c(
