@@ -303,17 +303,17 @@ safe_div <- function(num, den, default = 0) {
       total_land_requirement_ha
     )
 
-    ghg_emission_t_co2_eq_per_kg_fpcm <- safe_div(
+    ghg_emission_kg_co2_eq_per_kg_fpcm <- safe_div(
       ghg_emission_t_co2_eq_per_year,
       total_milk_produced_kg_fpcm_per_year
     ) * 1000
 
-    ghg_emission_t_co2_eq_per_kg_meat <- safe_div(
+    ghg_emission_kg_co2_eq_per_kg_meat <- safe_div(
       ghg_emission_t_co2_eq_per_year,
       total_meat_produced_kg_per_year
     ) * 1000
 
-    ghg_emission_t_co2_eq_per_kg_protein <- safe_div(
+    ghg_emission_kg_co2_eq_per_kg_protein <- safe_div(
       ghg_emission_t_co2_eq_per_year,
       total_protein_produced_kg_per_year
     ) * 1000
@@ -391,9 +391,9 @@ safe_div <- function(num, den, default = 0) {
     # -------------------------------------------------------------------------
     # Total carbon balance
     # -------------------------------------------------------------------------
-    total_carbon_balance_per_fpcm <- scalar_num(ghg_emission_t_co2_eq_per_kg_fpcm) - scalar_num(carbon_stock_change_t_co2eq_per_fpcm)
-    total_carbon_balance_per_meat <- scalar_num(ghg_emission_t_co2_eq_per_kg_meat) - scalar_num(carbon_stock_change_t_co2eq_per_meat)
-    total_carbon_balance_per_protein <- scalar_num(ghg_emission_t_co2_eq_per_kg_protein) - scalar_num(carbon_stock_change_t_co2eq_per_protein)
+    total_carbon_balance_per_fpcm <- scalar_num(ghg_emission_kg_co2_eq_per_kg_fpcm) - scalar_num(carbon_stock_change_t_co2eq_per_fpcm)
+    total_carbon_balance_per_meat <- scalar_num(ghg_emission_kg_co2_eq_per_kg_meat) - scalar_num(carbon_stock_change_t_co2eq_per_meat)
+    total_carbon_balance_per_protein <- scalar_num(ghg_emission_kg_co2_eq_per_kg_protein) - scalar_num(carbon_stock_change_t_co2eq_per_protein)
 
     # -------------------------------------------------------------------------
     # Final scenario row - every field forced to length 1
@@ -428,9 +428,9 @@ safe_div <- function(num, den, default = 0) {
 
       ghg_emission_t_co2_eq_per_year = scalar_num(ghg_emission_t_co2_eq_per_year),
       ghg_emission_t_co2_eq_per_ha_per_year = scalar_num(ghg_emission_t_co2_eq_per_ha_per_year),
-      ghg_emission_t_co2_eq_per_kg_fpcm = scalar_num(ghg_emission_t_co2_eq_per_kg_fpcm),
-      ghg_emission_t_co2_eq_per_kg_meat = scalar_num(ghg_emission_t_co2_eq_per_kg_meat),
-      ghg_emission_t_co2_eq_per_kg_protein = scalar_num(ghg_emission_t_co2_eq_per_kg_protein),
+      ghg_emission_kg_co2_eq_per_kg_fpcm = scalar_num(ghg_emission_kg_co2_eq_per_kg_fpcm),
+      ghg_emission_kg_co2_eq_per_kg_meat = scalar_num(ghg_emission_kg_co2_eq_per_kg_meat),
+      ghg_emission_kg_co2_eq_per_kg_protein = scalar_num(ghg_emission_kg_co2_eq_per_kg_protein),
 
       percent_precipitation_used_for_feed_production = scalar_num(percent_precipitation_used_for_feed_production),
       total_water_use_m3 = scalar_num(total_water_use_m3),
