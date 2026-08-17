@@ -1,6 +1,6 @@
 # cleaned
 
-`cleaned` implements the iCLEANED model: Comprehensive Livestock Environmental Assessment for Improved Nutrition, a Secured Environment, and Sustainable Development along livestock and fish value chains.
+`cleaned` implements the iCLEANED model: inclusive Comprehensive Livestock Environmental Assessment for Improved Nutrition, a Secured Environment, and Sustainable Development along livestock and fish value chains.
 
 The package estimates environmental indicators for livestock production systems from a structured scenario input object. It is used in two main workflows:
 
