@@ -1,25 +1,30 @@
 cff-version: 1.2.0
-title: "CIAT/Cleaned_batch-2: CLEANED Development Changes (2025)"
+title: "iCLEANED: inclusive Comprehensive Livestock Environmental Assessment for Improved Nutrition, a Secured Environment, and Sustainable Development along livestock and fish value chains"
 message: "If you use this software, please cite it as below."
 type: software
 
 authors:
   - family-names: Mwema
     given-names: Emmanuel
-    affiliation: "Alliance Bioversity International - CIAT"
-
+    email: e.mwema@cgiar.org
   - family-names: Steward
     given-names: Pete
-    affiliation: "Alliance Bioversity International - CIAT"
-
-  - family-names: "Van der Hoek"
+  - family-names: Oloo
+    given-names: Stephen
+    email: oloostephen08@gmail.com
+    orcid: https://orcid.org/0000-0003-2314-3146
+  - family-names: Mutua
+    given-names: John
+  - family-names: Van der Hoek
     given-names: Rein
-    affiliation: "Alliance Bioversity International - CIAT"
-
+  - family-names: Mukiri
+    given-names: Jessica
+  - family-names: Paul
+    given-names: Birthe
+  - family-names: Jou
+    given-names: Ahmed
   - family-names: Notenbaert
     given-names: An
-    affiliation: "Alliance Bioversity International - CIAT"
-
-repository-code: https://github.com/M-Emmanuel/cleaned-staging-v2
-version: "2025.1"
-date-released: 2026-01-27
+repository-code: "https://github.com/CIAT/cleaned"
+version: "0.7.0"
+date-released: 2026-08-17

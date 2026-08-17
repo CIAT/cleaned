@@ -1,7 +1,7 @@
 Package: cleaned
 Title: Comprehensive Livestock Environmental Assessment for Improved Nutrition, a Secured Environment, and Sustainable Development along Livestock and Fish Value Chains
-Version: 0.6.0
-Date: 2024-03-11
+Version: 0.7.0
+Date: 2026-08-17
 Authors@R: c(person("Stephen", "Oloo",
         email = "oloostephen08@gmail.com",
         role = "aut",
