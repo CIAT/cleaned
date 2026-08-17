@@ -1003,6 +1003,7 @@ ghg_fertilizer_by_crop <- if (
     t_CO2e_per_ha = c(soil_on_farm, soil_off_farm, livestock_manure, livestock_enteric_fermentation, burning_emission, rice, fertilizer_on_farm),
     stringsAsFactors = FALSE
   )
+  on_farm_table$t_CO2e_per_ha <- clean_num(on_farm_table$t_CO2e_per_ha)
 
   off_farm_table <- data.frame(
     sources_and_sinks = c("Roughages off-farm", "Soil off-farm", "Fertilizer off-farm",
