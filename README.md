@@ -61,7 +61,7 @@ remotes::install_local("path/to/cleaned")
 Or install from a tagged GitHub release:
 
 ```r
-remotes::install_github("CIAT/cleaned@cleaned_v0.6.1")
+remotes::install_github("CIAT/cleaned@cleaned_v0.7.0")
 ```
 
 For development on Windows, verify the package with:
