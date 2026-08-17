@@ -1,0 +1,197 @@
+---
+title: "iCLEANED Model Overview"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{iCLEANED Model Overview}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+# Purpose
+
+`cleaned` implements the iCLEANED model for ex-ante environmental assessment of livestock production systems and value chains. It connects animal, feed, land, soil, water, carbon, and greenhouse gas calculations into a single scenario workflow.
+
+The package is used in two operational settings:
+
+1. **Interactive app workflow**: the iCLEANED application builds a scenario object, calls the package functions, and uses compact outputs for result tables and interactive plots.
+2. **Batch workflow**: scripts process many scenario files, export detailed JSON and Excel outputs, and compare scenarios with `calculate_differences()`.
+
+# Main Data Flow
+
+The model is ordered. Later modules depend on outputs from earlier modules.
+
+```text
+Scenario input object
+  |
+  +-- feed_quality()
+        |
+        +-- energy_requirement()
+              |
+              +-- land_requirement()
+              |     |
+              |     +-- soil_health()
+              |     +-- water_requirement()
+              |     +-- biomass_calculation()
+              |     +-- soil_organic_carbon()
+              |
+              +-- land_productivity()
+              +-- n_balance()
+              +-- ghg_emission()
+                    |
+                    +-- combineOutputs()
+                          |
+                          +-- app outputs
+                          +-- batch JSON and Excel outputs
+                          +-- calculate_differences()
+```
+
+# Core Functions
+
+| Function | Role | Main inputs | Main outputs |
+|---|---|---|---|
+| `feed_quality()` | Converts feed basket allocations and feed nutrient composition into seasonal livestock feed quality matrices. | `para$livestock`, `para$seasons`, `para$feed_items`, `para$feed_basket` | Data frame with feed quality variables by season, livestock category, and feed item. |
+| `energy_requirement()` | Calculates animal energy, protein, intake, limiting nutrient, and manure outputs. | `para`, `feed_basket_quality`, `energy_parameters` | List with `annual_results` and `seasonal_results`. |
+| `land_requirement()` | Converts feed demand into land and dry matter requirements by feed source. | `feed_basket_quality`, `energy_required`, `para` | List with `land_requirements_all` and `feed_items_frac`. |
+| `soil_health()` | Calculates soil erosion using rainfall, soil, slope, cover, and land requirement data. | `para`, `land_required` | Soil erosion data frame by feed item. |
+| `n_balance()` | Calculates nitrogen inputs, removals, balance, NUE, mining, and leaching indicators. | `para`, `land_required`, `energy_required`, `soil_erosion` | Nitrogen balance data frame by feed item. |
+| `water_requirement()` | Calculates feed water use and product-level water use indicators. | `para`, `land_required` | List with `water_use_per_feed_item` and `water_use_for_production`. |
+| `land_productivity()` | Calculates milk, meat, protein, energy, TLU, and manure-exported summaries by livestock category. | `para`, `energy_required` | Livestock productivity data frame. |
+| `biomass_calculation()` | Calculates tree biomass and CO2 change for non-feed tree biomass associated with feed land. | `para`, `land_required` | Biomass/carbon data frame. |
+| `soil_organic_carbon()` | Calculates soil organic carbon stock changes using land use and stock change parameters. | `para`, `stock_change_para`, `land_required`, `biomass` | Soil carbon data frame. |
+| `ghg_emission()` | Calculates GHG emissions from livestock, manure, soils, fertilizer, burning, rice, and feed production. | `para`, `energy_required`, `ghg_ipcc_data`, `land_required`, `nitrogen_balance`, optional `feed_basket_quality` | GHG component list. |
+| `combineOutputs()` | Aggregates module outputs into JSON, Excel, app plot data, and batch detail tables. | All module outputs | App-facing and batch-facing output list; writes Excel workbook. |
+| `calculate_differences()` | Converts one or more scenario outputs into scalar comparison indicators. | Output JSON paths | Comparison JSON and `runs_comparison.xlsx`. |
+
+# Standard Workflow
+
+```r
+library(cleaned)
+library(jsonlite)
+
+para <- fromJSON("scenario_input.json")
+energy_parameters <- fromJSON(system.file("extdata", "energy_parameters.json", package = "cleaned"))
+ghg_parameters <- fromJSON(system.file("extdata", "ghg_parameters.json", package = "cleaned"))
+stock_change_parameters <- fromJSON(system.file("extdata", "stock_change_parameters.json", package = "cleaned"))
+
+feed_basket_quality <- feed_quality(para)
+
+energy_required <- energy_requirement(
+  para,
+  feed_basket_quality,
+  energy_parameters
+)
+
+land_required <- land_requirement(
+  feed_basket_quality,
+  energy_required,
+  para
+)
+
+soil_erosion <- soil_health(para, land_required)
+
+nitrogen_balance <- n_balance(
+  para,
+  land_required,
+  energy_required,
+  soil_erosion
+)
+
+water_required <- water_requirement(para, land_required)
+
+livestock_productivity <- land_productivity(
+  para,
+  energy_required
+)
+
+biomass <- biomass_calculation(para, land_required)
+
+soil_carbon <- soil_organic_carbon(
+  para,
+  stock_change_parameters,
+  land_required,
+  biomass
+)
+
+ghg_emissions <- ghg_emission(
+  para,
+  energy_required,
+  ghg_parameters,
+  land_required,
+  nitrogen_balance,
+  feed_basket_quality
+)
+
+outputs <- combineOutputs(
+  para,
+  feed_basket_quality,
+  energy_required,
+  land_required,
+  soil_erosion,
+  water_required,
+  nitrogen_balance,
+  livestock_productivity,
+  biomass,
+  soil_carbon,
+  ghg_emissions,
+  filePath = "scenario_output.json"
+)
+```
+
+# Workflow Modes
+
+## App mode
+
+The iCLEANED app expects compact results that are easy to render:
+
+- `on_farm_table`
+- `nitrogen_balance`
+- `land_required`
+- `water_use_per_feed_item`
+- `json_output`
+
+These are returned by `combineOutputs()` and consumed by the app's result page and visualizations.
+
+When `primary_excel` is supplied to `combineOutputs()`, the function loads the app's primary workbook and adds the curated sheets expected by the app workflow.
+
+## Batch mode
+
+When `primary_excel` is not supplied, `combineOutputs()` writes a detailed workbook and includes both legacy nested outputs and newer flat detail tables in `json_output`. This is the preferred structure for batch processing and scenario comparison.
+
+Batch outputs preserve additional intermediate tables such as feed quality, annual and seasonal energy requirements, GHG components, fertilizer tables, soil detail, and livestock productivity.
+
+# Scenario Comparison
+
+Use `calculate_differences()` after generating output JSON files for multiple runs.
+
+```r
+calculate_differences(
+  outFile = "comparison.json",
+  "baseline_output.json",
+  "intervention_output.json"
+)
+```
+
+The function writes:
+
+- `comparison.json`: one row per scenario as JSON.
+- `runs_comparison.xlsx`: an Excel workbook with an `all_results` sheet.
+
+The comparison output is intended for batch summaries, app comparison views, and plotting.
+
+# Important Design Assumptions
+
+- Function inputs are expected to follow the iCLEANED scenario schema.
+- Category labels and codes should match the app/database controlled vocabularies.
+- Feed nutrient values from external databases must be converted into the package format before running the model.
+- `combineOutputs()` is the compatibility layer between old nested outputs, newer flat batch outputs, and app plot-ready outputs.
+- Invalid divisions are handled defensively in output aggregation and comparison, but upstream scenario inputs should still be validated before model execution.
+
+See `vignette("input-contract", package = "cleaned")` and `vignette("output-contract", package = "cleaned")` for field-level details.
