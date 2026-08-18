@@ -190,8 +190,8 @@ For an internal or GitHub release:
 6. Create a tag, for example:
 
 ```powershell
-git tag cleaned_v0.7.0
-git push origin cleaned_v0.7.0
+git tag v0.7.0
+git push origin v0.7.0
 ```
 
 7. Create a GitHub release from the tag.
