@@ -1,0 +1,88 @@
+name: Bug report
+description: Something in cleaned errors, crashes or gives a wrong result.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug. A small reproducible example helps us fix it much faster.
+        If the problem is a parameter value or a lookup table entry rather than code, please use the **Data or parameter issue** form instead.
+  - type: dropdown
+    id: component
+    attributes:
+      label: Function or component
+      description: Where does the problem happen? Pick all that apply.
+      multiple: true
+      options:
+        - feed_quality
+        - energy_requirement
+        - land_requirement
+        - land_productivity
+        - biomass_calculation
+        - soil_health
+        - soil_organic_carbon
+        - water_requirement
+        - n_balance
+        - ghg_emission
+        - season_length
+        - combineOutputs
+        - compare_scenario / calculate_differences
+        - clean_plotting
+        - Parameter files (inst/extdata)
+        - Batch processing
+        - Installation
+        - Not sure / other
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Describe the bug. Paste the full error or warning message if there is one.
+      placeholder: |
+        Error in ghg_emission(...): object 'x' not found
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect to happen?
+    validations:
+      required: true
+  - type: textarea
+    id: reprex
+    attributes:
+      label: Reproducible example
+      description: |
+        Minimal R code that shows the problem. Ideally use the example input shipped with the package:
+        `system.file("extdata", "example_input.json", package = "cleaned")`.
+        If you need your own input file, attach it (JSON or xlsx) or a cut-down version of it.
+      render: r
+      placeholder: |
+        library(cleaned)
+        para <- jsonlite::fromJSON(system.file("extdata", "example_input.json", package = "cleaned"))
+        energy_parameters <- jsonlite::fromJSON(system.file("extdata", "energy_parameters.json", package = "cleaned"))
+        feed_basket_quality <- feed_quality(para)
+        energy_required <- energy_requirement(para, feed_basket_quality, energy_parameters)
+    validations:
+      required: true
+  - type: input
+    id: pkg-version
+    attributes:
+      label: cleaned version
+      description: Output of `packageVersion("cleaned")`, or the branch or commit you installed from.
+      placeholder: "0.7.0"
+    validations:
+      required: true
+  - type: textarea
+    id: session
+    attributes:
+      label: Session info
+      description: Output of `sessionInfo()`.
+      render: text
+  - type: textarea
+    id: context
+    attributes:
+      label: Anything else?
+      description: Screenshots, links to related issues, workarounds you found.

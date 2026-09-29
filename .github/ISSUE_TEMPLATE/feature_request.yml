@@ -1,0 +1,38 @@
+name: Feature request
+description: Suggest a new function, output, livestock system or improvement.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      description: Describe what you're trying to do and what's missing or awkward today.
+      placeholder: I want to compare several scenarios at once, but I have to run each JSON file separately...
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: What you'd like to happen. Sketch function names, arguments or outputs if you have ideas.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Workarounds you use now, or other approaches you thought about.
+  - type: textarea
+    id: methods
+    attributes:
+      label: Methods or references
+      description: If this needs new calculations, link the method (IPCC chapter, paper, DOI).
+  - type: dropdown
+    id: contribute
+    attributes:
+      label: Can you help?
+      options:
+        - I'd like to submit a pull request
+        - I can help test or provide data
+        - Not at the moment
