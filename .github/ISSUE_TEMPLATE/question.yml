@@ -1,0 +1,21 @@
+name: Question
+description: Ask how to use cleaned, or how a calculation works.
+title: "[Question]: "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please check the [documentation](https://ciat.github.io/cleaned/) first. If it doesn't answer your question, ask here.
+  - type: textarea
+    id: question
+    attributes:
+      label: Your question
+    validations:
+      required: true
+  - type: textarea
+    id: tried
+    attributes:
+      label: What have you tried?
+      description: Code you ran, docs you read, or results you got.
+      render: r

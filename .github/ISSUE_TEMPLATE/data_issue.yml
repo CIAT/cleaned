@@ -1,0 +1,55 @@
+name: Data or parameter issue
+description: A coefficient, emission factor, feed value or lookup entry looks wrong or is missing.
+title: "[Data]: "
+labels: ["data"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for problems with the values the model relies on, rather than the code itself.
+        For example: an IPCC emission factor, a feed nutritional value, a livestock parameter, or a missing crop or feed item.
+  - type: dropdown
+    id: source
+    attributes:
+      label: Which data or parameter set?
+      multiple: true
+      options:
+        - ghg_parameters.json
+        - energy_parameters.json
+        - stock_change_parameters.json
+        - Feed library (ilri_feed_db / ERA nutrition library)
+        - Input mappings
+        - Other package data
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: Current value
+      description: Which entry, and what value it has now.
+      placeholder: "ghg_parameters.json, Table 10.12, dairy cattle: Ym = 6.3"
+    validations:
+      required: true
+  - type: textarea
+    id: proposed
+    attributes:
+      label: Proposed value
+      description: What it should be. Leave blank if you're reporting a missing entry and don't know the value.
+  - type: textarea
+    id: reference
+    attributes:
+      label: Source or reference
+      description: Citation, table number, DOI or link that supports the proposed value.
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Effect on results
+      description: Which outputs change and roughly by how much, if you know.
+  - type: input
+    id: pkg-version
+    attributes:
+      label: cleaned version
+      placeholder: "0.7.0"
